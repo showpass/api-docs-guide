@@ -1,7 +1,7 @@
 
 import React from 'react';
-import { Badge } from "../../../shared/components/badge.tsx";
-import { cn } from "../../../shared/lib/utils.ts";
+import { Badge } from "@/shared/components/badge.tsx";
+import { cn } from "@/shared/lib/utils.ts";
 
 interface ParameterProps {
   name: string;

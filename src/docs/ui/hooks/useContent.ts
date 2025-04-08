@@ -1,6 +1,6 @@
 
-import { useState, useEffect } from "react";
-import { ContentManager } from "../content-manager";
+import { useState, useEffect, useMemo } from "react";
+import { ContentManager } from "@/docs/application/content-manager.ts";
 
 /**
  * Hook for fetching content directly from markdown files
@@ -11,6 +11,11 @@ export const useContent = (contentPath: string) => {
   const [error, setError] = useState<Error | null>(null);
   const [tableOfContents, setTableOfContents] = useState<{title: string; href: string}[]>([]);
 
+  // Memoize so it is only created once
+  const contentManager = useMemo(() => {
+    return new ContentManager();
+  }, []);
+
   useEffect(() => {
     const fetchContent = async () => {
       try {
@@ -18,10 +23,10 @@ export const useContent = (contentPath: string) => {
         setError(null);
         
         // Load content directly from file
-        const loadedContent = await ContentManager.loadContent(contentPath);
+        const loadedContent = await contentManager.loadContent(contentPath);
         
         // Extract headings for table of contents
-        const headings = ContentManager.extractHeadings(loadedContent);
+        const headings = contentManager.extractHeadings(loadedContent);
         
         setContent(loadedContent);
         setTableOfContents(headings);

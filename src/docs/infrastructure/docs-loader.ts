@@ -1,7 +1,6 @@
 
 /**
- * Content service responsible for loading content from static files
- * This version loads content statically at build time
+ * Responsible for loading markdown documentation content from static imports
  */
 import sdkProductSelection from '../data/sdk/product-selection.md';
 import sdkTicketSelection from '../data/sdk/ticket-selection.md';
@@ -18,7 +17,11 @@ import apiQueryEvent from '../data/api/query-event.md';
 import advancedGoogleAnalytics from '../data/advanced/google-analytics.md';
 import advancedWebhooks from '../data/advanced/webhooks.md';
 
-export class ContentService {
+export interface IDocsLoader {
+  loadContent(contentPath: string): Promise<string>;
+}
+
+export class DocsLoader implements IDocsLoader {
   // Map of path to static content
   private static contentMap: Record<string, string> = {
     // SDK content
@@ -45,15 +48,14 @@ export class ContentService {
   /**
    * Loads markdown content from static imports (loaded during build time)
    */
-  static async loadContent(relativePath: string): Promise<string> {
+  async loadContent(relativePath: string): Promise<string> {
     try {
-      // Normalize the path for consistency
+      // Normalizes the path for consistency
       const normalizedPath = relativePath.startsWith('/')
-        ? relativePath
-        : `/${relativePath}`;
+          ? relativePath
+          : `/${relativePath}`;
 
-      // Get the content from our static map
-      const content = this.contentMap[normalizedPath];
+      const content = DocsLoader.contentMap[normalizedPath];
 
       if (content) {
         return content;

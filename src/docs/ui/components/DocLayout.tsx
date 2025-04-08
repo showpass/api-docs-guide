@@ -1,9 +1,9 @@
 
 import React, { useState } from 'react';
-import { ScrollArea } from "../../../shared/components/scroll-area.tsx";
+import { ScrollArea } from "@/shared/components/scroll-area.tsx";
 import { Menu, X } from "lucide-react";
-import { cn } from "../../../shared/lib/utils.ts";
-import { Button } from "../../../shared/components/button.tsx";
+import { cn } from "@/shared/lib/utils.ts";
+import { Button } from "@/shared/components/button.tsx";
 import Navigation from "./Navigation.tsx";
 import TableOfContents from "./TableOfContents.tsx";
 

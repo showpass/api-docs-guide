@@ -1,21 +1,20 @@
-
-import { ContentService } from "../infrastructure/content-service";
+import { DocsLoader, IDocsLoader } from "@/docs/infrastructure/docs-loader";
 
 /**
  * Content manager responsible for application-specific content operations
  */
 export class ContentManager {
-  /**
-   * Loads content from a given path
-   */
-  static async loadContent(contentPath: string): Promise<string> {
-    return await ContentService.loadContent(contentPath);
+  private docsLoader: IDocsLoader;
+
+  constructor(docsLoader: IDocsLoader = new DocsLoader()) {
+    this.docsLoader = docsLoader;
   }
-  
-  /**
-   * Extracts headings from markdown content for table of contents
-   */
-  static extractHeadings(content: string): { title: string; href: string }[] {
+
+  async loadContent(contentPath: string): Promise<string> {
+    return this.docsLoader.loadContent(contentPath);
+  }
+
+  extractHeadings(content: string): { title: string; href: string }[] {
     const headings: { title: string; href: string }[] = [];
     const lines = content.split('\n');
 
