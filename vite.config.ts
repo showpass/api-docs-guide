@@ -2,7 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
-import { markdownImport } from "./src/docs/infrastructure/vite-plugin-md-import";
+import { markdownImport } from "./src/docs-app/infrastructure/vite-plugin-md-import";
 
 // Check if we're building for GitHub Pages
 const isGitHubPages = process.env.GITHUB_ACTIONS === "true";

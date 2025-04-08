@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import DocLayout from "../docs/ui/components/DocLayout";
-import CodeBlock from "../docs/ui/components/CodeBlock";
+import DocLayout from "@/docs-app/ui/components/DocLayout";
+import CodeBlock from "@/docs-app/ui/components/CodeBlock";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("");

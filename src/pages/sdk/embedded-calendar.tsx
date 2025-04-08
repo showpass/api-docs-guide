@@ -1,6 +1,6 @@
 
 import React from "react";
-import ContentPage from "../../docs/ui/components/ContentPage";
+import ContentPage from "@/docs-app/ui/components/ContentPage";
 
 const EmbeddedCalendarWidgetPage = () => {
   return <ContentPage contentPath="/sdk/embedded-calendar.md" currentPath="/sdk/embedded-calendar" />;

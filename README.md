@@ -5,7 +5,7 @@
 git clone https://github.com/showpass/api-docs-guide
 
 # Step 2: Navigate to the project directory.
-cd api-docs-guide
+cd api-docs-app-guide
 
 # Step 3: Install the necessary dependencies.
 npm i

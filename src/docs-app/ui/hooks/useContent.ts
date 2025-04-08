@@ -1,6 +1,6 @@
 
 import { useState, useEffect, useMemo } from "react";
-import { ContentManager } from "@/docs/application/content-manager.ts";
+import { ContentManager } from "@/docs-app/application/content-manager.ts";
 
 /**
  * Hook for fetching content directly from markdown files

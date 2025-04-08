@@ -1,6 +1,7 @@
 {
   "files": [],
-  "include": ["src/docs/infrastructure", "declarations.d.ts"],
+  "include": [
+    "src/docs-app/infrastructure", "declarations.d.ts"],
   "references": [
     { "path": "./tsconfig.app.json" },
     { "path": "./tsconfig.node.json" }

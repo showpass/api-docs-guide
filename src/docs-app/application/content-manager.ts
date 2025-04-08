@@ -1,4 +1,4 @@
-import { DocsLoader, IDocsLoader } from "@/docs/infrastructure/docs-loader";
+import { DocsLoader, IDocsLoader } from "@/docs-app/infrastructure/docs-loader";
 
 /**
  * Content manager responsible for application-specific content operations

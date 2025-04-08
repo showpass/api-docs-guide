@@ -4,7 +4,7 @@ import MarkdownContent from "./MarkdownContent";
 import DocLayout from "./DocLayout";
 import Navigation from "./Navigation";
 import TableOfContents from "./TableOfContents";
-import { useContent } from "@/docs/ui/hooks/useContent";
+import { useContent } from "@/docs-app/ui/hooks/useContent";
 import { toast } from "@/shared/hooks/use-toast.ts";
 
 interface ContentPageProps {
