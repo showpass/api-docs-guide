@@ -30,14 +30,14 @@ import GoogleAnalyticsPage from "./pages/advanced/google-analytics";
 import WebhooksPage from "./pages/advanced/webhooks";
 
 const queryClient = new QueryClient();
-const baseName = import.meta.env.BASE_URL;
+const BASENAME = import.meta.env.MODE === "production" ? "/api-docs-guide" : "/";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter basename={baseName}>
+      <BrowserRouter basename={BASENAME}>
         <Routes>
           {/* Introduction Routes */}
           <Route path="/" element={<Index />} />
