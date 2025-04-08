@@ -1,8 +1,6 @@
-
 import React, { useState, useEffect } from "react";
-import DocLayout from "../components/DocLayout";
-import TableOfContents from "../components/TableOfContents";
-import CodeBlock from "../components/CodeBlock";
+import DocLayout from "../docs/ui/components/DocLayout";
+import CodeBlock from "../docs/ui/components/CodeBlock";
 
 const Index = () => {
   const [activeSection, setActiveSection] = useState("");
@@ -75,7 +73,7 @@ const Index = () => {
         </p>
         <CodeBlock 
           language="javascript"
-          value={`(function(window, document, src) {
+          code={`(function(window, document, src) {
     let config = window.__shwps;
     if (typeof config === "undefined") {
         config = function() {
@@ -100,7 +98,7 @@ const Index = () => {
         <p>Alternatively, you can include it directly in your HTML:</p>
         <CodeBlock 
           language="html"
-          value={`<script type="text/javascript" src="https://showpass.com/static/dist/sdk.js"></script>`} 
+          code={`<script type="text/javascript" src="https://showpass.com/static/dist/sdk.js"></script>`} 
         />
       </section>
 
@@ -112,8 +110,8 @@ const Index = () => {
         
         <h3>Main Endpoints</h3>
         <ul className="list-disc pl-6 space-y-2 mt-4">
-          <li><strong>Event List</strong>: <code>https://www.showpass.com/api/public/events/</code></li>
-          <li><strong>Event List by Organization</strong>: <code>https://www.showpass.com/api/public/events/?venue__in=id</code></li>
+          <li><strong>Event List</strong>: <code>https://www.showpass.com/api/public/discovery/</code></li>
+          <li><strong>Event List by Organization</strong>: <code>https://www.showpass.com/api/public/discovery/?venue__in=id</code></li>
           <li><strong>Query a Specific Event</strong>: <code>https://www.showpass.com/api/public/events/slug/</code></li>
         </ul>
         

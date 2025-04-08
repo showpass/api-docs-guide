@@ -1,7 +1,7 @@
 
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
-import { TooltipProvider } from "@/components/ui/tooltip";
+import { Toaster } from "./shared/components/toaster";
+import { Toaster as Sonner } from "./shared/components/sonner";
+import { TooltipProvider } from "./shared/components/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
@@ -22,6 +22,7 @@ import ShoppingCartPage from "./pages/sdk/shopping-cart";
 import CheckOutPage from "./pages/sdk/check-out";
 import LoginWidgetPage from "./pages/sdk/login";
 import CalendarWidgetPage from "./pages/sdk/calendar";
+import EmbeddedCalendarWidgetPage from "./pages/sdk/embedded-calendar";
 import CartCounterPage from "./pages/sdk/cart-counter";
 
 // Advanced Pages
@@ -53,6 +54,7 @@ const App = () => (
           <Route path="/sdk/check-out" element={<CheckOutPage />} />
           <Route path="/sdk/login" element={<LoginWidgetPage />} />
           <Route path="/sdk/calendar" element={<CalendarWidgetPage />} />
+          <Route path="/sdk/embedded-calendar" element={<EmbeddedCalendarWidgetPage />} />
           <Route path="/sdk/cart-counter" element={<CartCounterPage />} />
           
           {/* Advanced Routes */}
