@@ -1,0 +1,148 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 221 83% 53%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 221 83% 53%;
+
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    --background: 222.2 84% 4.9%;
+    --foreground: 210 40% 98%;
+
+    --card: 222.2 84% 4.9%;
+    --card-foreground: 210 40% 98%;
+
+    --popover: 222.2 84% 4.9%;
+    --popover-foreground: 210 40% 98%;
+
+    --primary: 217.2 91.2% 59.8%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 217.2 32.6% 17.5%;
+    --secondary-foreground: 210 40% 98%;
+
+    --muted: 217.2 32.6% 17.5%;
+    --muted-foreground: 215 20.2% 65.1%;
+
+    --accent: 217.2 32.6% 17.5%;
+    --accent-foreground: 210 40% 98%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 217.2 32.6% 17.5%;
+    --input: 217.2 32.6% 17.5%;
+    --ring: 224.3 76.3% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+
+  h1 {
+    @apply text-3xl font-bold tracking-tight scroll-m-20;
+  }
+
+  h2 {
+    @apply text-2xl font-semibold tracking-tight mt-8 scroll-m-20;
+  }
+
+  h3 {
+    @apply text-xl font-semibold tracking-tight mt-6 scroll-m-20;
+  }
+
+  h4 {
+    @apply text-lg font-semibold tracking-tight mt-4 scroll-m-20;
+  }
+
+  p {
+    @apply leading-7 my-4;
+  }
+
+  code {
+    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
+  }
+
+  pre {
+    @apply my-4 overflow-x-auto rounded-lg bg-muted py-4;
+  }
+
+  pre > code {
+    @apply bg-transparent px-0 py-0 text-sm;
+  }
+
+  table {
+    @apply w-full my-6 text-sm;
+  }
+
+  thead {
+    @apply bg-muted [&_tr]:border-b;
+  }
+
+  tbody {
+    @apply [&_tr:last-child]:border-0;
+  }
+
+  tr {
+    @apply border-b transition-colors;
+  }
+
+  th {
+    @apply h-10 px-4 text-left align-middle font-medium text-muted-foreground;
+  }
+
+  td {
+    @apply p-4 align-top;
+  }
+}
+
+@layer components {
+  .sidebar-link {
+    @apply block text-sm py-1 hover:text-primary transition-colors;
+  }
+
+  .sidebar-link.active {
+    @apply text-primary font-medium;
+  }
+  
+  .sidebar-category {
+    @apply text-sm font-medium text-foreground py-1 mb-2;
+  }
+}
