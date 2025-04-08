@@ -12,7 +12,7 @@ const BASE_URL = isGitHubPages ? "/api-docs-guide/" : "/";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
-  base: '/api-docs-guide/',
+  base: BASE_URL,
   server: {
     host: "::",
     port: 8080,
