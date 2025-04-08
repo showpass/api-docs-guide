@@ -30,7 +30,7 @@ import GoogleAnalyticsPage from "./pages/advanced/google-analytics";
 import WebhooksPage from "./pages/advanced/webhooks";
 
 const queryClient = new QueryClient();
-const baseName = import.meta.env.BASE_URL;
+const baseName = '/api-docs-guide/';
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
