@@ -4,7 +4,6 @@
  */
 import { Plugin } from 'vite';
 import fs from 'fs';
-import path from 'path';
 
 export function markdownImport(): Plugin {
   return {
