@@ -1,7 +1,8 @@
-
 /**
- * Responsible for loading markdown documentation content from static imports
+ * Loads Markdown docs from statically imported files.
+ * Used by ContentManager to decouple content source logic.
  */
+
 import sdkProductSelection from '../data/sdk/product-selection.md';
 import sdkTicketSelection from '../data/sdk/ticket-selection.md';
 import sdkLogin from '../data/sdk/login.md';
@@ -22,7 +23,7 @@ export interface IDocsLoader {
 }
 
 export class DocsLoader implements IDocsLoader {
-  // Map of path to static content
+  // Maps relative paths to statically imported content
   private static contentMap: Record<string, string> = {
     // SDK content
     '/sdk/product-selection.md': sdkProductSelection,
@@ -46,7 +47,8 @@ export class DocsLoader implements IDocsLoader {
   };
 
   /**
-   * Loads markdown content from static imports (loaded during build time)
+   * Returns markdown content for a given relative path.
+   * If not found, returns a fallback error message.
    */
   async loadContent(relativePath: string): Promise<string> {
     try {
