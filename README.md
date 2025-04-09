@@ -56,6 +56,7 @@ Deployed automatically to **GitHub Pages** using `gh-pages`.
 - 📚 Markdown as source of truth
 - ⚛️ React + Vite for blazing-fast UI
 - 📜 Custom TOC & syntax highlighting
+- 📦️ Built-in API Example block (multi-language)
 - 🧩 Parameter tables with semantic parsing
 - 🧼 Modular design & UI separation
 

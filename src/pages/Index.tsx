@@ -1,9 +1,12 @@
-import React, { useState, useEffect } from "react";
+
+import React from "react";
 import DocLayout from "@/docs-app/ui/components/DocLayout";
 import CodeBlock from "@/docs-app/ui/components/CodeBlock";
+import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
+import { BookOpen, Code, Calendar, Webhook } from "lucide-react";
 
 const Index = () => {
-  const [activeSection, setActiveSection] = useState("");
+  const activeSection = useScrollSpy("h2[id], h3[id]", 100);
   
   const tableOfContentsItems = [
     { title: "Overview", href: "#overview" },
@@ -13,30 +16,6 @@ const Index = () => {
     { title: "SDK Components", href: "#sdk-components" },
     { title: "Webhooks", href: "#webhooks" },
   ];
-
-  // Handle scroll to update the active section
-  useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll("h2[id], h3[id]");
-      
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i];
-        const rect = section.getBoundingClientRect();
-        
-        if (rect.top <= 100) {
-          setActiveSection(`#${section.id}`);
-          break;
-        }
-      }
-    };
-    
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
-    
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, []);
 
   return (
     <DocLayout 
@@ -127,37 +106,37 @@ const Index = () => {
         </p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Ticket Selection Widget</h4>
             <p className="text-sm text-muted-foreground">
               Allow users to select ticket quantities for an event
             </p>
           </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Product Selection Widget</h4>
             <p className="text-sm text-muted-foreground">
               Displays products for purchase
             </p>
           </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Shopping Cart Widget</h4>
             <p className="text-sm text-muted-foreground">
               Displays the current shopping cart contents
             </p>
           </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Check Out Widget</h4>
             <p className="text-sm text-muted-foreground">
               Handles the checkout process
             </p>
           </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Login Widget</h4>
             <p className="text-sm text-muted-foreground">
               Handles user authentication
             </p>
           </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors">
+          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Calendar Widget</h4>
             <p className="text-sm text-muted-foreground">
               Displays events in a calendar format

@@ -4,11 +4,8 @@ import path from "path";
 import { componentTagger } from "lovable-tagger";
 import { markdownImport } from "./src/docs-app/infrastructure/vite-plugin-md-import";
 
-// Check if we're building for GitHub Pages
-const isGitHubPages = process.env.GITHUB_ACTIONS === "true";
-
 // Use the correct base depending on where we are deploying
-const BASE_URL = isGitHubPages ? "/api-docs-guide/" : "/";
+const BASE_URL ="/";
 
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({

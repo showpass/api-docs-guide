@@ -1,3 +1,4 @@
+
 /**
  * Loads Markdown docs from statically imported files.
  * Used by ContentManager to decouple content source logic.
@@ -71,3 +72,6 @@ export class DocsLoader implements IDocsLoader {
     }
   }
 }
+
+// Default export for better module compatibility
+export default DocsLoader;

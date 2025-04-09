@@ -3,18 +3,31 @@ import React, { useEffect, useState } from "react";
 import MarkdownContent from "./MarkdownContent";
 import DocLayout from "./DocLayout";
 import Navigation from "./Navigation";
-import TableOfContents from "./TableOfContents";
+import ApiExamples from "./ApiExamples";
 import { useContent } from "@/docs-app/ui/hooks/useContent";
-import { toast } from "@/shared/hooks/use-toast.ts";
+import { toast } from "@/shared/components/use-toast";
+import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
+import { ApiResponse } from "./ApiExamples";
 
 interface ContentPageProps {
   contentPath: string;
   currentPath: string;
+  apiExamples?: {
+    endpoint: string;
+    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+    description?: string;
+    examples: {
+      curl: string;
+      python: string;
+      node: string;
+    };
+    response: ApiResponse;
+  };
 }
 
-const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath }) => {
+const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath, apiExamples }) => {
   const { content, isLoading, error, tableOfContents } = useContent(contentPath);
-  const [activeSection, setActiveSection] = useState("");
+  const activeSection = useScrollSpy("h2[id], h3[id]", 100);
 
   // Show error toast if content failed to load
   useEffect(() => {
@@ -26,32 +39,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath }) =
       });
     }
   }, [error]);
-
-  // Handle scroll to update the active section
-  useEffect(() => {
-    if (!isLoading && content) {
-      const handleScroll = () => {
-        const sections = document.querySelectorAll("h2[id], h3[id]");
-        
-        for (let i = sections.length - 1; i >= 0; i--) {
-          const section = sections[i] as HTMLElement;
-          const rect = section.getBoundingClientRect();
-          
-          if (rect.top <= 100) {
-            setActiveSection(`#${section.id}`);
-            break;
-          }
-        }
-      };
-      
-      window.addEventListener("scroll", handleScroll, { passive: true });
-      handleScroll(); // Initialize active section on load
-      
-      return () => {
-        window.removeEventListener("scroll", handleScroll);
-      };
-    }
-  }, [isLoading, content]);
 
   // Handle anchor clicks and fix scroll behavior
   useEffect(() => {
@@ -67,7 +54,6 @@ const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath }) =
               top: element.getBoundingClientRect().top + window.scrollY - 100,
               behavior: 'smooth'
             });
-            setActiveSection(hash);
           }
         }, 100);
       }
@@ -89,12 +75,18 @@ const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath }) =
     window.scrollTo(0, 0);
   }, [contentPath]);
 
+  // Determine what to show in the right column
+  const rightColumnContent = apiExamples ? (
+    <ApiExamples {...apiExamples} />
+  ) : null;
+
   return (
     <DocLayout 
       navigation={<Navigation currentPath={currentPath} />}
-      tableOfContents={<TableOfContents items={tableOfContents} activeItem={activeSection} />}
+      tableOfContents={rightColumnContent}
+      tocItems={!apiExamples ? tableOfContents : undefined}
     >
-      <div className="max-w-3xl mx-auto py-8 px-4">
+      <div className="mx-auto">
         {isLoading ? (
           <div className="flex justify-center items-center p-8">
             <div className="animate-pulse text-primary">Loading documentation...</div>

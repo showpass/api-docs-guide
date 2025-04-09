@@ -33,7 +33,11 @@ Make sure you add your website's domain to the "Integrations" tab on the same pa
 
 ## Example Request
 ```
-https://www.showpass.com/api/public/discovery/?venue__in=123&page_size=10&ordering=starts_on&tags=featured
+https://www.showpass.com/api/public/discovery/?\
+    venue__in=123&\
+    page_size=10&\
+    ordering=starts_on&\
+    tags=featured
 ```
 
 ## API Response

@@ -2,6 +2,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { cn } from "@/shared/lib/utils.ts";
+import { ChevronRight } from 'lucide-react';
 
 interface NavigationProps {
   currentPath: string;
@@ -11,10 +12,13 @@ const Navigation = ({ currentPath }: NavigationProps) => {
   const isActive = (path: string) => currentPath === path;
 
   return (
-    <nav className="space-y-6">
+    <nav className="space-y-8">
       <div>
-        <h3 className="sidebar-category">Introduction</h3>
-        <ul className="space-y-1">
+        <h3 className="sidebar-category flex items-center">
+          <ChevronRight className="h-4 w-4 mr-1" />
+          Introduction
+        </h3>
+        <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
             <Link 
               to="/" 
@@ -27,8 +31,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </div>
       
       <div>
-        <h3 className="sidebar-category">API Reference</h3>
-        <ul className="space-y-1">
+        <h3 className="sidebar-category flex items-center">
+          <ChevronRight className="h-4 w-4 mr-1" />
+          API Reference
+        </h3>
+        <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
             <Link 
               to="/api/events" 
@@ -57,8 +64,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </div>
       
       <div>
-        <h3 className="sidebar-category">SDK</h3>
-        <ul className="space-y-1">
+        <h3 className="sidebar-category flex items-center">
+          <ChevronRight className="h-4 w-4 mr-1" />
+          SDK
+        </h3>
+        <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
             <Link 
               to="/sdk/getting-started" 
@@ -135,8 +145,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </div>
       
       <div>
-        <h3 className="sidebar-category">Advanced</h3>
-        <ul className="space-y-1">
+        <h3 className="sidebar-category flex items-center">
+          <ChevronRight className="h-4 w-4 mr-1" />
+          Advanced
+        </h3>
+        <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
             <Link 
               to="/advanced/google-analytics" 
