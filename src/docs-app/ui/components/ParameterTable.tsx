@@ -1,12 +1,6 @@
 
 import React from "react";
-
-interface ParameterRow {
-  parameter: string;
-  type: string;
-  status: string;
-  description: string;
-}
+import { ParameterRow } from "@/docs-app/data/types";
 
 interface ParameterTableProps {
   data: ParameterRow[];

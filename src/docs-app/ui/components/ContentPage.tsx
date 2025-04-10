@@ -1,33 +1,26 @@
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import MarkdownContent from "./MarkdownContent";
 import DocLayout from "./DocLayout";
 import Navigation from "./Navigation";
-import ApiExamples from "./ApiExamples";
 import { useContent } from "@/docs-app/ui/hooks/useContent";
 import { toast } from "@/shared/components/use-toast";
 import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
-import { ApiResponse } from "./ApiExamples";
+import { ApiExamplesData } from "@/docs-app/data/types.ts";
+import { useHashScroll } from "@/docs-app/ui/hooks/useHashScroll";
 
 interface ContentPageProps {
   contentPath: string;
   currentPath: string;
-  apiExamples?: {
-    endpoint: string;
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-    description?: string;
-    examples: {
-      curl: string;
-      python: string;
-      node: string;
-    };
-    response: ApiResponse;
-  };
+  apiExamples?: ApiExamplesData;
 }
 
 const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath, apiExamples }) => {
   const { content, isLoading, error, tableOfContents } = useContent(contentPath);
   const activeSection = useScrollSpy("h2[id], h3[id]", 100);
+  
+  // Use the hash scroll hook
+  useHashScroll(100);
 
   // Show error toast if content failed to load
   useEffect(() => {
@@ -40,51 +33,17 @@ const ContentPage: React.FC<ContentPageProps> = ({ contentPath, currentPath, api
     }
   }, [error]);
 
-  // Handle anchor clicks and fix scroll behavior
-  useEffect(() => {
-    const handleHashChange = () => {
-      const hash = window.location.hash;
-      if (hash) {
-        // Small delay to ensure DOM is ready
-        setTimeout(() => {
-          const element = document.querySelector(hash);
-          if (element) {
-            // Scroll to element with offset for header
-            window.scrollTo({
-              top: element.getBoundingClientRect().top + window.scrollY - 100,
-              behavior: 'smooth'
-            });
-          }
-        }, 100);
-      }
-    };
-
-    // Initial check for hash in URL
-    if (window.location.hash) {
-      handleHashChange();
-    }
-
-    window.addEventListener('hashchange', handleHashChange);
-    return () => {
-      window.removeEventListener('hashchange', handleHashChange);
-    };
-  }, [isLoading]);
-
   // Scroll to top when content changes (new page)
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [contentPath]);
 
-  // Determine what to show in the right column
-  const rightColumnContent = apiExamples ? (
-    <ApiExamples {...apiExamples} />
-  ) : null;
-
   return (
     <DocLayout 
       navigation={<Navigation currentPath={currentPath} />}
-      tableOfContents={rightColumnContent}
-      tocItems={!apiExamples ? tableOfContents : undefined}
+      apiExamplesData={apiExamples}
+      tocItems={tableOfContents}
+      activeSection={activeSection}
     >
       <div className="mx-auto">
         {isLoading ? (

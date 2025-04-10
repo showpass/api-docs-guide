@@ -1,13 +1,11 @@
 
 import React from 'react';
-import { cn } from "@/shared/lib/utils.ts";
+import { cn } from "@/shared/lib/utils";
 import { ChevronRight } from "lucide-react";
+import { TocItem } from "@/docs-app/data/types.ts";
 
 interface TableOfContentsProps {
-  items: {
-    title: string;
-    href: string;
-  }[];
+  items: TocItem[];
   activeItem?: string;
 }
 

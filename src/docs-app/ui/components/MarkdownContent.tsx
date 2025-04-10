@@ -1,10 +1,10 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CodeBlock from "./CodeBlock";
 import ParameterTable from "./ParameterTable";
-import { parseParameterTable } from "../utils/parameterTableParser";
+import { remarkParameterTable } from "../utils/parameterTablePlugin";
 import type { Components } from "react-markdown";
 
 interface MarkdownContentProps {
@@ -22,22 +22,6 @@ const slugify = (text: string): string => {
 };
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
-  const [processedContent, setProcessedContent] = useState(content);
-  
-  // Process parameter tables and extract their data
-  const parameterTables = parseParameterTable(content);
-  
-  // Process content to replace parameter tables with our custom component
-  useEffect(() => {
-    // Replace parameter tables with a special marker
-    const newContent = content.replace(
-      /<!-- PARAMETER_TABLE_START -->[\s\S]*?<!-- PARAMETER_TABLE_END -->/g, 
-      ':::parameter-table:::'
-    );
-    
-    setProcessedContent(newContent);
-  }, [content]);
-
   // Define components mapping for ReactMarkdown
   const components: Components = {
     code: ({ node, className, children, ...props }) => {
@@ -60,18 +44,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
         />
       );
     },
-    // Add a handler for paragraphs to check for our special marker
-    p: ({ node, children, ...props }) => {
-      const childrenArray = React.Children.toArray(children);
-      
-      // Check if this paragraph contains our parameter table marker
-      if (childrenArray.length === 1 && typeof childrenArray[0] === 'string' && childrenArray[0] === ':::parameter-table:::') {
-        return <ParameterTable data={parameterTables} />;
-      }
-      
-      // Otherwise render as normal paragraph
-      return <p className="my-4 text-slate-700" {...props}>{children}</p>;
-    },
+    // Custom components for markdown elements
     h1: ({ node, children, ...props }) => {
       const text = children.toString();
       const id = slugify(text);
@@ -95,7 +68,65 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     a: ({ node, ...props }) => <a className="text-slate-700 hover:text-slate-900 underline" {...props} />,
     ul: ({ node, ...props }) => <ul className="list-disc pl-6 my-4" {...props} />,
     ol: ({ node, ...props }) => <ol className="list-decimal pl-6 my-4" {...props} />,
+    p: ({ node, children, ...props }) => {
+      // Check if this paragraph contains a parameter table
+      const childStr = String(children);
+      if (childStr.includes('<!-- PARAMETER_TABLE_START -->') && childStr.includes('<!-- PARAMETER_TABLE_END -->')) {
+        const data = parseParameterTable(childStr);
+        return <ParameterTable data={data} />;
+      }
+      return <p className="my-4 text-slate-700" {...props}>{children}</p>;
+    },
     table: ({ node, ...props }) => <table className="w-full text-sm border-collapse mt-0" {...props} />
+  };
+
+  // Import parseParameterTable directly in the component
+  const parseParameterTable = (content: string): any[] => {
+    // Find content between PARAMETER_TABLE_START and PARAMETER_TABLE_END
+    const tableRegex = /<!-- PARAMETER_TABLE_START -->([\s\S]*?)<!-- PARAMETER_TABLE_END -->/g;
+    const tableMatches = [...content.matchAll(tableRegex)];
+    
+    if (!tableMatches || tableMatches.length === 0) return [];
+    
+    // Get the first table content and split into lines
+    const tableContent = tableMatches[0][1].trim();
+    const lines = tableContent.split('\n').filter(line => line.trim() !== '');
+    
+    // Remove header and separator lines (first two lines)
+    const dataLines = lines.slice(2);
+    
+    // Parse each line into a parameter row
+    return dataLines.map(line => {
+      const cells = line.split('|').map(cell => cell.trim()).filter(Boolean);
+      
+      if (cells.length >= 4) {
+        return {
+          parameter: cells[0],
+          type: cells[1],
+          status: cells[2],
+          description: cells[3]
+        };
+      }
+      
+      // Fallback for malformed rows or tab-separated content
+      if (line.includes('\t')) {
+        const tabCells = line.split('\t').map(cell => cell.trim());
+        return {
+          parameter: tabCells[0] || '',
+          type: tabCells[1] || '',
+          status: tabCells[2] || '',
+          description: tabCells[3] || ''
+        };
+      }
+      
+      // Final fallback
+      return {
+        parameter: '',
+        type: '',
+        status: '',
+        description: 'Malformed table row'
+      };
+    });
   };
 
   return (
@@ -104,7 +135,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
         remarkPlugins={[remarkGfm]}
         components={components}
       >
-        {processedContent}
+        {content}
       </ReactMarkdown>
     </div>
   );

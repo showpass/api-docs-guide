@@ -15,7 +15,7 @@ Make sure you add your website's domain to the "Integrations" tab on the same pa
 
 ## Parameters
 
-<!-- PARAMETER_TABLE_START -->
+
 | Parameter | Type | Status | Description |
 |-----------|------|--------|-------------|
 | categories | String | Optional | Include all events that have the following categories<br>`&categories="category_one,category_two"` |
@@ -29,7 +29,7 @@ Make sure you add your website's domain to the "Integrations" tab on the same pa
 | ordering | String | Optional | Specify the order the events are returned<br>starts_on: Order events by event start date<br>id: Order events by event ID<br>name: Order alphabetically by event name<br>`&ordering="-name"` (order descending by event name) |
 | show | String | Optional | Return all events regardless of visibility settings<br>`&show=all` |
 | only_parents | Boolean | Optional | Return parent events and single events - recommended use for recurring events<br>`&only_parents=true` |
-<!-- PARAMETER_TABLE_END -->
+
 
 ## Example Request
 ```

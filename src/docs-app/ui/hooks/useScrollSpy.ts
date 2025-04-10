@@ -1,54 +1,53 @@
 
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
+import { throttle } from 'lodash-es';
 
-/**
- * Hook that tracks the active section based on scroll position
- * 
- * @param selectors - CSS selectors for sections to track
- * @param offset - Offset from the top to consider a section "active"
- * @returns The active section ID with '#' prefix for anchor links
- */
-export function useScrollSpy(selectors: string, offset: number = 100): string {
-  const [activeSection, setActiveSection] = useState("");
+export const useScrollSpy = (
+  selectors: string,
+  offset: number = 0
+): string | null => {
+  const [activeId, setActiveId] = useState<string | null>(null);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = document.querySelectorAll(selectors);
+    const elements = document.querySelectorAll<HTMLElement>(selectors);
+    if (elements.length === 0) return;
+
+    const handleScroll = throttle(() => {
+      // Get all headings and their positions
+      const headingElements = Array.from(elements);
       
-      // Early return if no sections found
-      if (sections.length === 0) return;
-
-      // Start from the end and go up - sections lower in the page should take precedence
-      // when they reach the threshold
-      for (let i = sections.length - 1; i >= 0; i--) {
-        const section = sections[i] as HTMLElement;
-        const rect = section.getBoundingClientRect();
-        
-        if (rect.top <= offset) {
-          const newActiveSection = `#${section.id}`;
-          if (activeSection !== newActiveSection) {
-            setActiveSection(newActiveSection);
-          }
-          break;
-        }
+      // Find the heading that is currently at the top of the viewport (plus offset)
+      const headingPositions = headingElements.map((element) => {
+        return {
+          id: element.id,
+          position: element.getBoundingClientRect().top - offset
+        };
+      });
+      
+      // Find the first heading that is at or below the threshold
+      const activeHeading = headingPositions.find(
+        (heading) => heading.position >= 0
+      );
+      
+      // If we found an active heading and it's different from the current active heading
+      if (activeHeading) {
+        setActiveId(activeHeading.id);
+      } else if (headingPositions.length > 0) {
+        // If all headings are above the viewport, use the last one
+        setActiveId(headingPositions[headingPositions.length - 1].id);
       }
+    }, 100); // Throttle to improve performance
 
-      // Edge case: If scrolled all the way up, use the first section
-      if (window.scrollY < 10 && sections.length > 0) {
-        const firstSection = sections[0] as HTMLElement;
-        setActiveSection(`#${firstSection.id}`);
-      }
-    };
-    
+    // Attach event listener
     window.addEventListener("scroll", handleScroll, { passive: true });
-    
-    // Initialize active section on load
+    // Run once to initialize
     handleScroll();
-    
+
+    // Cleanup
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, [selectors, offset]);
 
-  return activeSection;
-}
+  return activeId;
+};

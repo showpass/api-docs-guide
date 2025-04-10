@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { cn } from "@/shared/lib/utils.ts";
 import { ChevronRight } from 'lucide-react';
 
@@ -9,8 +9,6 @@ interface NavigationProps {
 }
 
 const Navigation = ({ currentPath }: NavigationProps) => {
-  const isActive = (path: string) => currentPath === path;
-
   return (
     <nav className="space-y-8">
       <div>
@@ -20,12 +18,12 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </h3>
         <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
-            <Link 
+            <NavLink 
               to="/" 
-              className={cn("sidebar-link", isActive("/") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Overview
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -37,28 +35,28 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </h3>
         <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
-            <Link 
+            <NavLink 
               to="/api/events" 
-              className={cn("sidebar-link", isActive("/api/events") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Public Event API
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/api/event-list" 
-              className={cn("sidebar-link", isActive("/api/event-list") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Event List by Organization
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/api/query-event" 
-              className={cn("sidebar-link", isActive("/api/query-event") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Query a Specific Event
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -70,76 +68,76 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </h3>
         <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/getting-started" 
-              className={cn("sidebar-link", isActive("/sdk/getting-started") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Getting Started
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/ticket-selection" 
-              className={cn("sidebar-link", isActive("/sdk/ticket-selection") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Ticket Selection Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/product-selection" 
-              className={cn("sidebar-link", isActive("/sdk/product-selection") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Product Selection Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/shopping-cart" 
-              className={cn("sidebar-link", isActive("/sdk/shopping-cart") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Shopping Cart Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/check-out" 
-              className={cn("sidebar-link", isActive("/sdk/check-out") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Check Out Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/login" 
-              className={cn("sidebar-link", isActive("/sdk/login") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Login Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/calendar" 
-              className={cn("sidebar-link", isActive("/sdk/calendar") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Calendar Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/embedded-calendar" 
-              className={cn("sidebar-link", isActive("/sdk/embedded-calendar") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Embedded Calendar Widget
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/sdk/cart-counter" 
-              className={cn("sidebar-link", isActive("/sdk/cart-counter") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Cart Quantity Counter
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>
@@ -151,20 +149,20 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </h3>
         <ul className="space-y-1 pl-5 border-l border-border/30">
           <li>
-            <Link 
+            <NavLink 
               to="/advanced/google-analytics" 
-              className={cn("sidebar-link", isActive("/advanced/google-analytics") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Google Analytics Integration
-            </Link>
+            </NavLink>
           </li>
           <li>
-            <Link 
+            <NavLink 
               to="/advanced/webhooks" 
-              className={cn("sidebar-link", isActive("/advanced/webhooks") && "active")}
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
             >
               Webhooks
-            </Link>
+            </NavLink>
           </li>
         </ul>
       </div>

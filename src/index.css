@@ -135,7 +135,7 @@
 
 @layer components {
   .sidebar-link {
-    @apply block text-sm py-1 hover:text-primary transition-colors;
+    @apply block text-sm py-1.5 hover:text-primary transition-colors;
   }
 
   .sidebar-link.active {
@@ -143,6 +143,6 @@
   }
   
   .sidebar-category {
-    @apply text-sm font-medium text-foreground py-1 mb-2;
+    @apply text-sm font-medium text-foreground py-2 mb-1.5 uppercase tracking-wide text-xs text-muted-foreground;
   }
 }

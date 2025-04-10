@@ -12,14 +12,14 @@ showpass.tickets.loginWidget(params);
 
 ## Parameters
 
-<!-- PARAMETER_TABLE_START -->
+
 | Parameter | Type | Status | Description |
 |-----------|------|--------|-------------|
 | params | Object | Optional | Configuration object for the widget |
 | params.theme-primary | String | Optional | Hex code value for main widget color |
 | params.keep-shopping | Boolean | Optional | Displays "Keep Shopping" instead of "Close" on button verbiage |
 | params.tracking-id | - | - | Not supported |
-<!-- PARAMETER_TABLE_END -->
+
 
 ## Example
 

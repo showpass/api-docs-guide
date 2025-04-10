@@ -10,13 +10,13 @@ showpass.tickets.mountCalendarWidget(ORG_ID, params);
 
 ## Parameters
 
-<!-- PARAMETER_TABLE_START -->
+
 | Parameter | Type | Status | Description |
 |-----------|------|--------|-------------|
 | params.theme-primary | String | Optional | Hex code value for main widget color |
 | params.tags | String | Optional | Comma separated string which will tell calendar to only display events with these tags |
 | params.tracking-id | String | Optional | Tracking link tracking-id, for tracking, bypassing passwords, displaying hidden ticket types etc. |
-<!-- PARAMETER_TABLE_END -->
+
 
 ## Example
 

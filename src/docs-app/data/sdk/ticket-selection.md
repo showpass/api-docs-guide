@@ -10,7 +10,7 @@ showpass.tickets.eventPurchaseWidget(slug, params);
 
 ## Parameters
 
-<!-- PARAMETER_TABLE_START -->
+
 | Parameter | Type | Status | Description |
 |-----------|------|--------|-------------|
 | slug | String | Required | The unique slug of the event on Showpass<br>showpass.com/this-is-the-slug/ |
@@ -19,7 +19,7 @@ showpass.tickets.eventPurchaseWidget(slug, params);
 | params.keep-shopping | Boolean | Optional | Displays "Keep Shopping" instead of "Close" on button verbiage |
 | params.tracking-id | String | Optional | Tracking link tracking-id, for affiliate tracking, bypassing passwords, displaying hidden ticket types etc. |
 | params.show-description | Boolean | Optional | Displays or hides event description<br>default: true<br>(deploy date: October 15th 2019) |
-<!-- PARAMETER_TABLE_END -->
+
 
 ## Example
 

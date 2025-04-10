@@ -1,18 +1,21 @@
 
 import React, { useState } from 'react';
-import { ScrollArea } from "@/shared/components/scroll-area.tsx";
+import { ScrollArea } from "@/shared/components/scroll-area";
 import { Menu, X, BookOpen, Book, LayoutGrid } from "lucide-react";
-import { cn } from "@/shared/lib/utils.ts";
-import { Button } from "@/shared/components/button.tsx";
-import Navigation from "./Navigation.tsx";
-import TableOfContents from "./TableOfContents.tsx";
+import { cn } from "@/shared/lib/utils";
+import { Button } from "@/shared/components/button";
+import Navigation from "./Navigation";
+import TableOfContents from "./TableOfContents";
+import ApiExamples from "./ApiExamples";
+import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
 
 interface DocLayoutProps {
   children: React.ReactNode;
   currentPath?: string;
-  tocItems?: { title: string; href: string }[];
+  tocItems?: TocItem[];
   navigation?: React.ReactNode;
-  tableOfContents?: React.ReactNode;
+  apiExamplesData?: ApiExamplesData;
+  activeSection?: string;
 }
 
 const DocLayout = ({ 
@@ -20,7 +23,8 @@ const DocLayout = ({
   currentPath, 
   tocItems, 
   navigation, 
-  tableOfContents 
+  apiExamplesData,
+  activeSection 
 }: DocLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   
@@ -78,12 +82,16 @@ const DocLayout = ({
             <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
               <LayoutGrid className="h-4 w-4 text-slate-600" />
               <p className="text-sm font-medium text-slate-700">
-                {tableOfContents ? 'API Reference' : 'On This Page'}
+                {apiExamplesData ? 'API Reference' : 'On This Page'}
               </p>
             </div>
-            {tableOfContents || (tocItems && tocItems.length > 0 && (
-              <TableOfContents items={tocItems}/>
-            ))}
+            {apiExamplesData ? (
+              <ApiExamples {...apiExamplesData} />
+            ) : (
+              tocItems && tocItems.length > 0 && (
+                <TableOfContents items={tocItems} activeItem={activeSection} />
+              )
+            )}
           </div>
         </div>
       </div>

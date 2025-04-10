@@ -8,11 +8,9 @@ https://www.showpass.com/api/public/events/slug/
 
 ## Parameters
 
-<!-- PARAMETER_TABLE_START -->
 | Parameter | Type | Status | Description |
 |-----------|------|--------|-------------|
 | slug | String | Required | The unique slug of the event on Showpass<br>showpass.com/this-is-the-slug/ |
-<!-- PARAMETER_TABLE_END -->
 
 ## Example Request
 ```

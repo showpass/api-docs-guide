@@ -1,32 +1,11 @@
-
 import React, { useState } from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components/tabs";
 import { Card } from "@/shared/components/card";
-import { Check, Copy, Code, Terminal } from "lucide-react";
+import { Check, Copy, Terminal } from "lucide-react";
 import { cn } from "@/shared/lib/utils";
+import { ApiExamplesData } from "@/docs-app/data/types.ts";
 
-export interface CodeExample {
-  language: string;
-  code: string;
-}
-
-export interface ApiResponse {
-  contentType: string;
-  statusCode: number;
-  response: string;
-}
-
-interface ApiExamplesProps {
-  endpoint: string;
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-  description?: string;
-  examples: {
-    curl: string;
-    python: string;
-    node: string;
-  };
-  response: ApiResponse;
-}
+interface ApiExamplesProps extends ApiExamplesData {}
 
 const ApiExamples: React.FC<ApiExamplesProps> = ({
   endpoint,
@@ -45,7 +24,8 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
   };
 
   const copyResponseToClipboard = () => {
-    navigator.clipboard.writeText(response.response);
+    const responseText = JSON.stringify(response.body, null, 2);
+    navigator.clipboard.writeText(responseText);
     setCopiedResponse(true);
     setTimeout(() => setCopiedResponse(false), 2000);
   };
@@ -57,6 +37,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
     PATCH: "bg-orange-500",
     DELETE: "bg-red-500",
   };
+
+  // Get the status code from the standardized response format
+  const statusCode = response.status;
+  // Get the response text as JSON string
+  const responseText = JSON.stringify(response.body, null, 2);
 
   return (
     <div className="space-y-8 w-full">
@@ -118,7 +103,6 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 )}
               </button>
             </Card>
-
           </TabsContent>
 
           <TabsContent value="python" className="relative mt-4">
@@ -168,12 +152,12 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
           </div>
           <div className="text-xs font-mono px-2 py-1 rounded-full bg-green-100 text-green-800 flex items-center gap-1">
             <span className="h-2 w-2 rounded-full bg-green-500"></span>
-            {response.statusCode}
+            {statusCode}
           </div>
         </div>
         <Card className="relative bg-gray-900 text-gray-200 p-0 overflow-hidden rounded-md border-2 border-gray-800">
           <div className="p-4 font-mono text-sm whitespace-pre overflow-x-auto">
-            {response.response}
+            {responseText}
           </div>
           <button
             onClick={copyResponseToClipboard}

@@ -8,26 +8,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Pages
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
-
-// API Reference Pages
-import PublicEventAPI from "./pages/api/events";
-import EventListPage from "./pages/api/event-list";
-import QueryEventPage from "./pages/api/query-event";
-
-// SDK Pages
-import GettingStarted from "./pages/sdk/getting-started";
-import TicketSelectionPage from "./pages/sdk/ticket-selection";
-import ProductSelectionPage from "./pages/sdk/product-selection";
-import ShoppingCartPage from "./pages/sdk/shopping-cart";
-import CheckOutPage from "./pages/sdk/check-out";
-import LoginWidgetPage from "./pages/sdk/login";
-import CalendarWidgetPage from "./pages/sdk/calendar";
-import EmbeddedCalendarWidgetPage from "./pages/sdk/embedded-calendar";
-import CartCounterPage from "./pages/sdk/cart-counter";
-
-// Advanced Pages
-import GoogleAnalyticsPage from "./pages/advanced/google-analytics";
-import WebhooksPage from "./pages/advanced/webhooks";
+import DynamicDocPage from "./docs-app/ui/components/DynamicDocPage";
 
 const queryClient = new QueryClient();
 const basename = import.meta.env.MODE === "production" ? "/api-docs-guide" : "/";
@@ -42,25 +23,14 @@ const App = () => (
           {/* Introduction Routes */}
           <Route path="/" element={<Index />} />
           
-          {/* API Reference Routes */}
-          <Route path="/api/events" element={<PublicEventAPI />} />
-          <Route path="/api/event-list" element={<EventListPage />} />
-          <Route path="/api/query-event" element={<QueryEventPage />} />
+          {/* Dynamic API Reference Routes */}
+          <Route path="/api/:slug" element={<DynamicDocPage section="api" />} />
           
-          {/* SDK Routes */}
-          <Route path="/sdk/getting-started" element={<GettingStarted />} />
-          <Route path="/sdk/ticket-selection" element={<TicketSelectionPage />} />
-          <Route path="/sdk/product-selection" element={<ProductSelectionPage />} />
-          <Route path="/sdk/shopping-cart" element={<ShoppingCartPage />} />
-          <Route path="/sdk/check-out" element={<CheckOutPage />} />
-          <Route path="/sdk/login" element={<LoginWidgetPage />} />
-          <Route path="/sdk/calendar" element={<CalendarWidgetPage />} />
-          <Route path="/sdk/embedded-calendar" element={<EmbeddedCalendarWidgetPage />} />
-          <Route path="/sdk/cart-counter" element={<CartCounterPage />} />
+          {/* Dynamic SDK Routes */}
+          <Route path="/sdk/:slug" element={<DynamicDocPage section="sdk" />} />
           
-          {/* Advanced Routes */}
-          <Route path="/advanced/google-analytics" element={<GoogleAnalyticsPage />} />
-          <Route path="/advanced/webhooks" element={<WebhooksPage />} />
+          {/* Dynamic Advanced Routes */}
+          <Route path="/advanced/:slug" element={<DynamicDocPage section="advanced" />} />
           
           {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />

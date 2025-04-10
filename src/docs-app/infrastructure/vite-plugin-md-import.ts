@@ -17,7 +17,7 @@ export function markdownImport(): Plugin {
 
       // Read the markdown file content during build time
       const content = fs.readFileSync(id, 'utf-8');
-
+      
       // Export as a JS module that provides the content as a string
       return `export default ${JSON.stringify(content)};`;
     },
