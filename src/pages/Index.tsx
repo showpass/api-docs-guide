@@ -1,9 +1,8 @@
 
 import React from "react";
-import DocLayout from "@/docs-app/ui/components/DocLayout";
-import CodeBlock from "@/docs-app/ui/components/CodeBlock";
+import DocLayout from "@/docs-app/ui/components/layout/DocLayout.tsx";
+import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
 import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
-import { BookOpen, Code, Calendar, Webhook } from "lucide-react";
 
 const Index = () => {
   const activeSection = useScrollSpy("h2[id], h3[id]", 100);

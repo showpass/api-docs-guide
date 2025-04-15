@@ -1,8 +1,8 @@
 import React, { useState } from "react";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components/tabs";
-import { Card } from "@/shared/components/card";
+import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components/tabs.tsx";
+import { Card } from "@/shared/components/card.tsx";
 import { Check, Copy, Terminal } from "lucide-react";
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/utils.ts";
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
 
 interface ApiExamplesProps extends ApiExamplesData {}

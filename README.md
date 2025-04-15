@@ -57,7 +57,6 @@ Deployed automatically to **GitHub Pages** using `gh-pages`.
 - ⚛️ React + Vite for blazing-fast UI
 - 📜 Custom TOC & syntax highlighting
 - 📦️ Built-in API Example block (multi-language)
-- 🧩 Parameter tables with semantic parsing
 - 🧼 Modular design & UI separation
 
 ---

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { cn } from "@/shared/lib/utils";
+import { cn } from "@/shared/lib/utils.ts";
 import { ChevronRight } from "lucide-react";
 import { TocItem } from "@/docs-app/data/types.ts";
 

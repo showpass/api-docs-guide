@@ -1,13 +1,13 @@
 
 import React, { useEffect } from "react";
-import MarkdownContent from "./MarkdownContent";
-import DocLayout from "./DocLayout";
-import Navigation from "./Navigation";
-import { useContent } from "@/docs-app/ui/hooks/useContent";
-import { toast } from "@/shared/components/use-toast";
-import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
+import MarkdownContent from "@/docs-app/ui/components/content/MarkdownContent.tsx";
+import DocLayout from "@/docs-app/ui/components/layout/DocLayout.tsx";
+import Navigation from "@/docs-app/ui/components/navigation/Navigation.tsx";
+import { useContent } from "@/docs-app/ui/hooks/useContent.ts";
+import { toast } from "@/shared/components/use-toast.ts";
+import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy.ts";
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
-import { useHashScroll } from "@/docs-app/ui/hooks/useHashScroll";
+import { useHashScroll } from "@/docs-app/ui/hooks/useHashScroll.ts";
 
 interface ContentPageProps {
   contentPath: string;

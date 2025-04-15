@@ -1,7 +1,7 @@
 
 import React from "react";
 import { useParams, Link } from "react-router-dom";
-import ContentPage from "./ContentPage";
+import ContentPage from "@/docs-app/ui/components/content/ContentPage.tsx";
 import apiExamplesMap from "@/docs-app/data/apiExamplesMap";
 import type { ApiExamplesData } from "@/docs-app/data/types.ts";
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/alert";

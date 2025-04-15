@@ -1,12 +1,12 @@
 
 import React, { useState } from 'react';
-import { ScrollArea } from "@/shared/components/scroll-area";
-import { Menu, X, BookOpen, Book, LayoutGrid } from "lucide-react";
-import { cn } from "@/shared/lib/utils";
-import { Button } from "@/shared/components/button";
-import Navigation from "./Navigation";
-import TableOfContents from "./TableOfContents";
-import ApiExamples from "./ApiExamples";
+import { ScrollArea } from "@/shared/components/scroll-area.tsx";
+import { Menu, X, BookOpen, LayoutGrid } from "lucide-react";
+import { cn } from "@/shared/lib/utils.ts";
+import { Button } from "@/shared/components/button.tsx";
+import Navigation from "@/docs-app/ui/components/navigation/Navigation.tsx";
+import TableOfContents from "@/docs-app/ui/components/navigation/TableOfContents.tsx";
+import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
 import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
 
 interface DocLayoutProps {
