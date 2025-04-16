@@ -27,7 +27,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
           </li>
         </ul>
       </div>
-      
+
       <div>
         <h3 className="sidebar-category flex items-center">
           <ChevronRight className="h-4 w-4 mr-1" />
@@ -60,7 +60,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
           </li>
         </ul>
       </div>
-      
+
       <div>
         <h3 className="sidebar-category flex items-center">
           <ChevronRight className="h-4 w-4 mr-1" />
@@ -139,9 +139,17 @@ const Navigation = ({ currentPath }: NavigationProps) => {
               Cart Quantity Counter
             </NavLink>
           </li>
+          <li>
+            <NavLink 
+              to="/widgets" 
+              className={({ isActive }) => cn("sidebar-link", isActive && "active")}
+            >
+              Widget Playground
+            </NavLink>
+          </li>
         </ul>
       </div>
-      
+
       <div>
         <h3 className="sidebar-category flex items-center">
           <ChevronRight className="h-4 w-4 mr-1" />

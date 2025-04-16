@@ -16,6 +16,7 @@ interface DocLayoutProps {
   navigation?: React.ReactNode;
   apiExamplesData?: ApiExamplesData;
   activeSection?: string;
+  hideRightSidebar?: boolean;
 }
 
 const DocLayout = ({ 
@@ -24,10 +25,11 @@ const DocLayout = ({
   tocItems, 
   navigation, 
   apiExamplesData,
-  activeSection 
+  activeSection,
+  hideRightSidebar = false
 }: DocLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
-  
+
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-[330px_minmax(0,1fr)] min-h-screen">
       {/* Mobile Navigation Toggle */}
@@ -43,7 +45,7 @@ const DocLayout = ({
         </Button>
         <div className="flex-1 text-center font-semibold">Showpass Documentation</div>
       </div>
-      
+
       {/* Left Sidebar (Navigation) */}
       <div 
         className={cn(
@@ -68,32 +70,40 @@ const DocLayout = ({
           </ScrollArea>
         </div>
       </div>
-      
+
       {/* Main Content & Right Sidebar Grid Layout */}
-      <div className="lg:col-span-1 xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]">
+      <div className={cn(
+        "lg:col-span-1",
+        !hideRightSidebar && "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+      )}>
         {/* Main Content */}
-        <div className="px-5 py-8 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto max-w-4xl mx-auto xl:mx-0">
+        <div className={cn(
+          "px-5 py-8 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
+          hideRightSidebar ? "max-w-none" : "max-w-4xl mx-auto xl:mx-0"
+        )}>
           {children}
         </div>
 
         {/* Right Sidebar - API Examples or Table of Contents */}
-        <div className="hidden xl:block border-l border-slate-200 bg-slate-50/50">
-          <div className="sticky top-0 p-6 self-start max-h-screen overflow-y-auto">
-            <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-              <LayoutGrid className="h-4 w-4 text-slate-600" />
-              <p className="text-sm font-medium text-slate-700">
-                {apiExamplesData ? 'API Reference' : 'On This Page'}
-              </p>
+        {!hideRightSidebar && (
+          <div className="hidden xl:block border-l border-slate-200 bg-slate-50/50">
+            <div className="sticky top-0 p-6 self-start max-h-screen overflow-y-auto">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
+                <LayoutGrid className="h-4 w-4 text-slate-600" />
+                <p className="text-sm font-medium text-slate-700">
+                  {apiExamplesData ? 'API Reference' : 'On This Page'}
+                </p>
+              </div>
+              {apiExamplesData ? (
+                <ApiExamples {...apiExamplesData} />
+              ) : (
+                tocItems && tocItems.length > 0 && (
+                  <TableOfContents items={tocItems} activeItem={activeSection} />
+                )
+              )}
             </div>
-            {apiExamplesData ? (
-              <ApiExamples {...apiExamplesData} />
-            ) : (
-              tocItems && tocItems.length > 0 && (
-                <TableOfContents items={tocItems} activeItem={activeSection} />
-              )
-            )}
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

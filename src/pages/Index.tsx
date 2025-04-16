@@ -6,7 +6,7 @@ import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
 
 const Index = () => {
   const activeSection = useScrollSpy("h2[id], h3[id]", 100);
-  
+
   const tableOfContentsItems = [
     { title: "Overview", href: "#overview" },
     { title: "Key Features", href: "#key-features" },
@@ -22,7 +22,7 @@ const Index = () => {
       tocItems={tableOfContentsItems}
     >
       <h1>Showpass Public API & SDK</h1>
-      
+
       <section id="overview">
         <h2>Overview</h2>
         <p>
@@ -72,7 +72,7 @@ const Index = () => {
     }
 })(window, document, 'https://www.showpass.com/static/dist/sdk.js');`} 
         />
-        
+
         <p>Alternatively, you can include it directly in your HTML:</p>
         <CodeBlock 
           language="html"
@@ -85,14 +85,14 @@ const Index = () => {
         <p>
           The Showpass Public API provides endpoints for accessing event data programmatically:
         </p>
-        
+
         <h3>Main Endpoints</h3>
         <ul className="list-disc pl-6 space-y-2 mt-4">
           <li><strong>Event List</strong>: <code>https://www.showpass.com/api/public/discovery/</code></li>
           <li><strong>Event List by Organization</strong>: <code>https://www.showpass.com/api/public/discovery/?venue__in=id</code></li>
           <li><strong>Query a Specific Event</strong>: <code>https://www.showpass.com/api/public/events/slug/</code></li>
         </ul>
-        
+
         <p>
           Navigate to the API Reference section for detailed information about query parameters and response formats.
         </p>
@@ -103,7 +103,7 @@ const Index = () => {
         <p>
           The Showpass SDK provides several components for integrating with your website:
         </p>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
           <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
             <h4 className="font-medium">Ticket Selection Widget</h4>
@@ -141,6 +141,19 @@ const Index = () => {
               Displays events in a calendar format
             </p>
           </div>
+        </div>
+
+        <div className="mt-6 p-4 bg-primary/10 rounded-md border border-primary/20">
+          <h4 className="font-medium">Interactive Widget Playground</h4>
+          <p className="mt-2">
+            Try out all the Showpass widgets in our interactive playground. Experiment with different configurations and see how they can be integrated into your application.
+          </p>
+          <a 
+            href="/widgets" 
+            className="inline-block mt-3 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
+          >
+            Explore Widget Playground
+          </a>
         </div>
       </section>
 
