@@ -4,6 +4,14 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
 import type { Components } from "react-markdown";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/shared/components/table.tsx";
 
 interface MarkdownContentProps {
   content: string;
@@ -63,13 +71,47 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       const id = slugify(text);
       return <h4 id={id} className="text-lg font-bold mt-6 mb-2 text-slate-900 scroll-mt-24" {...props}>{children}</h4>;
     },
-    a: ({ node, ...props }) => <a className="text-slate-700 hover:text-slate-900 underline" {...props} />,
+    a: ({ node, ...props }) => <a className="text-blue-600 hover:text-blue-800 underline" {...props} />,
     ul: ({ node, ...props }) => <ul className="list-disc pl-6 my-4" {...props} />,
     ol: ({ node, ...props }) => <ol className="list-decimal pl-6 my-4" {...props} />,
     p: ({ node, children, ...props }) => {
       return <p className="my-4 text-slate-700" {...props}>{children}</p>;
     },
-    table: ({ node, ...props }) => <table className="w-full text-sm border-collapse mt-0" {...props} />
+    // Enhanced table components
+    table: ({ node, ...props }) => (
+      <div className="my-6 rounded-md border overflow-hidden">
+        <Table {...props} />
+      </div>
+    ),
+    thead: ({ node, ...props }) => <TableHeader {...props} />,
+    tbody: ({ node, ...props }) => <TableBody {...props} />,
+    tr: ({ node, ...props }) => <TableRow {...props} />,
+    th: ({ node, ...props }) => <TableHead {...props} />,
+    td: ({ node, ...props }) => {
+      // Check if content includes a URL that might need special handling
+      const childText = props.children?.toString() || '';
+      if (childText.includes('http')) {
+        return (
+          <TableCell {...props}>
+            {childText.split(' ').map((part, i) => {
+              if (part.startsWith('http')) {
+                return (
+                  <React.Fragment key={i}>
+                    {i > 0 && ' '}
+                    <a href={part} className="text-blue-600 hover:text-blue-800 underline break-all">
+                      {part}
+                    </a>
+                  </React.Fragment>
+                );
+              }
+              return <React.Fragment key={i}>{i > 0 && ' '}{part}</React.Fragment>;
+            })}
+          </TableCell>
+        );
+      }
+      
+      return <TableCell {...props} />;
+    }
   };
 
   return (
