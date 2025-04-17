@@ -1,7 +1,8 @@
 
-import React, { useState } from "react";
+import React from "react";
 import { Highlight, themes } from "prism-react-renderer";
 import { Copy, Check } from "lucide-react";
+import { useClipboard } from "../../../../shared/hooks/use-clipboard";
 
 interface CodeBlockProps {
   code: string;
@@ -9,12 +10,10 @@ interface CodeBlockProps {
 }
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
-  const [copied, setCopied] = useState(false);
+  const { copy, isCopied } = useClipboard();
 
   const copyToClipboard = () => {
-    navigator.clipboard.writeText(code);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    copy(code);
   };
 
   return (
@@ -31,7 +30,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
               className="absolute right-2 top-2 p-1.5 rounded-md bg-muted/50 hover:bg-muted/70 transition-colors focus:outline-none focus:ring-2 focus:ring-primary opacity-0 group-hover:opacity-100 z-10"
               aria-label="Copy code"
             >
-              {copied ? (
+              {isCopied ? (
                 <Check className="h-4 w-4 text-green-500" />
               ) : (
                 <Copy className="h-4 w-4 text-gray-400" />
