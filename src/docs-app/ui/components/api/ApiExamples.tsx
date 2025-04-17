@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React from "react";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/shared/components/tabs.tsx";
 import { Card } from "@/shared/components/card.tsx";
 import { Check, Copy, Terminal } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
+import { Highlight, themes } from "prism-react-renderer";
+import { useClipboard } from "@/shared/hooks/use-clipboard.ts";
 
-interface ApiExamplesProps extends ApiExamplesData {}
+type ApiExamplesProps = ApiExamplesData
 
 const ApiExamples: React.FC<ApiExamplesProps> = ({
   endpoint,
@@ -14,21 +16,8 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
   examples,
   response,
 }) => {
-  const [copiedCode, setCopiedCode] = useState<string | null>(null);
-  const [copiedResponse, setCopiedResponse] = useState(false);
-
-  const copyToClipboard = (code: string, language: string) => {
-    navigator.clipboard.writeText(code);
-    setCopiedCode(language);
-    setTimeout(() => setCopiedCode(null), 2000);
-  };
-
-  const copyResponseToClipboard = () => {
-    const responseText = JSON.stringify(response.body, null, 2);
-    navigator.clipboard.writeText(responseText);
-    setCopiedResponse(true);
-    setTimeout(() => setCopiedResponse(false), 2000);
-  };
+  const { copy: copyCode, isCopied: isCodeCopied } = useClipboard();
+  const { copy: copyResponse, isCopied: isResponseCopied } = useClipboard();
 
   const methodColors = {
     GET: "bg-blue-500",
@@ -40,7 +29,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
 
   // Get the status code from the standardized response format
   const statusCode = response.status;
-  // Get the response text as JSON string
+  // Get the response text as a JSON string
   const responseText = JSON.stringify(response.body, null, 2);
 
   return (
@@ -64,12 +53,8 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
         <div className="text-sm font-medium flex items-center border-b pb-2">
           <span className="text-primary mr-2">⚡</span> LANGUAGE
         </div>
-        <Tabs defaultValue="curl" className="w-full">
+        <Tabs defaultValue="python" className="w-full">
           <TabsList className="w-full grid grid-cols-3">
-            <TabsTrigger value="curl" className="flex items-center gap-2">
-              <Terminal className="h-4 w-4" />
-              <span>cURL</span>
-            </TabsTrigger>
             <TabsTrigger value="python" className="flex items-center gap-2">
               <svg className="h-4 w-4" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M12 0C5.371 0 5.125 2.611 5.125 2.611v5.318h6.964v.857H3.354S0 8.737 0 15.429c0 6.691 2.931 6.458 2.931 6.458h4.381v-3.108s-.233-3.109 3.062-3.109h5.289s2.969.049 2.969-2.865V4.692S19.287 0 12 0zM8.857 1.851c.693 0 1.25.557 1.25 1.25a1.25 1.25 0 0 1-2.5 0c0-.693.557-1.25 1.25-1.25z" />
@@ -84,62 +69,141 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               <span>Node.js</span>
             </TabsTrigger>
+            <TabsTrigger value="curl" className="flex items-center gap-2">
+              <Terminal className="h-4 w-4" />
+              <span>cURL</span>
+            </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="curl" className="relative mt-4">
-            <Card className="bg-gray-900 text-gray-200 p-0 overflow-hidden rounded-md border-2 border-gray-800">
-              <div className="p-4 font-mono text-sm whitespace-pre overflow-x-auto max-w-full">
-                {examples.curl}
-              </div>
-              <button
-                  onClick={() => copyToClipboard(examples.curl, "curl")}
-                  className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
-                  aria-label="Copy code"
-              >
-                {copiedCode === "curl" ? (
-                    <Check className="h-4 w-4 text-green-500"/>
-                ) : (
-                    <Copy className="h-4 w-4 text-gray-400"/>
-                )}
-              </button>
-            </Card>
-          </TabsContent>
-
           <TabsContent value="python" className="relative mt-4">
-            <Card className="bg-gray-900 text-gray-200 p-0 overflow-hidden rounded-md border-2 border-gray-800">
-              <div className="p-4 font-mono text-sm whitespace-pre overflow-x-auto">
-                {examples.python}
-              </div>
-              <button
-                onClick={() => copyToClipboard(examples.python, "python")}
-                className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
-                aria-label="Copy code"
+            <Card className="bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+              <Highlight 
+                code={examples.python} 
+                language="python"
+                theme={themes.vsDark}
               >
-                {copiedCode === "python" ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Copy className="h-4 w-4 text-gray-400" />
+                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                  <div className="relative">
+                    <pre 
+                      className="p-4 font-mono text-sm whitespace-pre overflow-x-auto"
+                      style={{ 
+                        ...style,
+                        margin: 0,
+                        background: "rgb(30, 30, 30)"
+                      }}
+                    >
+                      <code className={className}>
+                        {tokens.map((line, i) => (
+                          <div key={i} {...getLineProps({ line })}>
+                            {line.map((token, key) => (
+                              <span key={key} {...getTokenProps({ token })} />
+                            ))}
+                          </div>
+                        ))}
+                      </code>
+                    </pre>
+                    <button
+                      onClick={() => copyCode(examples.python)}
+                      className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {isCodeCopied ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4 text-gray-400" />
+                      )}
+                    </button>
+                  </div>
                 )}
-              </button>
+              </Highlight>
             </Card>
           </TabsContent>
 
           <TabsContent value="node" className="relative mt-4">
-            <Card className="bg-gray-900 text-gray-200 p-0 overflow-hidden rounded-md border-2 border-gray-800">
-              <div className="p-4 font-mono text-sm whitespace-pre overflow-x-auto">
-                {examples.node}
-              </div>
-              <button
-                onClick={() => copyToClipboard(examples.node, "node")}
-                className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
-                aria-label="Copy code"
+            <Card className="bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+              <Highlight 
+                code={examples.node} 
+                language="javascript"
+                theme={themes.vsDark}
               >
-                {copiedCode === "node" ? (
-                  <Check className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Copy className="h-4 w-4 text-gray-400" />
+                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                  <div className="relative">
+                    <pre 
+                      className="p-4 font-mono text-sm whitespace-pre overflow-x-auto"
+                      style={{ 
+                        ...style,
+                        margin: 0,
+                        background: "rgb(30, 30, 30)"
+                      }}
+                    >
+                      <code className={className}>
+                        {tokens.map((line, i) => (
+                          <div key={i} {...getLineProps({ line })}>
+                            {line.map((token, key) => (
+                              <span key={key} {...getTokenProps({ token })} />
+                            ))}
+                          </div>
+                        ))}
+                      </code>
+                    </pre>
+                    <button
+                      onClick={() => copyCode(examples.node)}
+                      className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {isCodeCopied ? (
+                        <Check className="h-4 w-4 text-green-500" />
+                      ) : (
+                        <Copy className="h-4 w-4 text-gray-400" />
+                      )}
+                    </button>
+                  </div>
                 )}
-              </button>
+              </Highlight>
+            </Card>
+          </TabsContent>
+
+          <TabsContent value="curl" className="relative mt-4">
+            <Card className="bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+              <Highlight 
+                code={examples.curl} 
+                language="bash"
+                theme={themes.vsDark}
+              >
+                {({ className, style, tokens, getLineProps, getTokenProps }) => (
+                  <div className="relative">
+                    <pre 
+                      className="p-4 font-mono text-sm whitespace-pre overflow-x-auto max-w-full"
+                      style={{ 
+                        ...style,
+                        margin: 0,
+                        background: "rgb(30, 30, 30)"
+                      }}
+                    >
+                      <code className={className}>
+                        {tokens.map((line, i) => (
+                          <div key={i} {...getLineProps({ line })}>
+                            {line.map((token, key) => (
+                              <span key={key} {...getTokenProps({ token })} />
+                            ))}
+                          </div>
+                        ))}
+                      </code>
+                    </pre>
+                    <button
+                      onClick={() => copyCode(examples.curl)}
+                      className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                      aria-label="Copy code"
+                    >
+                      {isCodeCopied ? (
+                        <Check className="h-4 w-4 text-green-500"/>
+                      ) : (
+                        <Copy className="h-4 w-4 text-gray-400"/>
+                      )}
+                    </button>
+                  </div>
+                )}
+              </Highlight>
             </Card>
           </TabsContent>
         </Tabs>
@@ -155,21 +219,46 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             {statusCode}
           </div>
         </div>
-        <Card className="relative bg-gray-900 text-gray-200 p-0 overflow-hidden rounded-md border-2 border-gray-800">
-          <div className="p-4 font-mono text-sm whitespace-pre overflow-x-auto">
-            {responseText}
-          </div>
-          <button
-            onClick={copyResponseToClipboard}
-            className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
-            aria-label="Copy response"
+        <Card className="relative bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+          <Highlight
+            code={responseText}
+            language="javascript"
+            theme={themes.vsDark}
           >
-            {copiedResponse ? (
-              <Check className="h-4 w-4 text-green-500" />
-            ) : (
-              <Copy className="h-4 w-4 text-gray-400" />
+            {({ className, style, tokens, getLineProps, getTokenProps }) => (
+              <div className="relative">
+                <pre 
+                  className="p-4 font-mono text-sm whitespace-pre overflow-x-auto"
+                  style={{ 
+                    ...style,
+                    margin: 0,
+                    background: "rgb(30, 30, 30)"
+                  }}
+                >
+                  <code className={className}>
+                    {tokens.map((line, i) => (
+                      <div key={i} {...getLineProps({ line })}>
+                        {line.map((token, key) => (
+                          <span key={key} {...getTokenProps({ token })} />
+                        ))}
+                      </div>
+                    ))}
+                  </code>
+                </pre>
+                <button
+                  onClick={() => copyResponse(responseText)}
+                  className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                  aria-label="Copy response"
+                >
+                  {isResponseCopied ? (
+                    <Check className="h-4 w-4 text-green-500" />
+                  ) : (
+                    <Copy className="h-4 w-4 text-gray-400" />
+                  )}
+                </button>
+              </div>
             )}
-          </button>
+          </Highlight>
         </Card>
       </div>
     </div>
