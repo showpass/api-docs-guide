@@ -7,6 +7,7 @@ import Navigation from "@/docs-app/ui/components/navigation/Navigation.tsx";
 import TableOfContents from "@/docs-app/ui/components/navigation/TableOfContents.tsx";
 import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
 import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
+import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
 
 interface DocLayoutProps {
   children: React.ReactNode;
@@ -31,8 +32,8 @@ const DocLayout = ({
 
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-[330px_minmax(0,1fr)] min-h-screen">
-      {/* Mobile Navigation Toggle */}
-      <div className="sticky top-0 z-50 flex items-center border-b bg-background p-4 lg:hidden">
+      {/* Mobile Navigation Toggle & Search */}
+      <div className="sticky top-0 z-50 flex items-center justify-between border-b bg-background p-4 lg:hidden">
         <Button
           variant="ghost"
           size="icon"
@@ -54,8 +55,10 @@ const DocLayout = ({
           sidebarOpen ? "block" : "hidden"
         )}
       >
-        <div className="sticky top-0 flex h-full flex-col">
-          <div className="flex items-center border-b p-4 lg:hidden">
+        <div className="flex h-full flex-col">
+          {/* Mobile Sidebar Header */}
+          <div className="flex items-center justify-between border-b p-4 lg:hidden">
+            <span className="ml-2 font-semibold">Navigation</span>
             <Button
               variant="ghost"
               size="icon"
@@ -64,13 +67,18 @@ const DocLayout = ({
               <X className="h-5 w-5" />
               <span className="sr-only">Close sidebar</span>
             </Button>
-            <span className="ml-2 font-semibold">Navigation</span>
           </div>
-          <div className="border-b border-slate-200 p-5 hidden lg:flex items-center gap-2">
-            <BookOpen className="h-5 w-5 text-primary" />
-            <h1 className="font-semibold text-xl">Showpass Documentation</h1>
+          {/* Desktop Sidebar Header & Search */}
+          <div className="border-b border-slate-200 p-5 hidden lg:flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <BookOpen className="h-5 w-5 text-primary" />
+              <h1 className="font-semibold text-xl">Showpass Documentation</h1>
+            </div>
           </div>
-          <ScrollArea className="flex-1 px-5 py-6 pb-12">
+          <div className="border-b border-slate-200 p-5">
+            <DocSearch />
+          </div>
+          <ScrollArea className="flex-1 px-5 pb-12">
             {navigation ||
               (currentPath && <Navigation currentPath={currentPath} />)}
           </ScrollArea>
