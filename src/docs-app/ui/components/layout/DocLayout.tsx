@@ -1,5 +1,4 @@
-
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import { ScrollArea } from "@/shared/components/scroll-area.tsx";
 import { Menu, X, BookOpen, LayoutGrid } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
@@ -19,14 +18,14 @@ interface DocLayoutProps {
   hideRightSidebar?: boolean;
 }
 
-const DocLayout = ({ 
-  children, 
-  currentPath, 
-  tocItems, 
-  navigation, 
+const DocLayout = ({
+  children,
+  currentPath,
+  tocItems,
+  navigation,
   apiExamplesData,
   activeSection,
-  hideRightSidebar = false
+  hideRightSidebar = false,
 }: DocLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -34,28 +33,34 @@ const DocLayout = ({
     <div className="flex flex-col lg:grid lg:grid-cols-[330px_minmax(0,1fr)] min-h-screen">
       {/* Mobile Navigation Toggle */}
       <div className="sticky top-0 z-50 flex items-center border-b bg-background p-4 lg:hidden">
-        <Button 
-          variant="ghost" 
-          size="icon" 
-          onClick={() => setSidebarOpen(true)} 
+        <Button
+          variant="ghost"
+          size="icon"
+          onClick={() => setSidebarOpen(true)}
           className="mr-2"
         >
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle navigation menu</span>
         </Button>
-        <div className="flex-1 text-center font-semibold">Showpass Documentation</div>
+        <div className="flex-1 text-center font-semibold">
+          Showpass Documentation
+        </div>
       </div>
 
       {/* Left Sidebar (Navigation) */}
-      <div 
+      <div
         className={cn(
-          "fixed inset-0 z-50 bg-background lg:static lg:block lg:border-r border-slate-200",
+          "fixed inset-0 z-50 bg-background lg:static lg:block lg:border-r border-slate-200 lg:sticky lg:top-0 lg:h-screen",
           sidebarOpen ? "block" : "hidden"
         )}
       >
         <div className="sticky top-0 flex h-full flex-col">
           <div className="flex items-center border-b p-4 lg:hidden">
-            <Button variant="ghost" size="icon" onClick={() => setSidebarOpen(false)}>
+            <Button
+              variant="ghost"
+              size="icon"
+              onClick={() => setSidebarOpen(false)}
+            >
               <X className="h-5 w-5" />
               <span className="sr-only">Close sidebar</span>
             </Button>
@@ -66,21 +71,27 @@ const DocLayout = ({
             <h1 className="font-semibold text-xl">Showpass Documentation</h1>
           </div>
           <ScrollArea className="flex-1 px-5 py-6 pb-12">
-            {navigation || (currentPath && <Navigation currentPath={currentPath} />)}
+            {navigation ||
+              (currentPath && <Navigation currentPath={currentPath} />)}
           </ScrollArea>
         </div>
       </div>
 
       {/* Main Content & Right Sidebar Grid Layout */}
-      <div className={cn(
-        "lg:col-span-1",
-        !hideRightSidebar && "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
-      )}>
+      <div
+        className={cn(
+          "lg:col-span-1",
+          !hideRightSidebar &&
+            "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+        )}
+      >
         {/* Main Content */}
-        <div className={cn(
-          "px-5 py-8 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
-          hideRightSidebar ? "max-w-none" : "max-w-4xl mx-auto xl:mx-0"
-        )}>
+        <div
+          className={cn(
+            "px-5 py-8 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
+            hideRightSidebar ? "max-w-none" : "max-w-4xl mx-auto xl:mx-0"
+          )}
+        >
           {children}
         </div>
 
@@ -91,14 +102,18 @@ const DocLayout = ({
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
                 <LayoutGrid className="h-4 w-4 text-slate-600" />
                 <p className="text-sm font-medium text-slate-700">
-                  {apiExamplesData ? 'API Reference' : 'On This Page'}
+                  {apiExamplesData ? "API Reference" : "On This Page"}
                 </p>
               </div>
               {apiExamplesData ? (
                 <ApiExamples {...apiExamplesData} />
               ) : (
-                tocItems && tocItems.length > 0 && (
-                  <TableOfContents items={tocItems} activeItem={activeSection} />
+                tocItems &&
+                tocItems.length > 0 && (
+                  <TableOfContents
+                    items={tocItems}
+                    activeItem={activeSection}
+                  />
                 )
               )}
             </div>

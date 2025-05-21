@@ -1,4 +1,3 @@
-
 import { Toaster } from "./shared/components/toaster";
 import { Toaster as Sonner } from "./shared/components/sonner";
 import { TooltipProvider } from "./shared/components/tooltip";
@@ -12,7 +11,8 @@ import DynamicDocPage from "./docs-app/ui/components/DynamicDocPage";
 import WidgetPlayground from "./pages/WidgetPlayground";
 
 const queryClient = new QueryClient();
-const basename = import.meta.env.MODE === "production" ? "/api-docs-guide" : "/";
+const basename =
+  import.meta.env.MODE === "production" ? "/api-docs-guide" : "/";
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -31,10 +31,19 @@ const App = () => (
           <Route path="/sdk/:slug" element={<DynamicDocPage section="sdk" />} />
 
           {/* Dynamic Advanced Routes */}
-          <Route path="/advanced/:slug" element={<DynamicDocPage section="advanced" />} />
+          <Route
+            path="/advanced/:slug"
+            element={<DynamicDocPage section="advanced" />}
+          />
 
           {/* Widget Playground Route */}
           <Route path="/widgets" element={<WidgetPlayground />} />
+
+          {/* Dynamic Wordpress Routes */}
+          <Route
+            path="/wordpress/:slug"
+            element={<DynamicDocPage section="wordpress" />}
+          />
 
           {/* Catch-all route for 404 */}
           <Route path="*" element={<NotFound />} />
