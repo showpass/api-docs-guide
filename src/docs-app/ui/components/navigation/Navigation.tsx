@@ -21,7 +21,11 @@ const getActiveSections = (currentPath: string) => {
       condition:
         currentPath.startsWith("/sdk/") || currentPath.startsWith("/widgets"),
     },
-    { value: "advanced", condition: currentPath.startsWith("/advanced/") },
+    { value: "webhooks", condition: currentPath.startsWith("/webhooks/") },
+    {
+      value: "google-tag-manager",
+      condition: currentPath.startsWith("/google-tag-manager/"),
+    },
     {
       value: "showpass-wordpress-plugin",
       condition: currentPath.startsWith("/wordpress/"),
@@ -49,11 +53,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       className="w-full"
     >
       <AccordionItem value="introduction">
-        <AccordionTrigger className="sidebar-category">
+        <AccordionTrigger className="sidebar-category mt-0">
           Introduction
         </AccordionTrigger>
         <AccordionContent>
-          <ul className="space-y-1 pl-5 border-l border-border/30 py-2">
+          <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
                 to="/"
@@ -69,11 +73,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </AccordionItem>
 
       <AccordionItem value="api-reference">
-        <AccordionTrigger className="sidebar-category">
-          API Reference
+        <AccordionTrigger className="sidebar-category mt-0">
+          Public API Reference
         </AccordionTrigger>
         <AccordionContent>
-          <ul className="space-y-1 pl-5 border-l border-border/30 py-2">
+          <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
                 to="/api/events"
@@ -109,9 +113,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </AccordionItem>
 
       <AccordionItem value="sdk">
-        <AccordionTrigger className="sidebar-category">SDK</AccordionTrigger>
+        <AccordionTrigger className="sidebar-category mt-0">
+          Javascript SDK
+        </AccordionTrigger>
         <AccordionContent>
-          <ul className="space-y-1 pl-5 border-l border-border/30 py-2">
+          <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
                 to="/sdk/getting-started"
@@ -216,25 +222,154 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </AccordionContent>
       </AccordionItem>
 
-      <AccordionItem value="advanced">
-        <AccordionTrigger className="sidebar-category">
-          Advanced
+      <AccordionItem value="showpass-wordpress-plugin">
+        <AccordionTrigger className="sidebar-category mt-0">
+          Showpass Wordpress Plugin
         </AccordionTrigger>
         <AccordionContent>
-          <ul className="space-y-1 pl-5 border-l border-border/30 py-2">
+          <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
-                to="/advanced/google-analytics"
+                to="/wordpress/01-getting-started-install-and-configure"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Google Analytics Integration
+                Getting Started
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/advanced/webhooks"
+                to="/wordpress/02-adding-single-button-embed-widget"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding a Single Button or Widget
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/03-adding-event-list"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding an Event List
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/04-adding-event-detail-page"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding an Event Detail Page
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/05-adding-calendar-widget"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding a Calendar Widget
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/06-adding-product-list"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding a Product List
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/07-adding-membership-list"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding a Membership List
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/08-adding-checkout-cart-button"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Adding a Checkout / Cart Button
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/09-advanced-dynamic-cart-counter-jquery"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Dynamic Cart Counter (jQuery)
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/10-widgets-and-affiliate-tracking-links"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Widgets & Affiliate Tracking
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/11-creating-custom-templates"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Creating Custom Templates
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/12-automatically-opening-popup-widgets"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Auto-Opening Popup Widgets
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/wordpress/13-tips-and-troubleshooting"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Tips & Troubleshooting
+              </NavLink>
+            </li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="webhooks">
+        <AccordionTrigger className="sidebar-category mt-0">
+          Webhooks
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="space-y-1 pl-5 border-l border-border/30">
+            <li>
+              <NavLink
+                to="/webhooks/getting-started"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
@@ -245,141 +380,111 @@ const Navigation = ({ currentPath }: NavigationProps) => {
           </ul>
         </AccordionContent>
       </AccordionItem>
-
-      <AccordionItem value="showpass-wordpress-plugin">
-        <AccordionTrigger className="sidebar-category">
-          Showpass Wordpress Plugin
+      <AccordionItem value="google-tag-manager">
+        <AccordionTrigger className="sidebar-category mt-0">
+          Google Tag Manager
         </AccordionTrigger>
         <AccordionContent>
-          <ul className="space-y-1 pl-5 border-l border-border/30 py-2">
+          <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
-                to="/wordpress/getting-started"
+                to="/google-tag-manager/01-introduction-to-showpass-gtm-integration"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Getting started
+                Introduction to Showpass Google Tag Manager (GTM) Integration
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/single-button"
+                to="/google-tag-manager/02-initial-setup-ga4-and-gtm-basics"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Add a single button or widget
+                Initial Setup: GA4 and GTM Basics
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-an-event-list"
+                to="/google-tag-manager/03-standard-ecommerce-tracking-with-ga4-via-gtm"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding an event list
+                Standard Ecommerce Tracking with GA4 via GTM
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-an-event-detail-page"
+                to="/google-tag-manager/04-cross-domain-tracking-considerations"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding an event detail page
+                Cross-Domain Tracking Considerations
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-a-calendar-widget"
+                to="/google-tag-manager/05-working-with-custom-html-and-javascript-in-gtm-for-showpass"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding an event calendar
+                Working with Custom HTML & JavaScript in GTM for Showpass
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-a-product-list"
+                to="/google-tag-manager/06-tracking-custom-conversions-marketing-pixels"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a product list
+                Tracking Custom Conversions (e.g., Marketing Pixels)
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-a-membership-list"
+                to="/google-tag-manager/07-showpass-data-layer-details"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a membership list
+                Showpass Data Layer Details
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-a-checkout-shopping-cart-button"
+                to="/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding the checkout component
+                Advanced & Preferred: iFrame Purchase Tracking via postMessage
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/adding-a-cart-counter"
+                to="/google-tag-manager/09-advanced-tracking-widget-and-direct-purchases"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a custom cart counter
+                Advanced: Differentiating Widget (iFrame) vs. Direct
+                showpass.com Event Tracking
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/wordpress/widgets-and-tracking-links-affiliate-tracking"
+                to="/google-tag-manager/10-example-google-ads-conversion-tracking-setup"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Widgets and tracking links
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/wordpress/creating-custom-templates-for-showpass-data"
-                className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
-                }
-              >
-                Creating custom templates
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/wordpress/automatically-opening-pop-up-widgets-on-page-load"
-                className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
-                }
-              >
-                Automatically opening the widget on page load
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/wordpress/tips-troubleshooting-for-the-showpass-wordpress-plugin"
-                className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
-                }
-              >
-                Tips &amp; Troubleshooting
+                Example: Google Ads Conversion Tracking Setup with GTM
               </NavLink>
             </li>
           </ul>

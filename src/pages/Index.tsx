@@ -1,4 +1,3 @@
-
 import React from "react";
 import DocLayout from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
@@ -17,18 +16,15 @@ const Index = () => {
   ];
 
   return (
-    <DocLayout 
-      currentPath="/"
-      tocItems={tableOfContentsItems}
-    >
+    <DocLayout currentPath="/" tocItems={tableOfContentsItems}>
       <h1>Showpass Public API & SDK</h1>
 
       <section id="overview">
         <h2>Overview</h2>
         <p>
-          Using Javascript or jQuery, HTML, CSS and the Showpass SDK you can easily integrate 
-          Showpass into any website. This documentation provides comprehensive information about 
-          the Showpass Public API and SDK, helping you seamlessly integrate ticket sales and 
+          SDK you can easily integrate Showpass into any website. This
+          documentation provides comprehensive information about the Showpass
+          Public API and SDK, helping you seamlessly integrate ticket sales and
           event management features into your application.
         </p>
       </section>
@@ -47,9 +43,10 @@ const Index = () => {
       <section id="getting-started">
         <h2>Getting Started</h2>
         <p>
-          To get started with the Showpass SDK, include the following script in your HTML header:
+          To get started with the Showpass SDK, include the following script in
+          your HTML header:
         </p>
-        <CodeBlock 
+        <CodeBlock
           language="javascript"
           code={`(function(window, document, src) {
     let config = window.__shwps;
@@ -70,38 +67,52 @@ const Index = () => {
         let x = document.getElementsByTagName('script')[0];
         x.parentNode.insertBefore(s, x);
     }
-})(window, document, 'https://www.showpass.com/static/dist/sdk.js');`} 
+})(window, document, 'https://www.showpass.com/static/dist/sdk.js');`}
         />
 
         <p>Alternatively, you can include it directly in your HTML:</p>
-        <CodeBlock 
+        <CodeBlock
           language="html"
-          code={`<script type="text/javascript" src="https://showpass.com/static/dist/sdk.js"></script>`} 
+          code={`<script type="text/javascript" src="https://showpass.com/static/dist/sdk.js"></script>`}
         />
       </section>
 
       <section id="api-reference">
         <h2>API Reference</h2>
         <p>
-          The Showpass Public API provides endpoints for accessing event data programmatically:
+          The Showpass Public API provides endpoints for accessing event data
+          programmatically:
         </p>
 
         <h3>Main Endpoints</h3>
         <ul className="list-disc pl-6 space-y-2 mt-4">
-          <li><strong>Event List</strong>: <code>https://www.showpass.com/api/public/discovery/</code></li>
-          <li><strong>Event List by Organization</strong>: <code>https://www.showpass.com/api/public/discovery/?venue__in=id</code></li>
-          <li><strong>Query a Specific Event</strong>: <code>https://www.showpass.com/api/public/events/slug/</code></li>
+          <li>
+            <strong>Event List</strong>:{" "}
+            <code>https://www.showpass.com/api/public/discovery/</code>
+          </li>
+          <li>
+            <strong>Event List by Organization</strong>:{" "}
+            <code>
+              https://www.showpass.com/api/public/discovery/?venue__in=id
+            </code>
+          </li>
+          <li>
+            <strong>Query a Specific Event</strong>:{" "}
+            <code>https://www.showpass.com/api/public/events/slug/</code>
+          </li>
         </ul>
 
         <p>
-          Navigate to the API Reference section for detailed information about query parameters and response formats.
+          Navigate to the API Reference section for detailed information about
+          query parameters and response formats.
         </p>
       </section>
 
       <section id="sdk-components">
         <h2>SDK Components</h2>
         <p>
-          The Showpass SDK provides several components for integrating with your website:
+          The Showpass SDK provides several components for integrating with your
+          website:
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
@@ -146,10 +157,12 @@ const Index = () => {
         <div className="mt-6 p-4 bg-primary/10 rounded-md border border-primary/20">
           <h4 className="font-medium">Interactive Widget Playground</h4>
           <p className="mt-2">
-            Try out all the Showpass widgets in our interactive playground. Experiment with different configurations and see how they can be integrated into your application.
+            Try out all the Showpass widgets in our interactive playground.
+            Experiment with different configurations and see how they can be
+            integrated into your application.
           </p>
-          <a 
-            href="/widgets" 
+          <a
+            href="/widgets"
             className="inline-block mt-3 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
           >
             Explore Widget Playground
@@ -160,16 +173,27 @@ const Index = () => {
       <section id="webhooks">
         <h2>Webhooks</h2>
         <p>
-          Showpass provides webhook functionality to notify your systems about events such as:
+          Showpass provides webhook functionality to notify your systems about
+          events such as:
         </p>
         <ul className="list-disc pl-6 space-y-2 mt-4">
-          <li>New orders (<code>invoice.purchase</code>)</li>
-          <li>Refunds (<code>invoice.refund</code>)</li>
-          <li>Transaction voids (<code>invoice.void</code>)</li>
-          <li>Ticket transfers (<code>invoice.transfer</code>, <code>invoice.transferred</code>)</li>
+          <li>
+            New orders (<code>invoice.purchase</code>)
+          </li>
+          <li>
+            Refunds (<code>invoice.refund</code>)
+          </li>
+          <li>
+            Transaction voids (<code>invoice.void</code>)
+          </li>
+          <li>
+            Ticket transfers (<code>invoice.transfer</code>,{" "}
+            <code>invoice.transferred</code>)
+          </li>
         </ul>
         <p>
-          Refer to the Webhooks section for detailed implementation guidance and payload formats.
+          Refer to the Webhooks section for detailed implementation guidance and
+          payload formats.
         </p>
       </section>
     </DocLayout>

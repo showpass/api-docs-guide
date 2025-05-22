@@ -1,4 +1,4 @@
-# Creating Custom Templates for Showpass Data
+# Creating Custom Wordpress Templates with Showpass data
 
 While the Showpass WordPress Plugin provides default templates for displaying event lists you might want to create your own unique layouts and designs.
 

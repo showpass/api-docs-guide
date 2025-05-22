@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ScrollArea } from "@/shared/components/scroll-area.tsx";
-import { Menu, X, BookOpen, LayoutGrid } from "lucide-react";
+import { Menu, X } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
 import { Button } from "@/shared/components/button.tsx";
 import Navigation from "@/docs-app/ui/components/navigation/Navigation.tsx";
@@ -8,6 +8,7 @@ import TableOfContents from "@/docs-app/ui/components/navigation/TableOfContents
 import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
 import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
 import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
+import logoSrc from "@/shared/assets/images/showpass-logo-red.svg";
 
 interface DocLayoutProps {
   children: React.ReactNode;
@@ -43,9 +44,14 @@ const DocLayout = ({
           <Menu className="h-5 w-5" />
           <span className="sr-only">Toggle navigation menu</span>
         </Button>
-        <div className="flex-1 text-center font-semibold">
-          Showpass Documentation
+        <div className="flex-1 flex justify-center">
+          <img
+            src={logoSrc}
+            alt="Showpass Documentation Logo"
+            className="h-12"
+          />
         </div>
+        <div className="w-12" />
       </div>
 
       {/* Left Sidebar (Navigation) */}
@@ -55,6 +61,7 @@ const DocLayout = ({
           sidebarOpen ? "block" : "hidden"
         )}
       >
+        {" "}
         <div className="flex h-full flex-col">
           {/* Mobile Sidebar Header */}
           <div className="flex items-center justify-between border-b p-4 lg:hidden">
@@ -69,10 +76,13 @@ const DocLayout = ({
             </Button>
           </div>
           {/* Desktop Sidebar Header & Search */}
-          <div className="border-b border-slate-200 p-5 hidden lg:flex items-center justify-between">
+          <div className="border-b border-slate-200 p-5 hidden lg:flex items-center justify-center">
             <div className="flex items-center gap-2">
-              <BookOpen className="h-5 w-5 text-primary" />
-              <h1 className="font-semibold text-xl">Showpass Documentation</h1>
+              <img
+                src={logoSrc}
+                alt="Showpass Documentation Logo"
+                className="h-12"
+              />
             </div>
           </div>
           <div className="border-b border-slate-200 p-5">
@@ -90,14 +100,18 @@ const DocLayout = ({
         className={cn(
           "lg:col-span-1",
           !hideRightSidebar &&
-            "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,1fr)]"
+            apiExamplesData &&
+            "xl:grid xl:grid-cols-[minmax(0,1fr)_minmax(0,600px)]",
+          !hideRightSidebar &&
+            !apiExamplesData &&
+            "xl:grid xl:grid-cols-[minmax(0,1fr)_288px]"
         )}
       >
         {/* Main Content */}
         <div
           className={cn(
             "px-5 py-8 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
-            hideRightSidebar ? "max-w-none" : "max-w-4xl mx-auto xl:mx-0"
+            hideRightSidebar ? "max-w-none" : "max-w-[1200px] mx-auto xl:mx-0"
           )}
         >
           {children}
@@ -108,7 +122,6 @@ const DocLayout = ({
           <div className="hidden xl:block border-l border-slate-200 bg-slate-50/50">
             <div className="sticky top-0 p-6 self-start max-h-screen overflow-y-auto">
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-                <LayoutGrid className="h-4 w-4 text-slate-600" />
                 <p className="text-sm font-medium text-slate-700">
                   {apiExamplesData ? "API Reference" : "On This Page"}
                 </p>
