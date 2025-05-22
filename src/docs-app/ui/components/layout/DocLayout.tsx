@@ -8,8 +8,10 @@ import TableOfContents from "@/docs-app/ui/components/navigation/TableOfContents
 import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
 import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
 import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
-import logoSrc from "@/shared/assets/images/showpass-logo-red.svg";
+import logoRedSrc from "@/shared/assets/images/showpass-logo-red.svg";
+import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
+import { useTheme } from "next-themes";
 
 interface DocLayoutProps {
   children: React.ReactNode;
@@ -31,6 +33,9 @@ const DocLayout = ({
   hideRightSidebar = false,
 }: DocLayoutProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const { resolvedTheme } = useTheme();
+
+  const currentLogo = resolvedTheme === "dark" ? logoWhiteSrc : logoRedSrc;
 
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-[330px_minmax(0,1fr)] min-h-screen">
@@ -47,7 +52,7 @@ const DocLayout = ({
         </Button>
         <div className="flex-1 flex justify-center">
           <img
-            src={logoSrc}
+            src={currentLogo}
             alt="Showpass Documentation Logo"
             className="h-8"
           />
@@ -60,7 +65,7 @@ const DocLayout = ({
       {/* Left Sidebar (Navigation) */}
       <div
         className={cn(
-          "fixed inset-0 z-50 bg-background lg:static lg:block lg:border-r border-slate-200 lg:sticky lg:top-0 lg:h-screen",
+          "fixed inset-0 z-50 bg-background lg:static lg:block lg:border-r border-border lg:sticky lg:top-0 lg:h-screen",
           sidebarOpen ? "block" : "hidden"
         )}
       >
@@ -79,10 +84,10 @@ const DocLayout = ({
             </Button>
           </div>
           {/* Desktop Sidebar Header: Logo | ThemeToggle & Search */}
-          <div className="border-b border-slate-200 p-4 hidden lg:flex items-center justify-between">
+          <div className="border-b border-border p-4 hidden lg:flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img
-                src={logoSrc}
+                src={currentLogo}
                 alt="Showpass Documentation Logo"
                 className="h-8"
               />
@@ -91,7 +96,7 @@ const DocLayout = ({
               <ThemeToggle />
             </div>
           </div>
-          <div className="border-b border-slate-200 p-5">
+          <div className="border-b border-border p-5">
             <DocSearch />
           </div>
           <ScrollArea className="flex-1 px-5 pb-12">
@@ -125,10 +130,10 @@ const DocLayout = ({
 
         {/* Right Sidebar - API Examples or Table of Contents */}
         {!hideRightSidebar && (
-          <div className="hidden xl:block border-l border-border bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
+          <div className="hidden xl:block border-l border-border dark:bg-background dark:border-[hsl(var(--border))]">
             <div className="sticky top-0 p-6 pt-2 self-start max-h-screen overflow-y-auto">
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border dark:border-slate-700">
-                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border dark:border-[hsl(var(--border))]">
+                <p className="text-sm font-medium text-slate-700 dark:text-[hsl(var(--muted-foreground))]">
                   {apiExamplesData ? "API Reference" : "On This Page"}
                 </p>
               </div>

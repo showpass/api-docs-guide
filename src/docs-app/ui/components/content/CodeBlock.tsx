@@ -19,7 +19,9 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
   };
 
   const currentPrismTheme =
-    resolvedTheme === "dark" ? themes.vsDark : themes.github;
+    resolvedTheme === "dark" ? themes.jettwaveDark : themes.jettwaveLight;
+
+  // No preBackgroundColor variable needed here, we rely on CSS override for .dark .prose pre
 
   return (
     <div className={cn("relative group rounded-md overflow-hidden my-4")}>
@@ -36,17 +38,18 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
               aria-label="Copy code"
             >
               {isCopied ? (
-                <Check className="h-4 w-4 text-green-400" /> /* Brighter green for copied */
+                <Check className="h-4 w-4 text-green-400" />
               ) : (
-                <Copy className="h-4 w-4 text-slate-400 dark:text-slate-500" /> /* Adjusted for very dark bg */
+                <Copy className="h-4 w-4 text-slate-400 dark:text-slate-500" />
               )}
             </button>
             <pre
               className="overflow-x-auto relative cursor-pointer m-0"
               style={{
-                ...style, // Spread the theme styles (for text colors etc.)
+                ...style, // This will include prism theme's default background and text colors
                 margin: 0,
                 padding: "1rem",
+                // NO explicit backgroundColor here, relying on CSS to override prism theme's default bg
               }}
               onClick={copyToClipboard}
             >
