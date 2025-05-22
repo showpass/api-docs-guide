@@ -16,7 +16,7 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
 
 ## Prerequisites
 
-Ensure the Showpass SDK is included on your page and has loaded before these functions are called. See the "SDK Getting Started" guide. The SDK loads asynchronously.
+Ensure the Showpass SDK is included on your page, preferably using the Asynchronous Loader (Option 1) described in the "SDK Getting Started" guide. This loader creates the window.\_\_shwps command queue, which is the recommended way to call SDK functions.
 
 ## Parameters
 
@@ -33,30 +33,25 @@ Ensure the Showpass SDK is included on your page and has loaded before these fun
 
 ## Basic usage examples
 
-These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available.
+These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available. For reliable execution, especially on initial page load, use the `window.__shwps` method shown in the "Robust Implementation Examples."
 
 ### Pop-up mode (basic)
 
 ```javascript
-// Basic parameters
 let params = {
-  "theme-primary": "#FF7F00", // Example orange
+  "theme-primary": "#FF7F00",
   "keep-shopping": true,
 };
 
-// Assuming 'my-event-slug' is your event's slug
 showpass.tickets.eventPurchaseWidget("my-event-slug", params);
 ```
 
 ### Embedded mode (basic)
 
 ```html
-<!-- 1. Your HTML container -->
 <div id="event-widget-here"></div>
-
 <script>
-  // 2. JavaScript to embed
-  let embedParams = { "theme-primary": "#337ab7" }; // Example blue
+  let embedParams = { "theme-primary": "#337ab7" };
   showpass.tickets.eventPurchaseWidget(
     "another-event-slug",
     embedParams,
@@ -73,24 +68,27 @@ To ensure your code works reliably even if the Showpass SDK is still loading, it
 
 ### Pop-up mode (robust)
 
-This example uses a button click to open the widget and checks if the SDK is loaded.
+This example attaches an event listener to all buttons with the class `showpass-popup-button` and reads the event slug from a `data-event-slug` attribute.
+
+**HTML:**
 
 ```html
-<button id="buyTicketsBtn" data-event-slug="your-event-slug">
-  Buy Tickets
+<button class="showpass-popup-button" data-event-slug="your-event-slug-1">
+  Buy Tickets for Event 1
 </button>
-<!-- Add more buttons with different slugs if needed -->
-<!-- <button class="showpass-popup-button" data-event-slug="another-event-slug">Tickets for Another Event</button> -->
+<button class="showpass-popup-button" data-event-slug="your-event-slug-2">
+  Buy Tickets for Event 2
+</button>
+```
 
+**JavaScript:**
+
+```html
 <script>
-  // Function to handle the click event for any button intended to open a Showpass widget
-  function handleShowpassButtonClick(event) {
-    // 'this' refers to the button that was clicked
+  function handleShowpassPopupButtonClick(event) {
     const eventSlug = this.getAttribute("data-event-slug");
-
     if (!eventSlug) {
       console.error("Button is missing data-event-slug attribute.");
-      alert("Could not determine the event. Please try again.");
       return;
     }
 
@@ -98,40 +96,20 @@ This example uses a button click to open the widget and checks if the SDK is loa
       "theme-primary": "#28a745", // Example green
       "keep-shopping": false,
       "show-description": true,
-      // Add other default parameters if needed
     };
 
-    if (
-      typeof showpass !== "undefined" &&
-      typeof showpass.tickets !== "undefined"
-    ) {
-      showpass.tickets.eventPurchaseWidget(eventSlug, widgetParams);
-    }
-    // Fallback to command queue if you used the async loader (Option 1 from Getting Started)
-    else if (typeof window.__shwps !== "undefined") {
-      window.__shwps("tickets.eventPurchaseWidget", eventSlug, widgetParams);
-      console.log(
-        `Showpass SDK call queued via __shwps for pop-up (slug: ${eventSlug}).`
-      );
-    } else {
-      console.error("Showpass SDK is not available.");
-      alert(
-        "Ticketing system is currently unavailable. Please try again shortly."
-      );
-    }
+    // Use window.__shwps to queue the command
+    window.__shwps("tickets.eventPurchaseWidget", eventSlug, widgetParams);
+    console.log(`Showpass SDK call queued for pop-up (slug: ${eventSlug}).`);
   }
 
-  // Attach the event listener to the button with the ID
-  const buyButton = document.getElementById("buyTicketsBtn");
-  if (buyButton) {
-    buyButton.addEventListener("click", handleShowpassButtonClick);
-  }
-
-  // Optional: Attach to multiple buttons using a class
-  // const allShowpassButtons = document.querySelectorAll('.showpass-popup-button');
-  // allShowpassButtons.forEach(button => {
-  //   button.addEventListener('click', handleShowpassButtonClick);
-  // });
+  // Wait for the DOM to be ready before attaching event listeners
+  document.addEventListener("DOMContentLoaded", function () {
+    const popupButtons = document.querySelectorAll(".showpass-popup-button");
+    popupButtons.forEach(function (button) {
+      button.addEventListener("click", handleShowpassPopupButtonClick);
+    });
+  });
 </script>
 ```
 
@@ -139,68 +117,57 @@ This example uses a button click to open the widget and checks if the SDK is loa
 
 This example attempts to embed the widget once the DOM is ready and includes a simple retry mechanism if the SDK isn't immediately available.
 
-```html
-<!-- 1. Your HTML container -->
-<div id="embedded-event-widget-container">
-  <!-- Optional: Loading... -->
-</div>
+**HTML:**
 
+```html
+<!-- This div must exist in the DOM before the script below runs -->
+<div id="embedded-event-widget-container">
+  <!-- Optional: You can put a loading message here -->
+</div>
+```
+
+**JavaScript:**
+
+```html
 <script>
+  // Function to initialize the embedded widget
   function initializeEmbeddedEventWidget() {
-    const eventSlug = "your-other-event-slug"; // <<< REPLACE THIS
-    const containerId = "embedded-event-widget-container"; // <<< Must match your div ID
-    const widgetParams = {
+    const eventSlugToEmbed = "your-other-event-slug"; // <<< REPLACE THIS
+    const embedContainerId = "embedded-event-widget-container"; // <<< Must match your div ID
+    const widgetEmbedParams = {
       "theme-primary": "#dc3545", // Example red
-      "show-specific-tickets": "TICKET_TYPE_ID_1,TICKET_TYPE_ID_2", // <<< REPLACE TICKET IDs
+      "show-specific-tickets": "TICKET_TYPE_ID_1", // <<< REPLACE TICKET ID if used
     };
 
-    if (document.getElementById(containerId)) {
-      if (
-        typeof showpass !== "undefined" &&
-        typeof showpass.tickets !== "undefined"
-      ) {
-        showpass.tickets.eventPurchaseWidget(
-          eventSlug,
-          widgetParams,
-          containerId
-        );
-      }
-      // Fallback to command queue if you used the async loader (Option 1 from Getting Started)
-      else if (typeof window.__shwps !== "undefined") {
-        window.__shwps(
-          "tickets.eventPurchaseWidget",
-          eventSlug,
-          widgetParams,
-          containerId
-        );
-        console.log("Showpass SDK call queued via __shwps for embedding.");
-      } else {
-        console.warn("Showpass SDK not ready for embedding, will retry...");
-        // Simple retry - for more complex scenarios, consider a more robust loader/ready check
-        setTimeout(initializeEmbeddedEventWidget, 500);
-      }
+    // Check if the container element exists before queuing the command
+    if (document.getElementById(embedContainerId)) {
+      // Use window.__shwps to queue the command
+      window.__shwps(
+        "tickets.eventPurchaseWidget",
+        eventSlugToEmbed,
+        widgetEmbedParams,
+        embedContainerId
+      );
+      console.log(
+        `Showpass SDK call queued for embedding (slug: ${eventSlugToEmbed}).`
+      );
     } else {
       console.error(
         "Target container for embedded Showpass widget not found:",
-        containerId
+        embedContainerId
       );
     }
   }
 
   // Wait for the DOM to be fully loaded before trying to embed
-  if (document.readyState === "loading") {
-    document.addEventListener(
-      "DOMContentLoaded",
-      initializeEmbeddedEventWidget
-    );
-  } else {
-    // DOM is already loaded
-    initializeEmbeddedEventWidget();
-  }
+  document.addEventListener("DOMContentLoaded", initializeEmbeddedEventWidget);
 </script>
 ```
 
-**Choosing an Implementation:**
+**Key for embedded widgets:**
 
-- Use the **Basic Usage Examples** for a quick understanding or if your script execution is guaranteed to be after the SDK loads.
-- Use the **Robust Implementation Examples** for production websites to ensure reliability and handle the asynchronous loading of the SDK. The robust examples demonstrate checking for `showpass.tickets` and provide a fallback to the `window.__shwps` command queue if you used the recommended asynchronous loader from the "Getting Started" guide.
+- The HTML `div` element (e.g., `<div id="embedded-event-widget-container"></div>`) **must exist on the page** when the Showpass SDK attempts to mount the widget into it.
+- It's best practice to ensure your script that calls `window.__shwps(...)` for an embedded widget runs _after_ its target HTML div is available in the DOM, for instance, by using a `DOMContentLoaded` event listener.
+
+**Note on direct SDK calls (without `window.__shwps`):**
+If you choose not to use the "Option 1" async loader from the Getting Started guide and instead use a direct `<script async/defer src="...">` tag, you would call `showpass.tickets.eventPurchaseWidget(...)` directly. In that scenario, you _must_ ensure your call is made only after the SDK has fully loaded, for example by checking `if (typeof showpass !== 'undefined' && typeof showpass.tickets !== 'undefined') { ... }` or using a `DOMContentLoaded` listener if using `defer`. The `window.__shwps` method handles this timing automatically when the loader snippet is used.
