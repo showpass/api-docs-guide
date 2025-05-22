@@ -144,4 +144,9 @@
   .sidebar-category {
     @apply text-sm font-medium text-foreground py-2 mb-1.5 uppercase tracking-wide text-xs text-muted-foreground;
   }
+
+  .prose h1:first-of-type,
+  .prose > :first-child:is(h1) {
+    @apply mt-5;
+  }
 }

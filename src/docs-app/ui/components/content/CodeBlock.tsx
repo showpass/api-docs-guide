@@ -1,4 +1,3 @@
-
 import React from "react";
 import { Highlight, themes } from "prism-react-renderer";
 import { Copy, Check } from "lucide-react";
@@ -18,10 +17,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
 
   return (
     <div className="relative group rounded-md overflow-hidden my-4">
-      <Highlight 
-        code={code} 
+      <Highlight
+        code={code}
         language={language || "text"} // Fallback to text if language is not provided
-        theme={themes.github}  // Use GitHub theme (light) for all languages
+        theme={themes.github} // Use GitHub theme (light) for all languages
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <div className="relative">
@@ -36,13 +35,13 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
                 <Copy className="h-4 w-4 text-gray-400" />
               )}
             </button>
-            <pre 
-              className="overflow-x-auto relative cursor-pointer"
-              style={{ 
+            <pre
+              className="overflow-x-auto relative cursor-pointer m0"
+              style={{
                 ...style,
                 margin: 0,
                 padding: "1rem",
-                background: "rgb(246, 248, 250)"  // Light background for all code blocks
+                background: "rgb(246, 248, 250)", // Light background for all code blocks
               }}
               onClick={copyToClipboard}
             >

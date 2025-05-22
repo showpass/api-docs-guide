@@ -48,7 +48,7 @@ const DocLayout = ({
           <img
             src={logoSrc}
             alt="Showpass Documentation Logo"
-            className="h-12"
+            className="h-8"
           />
         </div>
         <div className="w-12" />
@@ -75,13 +75,13 @@ const DocLayout = ({
               <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
-          {/* Desktop Sidebar Header & Search */}
-          <div className="border-b border-slate-200 p-5 hidden lg:flex items-center justify-center">
+          {/* Desktop Sidebar Header */}
+          <div className="border-b border-slate-200 p-4 hidden lg:flex items-center justify-start">
             <div className="flex items-center gap-2">
               <img
                 src={logoSrc}
                 alt="Showpass Documentation Logo"
-                className="h-12"
+                className="h-8"
               />
             </div>
           </div>
@@ -110,7 +110,7 @@ const DocLayout = ({
         {/* Main Content */}
         <div
           className={cn(
-            "px-5 py-8 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
+            "px-5 py-8 pt-3 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
             hideRightSidebar ? "max-w-none" : "max-w-[1200px] mx-auto xl:mx-0"
           )}
         >
@@ -120,7 +120,7 @@ const DocLayout = ({
         {/* Right Sidebar - API Examples or Table of Contents */}
         {!hideRightSidebar && (
           <div className="hidden xl:block border-l border-slate-200 bg-slate-50/50">
-            <div className="sticky top-0 p-6 self-start max-h-screen overflow-y-auto">
+            <div className="sticky top-0 p-6 pt-2 self-start max-h-screen overflow-y-auto">
               <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
                 <p className="text-sm font-medium text-slate-700">
                   {apiExamplesData ? "API Reference" : "On This Page"}

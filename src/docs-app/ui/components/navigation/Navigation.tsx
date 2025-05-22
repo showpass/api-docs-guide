@@ -80,7 +80,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
           <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
-                to="/api/events"
+                to="/api/01-public-api-introduction"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
@@ -90,7 +90,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
             <li>
               <NavLink
-                to="/api/event-list"
+                to="/api/02-public-api-event-list-by-organization"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
@@ -100,7 +100,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
             <li>
               <NavLink
-                to="/api/query-event"
+                to="/api/03-public-api-query-specific-event"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
@@ -120,7 +120,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
           <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
-                to="/sdk/getting-started"
+                to="/sdk/01-sdk-getting-started"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
@@ -130,82 +130,62 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
             <li>
               <NavLink
-                to="/sdk/ticket-selection"
+                to="/sdk/02-ticket-purchase-widget"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Ticket Selection Widget
+                Ticket Purchase Widget
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/sdk/product-selection"
+                to="/sdk/03-product-purchase-widget"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Product Selection Widget
+                Product Purchase Widget
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/sdk/shopping-cart"
+                to="/sdk/04-membership-purchase-widget"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Shopping Cart Widget
+                Membership Purchase Widget
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/sdk/check-out"
+                to="/sdk/05-event-calendar-widget"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Check Out Widget
+                Event Calendar Widget
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/sdk/login"
+                to="/sdk/06-checkout-widget"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Login Widget
+                Checkout/Shopping Cart Widget
               </NavLink>
             </li>
             <li>
               <NavLink
-                to="/sdk/calendar"
+                to="/sdk/07-cart-quantity-listener"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Calendar Widget
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/sdk/embedded-calendar"
-                className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
-                }
-              >
-                Embedded Calendar Widget
-              </NavLink>
-            </li>
-            <li>
-              <NavLink
-                to="/sdk/cart-counter"
-                className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
-                }
-              >
-                Cart Quantity Counter
+                Cart Quantity Listener
               </NavLink>
             </li>
             <li>
