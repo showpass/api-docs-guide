@@ -1,4 +1,4 @@
-# Calendar Widget
+# Calendar widget
 
 ## Overview
 
@@ -18,7 +18,7 @@ showpass.tickets.calendarWidget(venueId, params, containerId);
 
 Ensure the Showpass SDK is included on your page and has fully loaded before these functions are called. See the "SDK Getting Started" guide. The SDK loads asynchronously.
 
-## Finding the Venue/Organization ID
+## Finding the venue/organization ID
 
 To find your `venueId` (Organization ID):
 
@@ -27,25 +27,25 @@ To find your `venueId` (Organization ID):
 3.  The Organization ID is typically displayed in the top right corner of this page.
     For Attraction Calendars, you'll also need the event `slug` for the main attraction event, which is passed within the `params` object.
 
-## Common Parameters (Applicable to Standard & Attraction Calendar within `params` object)
+## Common parameters (applicable to Standard & Attraction Calendar within `params` object)
 
 | Parameter Property        | Type   | Status   | Description                                                   |
 | ------------------------- | ------ | -------- | ------------------------------------------------------------- |
 | `params['theme-primary']` | String | Optional | Hex code value for the main widget color (e.g., `'#dd3333'`). |
 
-## Standard Calendar Widget
+## Standard calendar widget
 
 This is for displaying a general calendar of events for a venue.
 
-### Standard Calendar Specific Parameters (within `params` object)
+### Standard calendar specific parameters (within `params` object)
 
 | Parameter Property | Type   | Status   | Description                                                                                                       |
 | ------------------ | ------ | -------- | ----------------------------------------------------------------------------------------------------------------- |
 | `params['tags']`   | String | Optional | Comma-separated string of tags to filter events (e.g., `'festivals,community'`). Applicable to standard calendar. |
 
-### Basic Usage Examples (Standard Calendar)
+### Basic usage examples (standard calendar)
 
-#### Pop-up Mode (Basic)
+#### Pop-up mode (basic)
 
 ```javascript
 const myVenueId = 123;
@@ -56,7 +56,7 @@ let params = {
 showpass.tickets.calendarWidget(myVenueId, params);
 ```
 
-#### Embedded Mode (Basic)
+#### Embedded mode (basic)
 
 ```html
 <div id="calendar-widget-here"></div>
@@ -76,11 +76,11 @@ showpass.tickets.calendarWidget(myVenueId, params);
 
 **Important:** The basic examples above assume `showpass.tickets` is ready. For production code, see the "Robust Implementation Examples" below to handle SDK loading.
 
-### Robust Implementation Examples (Standard Calendar)
+### Robust implementation examples (standard calendar)
 
 To ensure your code works reliably, especially handling the asynchronous loading of the SDK.
 
-#### Pop-up Mode (Robust)
+#### Pop-up mode (robust)
 
 ```html
 <button id="openCalendarBtn" data-venue-id="123">
@@ -115,7 +115,7 @@ To ensure your code works reliably, especially handling the asynchronous loading
 </script>
 ```
 
-#### Embedded Mode (Robust)
+#### Embedded mode (robust)
 
 ```html
 <div id="embedded-standard-calendar-container"></div>
@@ -163,11 +163,11 @@ To ensure your code works reliably, especially handling the asynchronous loading
 
 ---
 
-## Attraction Calendar Widget
+## Attraction calendar widget
 
 This specialized version of the calendar widget is designed for attractions (e.g., timed entry, tours) and requires specific parameters within the `params` object. The `venueId` (Organization ID) is **still required** as the first argument to the `calendarWidget` function.
 
-### Attraction Calendar Specific Parameters (within the `params` object)
+### Attraction calendar specific parameters (within the `params` object)
 
 | Parameter Property                         | Type    | Status   | Description                                                                                                                                |
 | ------------------------------------------ | ------- | -------- | ------------------------------------------------------------------------------------------------------------------------------------------ |
@@ -176,7 +176,7 @@ This specialized version of the calendar widget is designed for attractions (e.g
 | `params['ticket-type-selection-required']` | Boolean | Optional | If `true`, forces ticket type selection _before_ proceeding to the calendar view. Default might be `false`.                                |
 | `params['prompt-for-quantity']`            | Boolean | Optional | If `true`, forces quantity selector _before_ proceeding to calendar view. (Note: Verify current implementation status for this parameter). |
 
-### Example: Attraction Calendar (Pop-up, Robust)
+### Example: Attraction calendar (pop-up, robust)
 
 This example demonstrates calling the Attraction Calendar as a pop-up, triggered by a button click.
 
@@ -252,7 +252,7 @@ _Replace `YOUR_VENUE_ID` and `your-attraction-event-slug` with actual values._
 </script>
 ```
 
-### Example: Attraction Calendar (Embedded, Robust)
+### Example: Attraction calendar (embedded, robust)
 
 To embed the attraction calendar:
 

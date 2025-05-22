@@ -1,17 +1,17 @@
-# Adding an Event Detail Page with [showpass_events]
+# Adding an event detail page with [showpass_events]
 
 An Event Detail page is a dedicated page on your website that shows all the information for a single event. This typically includes the event name, description, date, time, location, image, and the Showpass widget to purchase tickets.
 
 Using event detail pages provides a much richer experience for your users compared to just linking directly to Showpass from an event list.
 
-## How it Works
+## How it works
 
 1.  You create a generic WordPress page (e.g., named "Event Details" with a URL like `yourwebsite.com/event-details`).
 2.  You add a special shortcode `[showpass_events type="detail"]` to this page.
 3.  When a user clicks on an event from your event list (which you've configured with the `detail_page` parameter), they are taken to this generic page.
 4.  The plugin intelligently looks at the URL (specifically a `?slug=` or `?event=` part added to the URL) to figure out _which_ event's details to display on that page.
 
-## Steps to Create an Event Detail Page
+## Steps to create an event detail page
 
 1.  **Create a New WordPress Page:**
 
@@ -40,7 +40,7 @@ Using event detail pages provides a much richer experience for your users compar
       `[showpass_events type="list" detail_page="event-detail"]`
     - If you have multiple event lists on your site, you'll need to update each one.
 
-## How the Magic Happens: URL Parameters
+## How the magic happens: URL parameters
 
 When a user clicks an event in your list (that now has `detail_page="event-detail"`), they will be redirected to a URL like:
 `yourwebsite.com/event-detail/?slug=the-specific-event-slug`
@@ -49,7 +49,7 @@ or
 
 The `[showpass_events type="detail"]` shortcode on your "event-detail" page automatically detects the `?slug=` or `?event=` part of the URL and fetches and displays the correct event's information.
 
-## Customizing Your Event Detail Page: Parameters
+## Customizing your event detail page: Parameters
 
 The `[showpass_events type="detail"]` shortcode itself doesn't have many parameters because it primarily relies on the event data fetched. However, one important aspect is the template:
 
@@ -63,7 +63,7 @@ The `[showpass_events type="detail"]` shortcode itself doesn't have many paramet
   - **Use Case**: To explicitly show or hide the description panel within the purchase widget that appears on the detail page. This overrides the global admin setting.
   - **Example**: `[showpass_events type="detail" show_widget_description="false"]`
 
-## What an Event Detail Page Typically Shows
+## What an event detail page typically shows
 
 By default, using `[showpass_events type="detail"]`, the page will display:
 

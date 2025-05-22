@@ -1,10 +1,10 @@
-# Adding an Event List with [showpass_events]
+# Adding an event list with [showpass_events]
 
 To display a list of your upcoming events on any WordPress page or post, you'll use the `[showpass_events]` shortcode. This is a powerful way to showcase multiple events at once, allowing visitors to browse what you have to offer.
 
 By default, this shortcode will display events in a grid layout.
 
-## Basic Event List
+## Basic event list
 
 To add a basic event list:
 
@@ -16,11 +16,11 @@ To add a basic event list:
 
 This will display a list of your upcoming events, using the default settings (grid template, 20 events per page).
 
-## Key Parameter: `type="list"`
+## Key parameter: `type="list"`
 
 For the `[showpass_events]` shortcode to display a list of events, the `type="list"` parameter is **required**.
 
-## Customizing Your Event List: Parameters
+## Customizing your event list: Parameters
 
 You can customize how your event list appears and which events are shown using various parameters. Remember, parameters are added inside the square brackets `[]` and follow the `parameter="value"` format.
 
@@ -111,7 +111,7 @@ Here are the common parameters for `[showpass_events type="list"]`:
   - **Use Case**: For testing purposes. This will show all events from your organization, regardless of their visibility settings (e.g., draft or private events) in Showpass.
   - **Example**: `[showpass_events type="list" show="all"]`
 
-## URL Parameters for Filtering
+## URL parameters for filtering
 
 Some filtering can also be done by adding parameters directly to the URL of the page where your event list is. This is useful for creating dynamic links or allowing users to search/filter.
 
@@ -121,7 +121,7 @@ Some filtering can also be done by adding parameters directly to the URL of the 
   - Will filter by the tag "rock". Works with multiple tags: `?tags=tag1,tag2`.
 - **Date filtering (advanced)**: Parameters like `?starts_on__gte=YYYY-MM-DD` (starts on or after) or `?ends_on__lt=YYYY-MM-DD` (ends before) can also be used in the URL.
 
-## Example: A Customized Event List
+## Example: A customized event list
 
 Here's an example combining several parameters:
 

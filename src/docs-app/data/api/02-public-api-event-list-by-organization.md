@@ -1,4 +1,4 @@
-# Event List by Organization
+# Event list by organization
 
 ## Endpoint
 

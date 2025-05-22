@@ -1,10 +1,10 @@
-# Adding a Checkout / Shopping Cart Button with [showpass_cart_button]
+# Adding a checkout / shopping cart button with [showpass_cart_button]
 
 The `[showpass_cart_button]` shortcode allows you to add a button to your site that opens the Showpass shopping cart and checkout widget. This is essential for allowing customers to review their selected tickets, products, or memberships and complete their purchase.
 
 The button will dynamically update to show the number of items currently in the user's cart (e.g., "Shopping Cart (3)").
 
-## How to Add the Cart Button
+## How to add the cart button
 
 1.  Go to the WordPress page or post where you want the cart button. This is often placed in a website header or a persistent sidebar for easy access.
 2.  Add a "Shortcode" block.
@@ -15,7 +15,7 @@ The button will dynamically update to show the number of items currently in the 
 
 This will display a button, typically saying "Shopping Cart (x)". When clicked, the Showpass cart/checkout widget will open in a pop-up.
 
-## Embedding the Cart Directly on the Page
+## Embedding the cart directly on the page
 
 You can also embed the entire shopping cart and checkout process directly onto a page, for instance, a dedicated "Checkout" page.
 
@@ -37,7 +37,7 @@ This will display the cart interface directly within your page content.
   - **Use Case**: Potentially to change the static part of the button's text, though the item count `(x)` is dynamic.
   - **Example**: `[showpass_cart_button label="View Your Cart"]` (Verify if this customizes the label as expected, or if it's overridden by the dynamic count text).
 
-## Where to Place the Cart Button
+## Where to place the cart button
 
 - **Website Header**: Most common and user-friendly location.
 - **Sidebar**: If your theme has a persistent sidebar.

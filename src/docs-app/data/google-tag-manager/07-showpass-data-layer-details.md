@@ -1,8 +1,8 @@
-# Showpass Data Layer Details
+# 7. Showpass data layer details
 
 Understanding how Showpass interacts with the Data Layer is key to successfully configuring your tags and variables in Google Tag Manager (GTM). The Data Layer is a JavaScript object that GTM uses to receive information from your website or, in this case, from Showpass services.
 
-## Dynamic Data Layer Naming
+## Dynamic Data Layer naming
 
 Showpass implements a dynamic naming convention for the Data Layer variable to support scenarios where multiple GTM containers or data layers might coexist on a page.
 
@@ -13,7 +13,7 @@ Showpass implements a dynamic naming convention for the Data Layer variable to s
 
 **Important:** When you are setting up Data Layer Variables in GTM (as described in Section 6 for ecommerce parameters), you typically **do not need to specify this full dynamic name** in the "Data Layer Variable Name" field in GTM. GTM is designed to work with the concept of a "data layer" and will usually pick up pushes to any array named `dataLayer` or specifically named ones if configured correctly at a deeper GTM level or via custom JavaScript. For standard Data Layer Variable configuration in GTM, you just use the key name (e.g., `ecommerce.value`).
 
-## Accessing the Showpass Data Layer with Custom JavaScript
+## Accessing the Showpass Data Layer with custom JavaScript
 
 If you need to access the Showpass-specific Data Layer directly within a **Custom JavaScript Variable** in GTM or a **Custom HTML tag** script, you would use its dynamic name:
 

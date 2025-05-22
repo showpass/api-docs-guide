@@ -1,12 +1,12 @@
-# Tips & Troubleshooting for the Showpass WordPress Plugin
+# Tips & troubleshooting for the Showpass WordPress plugin
 
 Here are some common tips and troubleshooting steps to help you get the most out of the Showpass WordPress Plugin and resolve any issues you might encounter.
 
-## Understanding Shortcodes
+## Understanding shortcodes
 
 Shortcodes are the backbone of this plugin. They are little snippets of text in square brackets `[]` that WordPress magically transforms into dynamic content from Showpass.
 
-### Shortcode Anatomy
+### Shortcode anatomy
 
 Let's break down a typical Showpass shortcode:
 
@@ -23,9 +23,9 @@ Let's break down a typical Showpass shortcode:
 - There's only one main shortcode tag per set of square brackets (e.g., you can't have `[showpass_events showpass_widget]`).
 - If you don't provide a parameter, the plugin will use a default value for it.
 
-## Common Issues & Solutions
+## Common issues & solutions
 
-### 1. My Event List is Showing the Wrong Events (or No Events)
+### 1. My event list is showing the wrong events (or no events)
 
 - **Check Your Organization ID:**
   - **Symptom:** The list is empty, or it shows events from a completely different organization.
@@ -35,7 +35,7 @@ Let's break down a typical Showpass shortcode:
     3.  You can find your Organization ID by logging into your Showpass account and navigating to `https://www.showpass.com/dashboard/venues/edit/` or the 'Organization Info' section. [1, 2]
     4.  Save the changes.
 
-### 2. My Shortcode Isn't Working or Looks Broken
+### 2. My shortcode isn't working or looks broken
 
 - **Check Your Quotes:**
 
@@ -56,7 +56,7 @@ Let's break down a typical Showpass shortcode:
   - **Symptom:** Shortcode displays as plain text.
   - **Solution:** Go to **Plugins** in your WordPress admin and make sure the "Showpass Wordpress Extension" is activated. [1]
 
-### 3. The Purchase Widget Isn't Loading the Correct Event/Product
+### 3. The purchase widget isn't loading the correct event/product
 
 - **Check the `slug` or `id`:**
   - **Symptom:** You click a "Buy Tickets" button (`[showpass_widget]`), and it shows the wrong event, a "not found" message, or just spins.
@@ -65,7 +65,7 @@ Let's break down a typical Showpass shortcode:
     - Do NOT include `https://showpass.com/` or any trailing slashes in the `slug` value itself. No spaces.
   - **Solution (for Products/Memberships):** Ensure the `id` parameter in your `[showpass_widget type="product" id="12345"]` (or `type="membership"`) is the correct numerical ID from your Showpass dashboard.
 
-### 4. "Connection is Blocked" or Widget Issues
+### 4. "Connection is blocked" or widget issues
 
 - **Add Your Domain in Showpass Dashboard:**
   - **Symptom:** The Showpass widget fails to load, shows an error message related to domains or permissions, or you get a "connection is blocked" type of error.
@@ -76,7 +76,7 @@ Let's break down a typical Showpass shortcode:
     4.  Add your full website domain (e.g., `yourwebsite.com`) to the list.
     5.  Save the changes in Showpass.
 
-### 5. Styles Look Off or Conflict with Theme
+### 5. Styles look off or conflict with theme
 
 - **CSS Conflicts:**
   - **Symptom:** Buttons, lists, or widgets look strange, misaligned, or don't match your website's style.
@@ -85,7 +85,7 @@ Let's break down a typical Showpass shortcode:
     - You may need to write more specific CSS rules in your theme's `style.css` (or child theme's stylesheet) to override the plugin's styles or your theme's conflicting styles.
     - For `[showpass_widget]` buttons, you can use the `class="your-custom-class"` parameter to add your own CSS class and style it precisely.
 
-### 6. Changes Not Appearing Immediately
+### 6. Changes not appearing immediately
 
 - **Caching:**
   - **Symptom:** You've made changes to a shortcode or plugin settings, but you're not seeing them on the live site.

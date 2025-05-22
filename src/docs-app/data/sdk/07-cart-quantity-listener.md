@@ -4,7 +4,7 @@ The key is to keep the simple SDK call visible upfront, then provide a more comp
 
 Here's the raw text content for the updated `sdk-cart-quantity-listener.md`:
 
-# Cart Quantity Listener
+# Cart quantity listener
 
 ## Overview
 
@@ -25,7 +25,7 @@ showpass.tickets.addCartCountListener(callbackFunction);
 - Ensure the Showpass SDK is included on your page and has fully loaded. See the "SDK Getting Started" guide.
 - This listener should typically be set up once the page is ready (e.g., DOMContentLoaded) to ensure the SDK is available.
 
-## Basic Example
+## Basic example
 
 This example simply logs the cart count to the console whenever it changes.
 
@@ -51,7 +51,7 @@ else if (typeof window.__shwps !== "undefined") {
 }
 ```
 
-## Advanced Implementation: Dynamic Cart Counter with Click-to-Open Cart
+## Advanced implementation: Dynamic cart counter with click-to-open cart
 
 This more comprehensive example demonstrates how to:
 
@@ -59,7 +59,7 @@ This more comprehensive example demonstrates how to:
 2.  Optionally, use a cookie (with a library like `js-cookie`) to maintain the cart display text across page loads.
 3.  Make this HTML element clickable to open the Showpass Shopping Cart or Checkout widget.
 
-### 1. HTML Structure
+### 1. HTML structure
 
 You'll need an HTML element for your cart display and trigger. This could be a link, a list item, or any other suitable element.
 
@@ -71,7 +71,7 @@ You'll need an HTML element for your cart display and trigger. This could be a l
 </a>
 ```
 
-### 2. JavaScript Dependencies (Optional but Recommended)
+### 2. JavaScript dependencies (optional but recommended)
 
 - **jQuery (Optional):** While not strictly necessary, jQuery can simplify DOM manipulation and event handling. The example below will provide both plain JavaScript and jQuery-style selectors where applicable.
 - **js-cookie (Optional):** If you want the cart count to persist visually across page loads (as the SDK might re-initialize the count on each page), a cookie library is helpful. You can get it from [https://github.com/js-cookie/js-cookie](https://github.com/js-cookie/js-cookie).
@@ -80,7 +80,7 @@ You'll need an HTML element for your cart display and trigger. This could be a l
   <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
   ```
 
-### 3. JavaScript Implementation
+### 3. JavaScript implementation
 
 This script should be placed after you've included the Showpass SDK and any optional libraries like js-cookie.
 
@@ -126,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     if (typeof showpass !== 'undefined' && typeof showpass.tickets !== 'undefined') {
       showpass.tickets.shoppingCartWidget(widgetParams);
       // Or: showpass.tickets.checkoutWidget(widgetParams);
-    } else if (typeof window.__shwps !== 'undefined') {
+    } else if (typeof window.__shwps !== "undefined") {
       window.__shwps('tickets.shoppingCartWidget', widgetParams);
       // Or: window.__shwps('tickets.checkoutWidget', widgetParams);
     } else {
@@ -144,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
       showpass.tickets.addCartCountListener(updateCartDisplay);
     }
     // Fallback for asynchronous loader
-    else if (typeof window.__shwps !== 'undefined') {
+    else if (typeof window.__shwps !== "undefined") {
       window.__shwps('tickets.addCartCountListener', updateCartDisplay);
       console.log('Showpass cart count listener queued via __shwps.');
     }

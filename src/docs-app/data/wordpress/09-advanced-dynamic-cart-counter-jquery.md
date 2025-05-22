@@ -1,4 +1,4 @@
-# Advanced: Adding a Dynamic Cart Counter with Custom JavaScript
+# Advanced: Adding a dynamic cart counter with custom JavaScript
 
 The standard Showpass WordPress plugin provides a `[showpass_cart_button]` shortcode that conveniently includes a text-based cart counter (e.g., "Shopping Cart (3)"). This is perfect for most users.
 
@@ -6,7 +6,7 @@ However, if you're looking for a more integrated cart display—perhaps a dynami
 
 **Please Note:** This is an advanced customization. It requires familiarity with HTML, CSS, JavaScript (jQuery), and adding custom code to your WordPress theme. If you're not comfortable with these steps, consider working with a web developer.
 
-## What This Custom Cart Counter Does
+## What this custom cart counter does
 
 This custom JavaScript solution will:
 
@@ -14,7 +14,7 @@ This custom JavaScript solution will:
 2.  **Dynamically Update Your HTML:** It updates a specific element on your webpage to show the current number of items in the cart (e.g., "Cart (2)" or "Cart" if empty).
 3.  **Enable Click-to-Open Cart:** It allows you to designate an element (like your custom counter or a menu item) that, when clicked, will open the Showpass checkout widget.
 
-## Before You Begin: Prerequisites
+## Before you begin: Prerequisites
 
 - **Showpass WordPress Plugin:** Ensure the Showpass plugin is installed and activated.
 - **jQuery:** WordPress includes jQuery by default, so this should be available on your site.
@@ -26,7 +26,7 @@ This custom JavaScript solution will:
   - An element where the cart count text will be displayed (e.g., a `<span>` inside a menu link).
   - An element that will act as the click trigger to open the cart (e.g., the menu item itself or the link).
 
-## The Custom JavaScript Code
+## The custom JavaScript code
 
 Here's the JavaScript code that powers the dynamic cart counter. You will need to customize parts of this code to match your website's specific HTML structure.
 
@@ -81,11 +81,12 @@ Here's the JavaScript code that powers the dynamic cart counter. You will need t
 })(jQuery);
 ```
 
-## How to Add This Code to Your WordPress Site
+## How to add this code to your WordPress site
 
 1.  **Include JS-Cookie Library:**
 
     - **Recommended (Production):** Enqueue the script in your theme's `functions.php` file.
+
       ```php
       function my_theme_enqueue_custom_scripts() {
           // Enqueue JS-Cookie from a CDN
@@ -96,7 +97,9 @@ Here's the JavaScript code that powers the dynamic cart counter. You will need t
       }
       add_action('wp_enqueue_scripts', 'my_theme_enqueue_custom_scripts');
       ```
+
       This assumes you will create a file named `my-showpass-cart.js` inside a `js` folder in your theme's directory.
+
     - **Simple (Testing):** Add the CDN link for JS-Cookie directly into your theme's `header.php` file, before `<?php wp_head(); ?>`.
 
 2.  **Add the Custom JavaScript:**
@@ -135,7 +138,7 @@ Here's the JavaScript code that powers the dynamic cart counter. You will need t
     - `'theme-primary'`: Set this to your preferred hex color code to style the primary elements of the Showpass widget.
     - `'keep-shopping'`: Set to `true` for the close button to say "Keep Shopping," or `false` for it to say "Close."
 
-## Important Considerations
+## Important considerations
 
 - **Child Themes:** If you're modifying theme files or adding custom `functions.php` code, always use a [WordPress child theme](https://developer.wordpress.org/themes/advanced-topics/child-themes/). This ensures your customizations aren't lost when you update your main theme.
 - **JavaScript Errors:** If the counter isn't working, open your browser's JavaScript console (usually by pressing F12 and clicking the "Console" tab). Errors here can provide clues, such as the JS-Cookie library not being loaded, the `showpass.tickets` object not being available, or issues with your jQuery selectors.

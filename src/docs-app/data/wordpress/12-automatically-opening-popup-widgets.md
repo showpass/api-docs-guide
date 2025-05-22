@@ -1,10 +1,10 @@
-# Automatically Opening Pop-up Widgets on Page Load
+# Automatically opening pop-up widgets on page load
 
 Sometimes, you might want the Showpass ticket-buying widget to open automatically as soon as a customer lands on a specific page on your website. This can be useful for targeted landing pages where the primary call to action is to purchase tickets for a particular event.
 
 The Showpass WordPress plugin supports this functionality using a URL query parameter: `auto`.
 
-## How It Works
+## How it works
 
 You append `?auto=your-event-slug` to the URL of the WordPress page where you want the widget to auto-open.
 
@@ -12,7 +12,7 @@ You append `?auto=your-event-slug` to the URL of the WordPress page where you wa
 
 When a user visits this specially crafted URL, the plugin will detect the `auto` parameter and automatically trigger the Showpass ticket widget for the specified event slug to open in a pop-up.
 
-## Use Cases
+## Use cases
 
 - **Directing from Ad Campaigns:** If you run an ad campaign for a specific event, you can link the ad directly to a page on your site with the `?auto=event-slug` parameter. The widget for that event opens immediately, streamlining the purchase process.
 - **Dedicated Event Landing Pages:** If you have a landing page on your WordPress site focused solely on one event, automatically opening the widget can reduce clicks and potentially increase conversions.

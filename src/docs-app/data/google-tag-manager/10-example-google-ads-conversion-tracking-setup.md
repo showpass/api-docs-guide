@@ -1,4 +1,4 @@
-# Example: Google Ads Conversion Tracking Setup with GTM
+# 10. Example: Google Ads conversion tracking setup with GTM
 
 This section provides a step-by-step example of how to set up Google Ads conversion tracking and remarketing using Google Tag Manager (GTM) for Showpass events. This assumes you have already configured GTM to receive ecommerce data from Showpass (as outlined in previous sections, especially Section 3 and Section 6).
 
@@ -8,22 +8,22 @@ This section provides a step-by-step example of how to set up Google Ads convers
 - Conversion actions set up in your Google Ads account (you'll need Conversion ID and Conversion Label).
 - Your GTM container is correctly receiving ecommerce data from Showpass (e.g., `purchase` events with `value`, `transaction_id`, `currency`, `items`).
 
-## Step 1: Create Necessary Data Layer Variables (If Not Already Done)
+## Step 1: Create necessary Data Layer variables (if not already done)
 
 Ensure you have GTM variables to capture the required data for Google Ads conversion tracking. Refer to **Section 6, Step 1** for detailed instructions on creating Data Layer Variables. You will typically need:
 
-- **`SP - ecommerce.value`**:
+- **`DLV - ecommerce.value`**:
   - Data Layer Variable Name: `ecommerce.value`
-- **`SP - ecommerce.transaction_id`**:
+- **`DLV - ecommerce.transaction_id`**:
   - Data Layer Variable Name: `ecommerce.transaction_id`
-- **`SP - ecommerce.currency`**:
+- **`DLV - ecommerce.currency`**:
   - Data Layer Variable Name: `ecommerce.currency`
-- **`SP - ecommerce.items`**:
+- **`DLV - ecommerce.items`**:
   - Data Layer Variable Name: `ecommerce.items` (for product-level sales data)
 
-_(Use your chosen GTM variable names, e.g., `{{SP - ecommerce.value}}`)_
+_(Use your chosen GTM variable names, e.g., `{{DLV - ecommerce.value}}`)_
 
-## Step 2: Add the Conversion Linker Tag
+## Step 2: Add the conversion linker tag
 
 The Conversion Linker tag is essential for ensuring accurate conversion measurement by setting first-party cookies.
 
@@ -40,7 +40,7 @@ The Conversion Linker tag is essential for ensuring accurate conversion measurem
     - Select the **Initialization - All Pages** trigger (or a standard "All Pages" trigger).
 5.  Click **Save**.
 
-## Step 3: Add the Google Ads Remarketing Tag (Optional but Recommended)
+## Step 3: Add the Google Ads remarketing tag (optional but recommended)
 
 This tag builds remarketing lists by tagging users who visit your site or interact with Showpass events.
 
@@ -56,7 +56,7 @@ This tag builds remarketing lists by tagging users who visit your site or intera
     - Select the **Initialization - All Pages** trigger (or a standard "All Pages" trigger).
 5.  Click **Save**.
 
-## Step 4: Add the Google Ads Conversion Tracking Tag (for Purchases)
+## Step 4: Add the Google Ads conversion tracking tag (for purchases)
 
 This tag tracks actual purchases as conversions in Google Ads.
 
@@ -67,9 +67,9 @@ This tag tracks actual purchases as conversions in Google Ads.
     - Select **Google Ads Conversion Tracking**.
     - **Conversion ID:** Enter your Google Ads Conversion ID (e.g., `AW-XXXXXXXXX`).
     - **Conversion Label:** Enter the specific Conversion Label for your purchase conversion action from Google Ads.
-    - **Conversion Value:** Click the variable icon `+` and select your GTM variable for the transaction value (e.g., `{{SP - ecommerce.value}}`).
-    - **Transaction ID:** Click `+` and select your GTM variable for the transaction ID (e.g., `{{SP - ecommerce.transaction_id}}`).
-    - **Currency Code:** Click `+` and select your GTM variable for the currency (e.g., `{{SP - ecommerce.currency}}`).
+    - **Conversion Value:** Click the variable icon `+` and select your GTM variable for the transaction value (e.g., `{{DLV - ecommerce.value}}`).
+    - **Transaction ID:** Click `+` and select your GTM variable for the transaction ID (e.g., `{{DLV - ecommerce.transaction_id}}`).
+    - **Currency Code:** Click `+` and select your GTM variable for the currency (e.g., `{{DLV - ecommerce.currency}}`).
     - **Provide product-level sales data:**
       - Check this box if you want to send item details with the conversion.
       - **Data source:** Select **Data Layer**.
@@ -89,7 +89,7 @@ This tag tracks actual purchases as conversions in Google Ads.
 **Note on GA4 and Google Ads:**
 If you have already set up comprehensive GA4 ecommerce tracking (as per Section 3) and linked your GA4 property to your Google Ads account, GA4 ecommerce conversions can often be imported directly into Google Ads. This GTM setup for Google Ads provides direct conversion tracking, which can be beneficial for faster reporting or specific Google Ads features. You may choose one or both methods depending on your needs.
 
-## Step 5: Publish and Verify
+## Step 5: Publish and verify
 
 1.  **Publish Your GTM Container:**
     - In GTM, click **Submit**.

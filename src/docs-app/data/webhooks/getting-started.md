@@ -1,30 +1,30 @@
-
-# Showpass Webhooks
+# Showpass webhooks
 
 ## Introduction
+
 To make it easier for organizers to integrate Showpass with other systems and automate their workflows, Showpass provides webhook functionality. Webhooks allow external systems to be notified when certain events occur in Showpass, such as when a new order is placed or when a ticket transfer occurs.
 
-## Webhook Events
+## Webhook events
 
 By setting up a webhook to be triggered by a specific event, external systems can be notified in real-time and perform automated actions based on the event data. Below is a list of the events for which Showpass provides webhook support:
 
-| Event Name | Description |
-|------------|-------------|
-| `invoice.purchase` | Triggered when a new order is created |
-| `invoice.refund` | Triggered when a transaction is refunded |
-| `invoice.void` | Triggered when a transaction is voided |
-| `invoice.transfer` | Triggered when a transfer has been completed and new invoices and tickets have been generated |
+| Event Name            | Description                                                                                                                                                           |
+| --------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `invoice.purchase`    | Triggered when a new order is created                                                                                                                                 |
+| `invoice.refund`      | Triggered when a transaction is refunded                                                                                                                              |
+| `invoice.void`        | Triggered when a transaction is voided                                                                                                                                |
+| `invoice.transfer`    | Triggered when a transfer has been completed and new invoices and tickets have been generated                                                                         |
 | `invoice.transferred` | Triggered when a transfer has been completed and updates the original invoice and ticket items. Should be used to void original tickets when a transfer is completed. |
 
-## Webhook Objects
+## Webhook objects
 
 The Showpass Webhook Objects section describes the format of the webhook objects that will be sent when specific events are triggered. For example, when the "invoice.purchase" event is triggered, Showpass will send an "invoice" object containing information about the purchase.
 
-## Invoice Object
+## Invoice object
 
 The invoice object contains detailed information about a purchase, refund, or other transaction-related event.
 
-## Sample Request
+## Sample request
 
 Here is an example of a request that we send as a webhook when we're sending the invoice structure:
 
@@ -121,15 +121,15 @@ Here is an example of a request that we send as a webhook when we're sending the
 }
 ```
 
-## Fields Reference
+## Fields reference
 
 When we send the invoice structure as a webhook, we provide a set of fields with their corresponding values to convey information about the invoice. Here's a breakdown of the key fields and what information they represent:
 
-| Field | Description |
-|-------|-------------|
-| `event_type` | The type of the event that triggered the webhook.<br>Choices = ['invoice.purchase', 'invoice.refund', 'invoice.void', 'invoice.transfer', 'invoice.transferred'] |
-| `webhook_event_uuid` | The UUID of the webhook event, you can use it as idempotency ID. |
-| `id` | The ID for verifying header, in this case it's same as data.transaction_id |
-| `data.transaction_id` | Unique identifier for the transaction |
-| `data.customer_name` | Name of the customer who made the purchase |
-| `data.payment_type` | Payment method used for the transaction |
+| Field                 | Description                                                                                                                                                      |
+| --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `event_type`          | The type of the event that triggered the webhook.<br>Choices = ['invoice.purchase', 'invoice.refund', 'invoice.void', 'invoice.transfer', 'invoice.transferred'] |
+| `webhook_event_uuid`  | The UUID of the webhook event, you can use it as idempotency ID.                                                                                                 |
+| `id`                  | The ID for verifying header, in this case it's same as data.transaction_id                                                                                       |
+| `data.transaction_id` | Unique identifier for the transaction                                                                                                                            |
+| `data.customer_name`  | Name of the customer who made the purchase                                                                                                                       |
+| `data.payment_type`   | Payment method used for the transaction                                                                                                                          |

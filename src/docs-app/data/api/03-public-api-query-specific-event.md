@@ -1,4 +1,4 @@
-# Query a Specific Event by Slug
+# Query a specific event by slug
 
 To retrieve details for a single, specific public event using its unique slug, use the following endpoint:
 

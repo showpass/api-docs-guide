@@ -1,4 +1,4 @@
-# Adding a Calendar Widget
+# Adding a calendar widget
 
 Showpass offers a modern calendar widget to display your events. This is often a great solution for venues with many time-slot based events or if you want to provide a visual calendar view for your users.
 
@@ -9,7 +9,7 @@ There are two main ways to add the new calendar:
 
 **Note:** The plugin refers to this as "Calendar Widget V2.0" in the GitHub readme and recommends it over the older `[showpass_calendar]` shortcode.
 
-## 1. Calendar Button (Pop-up) with `[showpass_calendar_widget]`
+## 1. Calendar button (pop-up) with `[showpass_calendar_widget]`
 
 This shortcode adds a button to your page. When a user clicks this button, the Showpass event calendar opens in a pop-up window.
 
@@ -39,7 +39,7 @@ This will create a button with the default label "Get Tickets".
   - **Example (Show all events)**:
     `[showpass_calendar_widget label="Full Event Calendar"]`
 
-## 2. Embedded Calendar with `[showpass_embed_calendar]`
+## 2. Embedded calendar with `[showpass_embed_calendar]`
 
 This shortcode embeds the full calendar directly onto your WordPress page or post.
 
@@ -66,7 +66,7 @@ This will embed the calendar showing all events.
   - **Example (Show all events)**:
     `[showpass_embed_calendar]`
 
-## Which Calendar Option to Choose?
+## Which calendar option to choose?
 
 - **Button (`[showpass_calendar_widget]`):**
   - Good if you want to save space on your page and let users open the calendar only if they need it.
@@ -79,7 +79,7 @@ Both options provide a user-friendly, modern interface for browsing events by da
 
 ---
 
-### Older Calendar Shortcode `[showpass_calendar]` (Not Recommended for New Implementations)
+### Older calendar shortcode `[showpass_calendar]` (not recommended for new implementations)
 
 The plugin also contains an older calendar shortcode: `[showpass_calendar]`. While it still functions, the new `[showpass_calendar_widget]` and `[showpass_embed_calendar]` are recommended for better features and user experience.
 

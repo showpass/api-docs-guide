@@ -1,8 +1,8 @@
-# Getting Started with the Showpass WordPress Plugin
+# Getting started with the Showpass WordPress plugin
 
 Welcome to the Showpass WordPress Plugin! This guide will help you get the plugin installed and configured on your WordPress website. It's designed to be easy to follow, even if you're not a technical expert.
 
-## What You Need Before You Start
+## What you need before you start
 
 - A WordPress website.
 - Access to your WordPress admin dashboard (usually `yourwebsite.com/wp-admin`).

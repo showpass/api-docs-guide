@@ -1,4 +1,4 @@
-# Standard Ecommerce Tracking with GA4 via GTM
+# 3. Standard ecommerce tracking with GA4 via GTM
 
 After setting up the basic GA4 Configuration Tag, the next step is to configure Google Tag Manager (GTM) to capture and send detailed ecommerce events from Showpass to your Google Analytics 4 (GA4) property.
 
@@ -8,7 +8,7 @@ This setup allows you to track user interactions with your products and events, 
 
 Showpass sends ecommerce data to the Data Layer. This GTM configuration will listen for these Data Layer events and forward them to GA4.
 
-## Step 1: Create an Ecommerce Events Trigger
+## Step 1: Create an ecommerce events trigger
 
 This trigger will fire your GA4 ecommerce tag whenever one of the specified Showpass ecommerce events occurs.
 
@@ -25,7 +25,7 @@ This trigger will fire your GA4 ecommerce tag whenever one of the specified Show
     - **This trigger fires on:** Select **All Custom Events**.
 4.  Click **Save**.
 
-## Step 2: Create the GA4 Ecommerce Event Tag
+## Step 2: Create the GA4 ecommerce event tag
 
 This tag will send the ecommerce data to GA4.
 
@@ -46,13 +46,13 @@ This tag will send the ecommerce data to GA4.
     - Select the trigger you created in Step 1 (e.g., `Custom - Showpass Ecommerce Events`).
 5.  Click **Save**.
 
-## Step 3: Publish Your GTM Container
+## Step 3: Publish your GTM container
 
 1.  In GTM, click the **Submit** button in the top right corner.
 2.  Enter a **Version Name** (e.g., "Added GA4 Ecommerce Tracking") and an optional **Version Description**.
 3.  Click **Publish**.
 
-## Step 4: Test Your Ecommerce Tracking
+## Step 4: Test your ecommerce tracking
 
 It's crucial to test your setup to ensure data is flowing correctly.
 

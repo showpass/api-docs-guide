@@ -1,4 +1,4 @@
-# Checkout Widget
+# Checkout widget
 
 ## Overview
 
@@ -31,11 +31,11 @@ The checkout widget typically requires items to be present in the shopping cart.
 | `params['tracking-id']`   | -       | -        | Not supported for this widget.                                                                                                                                |
 | `containerId`             | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the checkout flow should be mounted.                                                     |
 
-## Basic Usage Examples
+## Basic usage examples
 
 These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available, and there are items in the cart.
 
-### Pop-up Mode (Basic)
+### Pop-up mode (basic)
 
 Typically called after a user reviews their cart and clicks a "Proceed to Checkout" button.
 
@@ -50,7 +50,7 @@ let params = {
 showpass.tickets.checkoutWidget(params);
 ```
 
-### Embedded Mode (Basic)
+### Embedded mode (basic)
 
 Useful for creating a dedicated checkout page.
 
@@ -70,11 +70,11 @@ Useful for creating a dedicated checkout page.
 
 **Important:** The basic examples above assume `showpass.tickets` is ready. For production code, see the "Robust Implementation Examples" below.
 
-## Robust Implementation Examples
+## Robust implementation examples
 
 To ensure your code works reliably, especially handling the asynchronous loading of the SDK.
 
-### Pop-up Mode (Robust)
+### Pop-up mode (robust)
 
 This example uses a button click (e.g., "Proceed to Checkout" from a cart page) to open the widget.
 
@@ -118,7 +118,7 @@ This example uses a button click (e.g., "Proceed to Checkout" from a cart page) 
 </script>
 ```
 
-### Embedded Mode (Robust)
+### Embedded mode (robust)
 
 This example attempts to embed the checkout widget into a dedicated page area once the DOM is ready. This is suitable for a page where the main content _is_ the checkout process.
 

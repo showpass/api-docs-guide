@@ -1,6 +1,6 @@
-# Showpass Public API
+# Showpass public API
 
-## Event API Endpoint
+## Event API endpoint
 
 The primary endpoint for discovering events is: `https://www.showpass.com/api/public/discovery/`
 
@@ -12,7 +12,7 @@ The Showpass Public Event API allows you to fetch event data programmatically. Y
 
 The Public Event API is open and does not generally require authentication tokens for basic public event queries. However, for your requests to be successful, **your website's domain must be added to the allowlist** in the Showpass Dashboard. You can do this under your organization's settings, typically found on the "Integrations" tab of your venue edit page (`https://www.showpass.com/dashboard/venues/edit/`).
 
-## Response Format
+## Response format
 
 All API responses are returned in **JSON** format.
 

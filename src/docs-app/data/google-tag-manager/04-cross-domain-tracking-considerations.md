@@ -1,4 +1,4 @@
-# Cross-Domain Tracking Considerations
+# 4. Cross-domain tracking considerations
 
 Cross-domain tracking is essential when a user's journey spans across multiple domains (e.g., your website `yourdomain.com` and Showpass `showpass.com`) and you want to maintain a single, consistent session and user view in Google Analytics.
 
@@ -23,24 +23,24 @@ Google provides detailed instructions on how to configure cross-domain tracking 
 2.  Under **Configuration Settings > Configure domains**, add the domains involved (e.g., `yourdomain.com`, `showpass.com`).
 3.  Ensure your GA4 data stream settings in the GA4 UI are also configured for cross-domain tracking by adding the relevant domains.
 
-## B. Widget Tracking (Embedded iFrame)
+## B. Widget tracking (embedded iFrame)
 
 Tracking user activity accurately within an iFrame (like the Showpass embedded purchase widget) presents challenges, especially with browser privacy features that restrict third-party cookies.
 
-### Preferred Method: iFrame Tracking with `postMessage`
+### Preferred method: iFrame tracking with `postMessage`
 
 - For the most accurate tracking of widget conversions within GTM, Showpass **strongly recommends using the `postMessage` iFrame tracking method.**
 - This technique allows the iFrame to communicate data directly to the parent page (your website), bypassing many common cross-domain and third-party cookie issues.
 - **This method is detailed in Section 8: "Advanced & Preferred: iFrame Purchase Tracking via `postMessage`."**
 
-### Alternative: Basic iFrame Linker Decoration (If not using `postMessage`)
+### Alternative: Basic iFrame linker decoration (if not using `postMessage`)
 
 If you are not using the `postMessage` method, and you rely on basic cross-domain linker parameters for the iFrame, some configurations are needed.
 
 - **Showpass WordPress Plugin:** If you are using the Showpass WordPress plugin, it automatically includes functionality to help decorate the iFrame for cross-domain linking.
 - **Custom SDK Implementation (Not using WordPress Plugin):** If you are using the Showpass SDK with a custom JavaScript implementation on your site, you would typically need to add custom code to decorate the iFrame SRC URL with linker parameters. _The Showpass documentation you provided implies that specific code for this is needed but does not include the snippet itself; however, it details the GTM variables to capture these parameters if they are present in the iFrame URL._
 
-#### Updating Google Tag Configuration for iFrame Decoration Parameters
+#### Updating Google Tag configuration for iFrame decoration parameters
 
 If your iFrame URL is being decorated with `client_id`, `session_id`, etc. (either by the WordPress plugin or a custom solution), you can configure your Google Tag in GTM to read these values. This helps GA4 associate the iFrame activity with the parent page session.
 

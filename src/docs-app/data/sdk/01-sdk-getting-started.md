@@ -1,4 +1,4 @@
-# Showpass SDK Introduction
+# Showpass SDK introduction
 
 ## Overview
 
@@ -6,11 +6,11 @@ Showpass provides a JavaScript SDK (Software Development Kit) that makes it easy
 
 **Please note:** Your domain must have a valid SSL certificate (`https://`) installed for the SDK to work properly.
 
-## Including the Showpass SDK on Your Page
+## Including the Showpass SDK on your page
 
 You have two primary options for including the Showpass SDK:
 
-### Option 1: Asynchronous Loader (Recommended)
+### Option 1: Asynchronous loader (recommended)
 
 This method is generally recommended as it loads the SDK script asynchronously without blocking your page's rendering, and it provides a command queue to handle SDK calls made before the script is fully loaded. Paste this snippet into your site's JavaScript, or within `<script>` tags in your HTML (ideally before your closing `</body>` tag or in the `<head>`).
 
@@ -45,7 +45,7 @@ This method is generally recommended as it loads the SDK script asynchronously w
 - **Non-blocking:** Your page continues to load while the SDK fetches in the background.
 - **Command Queue:** You can call SDK functions immediately using `window.__shwps(...)` (see "Calling SDK Functions" below). These calls will be queued and executed once the SDK is fully loaded, preventing "function not defined" errors.
 
-### Option 2: Direct Script Tag (with `async` or `defer`)
+### Option 2: Direct script tag (with `async` or `defer`)
 
 You can include the SDK with a standard `<script>` tag. To prevent this tag from blocking your page's rendering while it downloads, it is crucial to use either the `async` or `defer` attribute. Place this tag in the `<head>` of your HTML or before your closing `</body>` tag.
 
@@ -79,7 +79,7 @@ Even when using `async` or `defer`, your custom JavaScript code that calls SDK f
 - Explicitly checking for the SDK's global object availability (e.g., `if (window.showpass && window.showpass.tickets) { ... }`) before making calls.
   This is in contrast to Option 1, where the `window.__shwps` command queue handles these timing issues for you.
 
-## Calling SDK Functions
+## Calling SDK functions
 
 Once the SDK is included and has loaded, its functions are available under the `showpass.tickets` namespace (e.g., `showpass.tickets.eventPurchaseWidget(...)`).
 
@@ -137,7 +137,7 @@ Because the SDK (especially with Option 1 or `async` in Option 2) loads asynchro
 
 The individual documentation for each SDK widget function will provide "Basic Usage" examples (which assume the SDK is ready for simplicity) and "Robust Implementation Examples" that demonstrate how to handle SDK loading and make calls reliably, often incorporating these checks or the command queue pattern.
 
-## Available SDK Functions
+## Available SDK functions
 
 The Showpass SDK provides several functions to integrate different Showpass widgets and features:
 

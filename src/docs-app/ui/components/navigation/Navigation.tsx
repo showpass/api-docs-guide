@@ -74,7 +74,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
 
       <AccordionItem value="api-reference">
         <AccordionTrigger className="sidebar-category mt-0">
-          Public API Reference
+          Public API reference
         </AccordionTrigger>
         <AccordionContent>
           <ul className="space-y-1 pl-5 border-l border-border/30">
@@ -85,7 +85,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Public Event API
+                Public event API
               </NavLink>
             </li>
             <li>
@@ -95,7 +95,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Event List by Organization
+                Event list by organization
               </NavLink>
             </li>
             <li>
@@ -105,7 +105,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Query a Specific Event
+                Query a specific event
               </NavLink>
             </li>
           </ul>
@@ -125,7 +125,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Getting Started
+                Getting started
               </NavLink>
             </li>
             <li>
@@ -135,7 +135,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Ticket Purchase Widget
+                Ticket purchase widget
               </NavLink>
             </li>
             <li>
@@ -145,7 +145,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Product Purchase Widget
+                Product purchase widget
               </NavLink>
             </li>
             <li>
@@ -155,7 +155,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Membership Purchase Widget
+                Membership purchase widget
               </NavLink>
             </li>
             <li>
@@ -165,7 +165,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Event Calendar Widget
+                Event calendar widget
               </NavLink>
             </li>
             <li>
@@ -175,7 +175,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Checkout/Shopping Cart Widget
+                Checkout/shopping cart widget
               </NavLink>
             </li>
             <li>
@@ -185,7 +185,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Cart Quantity Listener
+                Cart quantity listener
               </NavLink>
             </li>
             <li>
@@ -195,7 +195,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Widget Playground
+                Widget playground
               </NavLink>
             </li>
           </ul>
@@ -204,7 +204,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
 
       <AccordionItem value="showpass-wordpress-plugin">
         <AccordionTrigger className="sidebar-category mt-0">
-          Showpass Wordpress Plugin
+          Showpass Wordpress plugin
         </AccordionTrigger>
         <AccordionContent>
           <ul className="space-y-1 pl-5 border-l border-border/30">
@@ -215,7 +215,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Getting Started
+                Getting started
               </NavLink>
             </li>
             <li>
@@ -225,7 +225,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a Single Button or Widget
+                Adding a single button or widget
               </NavLink>
             </li>
             <li>
@@ -235,7 +235,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding an Event List
+                Adding an event list
               </NavLink>
             </li>
             <li>
@@ -245,7 +245,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding an Event Detail Page
+                Adding an event detail page
               </NavLink>
             </li>
             <li>
@@ -255,7 +255,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a Calendar Widget
+                Adding a calendar widget
               </NavLink>
             </li>
             <li>
@@ -265,7 +265,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a Product List
+                Adding a product list
               </NavLink>
             </li>
             <li>
@@ -275,7 +275,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a Membership List
+                Adding a membership list
               </NavLink>
             </li>
             <li>
@@ -285,7 +285,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Adding a Checkout / Cart Button
+                Adding a checkout / cart button
               </NavLink>
             </li>
             <li>
@@ -295,7 +295,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Dynamic Cart Counter (jQuery)
+                Dynamic cart counter (jQuery)
               </NavLink>
             </li>
             <li>
@@ -305,7 +305,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Widgets & Affiliate Tracking
+                Widgets & affiliate tracking
               </NavLink>
             </li>
             <li>
@@ -315,7 +315,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Creating Custom Templates
+                Creating custom templates
               </NavLink>
             </li>
             <li>
@@ -325,7 +325,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Auto-Opening Popup Widgets
+                Auto-opening popup widgets
               </NavLink>
             </li>
             <li>
@@ -335,7 +335,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Tips & Troubleshooting
+                Tips & troubleshooting
               </NavLink>
             </li>
           </ul>
@@ -373,7 +373,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Introduction to Showpass Google Tag Manager (GTM) Integration
+                Introduction to Showpass Google Tag Manager (GTM) integration
               </NavLink>
             </li>
             <li>
@@ -383,7 +383,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Initial Setup: GA4 and GTM Basics
+                Initial setup: GA4 and GTM basics
               </NavLink>
             </li>
             <li>
@@ -393,7 +393,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Standard Ecommerce Tracking with GA4 via GTM
+                Standard ecommerce tracking with GA4 via GTM
               </NavLink>
             </li>
             <li>
@@ -403,7 +403,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Cross-Domain Tracking Considerations
+                Cross-domain tracking considerations
               </NavLink>
             </li>
             <li>
@@ -413,7 +413,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Working with Custom HTML & JavaScript in GTM for Showpass
+                Working with custom HTML & JavaScript in GTM for Showpass
               </NavLink>
             </li>
             <li>
@@ -423,7 +423,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Tracking Custom Conversions (e.g., Marketing Pixels)
+                Tracking custom conversions (e.g., marketing pixels)
               </NavLink>
             </li>
             <li>
@@ -433,7 +433,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Showpass Data Layer Details
+                Showpass data layer details
               </NavLink>
             </li>
             <li>
@@ -443,7 +443,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Advanced & Preferred: iFrame Purchase Tracking via postMessage
+                Advanced & preferred: iFrame purchase tracking via postMessage
               </NavLink>
             </li>
             <li>
@@ -453,8 +453,8 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Advanced: Differentiating Widget (iFrame) vs. Direct
-                showpass.com Event Tracking
+                Advanced: differentiating widget (iFrame) vs. direct
+                Showpass.com event tracking
               </NavLink>
             </li>
             <li>
@@ -464,7 +464,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Example: Google Ads Conversion Tracking Setup with GTM
+                Example: Google Ads conversion tracking setup with GTM
               </NavLink>
             </li>
           </ul>

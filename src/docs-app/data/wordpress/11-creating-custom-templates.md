@@ -1,10 +1,10 @@
-# Creating Custom Wordpress Templates with Showpass data
+# Creating custom Wordpress templates with Showpass data
 
 While the Showpass WordPress Plugin provides default templates for displaying event lists you might want to create your own unique layouts and designs.
 
 This is an advanced topic that requires some knowledge of PHP, HTML, and WordPress theme development.
 
-## The `template="data"` Parameter
+## The `template="data"` parameter
 
 The key to creating custom templates is the `template="data"` parameter available for the relevant shortcodes:
 
@@ -12,7 +12,7 @@ The key to creating custom templates is the `template="data"` parameter availabl
 
 When you use `template="data"`, the shortcode doesn't output any HTML. Instead, it returns the raw data fetched from the Showpass API in JSON (JavaScript Object Notation) format. You can then use this JSON data within your own PHP WordPress template files to structure and style the information exactly how you want.
 
-## General Workflow for Custom Templates
+## General workflow for custom templates
 
 1.  **Identify the Data You Need:**
 
@@ -55,7 +55,7 @@ When you use `template="data"`, the shortcode doesn't output any HTML. Instead, 
       - _(Suggested: Include a screenshot of the Page Attributes meta box showing the Template dropdown)_
     - You do **not** put the `[showpass_events template="data"]` shortcode directly into the content editor of this page, because your PHP template file is already handling it.
 
-## Focused Example: Custom Event Data Display
+## Focused example: Custom event data display
 
 This example demonstrates how to fetch and display specific event fields within a custom WordPress page template. For product or membership data, the available fields in the JSON will differ.
 

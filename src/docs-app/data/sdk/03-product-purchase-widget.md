@@ -1,4 +1,4 @@
-# Product Purchase Widget
+# Product purchase widget
 
 ## Overview
 
@@ -18,7 +18,7 @@ showpass.tickets.productPurchaseWidget(productId, params, containerId);
 
 Ensure the Showpass SDK is included on your page and has fully loaded before these functions are called. See the "SDK Getting Started" guide. The SDK loads asynchronously.
 
-## Finding the Product ID
+## Finding the product ID
 
 To find the `productId`:
 
@@ -41,11 +41,11 @@ To find the `productId`:
 | `params['tracking-id']`      | -       | -        | Not supported for this widget.                                                                              |
 | `containerId`                | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the widget should be mounted.          |
 
-## Basic Usage Examples
+## Basic usage examples
 
 These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available.
 
-### Pop-up Mode (Basic)
+### Pop-up mode (basic)
 
 ```javascript
 // Basic parameters
@@ -58,7 +58,7 @@ let params = {
 showpass.tickets.productPurchaseWidget(1234, params);
 ```
 
-### Embedded Mode (Basic)
+### Embedded mode (basic)
 
 ```html
 <!-- 1. Your HTML container -->
@@ -78,11 +78,11 @@ showpass.tickets.productPurchaseWidget(1234, params);
 
 **Important:** The basic examples above assume `showpass.tickets` is ready. For production code, see the "Robust Implementation Examples" below to handle SDK loading.
 
-## Robust Implementation Examples
+## Robust implementation examples
 
 To ensure your code works reliably even if the Showpass SDK is still loading, it's best to check for its availability or use the `window.__shwps` command queue if you followed "Option 1" for SDK inclusion from the "Getting Started" guide.
 
-### Pop-up Mode (Robust)
+### Pop-up mode (robust)
 
 This example uses a button click to open the widget and reads the product ID from a `data-product-id` attribute on the button.
 
@@ -146,7 +146,7 @@ _Replace `1234` and `5678` with actual product IDs._
 </script>
 ```
 
-### Embedded Mode (Robust)
+### Embedded mode (robust)
 
 This example attempts to embed the product widget once the DOM is ready and includes a simple retry mechanism if the SDK isn't immediately available.
 

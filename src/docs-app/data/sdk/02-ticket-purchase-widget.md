@@ -1,4 +1,4 @@
-# Ticket Purchase Widget
+# Ticket purchase widget
 
 ## Overview
 
@@ -31,11 +31,11 @@ Ensure the Showpass SDK is included on your page and has loaded before these fun
 | `params['show-description']`      | Boolean | Optional | Displays or hides event description.<br>Default: `true`.<br>(Original deploy date: October 15th 2019)                                                    |
 | `containerId`                     | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the widget should be mounted. If provided, the widget embeds instead of popping up. |
 
-## Basic Usage Examples
+## Basic usage examples
 
 These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available.
 
-### Pop-up Mode (Basic)
+### Pop-up mode (basic)
 
 ```javascript
 // Basic parameters
@@ -48,7 +48,7 @@ let params = {
 showpass.tickets.eventPurchaseWidget("my-event-slug", params);
 ```
 
-### Embedded Mode (Basic)
+### Embedded mode (basic)
 
 ```html
 <!-- 1. Your HTML container -->
@@ -67,11 +67,11 @@ showpass.tickets.eventPurchaseWidget("my-event-slug", params);
 
 **Important:** The basic examples above assume `showpass.tickets` is ready. For production code, see the "Robust Implementation Examples" below to handle SDK loading.
 
-## Robust Implementation Examples
+## Robust implementation examples
 
 To ensure your code works reliably even if the Showpass SDK is still loading, it's best to check for its availability or use the `window.__shwps` command queue if you followed "Option 1" for SDK inclusion from the "Getting Started" guide.
 
-### Pop-up Mode (Robust)
+### Pop-up mode (robust)
 
 This example uses a button click to open the widget and checks if the SDK is loaded.
 
@@ -135,7 +135,7 @@ This example uses a button click to open the widget and checks if the SDK is loa
 </script>
 ```
 
-### Embedded Mode (Robust)
+### Embedded mode (robust)
 
 This example attempts to embed the widget once the DOM is ready and includes a simple retry mechanism if the SDK isn't immediately available.
 

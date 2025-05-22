@@ -1,8 +1,8 @@
-# Adding a Product List with [showpass_products]
+# Adding a product list with [showpass_products]
 
 If you sell merchandise, add-ons, or other non-event items through Showpass, you can display them on your WordPress site using the `[showpass_products]` shortcode. This allows customers to browse and purchase your products easily.
 
-## Basic Product List
+## Basic product list
 
 To add a basic product list:
 
@@ -14,7 +14,7 @@ To add a basic product list:
 
 By default, this will display your products in a grid layout, showing up to 20 products per page.
 
-## Customizing Your Product List: Parameters
+## Customizing your product list: Parameters
 
 You can customize the layout and content of your product list using these parameters:
 
@@ -43,7 +43,7 @@ You can customize the layout and content of your product list using these parame
   - **Use Case**: To explicitly show or hide the description panel within the purchase widget if a product is clicked. This overrides the global admin setting.
   - **Example**: `[showpass_products show_widget_description="true"]`
 
-## Example: A Customized Product List
+## Example: A customized product list
 
 Here's an example combining several parameters:
 

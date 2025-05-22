@@ -1,12 +1,12 @@
-# Adding a Single Button or Embeddable Widget with [showpass_widget]
+# Adding a single button or embeddable widget with [showpass_widget]
 
 The Showpass WordPress Plugin allows you to easily add "Buy Now" buttons or embed a full purchase widget directly onto your WordPress pages and posts. This is done using the `[showpass_widget]` shortcode. This is perfect for quickly linking to a specific event, product, or membership, or even embedding the entire purchase experience on a dedicated page.
 
-## What is a Shortcode?
+## What is a shortcode?
 
 Think of a shortcode as a shortcut. It's a small piece of text wrapped in square brackets `[]` that WordPress replaces with dynamic content. In this case, it replaces the `[showpass_widget]` shortcode with a button or an embedded widget.
 
-## How to Add the `[showpass_widget]` Shortcode
+## How to add the `[showpass_widget]` shortcode
 
 1.  Go to the WordPress page or post where you want to add the button or embedded widget.
 2.  In the WordPress editor, find a place to add a new block. Click the "+" icon to add a new block.
@@ -18,7 +18,7 @@ Think of a shortcode as a shortcut. It's a small piece of text wrapped in square
 
 Alternatively, you can often paste the shortcode directly into a standard Paragraph block. [3]
 
-## Basic Button Usage
+## Basic button usage
 
 To add a simple button that opens the Showpass purchase widget in a pop-up:
 
@@ -28,7 +28,7 @@ To add a simple button that opens the Showpass purchase widget in a pop-up:
 
 This will create a button with the default label "Tickets". When a user clicks it, the Showpass widget will open, allowing them to purchase tickets for that specific event.
 
-## Embedding the Widget Directly on the Page
+## Embedding the widget directly on the page
 
 If you want the purchase widget to appear directly on your page without a button click (embedded mode):
 
@@ -36,7 +36,7 @@ If you want the purchase widget to appear directly on your page without a button
 
 This is great for creating dedicated ticket pages.
 
-## Widget Types: Events, Products, and Memberships
+## Widget types: Events, products, and memberships
 
 The `[showpass_widget]` can be used for more than just events. You can specify the type of item you want to link to using the `type` parameter:
 
@@ -57,7 +57,7 @@ The `[showpass_widget]` can be used for more than just events. You can specify t
   - Example: `[showpass_widget type="membership" id="67890"]`
   - Embedded Example: `[showpass_widget type="membership" id="67890" embedded="true"]`
 
-## Customizing Your Widget: Parameters
+## Customizing your widget: Parameters
 
 Parameters are like settings for your shortcode. You add them inside the square brackets to change how the button or widget behaves or looks. Each parameter is followed by an equals sign `=` and then a value in quotes `""`.
 
@@ -113,7 +113,7 @@ Here are the common parameters for `[showpass_widget]`:
   - **How to find Ticket Type IDs**: You'll find these in your Showpass dashboard when managing your event's ticket types.
   - **Example**: `[showpass_widget slug="music-festival" show_specific_tickets="8001,8002"]` (This would only show ticket types with IDs 8001 and 8002 for the "music-festival" event).
 
-## Examples Putting It All Together:
+## Examples putting it all together:
 
 - **A button for an event called "Summer Fest" with custom label "Get Summer Fest Tickets!" and a red button style (assuming 'red-button' is a class in your CSS):**
   `[showpass_widget slug="summer-fest" label="Get Summer Fest Tickets!" class="red-button"]`
