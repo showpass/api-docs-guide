@@ -349,12 +349,62 @@ const Navigation = ({ currentPath }: NavigationProps) => {
           <ul className="space-y-1 pl-5 border-l border-border/30">
             <li>
               <NavLink
-                to="/webhooks/getting-started"
+                to="/webhooks/01-webhooks-introduction"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Webhooks
+                Introduction
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/webhooks/02-webhooks-setup-and-management"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Setup and management
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/webhooks/03-webhooks-security"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Security
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/webhooks/04-webhooks-event-types"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Event types
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/webhooks/05-webhooks-payload-invoice-object"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Payload invoice object
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/webhooks/06-webhooks-logging-and-troubleshooting"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Logging and troubleshooting
               </NavLink>
             </li>
           </ul>

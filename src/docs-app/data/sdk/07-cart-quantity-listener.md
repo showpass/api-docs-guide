@@ -1,9 +1,3 @@
-Okay, I will combine the core functionality of the `addCartCountListener` with the more detailed implementation guide from the "Advanced Dynamic Cart Counter" (WordPress focused) document, but I'll make it generic (non-WordPress specific for the implementation steps) as requested.
-
-The key is to keep the simple SDK call visible upfront, then provide a more comprehensive, yet generic, example of how it can be used to update an element and optionally persist the count using a cookie for navigation.
-
-Here's the raw text content for the updated `sdk-cart-quantity-listener.md`:
-
 # Cart quantity listener
 
 ## Overview

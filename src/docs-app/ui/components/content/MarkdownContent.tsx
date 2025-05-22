@@ -13,6 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/shared/components/table.tsx";
+import { cn } from "@/shared/lib/utils.ts";
 
 interface MarkdownContentProps {
   content: string;
@@ -61,9 +62,14 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       const match = /language-(\w+)/.exec(className || "");
 
       if (!match) {
+        // Inline code
         return (
           <code
-            className="px-1.5 py-0.5 bg-slate-100 text-slate-800 rounded font-mono text-sm"
+            className={cn(
+              "px-1.5 py-0.5 rounded font-mono text-sm", // Base styles
+              "bg-slate-100 text-slate-800", // Light mode styles
+              "dark:bg-[hsl(var(--prose-code-bg))] dark:text-[hsl(var(--prose-code-fg))]" // Dark mode styles
+            )}
             {...props}
           >
             {children}
@@ -71,6 +77,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
         );
       }
 
+      // Code block (will be rendered by CodeBlock component)
       return (
         <CodeBlock
           code={String(children).replace(/\n$/, "")}
@@ -85,7 +92,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h1
           id={id}
-          className="text-3xl font-bold mt-8 mb-4 text-slate-900 scroll-mt-24"
+          className="text-3xl font-bold mt-8 mb-4 scroll-mt-24"
           {...props}
         >
           {children}
@@ -98,7 +105,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h2
           id={id}
-          className="text-2xl font-bold mt-8 mb-3 text-slate-900 scroll-mt-24"
+          className="text-2xl font-bold mt-8 mb-3 scroll-mt-24"
           {...props}
         >
           {children}
@@ -111,7 +118,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h3
           id={id}
-          className="text-xl font-bold mt-6 mb-3 text-slate-900 scroll-mt-24"
+          className="text-xl font-bold mt-6 mb-3 scroll-mt-24"
           {...props}
         >
           {children}
@@ -124,16 +131,14 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h4
           id={id}
-          className="text-lg font-bold mt-6 mb-2 text-slate-900 scroll-mt-24"
+          className="text-lg font-bold mt-6 mb-2 scroll-mt-24"
           {...props}
         >
           {children}
         </h4>
       );
     },
-    a: ({ node, ...props }) => (
-      <a className="text-blue-600 hover:text-blue-800 underline" {...props} />
-    ),
+    a: ({ node, ...props }) => <a className="underline" {...props} />,
     ul: ({ node, ...props }) => (
       <ul className="list-disc pl-6 my-4" {...props} />
     ),
@@ -142,7 +147,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     ),
     p: ({ node, children, ...props }) => {
       return (
-        <p className="my-4 text-slate-700" {...props}>
+        <p className="my-4" {...props}>
           {children}
         </p>
       );
@@ -167,8 +172,9 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
             React.isValidElement(child) &&
             child.props &&
             typeof child.props.children === "string"
-          )
+          ) {
             return child.props.children;
+          }
           return "";
         })
         .join("");
@@ -181,10 +187,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
                 return (
                   <React.Fragment key={i}>
                     {i > 0 && " "}
-                    <a
-                      href={part}
-                      className="text-blue-600 hover:text-blue-800 underline break-all"
-                    >
+                    <a href={part} className="underline break-all">
                       {part}
                     </a>
                   </React.Fragment>
@@ -205,7 +208,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
   };
 
   return (
-    <div className="prose prose-slate max-w-none">
+    <div className="prose prose-slate max-w-none dark:prose-invert">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeRaw]}

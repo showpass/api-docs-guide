@@ -141,13 +141,11 @@ The individual documentation for each SDK widget function will provide "Basic Us
 
 The Showpass SDK provides several functions to integrate different Showpass widgets and features:
 
-1.  **Ticket Selection Widget:** For event ticket purchases.
-2.  **Product Selection Widget:** For marketplace product purchases.
-3.  **Shopping Cart Widget:** To display and manage cart contents.
-4.  **Check Out Widget:** To initiate the final checkout process.
-5.  **Login Widget:** To prompt user login.
-6.  **Cart Quantity Counter:** To listen for changes in cart item count.
-7.  **Calendar Widget:** A pop-up calendar for event selection.
-8.  **Embedded Calendar Widget:** Mounts a calendar directly onto a page element.
+1.  **Ticket purchase widget:** For event ticket purchases.
+2.  **Product purchase widget:** For marketplace product purchases.
+3.  **Memberhips purchase widget:** For membership and season pass purchases.
+4.  **Calendar widget:** A calendar for event purcahses.
+5.  **Checkout Widget:** To initiate the final checkout process.
+6.  **Cart quantity listener:** To listen for changes in cart item count.
 
 Refer to the specific documentation page for each function for detailed parameters and examples.

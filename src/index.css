@@ -33,36 +33,50 @@
     --ring: 185 51% 31%;
 
     --radius: 0.5rem;
+
+    --prose-body: var(--foreground);
+    --prose-headings: var(--foreground);
+    --prose-links: var(--primary);
+    --prose-code-fg: hsl(0, 0%, 15%);
+    --prose-code-bg: hsl(0, 0%, 80%);
+    --prose-pre-bg: hsl(0, 0%, 80%);
   }
 
   .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
+    --background: 185 68% 3%;
+    --foreground: 210 10% 85%;
 
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
+    --card: 185 65% 5%;
+    --card-foreground: var(--foreground);
 
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
+    --popover: hsl(var(--card));
+    --popover-foreground: var(--card-foreground);
 
-    --primary: 185 51% 41%;
-    --primary-foreground: 210 40% 98%;
+    --primary: 185 51% 35%;
+    --primary-foreground: 210 20% 95%;
 
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
+    --secondary: 185 60% 8%;
+    --secondary-foreground: var(--foreground);
 
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
+    --muted: 185 60% 6%;
+    --muted-foreground: 210 10% 60%;
 
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
+    --accent: 183 62% 30%;
+    --accent-foreground: 210 20% 95%;
 
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 98%;
 
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 185 51% 41%;
+    --border: 185 60% 6%;
+    --input: 185 60% 8%;
+    --ring: 185 51% 35%;
+
+    --prose-body: var(--foreground);
+    --prose-headings: var(--foreground);
+    --prose-links: var(--primary);
+    --prose-code-fg: var(--foreground);
+    --prose-code-bg: 185 60% 6%;
+    --prose-pre-bg: 185 60% 6%;
   }
 }
 
@@ -96,15 +110,15 @@
   }
 
   code {
-    @apply relative rounded bg-muted px-[0.3rem] py-[0.2rem] font-mono text-sm;
+    @apply relative rounded bg-[var(--prose-code-bg)] text-[var(--prose-code-fg)] px-[0.3rem] py-[0.2rem] font-mono text-sm;
   }
 
   pre {
-    @apply my-4 overflow-x-auto rounded-lg bg-muted py-4;
+    @apply my-4 overflow-x-auto rounded-lg bg-[var(--prose-pre-bg)] py-4;
   }
 
   pre > code {
-    @apply bg-transparent px-0 py-0 text-sm;
+    @apply !bg-transparent px-0 py-0 text-sm;
   }
 
   table {
@@ -129,6 +143,22 @@
 
   td {
     @apply p-4 align-top;
+  }
+
+  .dark .prose {
+    color: var(--prose-body);
+  }
+
+  .dark .prose :where(a):not(:where([class~="not-prose"] *)) {
+    color: var(--prose-links);
+  }
+
+  .dark .prose :where(strong):not(:where([class~="not-prose"] *)) {
+    color: var(--prose-headings);
+  }
+
+  .dark .prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"] *)) {
+    color: var(--prose-headings);
   }
 }
 

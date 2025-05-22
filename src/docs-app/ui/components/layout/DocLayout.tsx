@@ -9,6 +9,7 @@ import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
 import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
 import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
 import logoSrc from "@/shared/assets/images/showpass-logo-red.svg";
+import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
 
 interface DocLayoutProps {
   children: React.ReactNode;
@@ -33,7 +34,7 @@ const DocLayout = ({
 
   return (
     <div className="flex flex-col lg:grid lg:grid-cols-[330px_minmax(0,1fr)] min-h-screen">
-      {/* Mobile Navigation Toggle & Search */}
+      {/* Mobile Header: Menu | Logo (centered) | ThemeToggle */}
       <div className="sticky top-0 z-50 flex items-center justify-between border-b bg-background p-4 lg:hidden">
         <Button
           variant="ghost"
@@ -51,7 +52,9 @@ const DocLayout = ({
             className="h-8"
           />
         </div>
-        <div className="w-12" />
+        <div className="ml-2">
+          <ThemeToggle />
+        </div>
       </div>
 
       {/* Left Sidebar (Navigation) */}
@@ -75,14 +78,17 @@ const DocLayout = ({
               <span className="sr-only">Close sidebar</span>
             </Button>
           </div>
-          {/* Desktop Sidebar Header */}
-          <div className="border-b border-slate-200 p-4 hidden lg:flex items-center justify-start">
+          {/* Desktop Sidebar Header: Logo | ThemeToggle & Search */}
+          <div className="border-b border-slate-200 p-4 hidden lg:flex items-center justify-between">
             <div className="flex items-center gap-2">
               <img
                 src={logoSrc}
                 alt="Showpass Documentation Logo"
                 className="h-8"
               />
+            </div>
+            <div className="flex items-center gap-2">
+              <ThemeToggle />
             </div>
           </div>
           <div className="border-b border-slate-200 p-5">
@@ -110,7 +116,7 @@ const DocLayout = ({
         {/* Main Content */}
         <div
           className={cn(
-            "px-5 py-8 pt-3 lg:px-10 xl:px-12 prose prose-blue prose-pre:overflow-x-auto prose-table:overflow-x-auto",
+            "px-5 py-8 pt-3 lg:px-10 xl:px-12 prose dark:prose-invert prose-slate prose-pre:overflow-x-auto prose-table:overflow-x-auto",
             hideRightSidebar ? "max-w-none" : "max-w-[1200px] mx-auto xl:mx-0"
           )}
         >
@@ -119,10 +125,10 @@ const DocLayout = ({
 
         {/* Right Sidebar - API Examples or Table of Contents */}
         {!hideRightSidebar && (
-          <div className="hidden xl:block border-l border-slate-200 bg-slate-50/50">
+          <div className="hidden xl:block border-l border-border bg-slate-50/50 dark:bg-slate-900/50 dark:border-slate-700">
             <div className="sticky top-0 p-6 pt-2 self-start max-h-screen overflow-y-auto">
-              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-slate-200">
-                <p className="text-sm font-medium text-slate-700">
+              <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border dark:border-slate-700">
+                <p className="text-sm font-medium text-slate-700 dark:text-slate-300">
                   {apiExamplesData ? "API Reference" : "On This Page"}
                 </p>
               </div>
