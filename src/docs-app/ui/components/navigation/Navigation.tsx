@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useRef } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/shared/lib/utils.ts";
 import {
@@ -12,44 +12,35 @@ interface NavigationProps {
   currentPath: string;
 }
 
-const getActiveSections = (currentPath: string) => {
-  const sectionConfigs = [
-    { value: "introduction", condition: currentPath === "/" },
-    { value: "api-reference", condition: currentPath.startsWith("/api/") },
-    {
-      value: "sdk",
-      condition:
-        currentPath.startsWith("/sdk/") || currentPath.startsWith("/widgets"),
-    },
-    { value: "webhooks", condition: currentPath.startsWith("/webhooks/") },
-    {
-      value: "google-tag-manager",
-      condition: currentPath.startsWith("/google-tag-manager/"),
-    },
-    {
-      value: "showpass-wordpress-plugin",
-      condition: currentPath.startsWith("/wordpress/"),
-    },
-  ];
-  return sectionConfigs
-    .filter((section) => section.condition)
-    .map((section) => section.value);
+const getDefaultOpenSection = (currentPath: string): string[] => {
+  if (currentPath === "/") {
+    return ["introduction"];
+  }
+  if (currentPath.startsWith("/api/")) {
+    return ["api-reference"];
+  }
+  if (currentPath.startsWith("/sdk/") || currentPath.startsWith("/widgets")) {
+    return ["sdk"];
+  }
+  if (currentPath.startsWith("/wordpress/")) {
+    return ["showpass-wordpress-plugin"];
+  }
+  if (currentPath.startsWith("/webhooks/")) {
+    return ["webhooks"];
+  }
+  if (currentPath.startsWith("/google-tag-manager/")) {
+    return ["google-tag-manager"];
+  }
+  return [];
 };
 
 const Navigation = ({ currentPath }: NavigationProps) => {
-  const [openSections, setOpenSections] = useState<string[]>(() =>
-    getActiveSections(currentPath)
-  );
-
-  useEffect(() => {
-    setOpenSections(getActiveSections(currentPath));
-  }, [currentPath]);
+  const initialDefaultValueRef = useRef(getDefaultOpenSection(currentPath));
 
   return (
     <Accordion
       type="multiple"
-      value={openSections}
-      onValueChange={setOpenSections}
+      defaultValue={initialDefaultValueRef.current}
       className="w-full"
     >
       <AccordionItem value="introduction">

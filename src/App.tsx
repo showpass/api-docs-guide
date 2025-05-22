@@ -5,7 +5,11 @@ import { TooltipProvider } from "./shared/components/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Pages
+// Layout and Pages
+// Import DocLayout directly. DocLayoutDataProvider will be used by child page components.
+import DocLayout, {
+  DocLayoutDataProvider,
+} from "./docs-app/ui/components/layout/DocLayout.tsx";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import DynamicDocPage from "./docs-app/ui/components/DynamicDocPage";
@@ -23,43 +27,44 @@ const App = () => (
         <Sonner />
         <BrowserRouter basename={basename}>
           <Routes>
-            {/* Introduction Routes */}
-            <Route path="/" element={<Index />} />
-
-            {/* Dynamic API Reference Routes */}
+            {/* DocLayout is the parent layout route component */}
             <Route
-              path="/api/:slug"
-              element={<DynamicDocPage section="api" />}
-            />
+              element={
+                // Parent route that provides the layout and context
+                <DocLayoutDataProvider>
+                  {" "}
+                  {/* Provider sets up the context and state */}
+                  <DocLayout />{" "}
+                  {/* Layout consumes context and renders Outlet */}
+                </DocLayoutDataProvider>
+              }
+            >
+              {/* Child routes - their elements will render in DocLayout's Outlet */}
+              {/* These children will use a hook to update the context data */}
+              <Route path="/" element={<Index />} />
+              <Route
+                path="/api/:slug"
+                element={<DynamicDocPage section="api" />}
+              />
+              <Route
+                path="/sdk/:slug"
+                element={<DynamicDocPage section="sdk" />}
+              />
+              <Route
+                path="/webhooks/:slug"
+                element={<DynamicDocPage section="webhooks" />}
+              />
+              <Route
+                path="/google-tag-manager/:slug"
+                element={<DynamicDocPage section="google-tag-manager" />}
+              />
+              <Route path="/widgets" element={<WidgetPlayground />} />
+              <Route
+                path="/wordpress/:slug"
+                element={<DynamicDocPage section="wordpress" />}
+              />
+            </Route>
 
-            {/* Dynamic SDK Routes */}
-            <Route
-              path="/sdk/:slug"
-              element={<DynamicDocPage section="sdk" />}
-            />
-
-            {/* Dynamic Webhook Routes */}
-            <Route
-              path="/webhooks/:slug"
-              element={<DynamicDocPage section="webhooks" />}
-            />
-
-            {/* Widget Playground Route */}
-            <Route path="/widgets" element={<WidgetPlayground />} />
-
-            {/* Dynamic Wordpress Routes */}
-            <Route
-              path="/wordpress/:slug"
-              element={<DynamicDocPage section="wordpress" />}
-            />
-
-            {/* Dynamic Webhook Routes */}
-            <Route
-              path="/google-tag-manager/:slug"
-              element={<DynamicDocPage section="google-tag-manager" />}
-            />
-
-            {/* Catch-all route for 404 */}
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>

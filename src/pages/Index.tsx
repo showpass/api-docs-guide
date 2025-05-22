@@ -1,202 +1,167 @@
 import React from "react";
-import DocLayout from "@/docs-app/ui/components/layout/DocLayout.tsx";
+import { DocLayoutDataProvider } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
 import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
+import { Link } from "react-router-dom";
+import { Button } from "@/shared/components/button";
 
 const Index = () => {
   const activeSection = useScrollSpy("h2[id], h3[id]", 100);
 
   const tableOfContentsItems = [
     { title: "Overview", href: "#overview" },
-    { title: "Key Features", href: "#key-features" },
-    { title: "Getting Started", href: "#getting-started" },
-    { title: "API Reference", href: "#api-reference" },
-    { title: "SDK Components", href: "#sdk-components" },
+    { title: "Getting started with the SDK", href: "#getting-started-sdk" },
+    { title: "Public API reference", href: "#api-reference" },
+    { title: "Javascript SDK", href: "#javascript-sdk" },
+    { title: "Showpass Wordpress plugin", href: "#wordpress-plugin" },
     { title: "Webhooks", href: "#webhooks" },
+    { title: "Google Tag Manager", href: "#google-tag-manager" },
   ];
 
+  const pageDataForLayout = {
+    tocItems: tableOfContentsItems,
+    activeSection: activeSection,
+    hideRightSidebar: false,
+    apiExamplesData: undefined,
+  };
+
   return (
-    <DocLayout currentPath="/" tocItems={tableOfContentsItems}>
-      <h1>Showpass Public API & SDK</h1>
+    <DocLayoutDataProvider {...pageDataForLayout}>
+      <h1 className="mt-5">Showpass Developer Documentation</h1>
 
       <section id="overview">
         <h2>Overview</h2>
         <p>
-          SDK you can easily integrate Showpass into any website. This
-          documentation provides comprehensive information about the Showpass
-          Public API and SDK, helping you seamlessly integrate ticket sales and
-          event management features into your application.
+          Welcome to the Showpass developer documentation. This site provides
+          comprehensive information about the Showpass Public API, Javascript
+          SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.
+          Our goal is to help you seamlessly integrate Showpass ticket sales,
+          event management, and tracking features into your websites and
+          applications.
         </p>
       </section>
 
-      <section id="key-features">
-        <h2>Key Features</h2>
-        <ul className="list-disc pl-6 space-y-2 mt-4">
-          <li>Comprehensive Public Event API for accessing event data</li>
-          <li>Customizable widgets for ticket selection and purchases</li>
-          <li>Product selection and shopping cart integration</li>
-          <li>Calendar display for upcoming events</li>
-          <li>Webhook support for real-time event notifications</li>
-        </ul>
-      </section>
-
-      <section id="getting-started">
-        <h2>Getting Started</h2>
+      <section id="getting-started-sdk">
+        <h2>Getting started with the SDK</h2>
         <p>
-          To get started with the Showpass SDK, include the following script in
-          your HTML header:
+          To begin integrating Showpass widgets and functionality into your
+          website, include the Showpass SDK script. The recommended method is
+          using the asynchronous loader:
         </p>
         <CodeBlock
           language="javascript"
           code={`(function(window, document, src) {
-    let config = window.__shwps;
-    if (typeof config === "undefined") {
-        config = function() {
-            config.c(arguments)
-        };
-        config.q = [];
-        config.c = function(args) {
-            config.q.push(args)
-        };
-        window.__shwps = config;
-
-        let s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.async = true;
-        s.src = src;
-        let x = document.getElementsByTagName('script')[0];
-        x.parentNode.insertBefore(s, x);
-    }
+  let config = window.__shwps;
+  if (typeof config === "undefined") {
+    config = function() { config.c(arguments); };
+    config.q = [];
+    config.c = function(args) { config.q.push(args); };
+    window.__shwps = config;
+    let s = document.createElement('script');
+    s.type = 'text/javascript';
+    s.async = true;
+    s.src = src;
+    let x = document.getElementsByTagName('script')[0];
+    x.parentNode.insertBefore(s, x);
+  }
 })(window, document, 'https://www.showpass.com/static/dist/sdk.js');`}
         />
-
-        <p>Alternatively, you can include it directly in your HTML:</p>
-        <CodeBlock
-          language="html"
-          code={`<script type="text/javascript" src="https://showpass.com/static/dist/sdk.js"></script>`}
-        />
+        <p className="mt-4">
+          For detailed SDK setup and usage, please see the{" "}
+          <Link
+            to="/sdk/01-sdk-getting-started"
+            className="underline hover:text-primary"
+          >
+            SDK Getting Started guide
+          </Link>
+          .
+        </p>
       </section>
 
       <section id="api-reference">
-        <h2>API Reference</h2>
+        <h2>Public API reference</h2>
         <p>
-          The Showpass Public API provides endpoints for accessing event data
-          programmatically:
+          Access detailed information about Showpass events programmatically.
+          Our Public Event API allows you to fetch, query, and display event
+          data for your custom applications.
         </p>
-
-        <h3>Main Endpoints</h3>
-        <ul className="list-disc pl-6 space-y-2 mt-4">
-          <li>
-            <strong>Event List</strong>:{" "}
-            <code>https://www.showpass.com/api/public/discovery/</code>
-          </li>
-          <li>
-            <strong>Event List by Organization</strong>:{" "}
-            <code>
-              https://www.showpass.com/api/public/discovery/?venue__in=id
-            </code>
-          </li>
-          <li>
-            <strong>Query a Specific Event</strong>:{" "}
-            <code>https://www.showpass.com/api/public/events/slug/</code>
-          </li>
-        </ul>
-
-        <p>
-          Navigate to the API Reference section for detailed information about
-          query parameters and response formats.
+        <p className="mt-2">
+          Key endpoints include listing all events, filtering events by
+          organization, and querying specific event details.
         </p>
+        <Button asChild className="mt-4">
+          <Link to="/api/01-public-api-introduction">
+            Explore API Reference
+          </Link>
+        </Button>
       </section>
 
-      <section id="sdk-components">
-        <h2>SDK Components</h2>
+      <section id="javascript-sdk">
+        <h2>Javascript SDK</h2>
         <p>
-          The Showpass SDK provides several components for integrating with your
-          website:
+          Our Javascript SDK provides a suite of embeddable widgets and
+          functions to integrate Showpass directly into your website frontend.
+          Easily add ticket selection, product purchase flows, calendars,
+          shopping cart functionality, and more.
         </p>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
-            <h4 className="font-medium">Ticket Selection Widget</h4>
-            <p className="text-sm text-muted-foreground">
-              Allow users to select ticket quantities for an event
-            </p>
-          </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
-            <h4 className="font-medium">Product Selection Widget</h4>
-            <p className="text-sm text-muted-foreground">
-              Displays products for purchase
-            </p>
-          </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
-            <h4 className="font-medium">Shopping Cart Widget</h4>
-            <p className="text-sm text-muted-foreground">
-              Displays the current shopping cart contents
-            </p>
-          </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
-            <h4 className="font-medium">Check Out Widget</h4>
-            <p className="text-sm text-muted-foreground">
-              Handles the checkout process
-            </p>
-          </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
-            <h4 className="font-medium">Login Widget</h4>
-            <p className="text-sm text-muted-foreground">
-              Handles user authentication
-            </p>
-          </div>
-          <div className="border rounded-md p-4 hover:border-primary transition-colors bg-white">
-            <h4 className="font-medium">Calendar Widget</h4>
-            <p className="text-sm text-muted-foreground">
-              Displays events in a calendar format
-            </p>
-          </div>
+        <p className="mt-2">
+          Widgets include: Ticket Purchase, Product Purchase, Membership
+          Purchase, Event Calendar, Checkout, and Cart Quantity Listener.
+        </p>
+        <div className="flex flex-wrap gap-4 mt-4">
+          <Button asChild>
+            <Link to="/sdk/01-sdk-getting-started">SDK Documentation</Link>
+          </Button>
+          <Button asChild variant="outline">
+            <Link to="/widgets">Widget Playground</Link>
+          </Button>
         </div>
+      </section>
 
-        <div className="mt-6 p-4 bg-primary/10 rounded-md border border-primary/20">
-          <h4 className="font-medium">Interactive Widget Playground</h4>
-          <p className="mt-2">
-            Try out all the Showpass widgets in our interactive playground.
-            Experiment with different configurations and see how they can be
-            integrated into your application.
-          </p>
-          <a
-            href="/widgets"
-            className="inline-block mt-3 px-4 py-2 bg-primary text-white rounded-md hover:bg-primary/90 transition-colors"
-          >
-            Explore Widget Playground
-          </a>
-        </div>
+      <section id="wordpress-plugin">
+        <h2>Showpass Wordpress plugin</h2>
+        <p>
+          Effortlessly integrate Showpass into your WordPress site with our
+          official plugin. Add event listings, buy buttons, calendars, and
+          product displays using simple shortcodes, with extensive customization
+          options available.
+        </p>
+        <Button asChild className="mt-4">
+          <Link to="/wordpress/01-getting-started-install-and-configure">
+            WordPress Plugin Guide
+          </Link>
+        </Button>
       </section>
 
       <section id="webhooks">
         <h2>Webhooks</h2>
         <p>
-          Showpass provides webhook functionality to notify your systems about
-          events such as:
+          Automate your workflows and receive real-time notifications for events
+          occurring in Showpass. Integrate with external systems when new orders
+          are placed, tickets are transferred, or refunds are processed.
         </p>
-        <ul className="list-disc pl-6 space-y-2 mt-4">
-          <li>
-            New orders (<code>invoice.purchase</code>)
-          </li>
-          <li>
-            Refunds (<code>invoice.refund</code>)
-          </li>
-          <li>
-            Transaction voids (<code>invoice.void</code>)
-          </li>
-          <li>
-            Ticket transfers (<code>invoice.transfer</code>,{" "}
-            <code>invoice.transferred</code>)
-          </li>
-        </ul>
-        <p>
-          Refer to the Webhooks section for detailed implementation guidance and
-          payload formats.
-        </p>
+        <Button asChild className="mt-4">
+          <Link to="/webhooks/01-webhooks-introduction">
+            Learn about Webhooks
+          </Link>
+        </Button>
       </section>
-    </DocLayout>
+
+      <section id="google-tag-manager">
+        <h2>Google Tag Manager</h2>
+        <p>
+          Leverage Google Tag Manager (GTM) for advanced analytics and marketing
+          tag integration. Track detailed ecommerce events, send data to Google
+          Analytics 4 (GA4), and manage third-party pixels for comprehensive
+          insights into customer behavior and conversions.
+        </p>
+        <Button asChild className="mt-4">
+          <Link to="/google-tag-manager/01-introduction-to-showpass-gtm-integration">
+            GTM Integration Guide
+          </Link>
+        </Button>
+      </section>
+    </DocLayoutDataProvider>
   );
 };
 

@@ -44,7 +44,7 @@
 
   .dark {
     --background: 185 68% 3%;
-    --foreground: 210 10% 70%;
+    --foreground: 210 10% 82%;
 
     --card: 185 65% 5%;
     --card-foreground: var(--foreground);
@@ -53,7 +53,7 @@
     --popover-foreground: var(--card-foreground);
 
     --primary: 185 51% 35%;
-    --primary-foreground: 210 20% 70;
+    --primary-foreground: 210 20% 82%;
 
     --secondary: 185 60% 8%;
     --secondary-foreground: var(--foreground);

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { Outlet, useLocation } from "react-router-dom";
 import { ScrollArea } from "@/shared/components/scroll-area.tsx";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
@@ -13,27 +14,58 @@ import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
 import { useTheme } from "next-themes";
 
-interface DocLayoutProps {
-  children: React.ReactNode;
-  currentPath?: string;
+export interface DocLayoutContextProps {
   tocItems?: TocItem[];
-  navigation?: React.ReactNode;
   apiExamplesData?: ApiExamplesData;
   activeSection?: string;
   hideRightSidebar?: boolean;
 }
 
-const DocLayout = ({
+// Define the shape of the context value including the updater function
+interface FullDocLayoutContextProps extends DocLayoutContextProps {
+  setPageData: React.Dispatch<React.SetStateAction<DocLayoutContextProps>>;
+}
+
+export const DocLayoutContext =
+  React.createContext<FullDocLayoutContextProps | null>(null);
+
+export const useDocLayoutData = () => {
+  const context = React.useContext(DocLayoutContext);
+  if (!context) {
+    throw new Error(
+      "useDocLayoutData must be used within a DocLayoutDataProvider"
+    );
+  }
+  return context;
+};
+
+// This Provider will be used ONCE in App.tsx, wrapping DocLayout
+export const DocLayoutDataProvider: React.FC<React.PropsWithChildren> = ({
   children,
-  currentPath,
-  tocItems,
-  navigation,
-  apiExamplesData,
-  activeSection,
-  hideRightSidebar = false,
-}: DocLayoutProps) => {
+}) => {
+  const [pageData, setPageData] = useState<DocLayoutContextProps>({
+    tocItems: [],
+    apiExamplesData: undefined,
+    activeSection: undefined,
+    hideRightSidebar: false,
+  });
+
+  return (
+    <DocLayoutContext.Provider value={{ ...pageData, setPageData }}>
+      {children}
+    </DocLayoutContext.Provider>
+  );
+};
+
+const DocLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { resolvedTheme } = useTheme();
+  const location = useLocation();
+  const currentPath = location.pathname;
+
+  // Consume the context provided by DocLayoutDataProvider in App.tsx
+  const { tocItems, apiExamplesData, activeSection, hideRightSidebar } =
+    useDocLayoutData();
 
   const currentLogo = resolvedTheme === "dark" ? logoWhiteSrc : logoRedSrc;
 
@@ -100,8 +132,7 @@ const DocLayout = ({
             <DocSearch />
           </div>
           <ScrollArea className="flex-1 px-5 pb-12">
-            {navigation ||
-              (currentPath && <Navigation currentPath={currentPath} />)}
+            <Navigation currentPath={currentPath} />
           </ScrollArea>
         </div>
       </div>
@@ -125,7 +156,7 @@ const DocLayout = ({
             hideRightSidebar ? "max-w-none" : "max-w-[1200px] mx-auto xl:mx-0"
           )}
         >
-          {children}
+          <Outlet />
         </div>
 
         {/* Right Sidebar - API Examples or Table of Contents */}
