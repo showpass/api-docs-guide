@@ -13,8 +13,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --primary: 185 51% 31%;
-    --primary-foreground: 210 40% 98%;
+    --site-primary: 185 51% 31% !important;
+    --site-primary-foreground: 210 40% 98% !important;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -36,7 +36,7 @@
 
     --prose-body: var(--foreground);
     --prose-headings: var(--foreground);
-    --prose-links: var(--primary);
+    --prose-links: var(--site-primary);
     --prose-code-fg: hsl(0, 0%, 15%);
     --prose-code-bg: hsl(0, 0%, 80%);
     --prose-pre-bg: hsl(0, 0%, 80%);
@@ -52,8 +52,8 @@
     --popover: hsl(var(--card));
     --popover-foreground: var(--card-foreground);
 
-    --primary: 185 51% 35% !important;
-    --primary-foreground: 210 20% 82%;
+    --site-primary: 185 51% 35%;
+    --site-primary-foreground: 210 20% 82%;
 
     --secondary: 185 60% 8%;
     --secondary-foreground: var(--foreground);
@@ -73,7 +73,7 @@
 
     --prose-body: var(--foreground);
     --prose-headings: var(--foreground);
-    --prose-links: var(--primary);
+    --prose-links: var(--site-primary);
     --prose-code-fg: var(--foreground);
     --prose-code-bg: 185 60% 10%;
     --prose-pre-bg: 185 60% 10%;
