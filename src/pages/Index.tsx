@@ -1,5 +1,5 @@
-import React from "react";
-import { DocLayoutDataProvider } from "@/docs-app/ui/components/layout/DocLayout.tsx";
+import React, { useEffect } from "react";
+import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
 import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
 import { Link } from "react-router-dom";
@@ -7,26 +7,30 @@ import { Button } from "@/shared/components/button";
 
 const Index = () => {
   const activeSection = useScrollSpy("h2[id], h3[id]", 100);
+  const { setPageData } = useDocLayoutData();
 
-  const tableOfContentsItems = [
-    { title: "Overview", href: "#overview" },
-    { title: "Getting started with the SDK", href: "#getting-started-sdk" },
-    { title: "Public API reference", href: "#api-reference" },
-    { title: "Javascript SDK", href: "#javascript-sdk" },
-    { title: "Showpass Wordpress plugin", href: "#wordpress-plugin" },
-    { title: "Webhooks", href: "#webhooks" },
-    { title: "Google Tag Manager", href: "#google-tag-manager" },
-  ];
-
-  const pageDataForLayout = {
-    tocItems: tableOfContentsItems,
-    activeSection: activeSection,
-    hideRightSidebar: false,
-    apiExamplesData: undefined,
-  };
+  useEffect(() => {
+    if (setPageData) {
+      setPageData({
+        activeSection: activeSection,
+        hideRightSidebar: true,
+        apiExamplesData: undefined,
+      });
+    }
+    return () => {
+      if (setPageData) {
+        setPageData({
+          tocItems: [],
+          apiExamplesData: undefined,
+          activeSection: undefined,
+          hideRightSidebar: false,
+        });
+      }
+    };
+  }, [setPageData, activeSection]);
 
   return (
-    <DocLayoutDataProvider {...pageDataForLayout}>
+    <>
       <h1 className="mt-5">Showpass Developer Documentation</h1>
 
       <section id="overview">
@@ -38,43 +42,6 @@ const Index = () => {
           Our goal is to help you seamlessly integrate Showpass ticket sales,
           event management, and tracking features into your websites and
           applications.
-        </p>
-      </section>
-
-      <section id="getting-started-sdk">
-        <h2>Getting started with the SDK</h2>
-        <p>
-          To begin integrating Showpass widgets and functionality into your
-          website, include the Showpass SDK script. The recommended method is
-          using the asynchronous loader:
-        </p>
-        <CodeBlock
-          language="javascript"
-          code={`(function(window, document, src) {
-  let config = window.__shwps;
-  if (typeof config === "undefined") {
-    config = function() { config.c(arguments); };
-    config.q = [];
-    config.c = function(args) { config.q.push(args); };
-    window.__shwps = config;
-    let s = document.createElement('script');
-    s.type = 'text/javascript';
-    s.async = true;
-    s.src = src;
-    let x = document.getElementsByTagName('script')[0];
-    x.parentNode.insertBefore(s, x);
-  }
-})(window, document, 'https://www.showpass.com/static/dist/sdk.js');`}
-        />
-        <p className="mt-4">
-          For detailed SDK setup and usage, please see the{" "}
-          <Link
-            to="/sdk/01-sdk-getting-started"
-            className="underline hover:text-primary"
-          >
-            SDK Getting Started guide
-          </Link>
-          .
         </p>
       </section>
 
@@ -113,7 +80,7 @@ const Index = () => {
             <Link to="/sdk/01-sdk-getting-started">SDK Documentation</Link>
           </Button>
           <Button asChild variant="outline">
-            <Link to="/widgets">Widget Playground</Link>
+            <Link to="/widget-playground">Widget Playground</Link>
           </Button>
         </div>
       </section>
@@ -161,7 +128,7 @@ const Index = () => {
           </Link>
         </Button>
       </section>
-    </DocLayoutDataProvider>
+    </>
   );
 };
 
