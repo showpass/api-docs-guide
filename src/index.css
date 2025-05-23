@@ -13,8 +13,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
 
-    --site-primary: 185 51% 31% !important;
-    --site-primary-foreground: 210 40% 98% !important;
+    --site-primary: 186 55% 31%;
+    --site-primary-foreground: 210 40% 98%;
 
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
@@ -30,9 +30,19 @@
 
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
-    --ring: 185 51% 31%;
+    --ring: 186 55% 31%;
 
     --radius: 0.5rem;
+
+    /* Sidebar colors */
+    --sidebar-background: var(--background);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--site-primary);
+    --sidebar-primary-foreground: var(--site-primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
 
     --prose-body: var(--foreground);
     --prose-headings: var(--foreground);
@@ -44,7 +54,7 @@
 
   .dark {
     --background: 185 68% 3%;
-    --foreground: 210 10% 82%;
+    --foreground: 210 10% 95%;
 
     --card: 185 65% 5%;
     --card-foreground: var(--foreground);
@@ -52,7 +62,7 @@
     --popover: hsl(var(--card));
     --popover-foreground: var(--card-foreground);
 
-    --site-primary: 185 51% 35%;
+    --site-primary: 186 55% 35%;
     --site-primary-foreground: 210 20% 82%;
 
     --secondary: 185 60% 8%;
@@ -69,7 +79,17 @@
 
     --border: 185 60% 6%;
     --input: 185 60% 8%;
-    --ring: 185 51% 35%;
+    --ring: 186 55% 35%;
+
+    /* Sidebar colors for dark mode */
+    --sidebar-background: var(--background);
+    --sidebar-foreground: var(--foreground);
+    --sidebar-primary: var(--site-primary);
+    --sidebar-primary-foreground: var(--site-primary-foreground);
+    --sidebar-accent: var(--accent);
+    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-border: var(--border);
+    --sidebar-ring: var(--ring);
 
     --prose-body: var(--foreground);
     --prose-headings: var(--foreground);
@@ -173,6 +193,15 @@
 
   .sidebar-category {
     @apply text-sm font-medium text-foreground py-2 mb-1.5 uppercase tracking-wide text-xs text-muted-foreground;
+  }
+
+  /* Ensure primary color is applied correctly */
+  .text-primary {
+    color: hsl(var(--site-primary)) !important;
+  }
+
+  .hover\:text-primary:hover {
+    color: hsl(var(--site-primary)) !important;
   }
 
   .prose h1:first-of-type,

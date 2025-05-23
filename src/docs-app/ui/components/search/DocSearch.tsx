@@ -65,11 +65,11 @@ const DocSearch = () => {
       <Button
         variant="outline"
         onClick={() => setOpen(true)}
-        className="flex items-center text-sm text-muted-foreground px-3 py-2 h-9 w-full"
+        className="flex items-center text-sm text-muted-foreground px-3 py-2 h-9 w-full group"
       >
         <Search className="mr-2 h-4 w-4" />
         <span>Search docs...</span>
-        <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 md:flex">
+        <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 md:flex group-hover:bg-primary-foreground group-hover:text-primary group-hover:border-primary-foreground">
           <span className="text-xs">⌘</span>K
         </kbd>
       </Button>
