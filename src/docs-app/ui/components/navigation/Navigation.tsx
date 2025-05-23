@@ -181,7 +181,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
             <li>
               <NavLink
-                to="/widgets"
+                to="/widget-playground"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }

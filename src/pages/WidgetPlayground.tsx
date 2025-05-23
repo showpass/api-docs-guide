@@ -290,64 +290,6 @@ const WidgetPlayground: React.FC = () => {
             </div>
           </TabsContent>
         </Tabs>
-
-        {/* Documentation Section */}
-        <Card className="mb-10">
-          <CardHeader>
-            <CardTitle>Widget Documentation</CardTitle>
-            <CardDescription>
-              Learn how to use these widgets in your own application.
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="prose max-w-none">
-              <h3>Installation</h3>
-              <p>
-                To use the Showpass widgets, you need to include the Showpass
-                SDK in your application:
-              </p>
-              <pre className="bg-slate-100 p-4 rounded-md overflow-x-auto">
-                <code>{`<!-- Showpass SDK included directly -->
-<script type="text/javascript" src="https://beta.showpass.com/static/dist/sdk.js"></script>`}</code>
-              </pre>
-
-              <h3>Basic Usage</h3>
-              <p>
-                Once the SDK is loaded, you can use the widgets as shown in this
-                playground. Each widget requires specific IDs and can be
-                customized with options.
-              </p>
-
-              <h3>Example Code</h3>
-              <pre className="bg-slate-100 p-4 rounded-md overflow-x-auto">
-                <code>{`// Calendar Widget
-<ShowpassCalendarWidget 
-  venueId="1964"
-  options={{ 'theme-primary': '#FF7F00' }}
-/>
-
-// Event Widget
-<Button
-  onClick={() => {
-    window.showpass.tickets.eventPurchaseWidget("624039", {
-      'theme-primary': '#FF7F00',
-      'keep-shopping': true
-    });
-  }}
->
-  Open Event Widget
-</Button>
-
-// Mounted Widget
-<ShowpassMountedCalendarWidget 
-  venueId="1964"
-  themeColor="#FF7F00"
-  className="border rounded-md p-4"
-/>`}</code>
-              </pre>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </DocLayoutDataProvider>
   );

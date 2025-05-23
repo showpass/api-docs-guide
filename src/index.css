@@ -52,7 +52,7 @@
     --popover: hsl(var(--card));
     --popover-foreground: var(--card-foreground);
 
-    --primary: 185 51% 35%;
+    --primary: 185 51% 35% !important;
     --primary-foreground: 210 20% 82%;
 
     --secondary: 185 60% 8%;
@@ -75,8 +75,8 @@
     --prose-headings: var(--foreground);
     --prose-links: var(--primary);
     --prose-code-fg: var(--foreground);
-    --prose-code-bg: 185 60% 6%;
-    --prose-pre-bg: 185 60% 6%;
+    --prose-code-bg: 185 60% 10%;
+    --prose-pre-bg: 185 60% 10%;
   }
 }
 
