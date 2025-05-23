@@ -13,6 +13,7 @@ import logoRedSrc from "@/shared/assets/images/showpass-logo-red.svg";
 import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
 import { useTheme } from "next-themes";
+import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation";
 
 export interface DocLayoutContextProps {
   tocItems?: TocItem[];
@@ -156,6 +157,7 @@ const DocLayout = () => {
             hideRightSidebar ? "max-w-none" : "max-w-[1200px] mx-auto xl:mx-0"
           )}
         >
+          <BreadcrumbNavigation />
           <Outlet />
         </div>
 

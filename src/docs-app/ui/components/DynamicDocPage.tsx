@@ -6,6 +6,8 @@ import type { ApiExamplesData } from "@/docs-app/data/types.ts";
 import { Alert, AlertDescription, AlertTitle } from "@/shared/components/alert";
 import { ArrowLeft, AlertCircle } from "lucide-react";
 import { Button } from "@/shared/components/button";
+import SEOHead from "@/shared/components/SEOHead";
+import { seoDataMap } from "@/docs-app/data/seoData";
 
 interface DynamicDocPageProps {
   section:
@@ -48,12 +50,24 @@ const DynamicDocPage: React.FC<DynamicDocPageProps> = ({ section }) => {
   // Look up API examples if they exist for this path
   const apiExamples: ApiExamplesData | undefined = apiExamplesMap[currentPath];
 
+  // Get SEO data for this page
+  const seoData = seoDataMap[currentPath];
+
   return (
-    <ContentPage
-      contentPath={contentPath}
-      currentPath={currentPath}
-      apiExamples={apiExamples}
-    />
+    <>
+      {seoData && (
+        <SEOHead 
+          title={seoData.title}
+          description={seoData.description}
+          keywords={seoData.keywords}
+        />
+      )}
+      <ContentPage
+        contentPath={contentPath}
+        currentPath={currentPath}
+        apiExamples={apiExamples}
+      />
+    </>
   );
 };
 

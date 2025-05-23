@@ -4,10 +4,13 @@ import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
 import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
 import { Link } from "react-router-dom";
 import { Button } from "@/shared/components/button";
+import SEOHead from "@/shared/components/SEOHead";
+import { seoDataMap } from "@/docs-app/data/seoData";
 
 const Index = () => {
   const activeSection = useScrollSpy("h2[id], h3[id]", 100);
   const { setPageData } = useDocLayoutData();
+  const seoData = seoDataMap["/"];
 
   useEffect(() => {
     if (setPageData) {
@@ -31,6 +34,11 @@ const Index = () => {
 
   return (
     <>
+      <SEOHead 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+      />
       <h1 className="mt-5">Showpass Developer Documentation</h1>
 
       <section id="overview">

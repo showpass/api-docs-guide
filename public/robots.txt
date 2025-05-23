@@ -1,14 +1,15 @@
+User-agent: *
+Disallow: /
+
+# Sitemap location
+Sitemap: https://dev.showpass.com/sitemap.xml
+
+# Crawl delay for politeness
+Crawl-delay: 1
+
+# Specific bot instructions
 User-agent: Googlebot
 Disallow: /
 
 User-agent: Bingbot
-Disallow: /
-
-User-agent: Twitterbot
-Disallow: /
-
-User-agent: facebookexternalhit
-Disallow: /
-
-User-agent: *
 Disallow: /

@@ -6,8 +6,9 @@
   "scripts": {
     "dev": "vite",
     "build:search": "node scripts/build-search-index.mjs",
-    "build": "npm run build:search && vite build && cp dist/index.html dist/404.html",
-    "build:dev": "npm run build:search && vite build --mode development",
+    "build:seo": "node scripts/build-seo-enhancements.mjs",
+    "build": "npm run build:search && vite build && npm run build:seo && cp dist/index.html dist/404.html",
+    "build:dev": "npm run build:search && vite build --mode development && npm run build:seo",
     "lint": "eslint .",
     "preview": "vite preview",
     "deploy": "gh-pages -d dist -r https://github.com/showpass/api-docs-guide.git --cname dev.showpass.com"

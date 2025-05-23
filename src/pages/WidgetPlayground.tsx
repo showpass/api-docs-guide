@@ -18,6 +18,8 @@ import { Label } from "@/shared/components/label";
 import { Button } from "@/shared/components/button";
 import { Separator } from "@/shared/components/separator";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
+import SEOHead from "@/shared/components/SEOHead";
+import { seoDataMap } from "@/docs-app/data/seoData";
 
 // Import Showpass components
 import ShowpassIntegration from "@/docs-app/ui/components/widgets/ShowpassIntegration";
@@ -31,6 +33,7 @@ import ShowpassMountedProductWidget from "@/docs-app/ui/components/widgets/Showp
 
 const WidgetPlayground: React.FC = () => {
   const { setPageData } = useDocLayoutData();
+  const seoData = seoDataMap["/widget-playground"];
 
   // State for IDs and other configuration
   const [eventId, setEventId] = React.useState<string>("624039"); // Default event ID
@@ -63,6 +66,12 @@ const WidgetPlayground: React.FC = () => {
 
   return (
     <div>
+      <SEOHead 
+        title={seoData.title}
+        description={seoData.description}
+        keywords={seoData.keywords}
+      />
+      
       {/* Load the Showpass SDK */}
       <ShowpassIntegration />
 
