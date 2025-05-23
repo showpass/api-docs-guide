@@ -16,8 +16,7 @@ import DynamicDocPage from "./docs-app/ui/components/DynamicDocPage";
 import WidgetPlayground from "./pages/WidgetPlayground";
 
 const queryClient = new QueryClient();
-const basename =
-  import.meta.env.MODE === "production" ? "/api-docs-guide" : "/";
+const basename = "/";
 
 const App = () => (
   <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
