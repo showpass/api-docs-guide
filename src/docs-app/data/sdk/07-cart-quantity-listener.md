@@ -16,12 +16,12 @@ showpass.tickets.addCartCountListener(callbackFunction);
 
 ## Prerequisites
 
-- Ensure the Showpass SDK is included on your page, preferably using the Asynchronous Loader (Option 1) described in the "SDK Getting Started" guide. This loader creates the `window.__shwps` command queue, which is the recommended way to call SDK functions.
+- Ensure the Showpass SDK is included on your page as described in the "SDK Getting Started" guide. You'll need to ensure the SDK is loaded before calling its functions.
 - This listener should typically be set up once the page is ready (e.g., DOMContentLoaded) to ensure the SDK is available.
 
 ## Basic example
 
-This example simply logs the cart count to the console whenever it changes. For reliable execution, especially on initial page load, use the `window.__shwps` method shown in the "Robust Implementation Examples."
+This example simply logs the cart count to the console whenever it changes. For reliable execution, especially on initial page load, see the "Advanced Implementation" below.
 
 ```javascript
 function handleCartUpdate(count) {
@@ -30,12 +30,13 @@ function handleCartUpdate(count) {
   // document.getElementById('my-cart-display').innerText = 'Cart: ' + count;
 }
 
-// Example assuming SDK is ready (for illustration only)
-// showpass.tickets.addCartCountListener(handleCartUpdate);
-
-// Robust way using command queue:
-window.__shwps("tickets.addCartCountListener", handleCartUpdate);
-console.log("Showpass cart count listener queued via __shwps.");
+// Check if SDK is loaded before calling
+if (window.showpass && window.showpass.tickets) {
+  window.showpass.tickets.addCartCountListener(handleCartUpdate);
+  console.log("Showpass cart count listener added.");
+} else {
+  console.error("Showpass SDK not yet loaded");
+}
 ```
 
 ## Advanced implementation: Dynamic cart counter with click-to-open cart
@@ -73,7 +74,7 @@ This script should be placed after you've included the Showpass SDK and any opti
 
 ```html
 <script>
-  document.addEventListener("DOMContentLoaded", function () {
+  function initializeCartListener() {
     const cartTextElementId = "my-cart-text";
     const cartLinkElementId = "my-dynamic-cart-link";
 
@@ -107,16 +108,35 @@ This script should be placed after you've included the Showpass SDK and any opti
         "theme-primary": "#9e2a2b",
         "keep-shopping": true,
       };
-      window.__shwps("tickets.shoppingCartWidget", widgetParams);
-      // Or: window.__shwps('tickets.checkoutWidget', widgetParams);
-      console.log("Showpass SDK call queued for cart widget pop-up.");
+
+      // Check if SDK is loaded before calling
+      if (
+        window.showpass &&
+        window.showpass.tickets &&
+        window.showpass.tickets.shoppingCartWidget
+      ) {
+        window.showpass.tickets.shoppingCartWidget(widgetParams);
+        console.log("Showpass SDK called for cart widget pop-up.");
+      } else {
+        console.error("Showpass SDK or shopping cart widget not available");
+      }
     }
 
     cartLinkElement.addEventListener("click", openCartWidget);
 
-    // Initialize cart listener with the Showpass SDK via command queue
-    window.__shwps("tickets.addCartCountListener", updateCartDisplay);
-    console.log("Showpass cart count listener queued via __shwps.");
+    // Check if SDK is loaded before adding listener
+    if (
+      window.showpass &&
+      window.showpass.tickets &&
+      window.showpass.tickets.addCartCountListener
+    ) {
+      window.showpass.tickets.addCartCountListener(updateCartDisplay);
+      console.log("Showpass cart count listener added.");
+    } else {
+      // SDK not ready yet - wait and try again
+      setTimeout(initializeCartListener, 100);
+      return;
+    }
 
     // Optional: Display cart quantity from cookie on page load
     if (typeof Cookies !== "undefined") {
@@ -125,7 +145,9 @@ This script should be placed after you've included the Showpass SDK and any opti
         cartTextElement.innerHTML = savedCartText;
       }
     }
-  });
+  }
+
+  document.addEventListener("DOMContentLoaded", initializeCartListener);
 </script>
 ```
 
@@ -133,8 +155,8 @@ This script should be placed after you've included the Showpass SDK and any opti
 
 1.  **`cartTextElementId` & `cartLinkElementId`:** Set these to the IDs of your HTML elements.
 2.  **`updateCartDisplay(count)`:** This function is passed to `addCartCountListener`. It updates the `innerHTML` of your `cartTextElement` and optionally sets a cookie.
-3.  **`openCartWidget(event)`:** Attached as a click listener to your `cartLinkElement`, it opens the Showpass shopping cart (or checkout) widget using `window.__shwps`.
-4.  **Initialization:** The `addCartCountListener` is now directly queued using `window.__shwps` within the `DOMContentLoaded` listener, removing the need for a separate initialization function with retries if the primary method of SDK inclusion is the async loader.
+3.  **`openCartWidget(event)`:** Attached as a click listener to your `cartLinkElement`, it opens the Showpass shopping cart (or checkout) widget.
+4.  **Initialization:** The function checks if the SDK is loaded before adding the listener, with a retry mechanism if not ready.
 5.  **Cookie on Load (Optional):** Sets initial cart text from a cookie if available.
 
 **Customization:**
@@ -143,5 +165,15 @@ This script should be placed after you've included the Showpass SDK and any opti
 - Adjust `widgetParams` for the cart/checkout widget as needed.
 - Remove cookie logic if not using `js-cookie`.
 
-**Note on direct SDK calls (without `window.__shwps`):**
-If you use a direct `<script async/defer src="...">` tag for the SDK instead of the recommended async loader, you would call `showpass.tickets.addCartCountListener(...)` directly, but only after ensuring the SDK is loaded (e.g., by checking `if (typeof showpass !== 'undefined' && typeof showpass.tickets !== 'undefined') { ... }` or similar). The `window.__shwps` method handles this automatically with the loader.
+**Alternative: Using script onload callback**
+If you're dynamically loading the SDK, you can use the onload callback approach:
+
+```javascript
+let script = document.createElement("script");
+script.onload = function () {
+  // SDK is now loaded - safe to call functions
+  window.showpass.tickets.addCartCountListener(callbackFunction);
+};
+script.src = "https://showpass.com/static/dist/sdk.js";
+document.head.appendChild(script);
+```

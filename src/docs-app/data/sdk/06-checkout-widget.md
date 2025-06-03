@@ -18,7 +18,7 @@ showpass.tickets.checkoutWidget(params, containerId);
 
 ## Prerequisites
 
-Ensure the Showpass SDK is included on your page, preferably using the Asynchronous Loader (Option 1) described in the "SDK Getting Started" guide. This loader creates the `window.__shwps` command queue, which is the recommended way to call SDK functions.
+Ensure the Showpass SDK is included on your page as described in the "SDK Getting Started" guide. You'll need to ensure the SDK is loaded before calling its functions.
 The checkout widget typically requires items to be present in the shopping cart.
 
 ## Parameters
@@ -33,7 +33,7 @@ The checkout widget typically requires items to be present in the shopping cart.
 
 ## Basic usage examples
 
-These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available, and there are items in the cart. For reliable execution, especially on initial page load, use the `window.__shwps` method shown in the "Robust Implementation Examples."
+These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available, and there are items in the cart. For reliable execution, especially on initial page load, see the "Robust Implementation Examples" below.
 
 ### Pop-up mode (basic)
 
@@ -66,7 +66,7 @@ Useful for creating a dedicated checkout page.
 
 ## Robust implementation examples
 
-To ensure your code works reliably, it's best to use the `window.__shwps` command queue if you followed "Option 1" for SDK inclusion from the "Getting Started" guide.
+To ensure your code works reliably even if the Showpass SDK is still loading, you need to check for its availability before making calls.
 
 ### Pop-up mode (robust)
 
@@ -82,19 +82,25 @@ This example uses a button click (e.g., "Proceed to Checkout" from a cart page) 
 
 ```html
 <script>
+  function handleCheckoutClick() {
+    const widgetParams = {
+      "theme-primary": "#28a745", // Example green
+      "keep-shopping": false,
+    };
+
+    // Check if SDK is loaded before calling
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.checkoutWidget(widgetParams);
+      console.log("Showpass SDK called for checkout pop-up.");
+    } else {
+      console.error("Showpass SDK not yet loaded");
+    }
+  }
+
   document.addEventListener("DOMContentLoaded", function () {
     const checkoutButton = document.getElementById("proceedToCheckoutBtn");
     if (checkoutButton) {
-      checkoutButton.addEventListener("click", function () {
-        const widgetParams = {
-          "theme-primary": "#28a745", // Example green
-          "keep-shopping": false,
-        };
-        window.__shwps("tickets.checkoutWidget", widgetParams);
-        console.log(
-          "Showpass SDK call queued via __shwps for checkout pop-up."
-        );
-      });
+      checkoutButton.addEventListener("click", handleCheckoutClick);
     }
   });
 </script>
@@ -123,20 +129,25 @@ This example attempts to embed the checkout widget into a dedicated page area on
       "theme-primary": "#663399", // Example rebeccapurple
     };
 
-    if (document.getElementById(embedContainerId)) {
-      window.__shwps(
-        "tickets.checkoutWidget",
-        widgetEmbedParams,
-        embedContainerId
-      );
-      console.log(
-        "Showpass SDK call queued via __shwps for embedded checkout."
-      );
-    } else {
+    // Check if the container element exists
+    if (!document.getElementById(embedContainerId)) {
       console.error(
         "Target container for embedded Showpass checkout not found:",
         embedContainerId
       );
+      return;
+    }
+
+    // Check if SDK is loaded and call the function
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.checkoutWidget(
+        widgetEmbedParams,
+        embedContainerId
+      );
+      console.log("Showpass SDK called for embedded checkout.");
+    } else {
+      // SDK not ready yet - wait and try again
+      setTimeout(initializeEmbeddedCheckout, 100);
     }
   }
 
@@ -150,5 +161,15 @@ This example attempts to embed the checkout widget into a dedicated page area on
 - **Page Design:** When embedding the checkout, the rest of your page design around the `containerId` should complement a checkout experience (e.g., minimal distractions).
 - **Session Management:** Ensure user sessions and cart contents are correctly managed leading up to the display of the embedded checkout.
 
-**Note on direct SDK calls (without `window.__shwps`):**
-If you choose not to use the "Option 1" async loader from the Getting Started guide and instead use a direct `<script async/defer src="...">` tag, you would call `showpass.tickets.checkoutWidget(...)` directly. In that scenario, you _must_ ensure your call is made only after the SDK has fully loaded, for example by checking `if (typeof showpass !== 'undefined' && typeof showpass.tickets !== 'undefined') { ... }` or using a `DOMContentLoaded` listener if using `defer`. The `window.__shwps` method handles this timing automatically when the loader snippet is used.
+**Alternative: Using script onload callback**
+If you're dynamically loading the SDK, you can use the onload callback approach:
+
+```javascript
+let script = document.createElement("script");
+script.onload = function () {
+  // SDK is now loaded - safe to call functions
+  window.showpass.tickets.checkoutWidget(params, containerId);
+};
+script.src = "https://showpass.com/static/dist/sdk.js";
+document.head.appendChild(script);
+```

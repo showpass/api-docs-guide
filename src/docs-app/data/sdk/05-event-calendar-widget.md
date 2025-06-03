@@ -16,7 +16,7 @@ showpass.tickets.calendarWidget(venueId, params, containerId);
 
 ## Prerequisites
 
-Ensure the Showpass SDK is included on your page, preferably using the Asynchronous Loader (Option 1) described in the "SDK Getting Started" guide. This loader creates the `window.__shwps` command queue, which is the recommended way to call SDK functions.
+Ensure the Showpass SDK is included on your page as described in the "SDK Getting Started" guide. You'll need to ensure the SDK is loaded before calling its functions.
 
 ## Finding the venue/organization ID
 
@@ -45,7 +45,7 @@ This is for displaying a general calendar of events for a venue.
 
 ### Basic usage examples (standard calendar)
 
-These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available. For reliable execution, especially on initial page load, use the `window.__shwps` method shown in the "Robust Implementation Examples."
+These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available. For reliable execution, especially on initial page load, see the "Robust Implementation Examples" below.
 
 #### Pop-up mode (basic)
 
@@ -80,7 +80,7 @@ showpass.tickets.calendarWidget(myVenueId, params);
 
 ### Robust implementation examples (standard calendar)
 
-To ensure your code works reliably, it's best to use the `window.__shwps` command queue if you followed "Option 1" for SDK inclusion from the "Getting Started" guide.
+To ensure your code works reliably even if the Showpass SDK is still loading, you need to check for its availability before making calls.
 
 #### Pop-up mode (robust)
 
@@ -121,10 +121,15 @@ This example attaches an event listener to all buttons with the class `showpass-
       widgetParams.tags = tags;
     }
 
-    window.__shwps("tickets.calendarWidget", venueId, widgetParams);
-    console.log(
-      `Showpass SDK call queued for calendar pop-up (Venue ID: ${venueId}).`
-    );
+    // Check if SDK is loaded before calling
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.calendarWidget(venueId, widgetParams);
+      console.log(
+        `Showpass SDK called for calendar pop-up (Venue ID: ${venueId}).`
+      );
+    } else {
+      console.error("Showpass SDK not yet loaded");
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -158,21 +163,28 @@ This example attaches an event listener to all buttons with the class `showpass-
       tags: "family,all-ages",
     };
 
-    if (document.getElementById(embedContainerId)) {
-      window.__shwps(
-        "tickets.calendarWidget",
+    // Check if the container element exists
+    if (!document.getElementById(embedContainerId)) {
+      console.error(
+        "Target container for embedded Showpass standard calendar not found:",
+        embedContainerId
+      );
+      return;
+    }
+
+    // Check if SDK is loaded and call the function
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.calendarWidget(
         venueIdToEmbed,
         widgetEmbedParams,
         embedContainerId
       );
       console.log(
-        `Showpass SDK call queued for embedded standard calendar (Venue ID: ${venueIdToEmbed}).`
+        `Showpass SDK called for embedded standard calendar (Venue ID: ${venueIdToEmbed}).`
       );
     } else {
-      console.error(
-        "Target container for embedded Showpass standard calendar not found:",
-        embedContainerId
-      );
+      // SDK not ready yet - wait and try again
+      setTimeout(initializeEmbeddedStandardCalendar, 100);
     }
   }
 
@@ -248,10 +260,15 @@ _Replace placeholders with actual values._
       "theme-primary": "#00AEEF",
     };
 
-    window.__shwps("tickets.calendarWidget", venueId, attractionParams);
-    console.log(
-      `Showpass SDK call queued for attraction calendar (Venue ID: ${venueId}, Event Slug: ${eventSlug}).`
-    );
+    // Check if SDK is loaded before calling
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.calendarWidget(venueId, attractionParams);
+      console.log(
+        `Showpass SDK called for attraction calendar pop-up (Venue: ${venueId}, Event: ${eventSlug}).`
+      );
+    } else {
+      console.error("Showpass SDK not yet loaded");
+    }
   }
 
   document.addEventListener("DOMContentLoaded", function () {
@@ -270,7 +287,7 @@ _Replace placeholders with actual values._
 **HTML:**
 
 ```html
-<div id="embedded-attraction-calendar"></div>
+<div id="embedded-attraction-calendar-container"></div>
 ```
 
 **JavaScript:**
@@ -278,32 +295,39 @@ _Replace placeholders with actual values._
 ```html
 <script>
   function initializeEmbeddedAttractionCalendar() {
-    const venueIdForAttraction = 123; // <<< REPLACE with your actual Venue ID
-    const attractionEventSlug = "your-main-attraction-slug"; // <<< REPLACE THIS
-    const embedContainerId = "embedded-attraction-calendar"; // <<< Must match your div ID
+    const venueIdToEmbed = 555; // <<< REPLACE with your Venue/Organization ID
+    const attractionEventSlug = "my-attraction-event-slug"; // <<< REPLACE with your attraction's slug
+    const embedContainerId = "embedded-attraction-calendar-container";
 
     const attractionEmbedParams = {
       is_attraction: true,
       event_id: attractionEventSlug,
-      "ticket-type-selection-required": true,
-      "theme-primary": "#333333",
+      "prompt-for-quantity": false,
+      "theme-primary": "#9b59b6", // Example purple
     };
 
-    if (document.getElementById(embedContainerId)) {
-      window.__shwps(
-        "tickets.calendarWidget",
-        venueIdForAttraction,
-        attractionEmbedParams,
-        embedContainerId
-      );
-      console.log(
-        `Showpass SDK call queued for embedded attraction calendar (Venue ID: ${venueIdForAttraction}, Event Slug: ${attractionEventSlug}).`
-      );
-    } else {
+    // Check if the container element exists
+    if (!document.getElementById(embedContainerId)) {
       console.error(
         "Target container for embedded Showpass attraction calendar not found:",
         embedContainerId
       );
+      return;
+    }
+
+    // Check if SDK is loaded and call the function
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.calendarWidget(
+        venueIdToEmbed,
+        attractionEmbedParams,
+        embedContainerId
+      );
+      console.log(
+        `Showpass SDK called for embedded attraction calendar (Venue: ${venueIdToEmbed}, Event: ${attractionEventSlug}).`
+      );
+    } else {
+      // SDK not ready yet - wait and try again
+      setTimeout(initializeEmbeddedAttractionCalendar, 100);
     }
   }
 
@@ -314,13 +338,20 @@ _Replace placeholders with actual values._
 </script>
 ```
 
-**Key notes for attraction calendar:**
+**Key for embedded widgets:**
 
-- The `venueId` is always the first argument to `showpass.tickets.calendarWidget`.
-- The `params` object must contain `is_attraction: true` and the attraction's `event_id` (which is the event slug).
-- The behavior of `ticket-type-selection-required` and `prompt-for-quantity` will determine the initial steps the user sees.
+- The HTML `div` element must exist on the page when the Showpass SDK attempts to mount the widget.
+- Ensure your script runs after the target HTML div is available in the DOM.
 
-**Choosing an implementation:**
+**Alternative: Using script onload callback**
+If you're dynamically loading the SDK, you can use the onload callback approach:
 
-- Use the **Basic Usage Examples** for a quick understanding or if your script execution is guaranteed to be after the SDK loads.
-- Use the **Robust Implementation Examples** for production websites to ensure reliability and handle the asynchronous loading of the SDK, including the `window.__shwps` command queue fallback.
+```javascript
+let script = document.createElement("script");
+script.onload = function () {
+  // SDK is now loaded - safe to call functions
+  window.showpass.tickets.calendarWidget(venueId, params, containerId);
+};
+script.src = "https://showpass.com/static/dist/sdk.js";
+document.head.appendChild(script);
+```

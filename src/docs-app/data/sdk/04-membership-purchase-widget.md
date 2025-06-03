@@ -16,7 +16,7 @@ showpass.tickets.membershipPurchaseWidget(membershipId, params, containerId);
 
 ## Prerequisites
 
-Ensure the Showpass SDK is included on your page, preferably using the Asynchronous Loader (Option 1) described in the "SDK Getting Started" guide. This loader creates the `window.__shwps` command queue, which is the recommended way to call SDK functions.
+Ensure the Showpass SDK is included on your page as described in the "SDK Getting Started" guide. You'll need to ensure the SDK is loaded before calling its functions.
 
 ## Finding the membership ID
 
@@ -43,7 +43,7 @@ _(Assuming parameters are similar to Product/Event widgets. Adjust if specific m
 
 ## Basic usage examples
 
-These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available. For reliable execution, especially on initial page load, use the `window.__shwps` method shown in the "Robust Implementation Examples."
+These examples show the simplest way to call the functions, assuming the Showpass SDK (`showpass.tickets`) is already loaded and available. For reliable execution, especially on initial page load, see the "Robust Implementation Examples" below.
 
 ### Pop-up mode (basic)
 
@@ -75,7 +75,7 @@ showpass.tickets.membershipPurchaseWidget(789, params);
 
 ## Robust implementation examples
 
-To ensure your code works reliably, it's best to use the `window.__shwps` command queue if you followed "Option 1" for SDK inclusion from the "Getting Started" guide.
+To ensure your code works reliably even if the Showpass SDK is still loading, you need to check for its availability before making calls.
 
 ### Pop-up mode (robust)
 
@@ -112,15 +112,18 @@ _Replace `789` and `101` with actual membership IDs._
       "show-description": true,
     };
 
-    // Use window.__shwps to queue the command
-    window.__shwps(
-      "tickets.membershipPurchaseWidget",
-      membershipId,
-      widgetParams
-    );
-    console.log(
-      `Showpass SDK call queued for membership pop-up (ID: ${membershipId}).`
-    );
+    // Check if SDK is loaded before calling
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.membershipPurchaseWidget(
+        membershipId,
+        widgetParams
+      );
+      console.log(
+        `Showpass SDK called for membership pop-up (ID: ${membershipId}).`
+      );
+    } else {
+      console.error("Showpass SDK not yet loaded");
+    }
   }
 
   // Wait for the DOM to be ready before attaching event listeners
@@ -159,23 +162,28 @@ This example attempts to embed the membership widget once the DOM is ready.
       // Add other specific membership params if needed
     };
 
-    // Check if the container element exists before queuing the command
-    if (document.getElementById(embedContainerId)) {
-      // Use window.__shwps to queue the command
-      window.__shwps(
-        "tickets.membershipPurchaseWidget",
+    // Check if the container element exists
+    if (!document.getElementById(embedContainerId)) {
+      console.error(
+        "Target container for embedded Showpass membership widget not found:",
+        embedContainerId
+      );
+      return;
+    }
+
+    // Check if SDK is loaded and call the function
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.membershipPurchaseWidget(
         membershipIdToEmbed,
         widgetEmbedParams,
         embedContainerId
       );
       console.log(
-        `Showpass SDK call queued for membership embedding (ID: ${membershipIdToEmbed}).`
+        `Showpass SDK called for membership embedding (ID: ${membershipIdToEmbed}).`
       );
     } else {
-      console.error(
-        "Target container for embedded Showpass membership widget not found:",
-        embedContainerId
-      );
+      // SDK not ready yet - wait and try again
+      setTimeout(initializeEmbeddedMembershipWidget, 100);
     }
   }
 
@@ -190,7 +198,17 @@ This example attempts to embed the membership widget once the DOM is ready.
 **Key for embedded widgets:**
 
 - The HTML `div` element (e.g., `<div id="embedded-membership-widget-container"></div>`) **must exist on the page** when the Showpass SDK attempts to mount the widget into it.
-- It's best practice to ensure your script that calls `window.__shwps(...)` for an embedded widget runs _after_ its target HTML div is available in the DOM, for instance, by using a `DOMContentLoaded` event listener.
+- It's best practice to ensure your script that calls the SDK functions runs _after_ its target HTML div is available in the DOM, for instance, by using a `DOMContentLoaded` event listener.
 
-**Note on direct SDK calls (without `window.__shwps`):**
-If you choose not to use the "Option 1" async loader from the Getting Started guide and instead use a direct `<script async/defer src="...">` tag, you would call `showpass.tickets.membershipPurchaseWidget(...)` directly. In that scenario, you _must_ ensure your call is made only after the SDK has fully loaded, for example by checking `if (typeof showpass !== 'undefined' && typeof showpass.tickets !== 'undefined') { ... }` or using a `DOMContentLoaded` listener if using `defer`. The `window.__shwps` method handles this timing automatically when the loader snippet is used.
+**Alternative: Using script onload callback**
+If you're dynamically loading the SDK, you can use the onload callback approach:
+
+```javascript
+let script = document.createElement("script");
+script.onload = function () {
+  // SDK is now loaded - safe to call functions
+  window.showpass.tickets.membershipPurchaseWidget(membershipId, params);
+};
+script.src = "https://showpass.com/static/dist/sdk.js";
+document.head.appendChild(script);
+```
