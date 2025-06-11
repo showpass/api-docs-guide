@@ -57,6 +57,10 @@ const App = () => (
                 path="/google-tag-manager/:slug"
                 element={<DynamicDocPage section="google-tag-manager" />}
               />
+              <Route
+                path="/facebook/:slug"
+                element={<DynamicDocPage section="facebook" />}
+              />
               <Route path="/widget-playground" element={<WidgetPlayground />} />
               <Route
                 path="/wordpress/:slug"

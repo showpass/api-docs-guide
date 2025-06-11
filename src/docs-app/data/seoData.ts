@@ -198,8 +198,8 @@ export const seoDataMap: Record<string, SEOData> = {
   },
   "/google-tag-manager/07-showpass-data-layer-details": {
     title: "Showpass Data Layer Details - GTM Implementation Guide",
-    description: "Comprehensive guide to the Showpass data layer structure for Google Tag Manager. Understand available data and variables.",
-    keywords: "data layer, gtm data layer, showpass data layer, data layer variables, gtm variables, tracking data"
+    description: "Comprehensive guide to the Showpass data layer structure for Google Tag Manager implementations. Understand data flow and variables.",
+    keywords: "data layer, gtm data layer, showpass data, gtm variables, data structure, event data"
   },
   "/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage": {
     title: "Advanced iFrame Purchase Tracking - Showpass GTM PostMessage",
@@ -222,5 +222,27 @@ export const seoDataMap: Record<string, SEOData> = {
     title: "Showpass Widget Playground - Test & Preview Widgets",
     description: "Interactive playground to test and preview Showpass widgets. Experiment with different configurations and see live examples.",
     keywords: "widget playground, widget testing, widget preview, interactive demo, widget examples, showpass widgets"
+  },
+
+  // Facebook Integration
+  "/facebook/01-introduction-to-facebook-pixel": {
+    title: "About Facebook Pixel - Showpass Integration Guide",
+    description: "Learn about Facebook Pixel integration with Showpass. Track event performance, optimize ad campaigns, and build targeted audiences for better ROI.",
+    keywords: "facebook pixel, meta pixel, showpass facebook integration, facebook tracking, event advertising, conversion tracking, facebook ads"
+  },
+  "/facebook/02-installing-facebook-pixel": {
+    title: "Installing Facebook Pixel - Showpass Setup Guide",
+    description: "Step-by-step guide to install Facebook Pixel with Showpass. Configure event tracking, verify installation, and optimize for conversions.",
+    keywords: "facebook pixel installation, meta pixel setup, pixel configuration, facebook tracking setup, event pixel, showpass facebook"
+  },
+  "/facebook/03-about-facebook-conversions-api": {
+    title: "About Facebook Conversions API - Enhanced Tracking Guide",
+    description: "Understand Facebook Conversions API benefits for Showpass events. Improve data quality, enhance attribution, and future-proof your tracking.",
+    keywords: "facebook conversions api, server-side tracking, facebook capi, enhanced tracking, attribution improvement, data quality"
+  },
+  "/facebook/04-installing-facebook-conversions-api": {
+    title: "Installing Facebook Conversions API - Showpass Integration",
+    description: "Complete guide to setting up Facebook Conversions API with Showpass. Configure server-side tracking for improved ad performance and attribution.",
+    keywords: "conversions api setup, facebook capi installation, server-side tracking setup, facebook api integration, enhanced conversions"
   }
 }; 

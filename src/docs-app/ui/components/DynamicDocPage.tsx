@@ -16,7 +16,8 @@ interface DynamicDocPageProps {
     | "advanced"
     | "wordpress"
     | "webhooks"
-    | "google-tag-manager";
+    | "google-tag-manager"
+    | "facebook";
 }
 
 const DynamicDocPage: React.FC<DynamicDocPageProps> = ({ section }) => {

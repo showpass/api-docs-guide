@@ -21,6 +21,7 @@ const sectionLabels: Record<string, string> = {
   wordpress: 'WordPress Plugin',
   webhooks: 'Webhooks',
   'google-tag-manager': 'Google Tag Manager',
+  facebook: 'Facebook Integration',
   'widget-playground': 'Widget Playground'
 };
 

@@ -31,6 +31,9 @@ const getDefaultOpenSection = (currentPath: string): string[] => {
   if (currentPath.startsWith("/google-tag-manager/")) {
     return ["google-tag-manager"];
   }
+  if (currentPath.startsWith("/facebook/")) {
+    return ["facebook"];
+  }
   return [];
 };
 
@@ -506,6 +509,55 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 }
               >
                 Example: Google Ads conversion tracking setup with GTM
+              </NavLink>
+            </li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+      <AccordionItem value="facebook">
+        <AccordionTrigger className="sidebar-category mt-0">
+          Facebook Pixels & Conversions API
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="space-y-1 pl-5 border-l border-border/30">
+            <li>
+              <NavLink
+                to="/facebook/01-introduction-to-facebook-pixel"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                About Facebook Pixel
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/facebook/02-installing-facebook-pixel"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Installing Facebook Pixel
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/facebook/03-about-facebook-conversions-api"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                About Facebook Conversions API
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/facebook/04-installing-facebook-conversions-api"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Installing Facebook Conversions API
               </NavLink>
             </li>
           </ul>
