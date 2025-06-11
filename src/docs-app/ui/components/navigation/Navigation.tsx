@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useState, useEffect } from "react";
 import { NavLink } from "react-router-dom";
 import { cn } from "@/shared/lib/utils.ts";
 import {
@@ -12,7 +12,7 @@ interface NavigationProps {
   currentPath: string;
 }
 
-const getDefaultOpenSection = (currentPath: string): string[] => {
+const getOpenSections = (currentPath: string): string[] => {
   if (currentPath === "/") {
     return ["introduction"];
   }
@@ -38,12 +38,24 @@ const getDefaultOpenSection = (currentPath: string): string[] => {
 };
 
 const Navigation = ({ currentPath }: NavigationProps) => {
-  const initialDefaultValueRef = useRef(getDefaultOpenSection(currentPath));
+  const [openSections, setOpenSections] = useState<string[]>(() => getOpenSections(currentPath));
+
+  // Update open sections when the current path changes
+  useEffect(() => {
+    const newOpenSections = getOpenSections(currentPath);
+    setOpenSections(prev => {
+      // Merge current open sections with the new required section
+      // This keeps manually opened sections open while ensuring the current section is also open
+      const combined = [...new Set([...prev, ...newOpenSections])];
+      return combined;
+    });
+  }, [currentPath]);
 
   return (
     <Accordion
       type="multiple"
-      defaultValue={initialDefaultValueRef.current}
+      value={openSections}
+      onValueChange={setOpenSections}
       className="w-full"
     >
       <AccordionItem value="introduction">
