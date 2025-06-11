@@ -50,7 +50,7 @@ const ShowpassIntegration = () => {
     
     // Load the SDK script
     const script = document.createElement('script');
-    script.src = 'https://beta.showpass.com/static/dist/sdk.js';
+    script.src = 'https://showpass.com/static/dist/sdk.js';
     script.async = true;
     script.onload = () => {
       console.log('Showpass SDK script loaded');

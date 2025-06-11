@@ -36,11 +36,11 @@ const WidgetPlayground: React.FC = () => {
   const seoData = seoDataMap["/widget-playground"];
 
   // State for IDs and other configuration
-  const [eventId, setEventId] = React.useState<string>("624039"); // Default event ID
-  const [membershipId, setMembershipId] = React.useState<string>("17399"); // Default membership ID
-  const [productId, setProductId] = React.useState<string>("1894"); // Default product ID
-  const [venueId, setVenueId] = React.useState<string>("1964"); // Default venue ID
-  const [themeColor, setThemeColor] = React.useState<string>("#FF7F00"); // Default theme color
+  const [eventId, setEventId] = React.useState<string>(""); // Event ID
+  const [membershipId, setMembershipId] = React.useState<string>(""); // Membership ID
+  const [productId, setProductId] = React.useState<string>(""); // Product ID
+  const [venueId, setVenueId] = React.useState<string>(""); // Venue ID
+  const [themeColor, setThemeColor] = React.useState<string>("#FF7F00"); // Theme color
 
   // Set page data for layout using useEffect
   useEffect(() => {
@@ -139,9 +139,12 @@ const WidgetPlayground: React.FC = () => {
                     onChange={(e) => setThemeColor(e.target.value)}
                     placeholder="Enter hex color code"
                   />
-                  <div
-                    className="w-10 h-10 rounded border"
-                    style={{ backgroundColor: themeColor }}
+                  <input
+                    type="color"
+                    value={themeColor}
+                    onChange={(e) => setThemeColor(e.target.value)}
+                    className="w-10 h-10 rounded border cursor-pointer"
+                    title="Pick a color"
                   />
                 </div>
               </div>
@@ -173,10 +176,16 @@ const WidgetPlayground: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ShowpassCalendarWidget
-                  venueId={venueId}
-                  options={{ "theme-primary": themeColor }}
-                />
+                {venueId ? (
+                  <ShowpassCalendarWidget
+                    venueId={venueId}
+                    options={{ "theme-primary": themeColor }}
+                  />
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter a Venue ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -188,19 +197,24 @@ const WidgetPlayground: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <Button
-                  onClick={() => {
-                    if (window.showpass && window.showpass.tickets) {
-                      window.showpass.tickets.eventPurchaseWidget(eventId, {
-                        "theme-primary": themeColor,
-                        "keep-shopping": true,
-                      });
-                    }
-                  }}
-                  disabled={!eventId}
-                >
-                  Open Event Widget
-                </Button>
+                {eventId ? (
+                  <Button
+                    onClick={() => {
+                      if (window.showpass && window.showpass.tickets) {
+                        window.showpass.tickets.eventPurchaseWidget(eventId, {
+                          "theme-primary": themeColor,
+                          "keep-shopping": true,
+                        });
+                      }
+                    }}
+                  >
+                    Open Event Widget
+                  </Button>
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter an Event ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -210,10 +224,16 @@ const WidgetPlayground: React.FC = () => {
                 <CardDescription>Purchase a membership.</CardDescription>
               </CardHeader>
               <CardContent>
-                <ShowpassMembershipWidget
-                  id={membershipId}
-                  options={{ "theme-primary": themeColor }}
-                />
+                {membershipId ? (
+                  <ShowpassMembershipWidget
+                    id={membershipId}
+                    options={{ "theme-primary": themeColor }}
+                  />
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter a Membership ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -223,10 +243,16 @@ const WidgetPlayground: React.FC = () => {
                 <CardDescription>Purchase a product.</CardDescription>
               </CardHeader>
               <CardContent>
-                <ShowpassProductWidget
-                  id={productId}
-                  options={{ "theme-primary": themeColor }}
-                />
+                {productId ? (
+                  <ShowpassProductWidget
+                    id={productId}
+                    options={{ "theme-primary": themeColor }}
+                  />
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter a Product ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>
@@ -248,11 +274,17 @@ const WidgetPlayground: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ShowpassMountedCalendarWidget
-                  venueId={venueId}
-                  themeColor={themeColor}
-                  className="border rounded-md p-4"
-                />
+                {venueId ? (
+                  <ShowpassMountedCalendarWidget
+                    venueId={venueId}
+                    themeColor={themeColor}
+                    className="border rounded-md p-4"
+                  />
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter a Venue ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -266,11 +298,17 @@ const WidgetPlayground: React.FC = () => {
                 </CardDescription>
               </CardHeader>
               <CardContent>
-                <ShowpassMountedEventWidget
-                  id={eventId}
-                  themeColor={themeColor}
-                  className="border rounded-md p-4"
-                />
+                {eventId ? (
+                  <ShowpassMountedEventWidget
+                    id={eventId}
+                    themeColor={themeColor}
+                    className="border rounded-md p-4"
+                  />
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter an Event ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
 
@@ -282,11 +320,17 @@ const WidgetPlayground: React.FC = () => {
                 <CardDescription>Purchase a membership.</CardDescription>
               </CardHeader>
               <CardContent>
-                <ShowpassMountedMembershipWidget
-                  id={membershipId}
-                  themeColor={themeColor}
-                  className="border rounded-md p-4"
-                />
+                {membershipId ? (
+                  <ShowpassMountedMembershipWidget
+                    id={membershipId}
+                    themeColor={themeColor}
+                    className="border rounded-md p-4"
+                  />
+                ) : (
+                  <div className="text-amber-600 p-4 bg-amber-50 rounded-md">
+                    Please enter a Membership ID in the configuration section above.
+                  </div>
+                )}
               </CardContent>
             </Card>
 

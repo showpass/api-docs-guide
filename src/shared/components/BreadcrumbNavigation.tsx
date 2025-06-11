@@ -42,11 +42,11 @@ const BreadcrumbNavigation: React.FC = () => {
     currentPath += `/${segment}`;
     
     if (index === 0) {
-      // First segment is usually the section
+      // First segment is usually the section - don't make it a link
       const sectionLabel = sectionLabels[segment] || segment;
       breadcrumbItems.push({
         label: sectionLabel,
-        href: index === pathSegments.length - 1 ? undefined : currentPath
+        href: undefined // Section headers are not clickable
       });
     } else {
       // For subsequent segments, try to create a readable label
@@ -58,7 +58,7 @@ const BreadcrumbNavigation: React.FC = () => {
       
       breadcrumbItems.push({
         label: label || segment,
-        href: index === pathSegments.length - 1 ? undefined : currentPath
+        href: undefined // Only the final page should not be a link (handled below)
       });
     }
   });
@@ -67,7 +67,7 @@ const BreadcrumbNavigation: React.FC = () => {
     <Breadcrumb className="mb-6">
       <BreadcrumbList>
         {breadcrumbItems.map((item, index) => (
-          <React.Fragment key={index}>
+          <div key={index} style={{ display: 'contents' }}>
             <BreadcrumbItem>
               {item.href ? (
                 <BreadcrumbLink asChild>
@@ -77,7 +77,10 @@ const BreadcrumbNavigation: React.FC = () => {
                   </Link>
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage>{item.label}</BreadcrumbPage>
+                <BreadcrumbPage className="flex items-center gap-1">
+                  {index === 0 && <Home className="h-4 w-4" />}
+                  {item.label}
+                </BreadcrumbPage>
               )}
             </BreadcrumbItem>
             {index < breadcrumbItems.length - 1 && (
@@ -85,7 +88,7 @@ const BreadcrumbNavigation: React.FC = () => {
                 <ChevronRight className="h-4 w-4" />
               </BreadcrumbSeparator>
             )}
-          </React.Fragment>
+          </div>
         ))}
       </BreadcrumbList>
     </Breadcrumb>
