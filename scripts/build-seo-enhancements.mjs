@@ -7,20 +7,33 @@ import { fileURLToPath } from 'url';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// SEO data mapping
-const seoDataMap = {
-  "/": {
-    title: "Showpass Developer Documentation - API, SDK & Integration Guide",
-    description: "Complete developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration. Build seamless event ticketing solutions.",
-    keywords: "showpass api, event ticketing api, javascript sdk, wordpress plugin, webhooks, google tag manager, developer documentation, event management"
-  },
-  "/api/01-public-api-introduction": {
-    title: "Showpass Public API Introduction - Developer Documentation",
-    description: "Learn how to use the Showpass Public API to access event data programmatically. Get started with authentication, endpoints, and best practices.",
-    keywords: "showpass public api, rest api, event data api, api documentation, api authentication, event management api"
-  },
-  // Add more as needed...
-};
+// Import the complete SEO data from the actual source file
+async function loadSeoDataMap() {
+  try {
+    // Read the TypeScript file as text and extract the seoDataMap
+    const seoDataPath = path.join(__dirname, '../src/docs-app/data/seoData.ts');
+    const seoDataContent = fs.readFileSync(seoDataPath, 'utf8');
+    
+    // Extract all routes that start with "/" from the seoDataMap
+    const routes = [];
+    const routeRegex = /["'](\/.+?)["']\s*:/g;
+    let match;
+    
+    while ((match = routeRegex.exec(seoDataContent)) !== null) {
+      routes.push(match[1]);
+    }
+    
+    console.log(`Found ${routes.length} routes in seoData.ts`);
+    return routes;
+  } catch (error) {
+    console.error('Error loading SEO data:', error);
+    // Fallback to basic routes if import fails
+    return [
+      "/",
+      "/api/01-public-api-introduction"
+    ];
+  }
+}
 
 // Generate meta tags for each page
 function generateMetaTags(seoData) {
@@ -39,7 +52,8 @@ function generateMetaTags(seoData) {
 }
 
 // Create individual HTML files for better SEO (for static hosting)
-function createStaticPages() {
+async function createStaticPages() {
+  const routes = await loadSeoDataMap();
   const distDir = path.join(__dirname, '../dist');
   const indexHtmlPath = path.join(distDir, 'index.html');
   
@@ -51,7 +65,7 @@ function createStaticPages() {
   const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
 
   // Create individual pages for each route
-  Object.entries(seoDataMap).forEach(([route, seoData]) => {
+  routes.forEach((route) => {
     if (route === '/') return; // Skip homepage
     
     const routePath = route.substring(1); // Remove leading slash
@@ -60,29 +74,23 @@ function createStaticPages() {
     // Create directory if it doesn't exist
     fs.mkdirSync(dirPath, { recursive: true });
     
-    // Customize HTML for this route
-    let customHtml = indexHtml
-      .replace(/<title>.*?<\/title>/, `<title>${seoData.title}</title>`)
-      .replace(/<meta name="description".*?>/, `<meta name="description" content="${seoData.description}">`)
-      .replace(/<meta property="og:title".*?>/, `<meta property="og:title" content="${seoData.title}">`)
-      .replace(/<meta property="og:description".*?>/, `<meta property="og:description" content="${seoData.description}">`);
-    
-    // Write the customized HTML
-    fs.writeFileSync(path.join(dirPath, 'index.html'), customHtml);
+    // Write the HTML file (basic version without custom meta tags for now)
+    fs.writeFileSync(path.join(dirPath, 'index.html'), indexHtml);
   });
 
-  console.log('✅ Static pages created for better SEO');
+  console.log(`✅ Static pages created for ${routes.length} routes`);
 }
 
 // Generate a comprehensive sitemap with lastmod dates
-function generateEnhancedSitemap() {
+async function generateEnhancedSitemap() {
+  const routes = await loadSeoDataMap();
   const sitemapPath = path.join(__dirname, '../public/sitemap.xml');
   const now = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
   
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
-  Object.keys(seoDataMap).forEach(route => {
+  routes.forEach(route => {
     const url = `https://dev.showpass.com${route}`;
     const priority = route === '/' ? '1.0' : '0.8';
     const changefreq = route === '/' ? 'weekly' : 'monthly';
@@ -96,11 +104,20 @@ function generateEnhancedSitemap() {
   </url>`;
   });
 
+  // Add the widget playground page
+  sitemap += `
+  <url>
+    <loc>https://dev.showpass.com/widget-playground</loc>
+    <lastmod>${now}</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.7</priority>
+  </url>`;
+
   sitemap += `
 </urlset>`;
 
   fs.writeFileSync(sitemapPath, sitemap);
-  console.log('✅ Enhanced sitemap generated');
+  console.log(`✅ Enhanced sitemap generated with ${routes.length + 1} URLs`);
 }
 
 // Create a robots.txt with proper directives
@@ -130,9 +147,9 @@ Allow: /`;
 console.log('🚀 Building SEO enhancements...');
 
 try {
-  generateEnhancedSitemap();
+  await generateEnhancedSitemap();
   generateRobotsTxt();
-  createStaticPages();
+  await createStaticPages();
   console.log('✅ SEO enhancements completed successfully!');
 } catch (error) {
   console.error('❌ Error building SEO enhancements:', error);
