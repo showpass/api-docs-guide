@@ -8,11 +8,6 @@ Facebook Pixel is a piece of code that you add to your website to collect data t
 
 ## Key Benefits for Event Organizers
 
-### Track Event Performance
-- Monitor ticket sales and conversion rates
-- Track which Facebook ads drive the most ticket purchases
-- Understand user behavior on your event pages
-
 ### Optimize Ad Campaigns
 - Use conversion data to improve ad targeting
 - Create lookalike audiences based on successful ticket buyers

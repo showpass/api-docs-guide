@@ -136,6 +136,21 @@ const Index = () => {
           </Link>
         </Button>
       </section>
+
+      <section id="facebook-pixels">
+        <h2>Facebook Pixels & Conversions API</h2>
+        <p>
+          Integrate Facebook Pixel (Meta Pixel) and Conversions API with your Showpass events to track conversions, optimize advertising campaigns, and build custom audiences. Measure the effectiveness of your Facebook ads and gain valuable insights into ticket sales and attendee behavior.
+        </p>
+        <p className="mt-2">
+          Learn how to set up both browser-based tracking with Facebook Pixel and server-side tracking with Conversions API for comprehensive data collection and improved attribution.
+        </p>
+        <Button asChild className="mt-4">
+          <Link to="/facebook/01-introduction-to-facebook-pixel">
+            Facebook Integration Guide
+          </Link>
+        </Button>
+      </section>
     </>
   );
 };
