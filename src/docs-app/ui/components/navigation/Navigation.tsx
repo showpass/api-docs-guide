@@ -38,12 +38,14 @@ const getOpenSections = (currentPath: string): string[] => {
 };
 
 const Navigation = ({ currentPath }: NavigationProps) => {
-  const [openSections, setOpenSections] = useState<string[]>(() => getOpenSections(currentPath));
+  const [openSections, setOpenSections] = useState<string[]>(() =>
+    getOpenSections(currentPath)
+  );
 
   // Update open sections when the current path changes
   useEffect(() => {
     const newOpenSections = getOpenSections(currentPath);
-    setOpenSections(prev => {
+    setOpenSections((prev) => {
       // Merge current open sections with the new required section
       // This keeps manually opened sections open while ensuring the current section is also open
       const combined = [...new Set([...prev, ...newOpenSections])];
@@ -192,6 +194,16 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 }
               >
                 Cart quantity listener
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/sdk/08-basic-integration-example"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Basic integration example
               </NavLink>
             </li>
             <li>
