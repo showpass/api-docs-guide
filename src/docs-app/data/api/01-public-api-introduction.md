@@ -18,32 +18,28 @@ All API responses are returned in **JSON** format.
 
 You can refine your experience list query using the following optional parameters:
 
-| Parameter               | Type     | Status   | Description                                                                                                                                              |
-| ----------------------- | -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `search_string`         | String   | Optional | A search query string. Filters experiences by matching against experience name, venue name, and tags.<br>Example: `&search_string=concert`               |
-| `name__icontains`       | String   | Optional | Filter experiences by partial experience name match (case-insensitive).<br>Example: `&name__icontains=music`                                             |
-| `point_location`        | String   | Optional | Filter experiences by geographic location (latitude,longitude format).<br>Example: `&point_location=51.0447,-114.0719`                                   |
-| `venue__in`             | String   | Optional | Filter by venue IDs. Comma-separated list of integers.<br>Example: `&venue__in=123,456`                                                                  |
-| `venue`                 | Integer  | Optional | Filter by a single venue ID.<br>Example: `&venue=123`                                                                                                    |
-| `categories`            | String   | Optional | Include experiences with specified categories. Comma-separated array.<br>Example: `&categories=music,arts`                                               |
-| `tags`                  | String   | Optional | Include experiences with any of the specified tags. Comma-separated array.<br>Example: `&tags=featured,popular`                                          |
-| `is_featured`           | Boolean  | Optional | Filter for featured experiences only.<br>Example: `&is_featured=true`                                                                                    |
-| `is_sponsored`          | Boolean  | Optional | Filter for sponsored experiences only.<br>Example: `&is_sponsored=true`                                                                                  |
-| `is_protected_by_queue` | Boolean  | Optional | Filter experiences by queue protection status.<br>Example: `&is_protected_by_queue=false`                                                                |
-| `showpass_gift_card`    | Boolean  | Optional | Filter for experiences that support Showpass gift cards.<br>Example: `&showpass_gift_card=true`                                                          |
-| `voucher_code`          | String   | Optional | Filter experiences that accept a specific voucher code.<br>Example: `&voucher_code=DISCOUNT20`                                                           |
-| `page_size`             | Integer  | Optional | Number of results to return per page. <br>Default: `20`.<br>Example: `&page_size=8`                                                                      |
-| `page`                  | Integer  | Optional | The specific page number to return.<br>Example: `&page=2`                                                                                                |
-| `id__in`                | String   | Optional | Return specific experiences by their IDs. Comma-separated list of integers.<br>Example: `&id__in=1,2,3`                                                  |
-| `id`                    | Integer  | Optional | Return a single experience by its ID.<br>Example: `&id=123`                                                                                              |
-| `starts_on__gte`        | ISO date | Optional | Experiences starting after or on the specified date/time.<br>Format: `YYYY-MM-DDTHH:MM` or full ISO 8601.<br>Example: `&starts_on__gte=2023-06-23T19:30` |
-| `starts_on__lte`        | ISO date | Optional | Experiences starting before or on the specified date/time.<br>Example: `&starts_on__lte=2023-06-23T19:30`                                                |
-| `starts_on__gt`         | ISO date | Optional | Experiences starting after the specified date/time.<br>Example: `&starts_on__gt=2023-06-23T19:30`                                                        |
-| `starts_on__lt`         | ISO date | Optional | Experiences starting before the specified date/time.<br>Example: `&starts_on__lt=2023-06-23T19:30`                                                       |
-| `ends_on__gte`          | ISO date | Optional | Experiences ending after or on the specified date/time.<br>Example: `&ends_on__gte=2023-06-23T19:30`                                                     |
-| `ends_on__lte`          | ISO date | Optional | Experiences ending before or on the specified date/time.<br>Example: `&ends_on__lte=2023-06-23T19:30`                                                    |
-| `ends_on__gt`           | ISO date | Optional | Experiences ending after the specified date/time.<br>Example: `&ends_on__gt=2023-06-23T19:30`                                                            |
-| `ends_on__lt`           | ISO date | Optional | Experiences ending before the specified date/time.<br>Example: `&ends_on__lt=2023-06-23T19:30`                                                           |
+| Parameter         | Type     | Status   | Description                                                                                                                                              |
+| ----------------- | -------- | -------- | -------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `search_string`   | String   | Optional | A search query string. Filters experiences by matching against experience name, venue name, and tags.<br>Example: `&search_string=concert`               |
+| `name__icontains` | String   | Optional | Filter experiences by partial experience name match (case-insensitive).<br>Example: `&name__icontains=music`                                             |
+| `point_location`  | String   | Optional | Filter experiences by geographic location (latitude,longitude format).<br>Example: `&point_location=51.0447,-114.0719`                                   |
+| `venue__in`       | String   | Optional | Filter by venue IDs. Comma-separated list of integers.<br>Example: `&venue__in=123,456`                                                                  |
+| `venue`           | Integer  | Optional | Filter by a single venue ID.<br>Example: `&venue=123`                                                                                                    |
+| `categories`      | String   | Optional | Include experiences with specified categories. Comma-separated array.<br>Example: `&categories=music,arts`                                               |
+| `tags`            | String   | Optional | Include experiences with any of the specified tags. Comma-separated array.<br>Example: `&tags=featured,popular`                                          |
+| `voucher_code`    | String   | Optional | Filter experiences that accept a specific voucher code.<br>Example: `&voucher_code=DISCOUNT20`                                                           |
+| `page_size`       | Integer  | Optional | Number of results to return per page. <br>Default: `20`.<br>Example: `&page_size=8`                                                                      |
+| `page`            | Integer  | Optional | The specific page number to return.<br>Example: `&page=2`                                                                                                |
+| `id__in`          | String   | Optional | Return specific experiences by their IDs. Comma-separated list of integers.<br>Example: `&id__in=1,2,3`                                                  |
+| `id`              | Integer  | Optional | Return a single experience by its ID.<br>Example: `&id=123`                                                                                              |
+| `starts_on__gte`  | ISO date | Optional | Experiences starting after or on the specified date/time.<br>Format: `YYYY-MM-DDTHH:MM` or full ISO 8601.<br>Example: `&starts_on__gte=2023-06-23T19:30` |
+| `starts_on__lte`  | ISO date | Optional | Experiences starting before or on the specified date/time.<br>Example: `&starts_on__lte=2023-06-23T19:30`                                                |
+| `starts_on__gt`   | ISO date | Optional | Experiences starting after the specified date/time.<br>Example: `&starts_on__gt=2023-06-23T19:30`                                                        |
+| `starts_on__lt`   | ISO date | Optional | Experiences starting before the specified date/time.<br>Example: `&starts_on__lt=2023-06-23T19:30`                                                       |
+| `ends_on__gte`    | ISO date | Optional | Experiences ending after or on the specified date/time.<br>Example: `&ends_on__gte=2023-06-23T19:30`                                                     |
+| `ends_on__lte`    | ISO date | Optional | Experiences ending before or on the specified date/time.<br>Example: `&ends_on__lte=2023-06-23T19:30`                                                    |
+| `ends_on__gt`     | ISO date | Optional | Experiences ending after the specified date/time.<br>Example: `&ends_on__gt=2023-06-23T19:30`                                                            |
+| `ends_on__lt`     | ISO date | Optional | Experiences ending before the specified date/time.<br>Example: `&ends_on__lt=2023-06-23T19:30`                                                           |
 
 ## Important Fields
 
