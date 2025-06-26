@@ -1,8 +1,8 @@
-# Event list by organization
+# Experience list by organization
 
 ## Endpoint
 
-To fetch a list of public events for a specific organization, use the `/discovery/` endpoint with the `venue__in` parameter:
+To fetch a list of public experiences for a specific organization, use the `/discovery/` endpoint with the `venue__in` parameter:
 
 `https://www.showpass.com/api/public/discovery/?venue__in=ORGANIZATION_ID`
 
@@ -10,7 +10,7 @@ Replace `ORGANIZATION_ID` with the numerical ID of the Showpass organization.
 
 ## Overview
 
-This endpoint displays all upcoming (and potentially past, depending on other parameters) public events for a specified organization.
+This endpoint displays all upcoming (and potentially past, depending on other parameters) public experiences for a specified organization.
 
 **Finding Your Organization ID:**
 

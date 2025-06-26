@@ -93,7 +93,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Public event API
+                Showpass Discovery API
               </NavLink>
             </li>
             <li>
@@ -103,7 +103,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Event list by organization
+                Experience list by organization
               </NavLink>
             </li>
             <li>
@@ -113,7 +113,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   cn("sidebar-link", isActive && "active")
                 }
               >
-                Query a specific event
+                Query a specific experience
               </NavLink>
             </li>
           </ul>
