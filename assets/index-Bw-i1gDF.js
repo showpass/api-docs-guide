@@ -779,14 +779,17 @@ Before you begin, ensure you have:
 Domain verification is required for Conversions API to work properly.
 
 1. **Navigate to Business Settings**
+
    - Go to [Facebook Business Manager](https://business.facebook.com)
    - Click **Business Settings** in the top right
 
 2. **Access Brand Safety**
+
    - In the left sidebar, click **Brand Safety**
    - Select **Domains**
 
 3. **Add and Verify Your Domain**
+
    - If your event domain isn't listed, click **Add**
    - Enter your domain (e.g., \`yourdomain.showpass.com\`)
    - Choose a verification method:
@@ -795,18 +798,25 @@ Domain verification is required for Conversions API to work properly.
      - **Meta Tag Verification**
 
 4. **Complete Verification**
+
    - Follow the instructions for your chosen method
    - Wait for verification (usually takes a few minutes)
    - Confirmed domains show a green checkmark
 
+5. **Send Showpass your Business ID**
+   - Send your Facebook Business ID to clients@showpass.com so we can add you as a Partner to our showpass.com Verified Domain
+   - [How to find your Facebook Business ID](https://www.facebook.com/business/help/1181250022022158?id=180505742745347)
+
 ## Step 2: Generate Conversions API Access Token
 
 1. **Access Facebook Events Manager**
+
    - Go to [Facebook Events Manager](https://business.facebook.com/events_manager)
    - Select your Business Account
    - Choose the pixel you want to use with Conversions API
 
 2. **Navigate to Settings**
+
    - Click on your pixel name
    - Go to the **Settings** tab
    - Scroll down to the **Conversions API** section
@@ -821,97 +831,36 @@ Domain verification is required for Conversions API to work properly.
 ## Step 3: Configure Conversions API in Showpass
 
 1. **Access Organization Settings**
+
    - Log in to your Showpass dashboard
    - Navigate to **Organization Settings**
-   - Select the **Integrations** tab
-
-2. **Find Facebook Conversions API Section**
+   - Select the **Analytics** tab
    - Scroll down to **Facebook Conversions API**
-   - Click **Configure** or **Enable**
 
-3. **Enter Configuration Details**
+2. **Enter Configuration Details**
+
    - **Access Token**: Paste the token from Step 2
    - **Pixel ID**: Your Facebook Pixel ID (should already be configured from pixel setup)
    - **Test Event Code**: Leave blank for now (we'll add this during testing)
 
-4. **Configure Event Settings**
+3. **Configure Event Settings**
+
    - **Purchase Events**: ✅ Enable (essential for conversion tracking)
    - **Checkout Events**: ✅ Enable (recommended)
    - **Add to Cart Events**: ✅ Enable (recommended)
    - **View Content Events**: ✅ Enable (optional but useful)
 
-5. **Data Sharing Settings**
+4. **Data Sharing Settings**
+
    - **Customer Information**: Enable to send hashed customer data
    - **Purchase Data**: Enable to send transaction details
    - **Event Deduplication**: ✅ Enable (prevents duplicate events)
 
-6. **Save Configuration**
+5. **Save Configuration**
    - Click **Save Settings**
    - Your Conversions API integration is now active
 
-## Step 4: Test Your Integration
-
-### Set Up Test Events
-
-1. **Generate Test Event Code**
-   - In Facebook Events Manager, go to your pixel
-   - Click the **Test Events** tab
-   - Under **Test Server Events**, copy the test event code
-
-2. **Add Test Code to Showpass**
-   - Return to your Showpass Conversions API settings
-   - Paste the test event code in the **Test Event Code** field
-   - Save the configuration
-
-### Perform Test Actions
-
-1. **Test Purchase Event**
-   - Visit one of your event pages
-   - Add tickets to cart and complete a purchase
-   - Use a test credit card or complete the purchase process
-
-2. **Monitor Test Events**
-   - In Facebook Events Manager, go to **Test Events**
-   - You should see server events appearing in real-time
-   - Verify event details match your purchase
-
-### Verify Event Data
-
-Check that these details are correctly transmitted:
-
-- **Event Type**: Purchase, InitiateCheckout, AddToCart
-- **Event Value**: Correct currency and amount
-- **Customer Data**: Hashed email and phone (if provided)
-- **Event ID**: Present for deduplication
-- **Timestamp**: Accurate event timing
-
-## Step 5: Production Setup
-
-### Remove Test Code
-
-1. **Clear Test Event Code**
-   - Return to Showpass Conversions API settings
-   - Remove the test event code from the field
-   - Save the configuration
-
-2. **Monitor Live Events**
-   - In Facebook Events Manager, go to **Overview**
-   - Monitor real conversion events
-   - Verify data quality and event coverage
-
-### Verify Event Match Quality
-
-1. **Check Event Match Quality Score**
-   - In Events Manager, go to **Diagnostics**
-   - Review your Event Match Quality score
-   - Aim for a score above 6.0 for optimal performance
-
-2. **Improve Match Quality**
-   - Ensure customer email and phone data is being sent
-   - Verify all events include proper event IDs
-   - Check that customer data is properly formatted
-
-## Step 6: Monitor and Optimize
+## Step 4: Monitor and Optimize
 
 ### Regular Monitoring
 
@@ -922,6 +871,7 @@ Check that these details are correctly transmitted:
 ### Performance Optimization
 
 1. **Update Ad Campaigns**
+
    - Set campaigns to optimize for Conversions API events
    - Use the enhanced data for better audience targeting
    - Create lookalike audiences based on server-side purchase data
@@ -937,6 +887,7 @@ Check that these details are correctly transmitted:
 
 **Symptoms**: Events not being received in Facebook
 **Solutions**:
+
 - Regenerate your access token in Events Manager
 - Ensure the token has proper permissions
 - Verify the token is correctly entered in Showpass
@@ -945,57 +896,10 @@ Check that these details are correctly transmitted:
 
 **Symptoms**: Setup blocked or events rejected
 **Solutions**:
+
 - Complete domain verification in Business Manager
 - Ensure DNS records are properly configured
 - Wait up to 24 hours for DNS propagation
-
-### Event Deduplication Issues
-
-**Symptoms**: Seeing duplicate events in reporting
-**Solutions**:
-- Verify event deduplication is enabled in Showpass
-- Check that event IDs are being properly generated
-- Ensure both pixel and Conversions API use the same event naming
-
-### Low Event Match Quality
-
-**Symptoms**: Match quality score below 6.0
-**Solutions**:
-- Enable customer information sharing in Showpass
-- Verify email and phone data collection is working
-- Check that customer data is properly hashed
-
-## Advanced Configuration
-
-### Custom Parameters
-
-Send additional event data to Facebook:
-
-- **Event Categories**: Tag events by event type or genre
-- **Customer Segments**: Include customer tier or membership status
-- **Geographic Data**: Send venue location information
-
-### Attribution Settings
-
-Configure attribution windows in Facebook:
-
-- **Click-through Attribution**: 1, 7, or 28 days
-- **View-through Attribution**: 1 or 7 days
-- **Conversion Optimization**: Choose optimal attribution for your campaigns
-
-## Data Privacy and Compliance
-
-### GDPR and CCPA Compliance
-
-- Conversions API respects user consent preferences
-- Customer data is automatically hashed before transmission
-- Users can opt out through standard privacy controls
-
-### Data Processing
-
-- All personal information is hashed using SHA-256
-- Facebook cannot reverse-engineer personal data from hashes
-- Data is used only for advertising optimization and measurement
 
 ## Performance Expectations
 
@@ -1030,7 +934,8 @@ If you need assistance:
 - **Technical Issues**: Check Facebook Events Manager diagnostics
 - **Integration Problems**: Review configuration settings in both platforms
 
-Successfully implementing Facebook Conversions API provides more reliable data for your advertising campaigns and helps you better understand your customers' journey from ad click to ticket purchase. `,mz=`# 1. Introduction to Showpass Google Tag Manager (GTM) integration
+Successfully implementing Facebook Conversions API provides more reliable data for your advertising campaigns and helps you better understand your customers' journey from ad click to ticket purchase.
+`,mz=`# 1. Introduction to Showpass Google Tag Manager (GTM) integration
 
 Welcome to the Showpass Google Tag Manager (GTM) integration guide. This documentation will help you understand how to leverage GTM to track user activity, implement Google Analytics 4 (GA4), and integrate other marketing tags for events and purchases managed through Showpass.
 
