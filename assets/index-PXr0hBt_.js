@@ -803,7 +803,14 @@ Domain verification is required for Conversions API to work properly.
    - Wait for verification (usually takes a few minutes)
    - Confirmed domains show a green checkmark
 
-5. **Send Showpass your Business ID**
+5. **Assign Showpass as a Partner**
+
+   - Once the domain is verified, click "Assign Partner"
+   - Enter in \`1769782139975843\`
+   - Enable "Link to domain"
+   - Click Assign
+
+6. **Send Showpass your Business ID**
    - Send your Facebook Business ID to clients@showpass.com so we can add you as a Partner to our showpass.com Verified Domain
    - [How to find your Facebook Business ID](https://www.facebook.com/business/help/1181250022022158?id=180505742745347)
 
@@ -1157,8 +1164,172 @@ Tracking user activity accurately within an iFrame (like the Showpass embedded p
 
 If you are not using the \`postMessage\` method, and you rely on basic cross-domain linker parameters for the iFrame, some configurations are needed.
 
-- **Showpass WordPress Plugin:** If you are using the Showpass WordPress plugin, it automatically includes functionality to help decorate the iFrame for cross-domain linking.
-- **Custom SDK Implementation (Not using WordPress Plugin):** If you are using the Showpass SDK with a custom JavaScript implementation on your site, you would typically need to add custom code to decorate the iFrame SRC URL with linker parameters. _The Showpass documentation you provided implies that specific code for this is needed but does not include the snippet itself; however, it details the GTM variables to capture these parameters if they are present in the iFrame URL._
+**Showpass WordPress Plugin:** If you are using the Showpass WordPress plugin, it automatically includes functionality to help decorate the iFrame for cross-domain linking.
+
+**Custom SDK Implementation (Not using WordPress Plugin):** If you are using the Showpass SDK with a custom JavaScript implementation on your site, you would typically need to add custom code to decorate the iFrame SRC URL with linker parameters.
+
+Include the following code on your website, in order to decorate Showpass iFrame URLS wiht the correct query parameters
+
+\`\`\`javascript
+<script type="text/javascript">
+/**
+ * Utility for decorating Showpass iframes with tracking parameters
+ * Combines cookie-based tracking (GA, Facebook) with query parameter passing
+ * Automatically handles ALL Showpass iframes on the page without requiring explicit setup
+ */
+
+/**
+ * Shared function to decorate iframe - handles both cookie-based tracking and query parameters
+ * @param {HTMLIFrameElement} iFrame - The iframe element to decorate
+ */
+const decorateIframe = (iFrame) => {
+    if (!iFrame || !iFrame.src) {
+        console.warn("Invalid iframe provided to decorateIframe");
+        return;
+    }
+
+    // Prevent multiple decorations
+    if (iFrame.dataset.decorated) {
+        return;
+    }
+
+    let url = new URL(iFrame.src);
+
+    // 1. Handle cookie-based tracking (GA and Facebook)
+    if (typeof document.cookie === "string" && document.cookie !== "") {
+        // Parse cookies into an object
+        let cookie = {};
+        document.cookie.split(";").forEach(function (el) {
+            const splitCookie = el.split("=");
+            const key = splitCookie[0].trim();
+            const value = splitCookie[1];
+            cookie[key] = value;
+        });
+
+        // Parse the _ga cookie to extract client_id and session_id.
+        // A _ga cookie typically looks like GA1.1.1194072907.1685136322
+        const gaCookie = cookie["_ga"];
+        if (gaCookie) {
+            const client_id = gaCookie.substring(6); // Example: "1194072907.1685136322"
+            const session_id = client_id.split(".")[1]; // ["1194072907", "1685136322"]
+
+            if (!isNaN(Number(client_id)) && !isNaN(Number(session_id))) {
+                url.searchParams.append("parent_client_id", client_id);
+                url.searchParams.append("parent_session_id", session_id);
+            }
+        }
+
+        // Add fbclid from _fbc cookie if present and properly formatted
+        const fbcCookie = cookie["_fbc"];
+        if (fbcCookie) {
+            const parts = fbcCookie.split(".");
+            // Expecting exactly 4 parts; use the last part as fbclid
+            if (parts.length === 4) {
+                url.searchParams.append("fbclid", parts[3]);
+            }
+        }
+    }
+
+    // 2. Pass the parent page's referrer to our iFrame
+    const referrer = document.referrer || "";
+    if (referrer) {
+        url.searchParams.append("parent_document_referrer", referrer);
+    }
+
+    // 3. Add current page query parameters
+    // This is REQUIRED for the checkout widget to work properly with Affirm redirects
+    const currentUrl = new URL(window.location.href);
+    const queryParams = currentUrl.searchParams;
+
+    if (queryParams.toString()) {
+        queryParams.forEach((value, key) => {
+            // Check if parameter already exists in iframe src to avoid duplicates
+            if (!url.searchParams.has(key)) {
+                url.searchParams.append(key, value);
+            }
+        });
+    }
+
+    // Update iframe src and mark as decorated
+    iFrame.src = url.toString();
+    iFrame.dataset.decorated = "true";
+
+    console.log("Decorated iframe with tracking parameters:", url.toString());
+};
+
+/**
+ * Sets up observer to watch for ANY Showpass iframe anywhere in the document
+ * Handles both popup widgets and embedded widgets
+ */
+const setupShowpassIframeObserver = () => {
+    const documentObserver = new MutationObserver((mutations) => {
+        mutations.forEach((mutation) => {
+            if (mutation.type === "childList") {
+                mutation.addedNodes.forEach((node) => {
+                    if (node.nodeType === Node.ELEMENT_NODE) {
+                        // Check if the node itself is a Showpass iframe
+                        if (
+                            node.tagName === "IFRAME" &&
+                            node.src &&
+                            node.src.includes("showpass.com") &&
+                            !node.dataset.decorated
+                        ) {
+                            setTimeout(() => {
+                                decorateIframe(node);
+                            }, 100);
+                        }
+
+                        // Look for any Showpass iframes within the added node
+                        if (node.querySelectorAll) {
+                            const iframes = node.querySelectorAll(
+                                'iframe[src*="showpass.com"]'
+                            );
+                            iframes.forEach((iframe) => {
+                                if (iframe.src && !iframe.dataset.decorated) {
+                                    setTimeout(() => {
+                                        decorateIframe(iframe);
+                                    }, 100);
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            // Also watch for src attribute changes on existing iframes
+            if (
+                mutation.type === "attributes" &&
+                mutation.attributeName === "src"
+            ) {
+                const target = mutation.target;
+                if (
+                    target.tagName === "IFRAME" &&
+                    target.src &&
+                    target.src.includes("showpass.com") &&
+                    !target.dataset.decorated
+                ) {
+                    setTimeout(() => {
+                        decorateIframe(target);
+                    }, 100);
+                }
+            }
+        });
+    });
+
+    documentObserver.observe(document.body, {
+        childList: true,
+        subtree: true,
+        attributes: true,
+        attributeFilter: ["src"],
+    });
+
+    return documentObserver;
+};
+
+// Initialize the observer automatically
+setupShowpassIframeObserver();
+<\/script>
+\`\`\`
 
 #### Updating Google Tag configuration for iFrame decoration parameters
 
@@ -1176,62 +1347,16 @@ If your iFrame URL is being decorated with \`client_id\`, \`session_id\`, etc. (
     - **Field Name:** \`client_id\`
 
       - **Value:** Click the variable icon \`+\`, choose **New Variable**.
-        - Name it \`Custom JS - URL Parameter - client_id\`.
-        - Variable Type: **Custom JavaScript**.
-        - Custom JavaScript code:
-          \`\`\`javascript
-          function() {
-            try {
-              var urlParams = new URLSearchParams(window.location.search);
-              var client = urlParams.get('client_id') || null;
-              if (client) {
-                return client;
-              }
-            } catch(e) {
-              // console.error("Error reading client_id: ", e);
-              return null;
-            }
-          }
-          \`\`\`
-        - Save the variable.
-
-    - **Field Name:** \`session_id\`
-
-      - **Value:** Click \`+\`, choose **New Variable**.
-        - Name it \`Custom JS - URL Parameter - session_id\`.
-        - Variable Type: **Custom JavaScript**.
-        - Custom JavaScript code:
-          \`\`\`javascript
-          function() {
-            try {
-              var urlParams = new URLSearchParams(window.location.search);
-              var session = urlParams.get('session_id') || null;
-              if (session) {
-                return session;
-              }
-            } catch(e) {
-              // console.error("Error reading session_id: ", e);
-              return null;
-            }
-          }
-          \`\`\`
-        - Save the variable.
-
-    - **Field Name:** \`parent_client_id\`
-
-      - **Value:** Click \`+\`, choose **New Variable**.
         - Name it \`Custom JS - URL Parameter - parent_client_id\`.
         - Variable Type: **Custom JavaScript**.
         - Custom JavaScript code:
           \`\`\`javascript
-          // Note: The original document had 'session = urlParams.get(parent_client_id)'
-          // Assuming it meant to get 'parent_client_id' parameter
           function() {
             try {
               var urlParams = new URLSearchParams(window.location.search);
-              var parentClientId = urlParams.get('parent_client_id') || null;
-              if (parentClientId) {
-                return parentClientId;
+              var client = urlParams.get('parent_client_id') || null;
+              if (client) {
+                return client;
               }
             } catch(e) {
               // console.error("Error reading parent_client_id: ", e);
@@ -1241,21 +1366,19 @@ If your iFrame URL is being decorated with \`client_id\`, \`session_id\`, etc. (
           \`\`\`
         - Save the variable.
 
-    - **Field Name:** \`parent_session_id\`
+    - **Field Name:** \`session_id\`
 
       - **Value:** Click \`+\`, choose **New Variable**.
         - Name it \`Custom JS - URL Parameter - parent_session_id\`.
         - Variable Type: **Custom JavaScript**.
         - Custom JavaScript code:
           \`\`\`javascript
-          // Note: The original document had 'session = urlParams.get(parent_session_id)'
-          // Assuming it meant to get 'parent_session_id' parameter
           function() {
             try {
               var urlParams = new URLSearchParams(window.location.search);
-              var parentSessionId = urlParams.get('parent_session_id') || null;
-              if (parentSessionId) {
-                return parentSessionId;
+              var session = urlParams.get('parent_session_id') || null;
+              if (session) {
+                return session;
               }
             } catch(e) {
               // console.error("Error reading parent_session_id: ", e);
@@ -1265,7 +1388,7 @@ If your iFrame URL is being decorated with \`client_id\`, \`session_id\`, etc. (
           \`\`\`
         - Save the variable.
 
-    - **Field Name:** \`parent_document_referrer\`
+    - **Field Name:** \`page_referrer\`
       - **Value:** Click \`+\`, choose **New Variable**.
         - Name it \`Custom JS - URL Parameter - parent_document_referrer\`.
         - Variable Type: **Custom JavaScript**.
