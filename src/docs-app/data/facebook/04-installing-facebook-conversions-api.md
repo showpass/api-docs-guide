@@ -41,7 +41,14 @@ Domain verification is required for Conversions API to work properly.
    - Wait for verification (usually takes a few minutes)
    - Confirmed domains show a green checkmark
 
-5. **Send Showpass your Business ID**
+5. **Assign Showpass as a Partner**
+
+   - Once the domain is verified, click "Assign Partner"
+   - Enter in `1769782139975843`
+   - Enable "Link to domain"
+   - Click Assign
+
+6. **Send Showpass your Business ID**
    - Send your Facebook Business ID to clients@showpass.com so we can add you as a Partner to our showpass.com Verified Domain
    - [How to find your Facebook Business ID](https://www.facebook.com/business/help/1181250022022158?id=180505742745347)
 
