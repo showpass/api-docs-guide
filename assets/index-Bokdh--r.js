@@ -1589,9 +1589,10 @@ This setup involves two Google Tag Manager containers:
 
 1.  **Child GTM Container (for the Showpass iFrame):**
 
+    - Create a new **new, empty GTM Container ID**
     - This container is specifically for the Showpass widget environment.
-    - Showpass will provide you with a **new, empty GTM Container ID** for this purpose. You will need to request this from Showpass support or your account manager.
     - Its role is to capture ecommerce events within the iFrame and \`postMessage\` them to the parent window (your website).
+    - Add this to your Organizer Info > Analytics section in the Showpass Dashboard
 
 2.  **Main/Parent GTM Container (on your website):**
     - This is your existing GTM container that manages tracking for your primary website.
@@ -1607,7 +1608,7 @@ You (or Showpass, with your input) will configure this GTM container provided by
 
 This tag will send data from the iFrame's Data Layer to your parent website.
 
-1.  In the **Child GTM container** (provided by Showpass), go to **Tags** and click **New**.
+1.  In the **Child GTM container**, go to **Tags** and click **New**.
 2.  **Name the tag:** \`Custom HTML - Post Message Ecommerce Data to Parent\`.
 3.  **Tag Configuration:**
 
@@ -1655,9 +1656,8 @@ This trigger will fire the \`postMessage\` tag whenever an ecommerce event occur
     - Choose trigger type: **Custom Event**.
     - **Event name (Regex):**
       \`\`\`
-      view_item|select_item|add_to_cart|remove_from_cart|view_cart|begin_checkout|add_payment_info|add_shipping_info|purchase
+      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase
       \`\`\`
-      _(Note: \`select_item\`, \`view_cart\`, \`add_payment_info\`, \`add_shipping_info\` are more granular events sometimes seen in GA4 ecommerce. Confirm with Showpass which of these are actively pushed by the widget if needed.)_
     - Check the box **Use regex matching**.
     - **This trigger fires on:** All Custom Events.
 4.  Click **Save**.
