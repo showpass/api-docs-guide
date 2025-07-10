@@ -39,9 +39,9 @@ This is for displaying a general calendar of events for a venue.
 
 ### Standard calendar specific parameters (within `params` object)
 
-| Parameter Property | Type   | Status   | Description                                                                                                       |
-| ------------------ | ------ | -------- | ----------------------------------------------------------------------------------------------------------------- |
-| `params['tags']`   | String | Optional | Comma-separated string of tags to filter events (e.g., `'festivals,community'`). Applicable to standard calendar. |
+| Parameter Property | Type   | Status   | Description                                                                                                   |
+| ------------------ | ------ | -------- | ------------------------------------------------------------------------------------------------------------- |
+| `params['tags']`   | String | Optional | Comma-separated string of tags to filter events (e.g., `'featured,comedy'`). Applicable to standard calendar. |
 
 ### Basic usage examples (standard calendar)
 
@@ -61,17 +61,16 @@ showpass.tickets.calendarWidget(myVenueId, params);
 #### Embedded mode (basic)
 
 ```html
-<div id="calendar-widget-here"></div>
+<div id="showpass-embedded-calendar-container"></div>
+<script
+  type="text/javascript"
+  src="https://showpass.com/static/dist/sdk.js"
+></script>
 <script>
-  const venueIdForEmbed = 456;
-  let embedParams = {
-    "theme-primary": "#337ab7",
-    tags: "featured,specialevent",
-  };
-  showpass.tickets.calendarWidget(
-    venueIdForEmbed,
-    embedParams,
-    "calendar-widget-here"
+  window.showpass.tickets.calendarWidget(
+    123,
+    { "theme-primary": "#416b24" },
+    "showpass-embedded-calendar-container"
   );
 </script>
 ```
