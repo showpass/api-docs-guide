@@ -11,11 +11,6 @@ Integrating Showpass with Google Tag Manager allows you to:
 - Implement various third-party marketing and analytics tags (e.g., Facebook Pixel, TikTok Pixel, Google Ads) without modifying your website code directly.
 - Gain deeper insights into customer behavior and conversion funnels.
 
-## Important beta information
-
-- **Current Status:** This GTM integration feature is currently in **BETA**.
-- **Activation:** A Showpass administrator will need to add your GTM Container ID to your organization's settings within the Showpass platform. Please contact Showpass support or your account manager for assistance with this step.
-
 ## Crucial note on GA4 data duplication
 
 To avoid sending duplicate data to your Google Analytics 4 property:
