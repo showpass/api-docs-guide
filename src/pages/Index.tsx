@@ -51,15 +51,19 @@ const Index = () => {
           </p>
         </div>
 
+        {/* Section Divider */}
+        <div className="flex items-center my-6">
+          <div className="w-1/3 h-px bg-slate-200 dark:bg-slate-700/60"></div>
+        </div>
+
         {/* Core Integrations */}
         <div className="mb-12 relative">
-          <div className="flex items-center gap-2 mt-0 mb-6">
-            <div className="h-px bg-primary/40 w-6"></div>
+          <div className="flex flex-col mt-0 mb-1">
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 !mt-0 !mb-0">Core Integrations</h2>
-            <span className="bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs text-slate-600 dark:text-slate-400">API, SDK, and WordPress solutions for seamless integration</span>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Essential tools for seamless API, SDK, and WordPress integration</p>
           </div>
 
-          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-6 mx-auto"></div>
+          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-4 mx-auto"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Public API */}
@@ -142,15 +146,19 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Section Divider */}
+        <div className="flex items-center my-6">
+          <div className="w-1/3 h-px bg-slate-200 dark:bg-slate-700/60"></div>
+        </div>
+
         {/* Advanced Integrations */}
         <div className="mb-12 relative">
-          <div className="flex items-center gap-2 mt-0 mb-6">
-            <div className="h-px bg-primary/40 w-6"></div>
+          <div className="flex flex-col mt-0 mb-1">
             <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 !mt-0 !mb-0">Advanced Integrations</h2>
-            <span className="bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-xs text-slate-600 dark:text-slate-400">Webhooks, analytics, and marketing tools</span>
+            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Extend functionality with webhooks, analytics, and marketing tools</p>
           </div>
 
-          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-6 mx-auto"></div>
+          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-4 mx-auto"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Webhooks */}
