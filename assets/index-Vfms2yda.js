@@ -472,7 +472,7 @@ Authorization: Token YOUR_API_TOKEN
 
 The typical workflow for ticket scanning is:
 
-1. Verify the ticket using the [verification endpoint](/api/10-private-api-scan-ticket-by-code)
+1. Verify the ticket using the [verification endpoint](/api/11-private-api-scan-ticket-by-code)
 2. Extract the ticket item ID from the verification response
 3. Create a scan history record with the appropriate action
 
