@@ -735,4 +735,621 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
   },
 };
 
-export default apiExamplesMap;
+/**
+ * Private (authenticated) Scan API examples
+ * DRF Token auth: -H "Authorization: Token YOUR_API_TOKEN"
+ */
+const privateApiExamplesMap: Record<string, ApiExamplesData> = {
+  // ---- Scan a ticket by code (GET) ----
+  "/api/11-private-api-scan-ticket-by-code": {
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code}",
+    method: "GET",
+    description: "Lookup a ticket item by barcode/code for scanning.",
+    examples: {
+      curl: `curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123" \\
+-H "Authorization: Token YOUR_API_TOKEN"`,
+      python: `import requests
+
+# Define the venue_id and construct the base URL
+venue_id = 123456789
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/"
+
+# Define the parameters
+params = {"code": "test123"}
+
+# Define the headers
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN"
+}
+
+# Make the GET request
+response = requests.get(base_url, headers=headers, params=params)
+
+# Print the response status code and JSON content
+print("Status Code:", response.status_code)
+print("Response JSON:", response.json())`,
+      node: `const axios = require('axios');
+
+// Define the venue_id and construct the base URL
+const venueId = 123456789;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/scan/\`;
+
+// Define the parameters
+const params = {
+  code: 'test123'
+};
+
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN'
+};
+
+// Make the GET request
+axios.get(baseUrl, {
+  headers: headers,
+  params: params
+})
+.then(response => {
+  console.log('Status Code:', response.status);
+  console.log('Response Data:', response.data);
+})
+.catch(error => {
+  console.error('Error:', error);
+});`
+    },
+    response: {
+      status: 200,
+      body: {
+        id: 123456,              // ticket item id
+        event_id: 98765,
+        status: "payed",
+        barcode_string: "1234567890",
+        type: { id: 3001, name: "General Admission", multiscan_limit: 1 },
+        included_in_stats: true
+      }
+    }
+  },
+
+  // ---- Ticket Scan Actions (POST): pickup, return, void ----
+  "/api/12-private-api-ticket-scan-actions": {
+    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
+    method: "POST",
+    description: "Create a scan history with various actions (pickup, return, void).",
+    examples: {
+      curl: `# Example for pickup action (scan)
+curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "item": 123456,
+  "action": "pickup",
+  "scanner_device": "web_app",
+  "barcode_type": "static",
+  "barcode_string": "1234567890"
+}'
+
+# Example for return action (undo scan)
+curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "item": 123456,
+  "action": "return"
+}'
+
+# Example for void action (invalidate)
+curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "item": 123456,
+  "action": "void"
+}'`,
+      python: `import requests
+
+# Example for pickup action (scan)
+# Define the venue_id and construct the base URL
+venue_id = 123456789
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/"
+
+# Define the headers
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+
+# Define the payload for pickup action
+pickup_payload = {
+    "item": 123456,
+    "action": "pickup",
+    "scanner_device": "web_app",
+    "barcode_type": "static",
+    "barcode_string": "1234567890"
+}
+
+# Make the POST request for pickup
+pickup_response = requests.post(base_url, headers=headers, json=pickup_payload)
+
+# Print the response
+print("Pickup Status Code:", pickup_response.status_code)
+print("Pickup Response JSON:", pickup_response.json())
+
+# Example for return action (undo scan)
+# Define the payload for return action
+return_payload = {
+    "item": 123456,
+    "action": "return"
+}
+
+# Make the POST request for return
+return_response = requests.post(base_url, headers=headers, json=return_payload)
+
+# Print the response
+print("Return Status Code:", return_response.status_code)
+print("Return Response JSON:", return_response.json())
+
+# Example for void action (invalidate)
+# Define the payload for void action
+void_payload = {
+    "item": 123456,
+    "action": "void"
+}
+
+# Make the POST request for void
+void_response = requests.post(base_url, headers=headers, json=void_payload)
+
+# Print the response
+print("Void Status Code:", void_response.status_code)
+print("Void Response JSON:", void_response.json())`,
+      node: `const axios = require('axios');
+
+// Example for pickup action (scan)
+// Define the venue_id and construct the base URL
+const venueId = 123456789;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/histories/\`;
+
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+// Define the payload for pickup action
+const pickupPayload = {
+  item: 123456,
+  action: 'pickup',
+  scanner_device: 'web_app',
+  barcode_type: 'static',
+  barcode_string: '1234567890'
+};
+
+// Make the POST request for pickup
+axios.post(baseUrl, pickupPayload, { headers })
+  .then(response => {
+    console.log('Pickup Status Code:', response.status);
+    console.log('Pickup Response Data:', response.data);
+    
+    // Example for return action (undo scan)
+    // Define the payload for return action
+    const returnPayload = {
+      item: 123456,
+      action: 'return'
+    };
+    
+    // Make the POST request for return
+    return axios.post(baseUrl, returnPayload, { headers });
+  })
+  .then(response => {
+    console.log('Return Status Code:', response.status);
+    console.log('Return Response Data:', response.data);
+    
+    // Example for void action (invalidate)
+    // Define the payload for void action
+    const voidPayload = {
+      item: 123456,
+      action: 'void'
+    };
+    
+    // Make the POST request for void
+    return axios.post(baseUrl, voidPayload, { headers });
+  })
+  .then(response => {
+    console.log('Void Status Code:', response.status);
+    console.log('Void Response Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });
+
+// Alternative approach without chaining (for independent calls)
+/*
+// Pickup action
+axios.post(baseUrl, pickupPayload, { headers })
+  .then(response => {
+    console.log('Pickup Status Code:', response.status);
+    console.log('Pickup Response Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Pickup Error:', error);
+  });
+
+// Return action
+const returnPayload = {
+  item: 123456,
+  action: 'return'
+};
+
+axios.post(baseUrl, returnPayload, { headers })
+  .then(response => {
+    console.log('Return Status Code:', response.status);
+    console.log('Return Response Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Return Error:', error);
+  });
+
+// Void action
+const voidPayload = {
+  item: 123456,
+  action: 'void'
+};
+
+axios.post(baseUrl, voidPayload, { headers })
+  .then(response => {
+    console.log('Void Status Code:', response.status);
+    console.log('Void Response Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Void Error:', error);
+  });
+*/`
+    },
+    response: {
+      status: 201,
+      body: {
+        id: 777001,
+        item: 123456,
+        action: "pickup", // Can be "pickup", "return", or "void"
+        before: "payed",
+        after: "used", // Will be "used" for pickup, "payed" for return, "voided" for void
+        venue: 123456789,
+        created_by: 42,
+        scanner_device: "web_app",
+        barcode_type: "static",
+        created: "2025-07-31T18:00:00Z"
+      }
+    }
+  },
+
+  // ---- Create ticket scan history (POST): rotating barcode ----
+  "/api/11d-private-api-create-ticket-scan-history-rotating": {
+    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
+    method: "POST",
+    description: "Pickup using a rotating barcode (non-NFC device allowed).",
+    examples: {
+      curl: `curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "item": 123456,
+  "action": "pickup",
+  "scanner_device": "zebra_scanner_barcode",
+  "barcode_type": "rotating",
+  "barcode_string": "R-BASEBARCODE-1234"
+}'`,
+      python: `import requests
+
+# Define the venue_id and construct the base URL
+venue_id = 123456789
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/"
+
+# Define the headers
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+
+# Define the payload for rotating barcode
+payload = {
+    "item": 123456,
+    "action": "pickup",
+    "scanner_device": "zebra_scanner_barcode",
+    "barcode_type": "rotating",
+    "barcode_string": "R-BASEBARCODE-1234"
+}
+
+# Make the POST request
+response = requests.post(base_url, headers=headers, json=payload)
+
+# Print the response status code and JSON content
+print("Status Code:", response.status_code)
+print("Response JSON:", response.json())`,
+      node: `const axios = require('axios');
+
+// Define the venue_id and construct the base URL
+const venueId = 123456789;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/histories/\`;
+
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+// Define the payload for rotating barcode
+const payload = {
+  item: 123456,
+  action: 'pickup',
+  scanner_device: 'zebra_scanner_barcode',
+  barcode_type: 'rotating',
+  barcode_string: 'R-BASEBARCODE-1234'
+};
+
+// Make the POST request
+axios.post(baseUrl, payload, { headers })
+  .then(response => {
+    console.log('Status Code:', response.status);
+    console.log('Response Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });`
+    },
+    response: {
+      status: 201,
+      body: {
+        id: 777004,
+        item: 123456,
+        action: "pickup",
+        barcode_type: "rotating"
+      }
+    }
+  },
+
+  // ---- Create ticket scan history (POST): tracked barcode (e.g., Apple Wallet) ----
+  "/api/11e-private-api-create-ticket-scan-history-tracked": {
+    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
+    method: "POST",
+    description:
+      "Pickup using a tracked barcode (e.g., Apple Wallet). For NFC-only events, use an NFC-capable scanner_device.",
+    examples: {
+      curl: `curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "item": 123456,
+  "action": "pickup",
+  "scanner_device": "web_app",
+  "barcode_type": "static",
+  "barcode_source": "apple",
+  "barcode_string": "TRACKED-BARCODE-VALUE"
+}'`,
+      python: `import requests
+
+# Define the venue_id and construct the base URL
+venue_id = 123456789
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/"
+
+# Define the headers
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+
+# Define the payload for tracked barcode
+payload = {
+    "item": 123456,
+    "action": "pickup",
+    "scanner_device": "web_app",
+    "barcode_type": "static",
+    "barcode_source": "apple",
+    "barcode_string": "TRACKED-BARCODE-VALUE"
+}
+
+# Make the POST request
+response = requests.post(base_url, headers=headers, json=payload)
+
+# Print the response status code and JSON content
+print("Status Code:", response.status_code)
+print("Response JSON:", response.json())`,
+      node: `const axios = require('axios');
+
+// Define the venue_id and construct the base URL
+const venueId = 123456789;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/histories/\`;
+
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+// Define the payload for tracked barcode
+const payload = {
+  item: 123456,
+  action: 'pickup',
+  scanner_device: 'web_app',
+  barcode_type: 'static',
+  barcode_source: 'apple',
+  barcode_string: 'TRACKED-BARCODE-VALUE'
+};
+
+// Make the POST request
+axios.post(baseUrl, payload, { headers })
+  .then(response => {
+    console.log('Status Code:', response.status);
+    console.log('Response Data:', response.data);
+  })
+  .catch(error => {
+    console.error('Error:', error);
+  });`
+    },
+    response: {
+      status: 201,
+      body: {
+        id: 777005,
+        item: 123456,
+        action: "pickup",
+        barcode_type: "static",
+        barcode_source: "apple"
+      }
+    }
+  },
+
+  // ---- Scan stats (aggregated) ----
+  "/api/12-private-api-scan-stats": {
+    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id={event_id}",
+    method: "GET",
+    description:
+      "Aggregated scan stats. Optional params: breakdown_by_type=true, created__gte=ISO8601, created__lte=ISO8601.",
+    examples: {
+      curl: `curl -X GET "https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id=98765&breakdown_by_type=true" \\
+-H "Authorization: Token YOUR_API_TOKEN"`,
+      python: `import requests
+
+# Define the venue_id and construct the base URL
+venue_id = 123456789
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/stats/"
+
+# Define the parameters
+params = {
+    "item__event_id": "98765",
+    "breakdown_by_type": "true"
+}
+
+# Define the headers
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN"
+}
+
+# Make the GET request
+response = requests.get(base_url, headers=headers, params=params)
+
+# Print the response status code and JSON content
+print("Status Code:", response.status_code)
+print("Response JSON:", response.json())`,
+      node: `const axios = require('axios');
+
+// Define the venue_id and construct the base URL
+const venueId = 123456789;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/histories/stats/\`;
+
+// Define the parameters
+const params = {
+  item__event_id: '98765',
+  breakdown_by_type: 'true'
+};
+
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN'
+};
+
+// Make the GET request
+axios.get(baseUrl, {
+  headers: headers,
+  params: params
+})
+.then(response => {
+  console.log('Status Code:', response.status);
+  console.log('Response Data:', response.data);
+})
+.catch(error => {
+  console.error('Error:', error);
+});`
+    },
+    response: {
+      status: 200,
+      body: {
+        total_voided: 0,
+        total_picked_up: 2,
+        total_returned: 1,
+        total_used: 1,
+        total_multiscan_used: 0,
+        breakdown_by_type: [
+          {
+            id: 3001,
+            name: "General Admission",
+            total_picked_up: 2,
+            total_returned: 1,
+            total_used: 1
+          }
+        ]
+      }
+    }
+  },
+
+  // ---- Scan stats timeline (per-day) ----
+  "/api/13-private-api-scan-stats-timeline": {
+    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id={event_id}",
+    method: "GET",
+    description: "Timeline of scan stats grouped by day.",
+    examples: {
+      curl: `curl -X GET "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id=98765" \\
+-H "Authorization: Token YOUR_API_TOKEN"`,
+      python: `import requests
+
+# Define the venue_id and construct the base URL
+venue_id = 123456789
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/stats/timeline/"
+
+# Define the parameters
+params = {
+    "item__event_id": "98765"
+}
+
+# Define the headers
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN"
+}
+
+# Make the GET request
+response = requests.get(base_url, headers=headers, params=params)
+
+# Print the response status code and JSON content
+print("Status Code:", response.status_code)
+print("Response JSON:", response.json())`,
+      node: `const axios = require('axios');
+
+// Define the venue_id and construct the base URL
+const venueId = 123456789;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/histories/stats/timeline/\`;
+
+// Define the parameters
+const params = {
+  item__event_id: '98765'
+};
+
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN'
+};
+
+// Make the GET request
+axios.get(baseUrl, {
+  headers: headers,
+  params: params
+})
+.then(response => {
+  console.log('Status Code:', response.status);
+  console.log('Response Data:', response.data);
+})
+.catch(error => {
+  console.error('Error:', error);
+});`
+    },
+    response: {
+      status: 200,
+      body: [
+        { date: "2025-07-30", picked_up: 1, returned: 1, voided: 0 },
+        { date: "2025-07-31", picked_up: 1, returned: 0, voided: 0 }
+      ]
+    }
+  }
+};
+
+// Merge privateApiExamplesMap into apiExamplesMap
+const mergedApiExamplesMap = { ...apiExamplesMap, ...privateApiExamplesMap };
+
+export default mergedApiExamplesMap;
+export { privateApiExamplesMap };

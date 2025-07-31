@@ -17,6 +17,10 @@ const getOpenSections = (currentPath: string): string[] => {
     return ["introduction"];
   }
   if (currentPath.startsWith("/api/")) {
+    // Check if it's a private API page
+    if (currentPath.includes("-private-api-")) {
+      return ["private-api-reference"];
+    }
     return ["api-reference"];
   }
   if (currentPath.startsWith("/sdk/") || currentPath.startsWith("/widgets")) {
@@ -114,6 +118,46 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 }
               >
                 Query a specific experience
+              </NavLink>
+            </li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="private-api-reference">
+        <AccordionTrigger className="sidebar-category mt-0">
+          Private Organizer API
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="space-y-1 pl-5 border-l border-border/30">
+            <li>
+              <NavLink
+                to="/api/10-private-api-overview"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Overview
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/api/11-private-api-scan-ticket-by-code"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Ticket Verification
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/api/12-private-api-ticket-scan-actions"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Ticket Scan Actions
               </NavLink>
             </li>
           </ul>
