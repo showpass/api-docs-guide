@@ -5,30 +5,30 @@ import {
   TabsContent,
   TabsList,
   TabsTrigger,
-} from "@/shared/components/tabs";
+} from "@/shared/components/tabs.tsx";
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/shared/components/card";
-import { Input } from "@/shared/components/input";
-import { Label } from "@/shared/components/label";
-import { Button } from "@/shared/components/button";
+} from "@/shared/components/card.tsx";
+import { Input } from "@/shared/components/input.tsx";
+import { Label } from "@/shared/components/label.tsx";
+import { Button } from "@/shared/components/button.tsx";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
-import SEOHead from "@/shared/components/SEOHead";
-import { seoDataMap } from "@/docs-app/data/seoData";
+import SEOHead from "@/shared/components/SEOHead.tsx";
+import { seoDataMap } from "@/docs-app/data/seoData.ts";
 
 // Import Showpass components
-import ShowpassIntegration from "@/docs-app/ui/components/widgets/ShowpassIntegration";
-import ShowpassCalendarWidget from "@/docs-app/ui/components/widgets/ShowpassCalendarWidget";
-import ShowpassMembershipWidget from "@/docs-app/ui/components/widgets/ShowpassMembershipWidget";
-import ShowpassProductWidget from "@/docs-app/ui/components/widgets/ShowpassProductWidget";
-import ShowpassMountedCalendarWidget from "@/docs-app/ui/components/widgets/ShowpassMountedCalendarWidget";
-import ShowpassMountedEventWidget from "@/docs-app/ui/components/widgets/ShowpassMountedEventWidget";
-import ShowpassMountedMembershipWidget from "@/docs-app/ui/components/widgets/ShowpassMountedMembershipWidget";
-import ShowpassMountedProductWidget from "@/docs-app/ui/components/widgets/ShowpassMountedProductWidget";
+import ShowpassIntegration from "@/docs-app/ui/components/widgets/ShowpassIntegration.tsx";
+import ShowpassCalendarWidget from "@/docs-app/ui/components/widgets/ShowpassCalendarWidget.tsx";
+import ShowpassMembershipWidget from "@/docs-app/ui/components/widgets/ShowpassMembershipWidget.tsx";
+import ShowpassProductWidget from "@/docs-app/ui/components/widgets/ShowpassProductWidget.tsx";
+import ShowpassMountedCalendarWidget from "@/docs-app/ui/components/widgets/ShowpassMountedCalendarWidget.tsx";
+import ShowpassMountedEventWidget from "@/docs-app/ui/components/widgets/ShowpassMountedEventWidget.tsx";
+import ShowpassMountedMembershipWidget from "@/docs-app/ui/components/widgets/ShowpassMountedMembershipWidget.tsx";
+import ShowpassMountedProductWidget from "@/docs-app/ui/components/widgets/ShowpassMountedProductWidget.tsx";
 
 const WidgetPlayground: React.FC = () => {
   const { setPageData } = useDocLayoutData();

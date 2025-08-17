@@ -1,13 +1,13 @@
 import React from "react";
 import { useParams, Link } from "react-router-dom";
 import ContentPage from "@/docs-app/ui/components/content/ContentPage.tsx";
-import apiExamplesMap from "@/docs-app/data/apiExamplesMap";
+import apiExamplesMap from "@/docs-app/data/apiExamplesMap.ts";
 import type { ApiExamplesData } from "@/docs-app/data/types.ts";
-import { Alert, AlertDescription, AlertTitle } from "@/shared/components/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/shared/components/alert.tsx";
 import { ArrowLeft, AlertCircle } from "lucide-react";
-import { Button } from "@/shared/components/button";
-import SEOHead from "@/shared/components/SEOHead";
-import { seoDataMap } from "@/docs-app/data/seoData";
+import { Button } from "@/shared/components/button.tsx";
+import SEOHead from "@/shared/components/SEOHead.tsx";
+import { seoDataMap } from "@/docs-app/data/seoData.ts";
 
 interface DynamicDocPageProps {
   section:

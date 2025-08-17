@@ -20,7 +20,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
 }) => {
   const { content, isLoading, error, tableOfContents } =
     useContent(contentPath);
-  const activeSection = useScrollSpy("h2[id], h3[id]", 100);
+  const activeSection = useScrollSpy("h2[id], h3[id], h4[id]", 100);
   const { setPageData } = useDocLayoutData();
 
   // Use the hash scroll hook
@@ -60,7 +60,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
     }
   }, [error]);
 
-  // Scroll to top when content changes (new page)
+  // Reset scroll position when navigating to a new document
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [contentPath]);

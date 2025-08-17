@@ -13,7 +13,7 @@ import logoRedSrc from "@/shared/assets/images/showpass-logo-red.svg";
 import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
 import { useTheme } from "next-themes";
-import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation";
+import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation.tsx";
 
 export interface DocLayoutContextProps {
   tocItems?: TocItem[];

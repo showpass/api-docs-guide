@@ -1,55 +1,42 @@
 import { DocsLoader, IDocsLoader } from "@/docs-app/infrastructure/docs-loader";
+import { extractHeadingsFromMarkdown } from "@/docs-app/utils/heading-utils";
 
 /**
- * ContentManager acts as the main interface for loading and processing documentation content.
- * It decouples the markdown content source (DocsLoader) from the rest of the application logic.
+ * ContentManager provides a clean interface for loading and processing documentation content.
+ * It abstracts the content source (DocsLoader) from the application logic and provides
+ * consistent content processing capabilities.
  */
 export class ContentManager {
   private docsLoader: IDocsLoader;
 
   /**
-   * @param docsLoader - Optional custom loader implementing IDocsLoader. Defaults to a static DocsLoader.
+   * Creates a new ContentManager instance.
+   * 
+   * @param docsLoader - Content loader implementation. Defaults to DocsLoader if not provided.
    */
   constructor(docsLoader: IDocsLoader = new DocsLoader()) {
     this.docsLoader = docsLoader;
   }
 
   /**
-   * Loads raw markdown content based on a relative path.
-   * This delegates the actual loading logic to the injected docsLoader implementation.
-   *
-   * @param contentPath - Path to the markdown file (relative to the docs base).
-   * @returns A promise that resolves with the raw markdown content as a string.
+   * Loads raw markdown content from the specified path.
+   * 
+   * @param contentPath - Relative path to the markdown file
+   * @returns Promise resolving to the raw markdown content
    */
   async loadContent(contentPath: string): Promise<string> {
     return this.docsLoader.loadContent(contentPath);
   }
 
   /**
-   * Parses markdown content to extract second-level headings (`## `).
-   * These are used to build a table of contents (TOC) for in-page navigation.
-   *
-   * @param content - Raw markdown content.
-   * @returns An array of heading objects with title and anchor href.
+   * Extracts heading information from markdown content for table of contents generation.
+   * 
+   * @param content - Raw markdown content
+   * @returns Array of heading objects with title and href properties
    */
   extractHeadings(content: string): { title: string; href: string }[] {
-    const headings: { title: string; href: string }[] = [];
-    const lines = content.split('\n');
-
-    for (const line of lines) {
-      if (line.startsWith('## ')) {
-        const title = line.replace('## ', '').trim();
-
-        // Converts the title to a URL-friendly anchor ID (e.g. 'My Heading' → '#my-heading')
-        const href = `#${title
-          .toLowerCase()
-          .replace(/[^\w\s-]/g, '')
-          .replace(/[\s_-]+/g, '-')}`;
-
-        headings.push({ title, href });
-      }
-    }
-
-    return headings;
+    const headings = extractHeadingsFromMarkdown(content);
+    // Return simplified format for backward compatibility with existing consumers
+    return headings.map(({ title, href }) => ({ title, href }));
   }
 }

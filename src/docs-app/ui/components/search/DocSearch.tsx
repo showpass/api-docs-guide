@@ -8,8 +8,8 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
-} from "@/shared/components/command"; // Assuming this path is correct for your command components
-import { Button } from "@/shared/components/button";
+} from "@/shared/components/command.tsx";
+import { Button } from "@/shared/components/button.tsx";
 import { Search, FileText } from "lucide-react";
 
 interface SearchDoc {

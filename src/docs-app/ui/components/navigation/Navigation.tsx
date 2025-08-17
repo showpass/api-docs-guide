@@ -6,7 +6,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/shared/components/accordion";
+} from "@/shared/components/accordion.tsx";
 
 interface NavigationProps {
   currentPath: string;

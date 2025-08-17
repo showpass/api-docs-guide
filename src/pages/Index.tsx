@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import { Link } from "react-router-dom";
-import { Button } from "@/shared/components/button";
-import SEOHead from "@/shared/components/SEOHead";
-import { seoDataMap } from "@/docs-app/data/seoData";
+import { Button } from "@/shared/components/button.tsx";
+import SEOHead from "@/shared/components/SEOHead.tsx";
+import { seoDataMap } from "@/docs-app/data/seoData.ts";
 import { ArrowRight, Code, Zap, Globe, Webhook, BarChart3, Target } from "lucide-react";
 
 const Index = () => {
