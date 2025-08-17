@@ -186,11 +186,11 @@ const WidgetPlayground: React.FC = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setActiveTab("popup")}
-                className="text-xs h-6 px-3"
-                style={activeTab === "popup" ? {
-                  backgroundColor: '#24727b',
-                  color: 'white'
-                } : {}}
+                className={`text-xs h-6 px-3 transition-colors ${
+                  activeTab === "popup" 
+                    ? "bg-[hsl(var(--site-primary))] text-[hsl(var(--site-primary-foreground))]" 
+                    : "hover:bg-muted"
+                }`}
               >
                 Modal
               </Button>
@@ -198,11 +198,11 @@ const WidgetPlayground: React.FC = () => {
                 variant="ghost"
                 size="sm"
                 onClick={() => setActiveTab("mounted")}
-                className="text-xs h-6 px-3"
-                style={activeTab === "mounted" ? {
-                  backgroundColor: '#24727b',
-                  color: 'white'
-                } : {}}
+                className={`text-xs h-6 px-3 transition-colors ${
+                  activeTab === "mounted" 
+                    ? "bg-[hsl(var(--site-primary))] text-[hsl(var(--site-primary-foreground))]" 
+                    : "hover:bg-muted"
+                }`}
               >
                 Mounted
               </Button>
@@ -217,11 +217,11 @@ const WidgetPlayground: React.FC = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => setActiveWidget(widget)}
-                    className="text-xs h-6 px-2"
-                    style={activeWidget === widget ? {
-                      backgroundColor: '#24727b',
-                      color: 'white'
-                    } : {}}
+                    className={`text-xs h-6 px-2 transition-colors ${
+                      activeWidget === widget 
+                        ? "bg-[hsl(var(--site-primary))] text-[hsl(var(--site-primary-foreground))]" 
+                        : "hover:bg-muted"
+                    }`}
                   >
                     {widget === "calendar" && "📅 Cal"}
                     {widget === "event" && "🎫 Event"}
@@ -289,7 +289,7 @@ const WidgetPlayground: React.FC = () => {
                           window.showpass.tickets.eventPurchaseWidget(eventId, modalWidgetOptions);
                         }
                       }}
-                      className="w-full transition-colors hover:bg-[#24727b] hover:text-white"
+                      className="w-full transition-colors hover:bg-primary hover:text-primary-foreground"
                       size="lg"
                     >
                       🎫 Buy Tickets
