@@ -4,19 +4,19 @@ import { Button } from "@/shared/components/button.tsx";
 interface ShowpassProductWidgetProps {
   buttonText?: string;
   buttonClassName?: string;
-  id?: string;
+  id: string;
   options?: Record<string, any>;
 }
 
 const ShowpassProductWidget = ({ 
   buttonText = "Open Product View", 
   buttonClassName = "",
-  id = "1894", // Default product ID
+  id,
   options = {}
 }: ShowpassProductWidgetProps) => {
 
   const handleClick = () => {
-    if (typeof window === 'undefined' || !id) return;
+    if (typeof window === 'undefined') return;
 
     const defaultOptions = {
       'theme-primary': '#FF7F00',
@@ -42,7 +42,6 @@ const ShowpassProductWidget = ({
     <Button
       onClick={handleClick}
       className={`flex items-center gap-2 ${buttonClassName}`}
-      disabled={!id}
     >
       {buttonText}
     </Button>
