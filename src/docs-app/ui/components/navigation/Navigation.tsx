@@ -74,7 +74,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
               <NavLink
                 to="/"
                 className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
+                  cn("sidebar-link hover-scale", isActive && "active")
                 }
               >
                 Overview
@@ -94,7 +94,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
               <NavLink
                 to="/api/01-public-api-introduction"
                 className={({ isActive }) =>
-                  cn("sidebar-link", isActive && "active")
+                  cn("sidebar-link hover-scale", isActive && "active")
                 }
               >
                 Showpass Discovery API

@@ -15,6 +15,7 @@ import {
 } from "@/shared/components/table.tsx";
 import { cn } from "@/shared/lib/utils.ts";
 import { generateHeadingId } from "@/docs-app/utils/heading-utils";
+import { Separator } from "@/shared/components/separator.tsx";
 
 interface MarkdownContentProps {
   content: string;
@@ -81,13 +82,16 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       const text = children ? children.toString() : "";
       const id = generateHeadingId(text);
       return (
-        <h1
-          id={id}
-          className="text-3xl font-bold mt-8 mb-4 scroll-mt-24"
-          {...props}
-        >
-          {children}
-        </h1>
+        <>
+          <h1
+            id={id}
+            className="text-3xl font-bold mt-8 mb-6 scroll-mt-24"
+            {...props}
+          >
+            {children}
+          </h1>
+          <Separator className="mb-6 opacity-30" />
+        </>
       );
     },
     h2: ({ node, children, ...props }) => {

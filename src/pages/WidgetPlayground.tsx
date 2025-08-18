@@ -19,6 +19,7 @@ import { Button } from "@/shared/components/button.tsx";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import SEOHead from "@/shared/components/SEOHead.tsx";
 import { seoDataMap } from "@/docs-app/data/seoData.ts";
+import { Separator } from "@/shared/components/separator.tsx";
 
 // Import Showpass components
 import ShowpassIntegration from "@/docs-app/ui/components/widgets/ShowpassIntegration.tsx";
@@ -83,7 +84,8 @@ const WidgetPlayground: React.FC = () => {
       
       <ShowpassIntegration />
 
-      <h1 className="text-3xl font-bold mb-4">Widget Playground</h1>
+      <h1 className="text-3xl font-bold mb-6">Widget Playground</h1>
+      <Separator className="mb-6 opacity-30" />
 
       {/* Compact Sticky Control Center */}
       <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-lg mb-6 shadow-lg">
