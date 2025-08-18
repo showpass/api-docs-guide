@@ -72,20 +72,25 @@ const Index = () => {
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Code className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">Public API Reference</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">API Reference</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
                 <span className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-400">Event listings</span>
-                <span className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-400">Organization filtering</span>
-                <span className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-400">Detailed queries</span>
+                <span className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-400">Event filtering</span>
+                <span className="bg-slate-100 dark:bg-slate-700 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-400">Ticket management</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">Access detailed event information programmatically with our REST API.</p>
+                <p className="text-slate-600 dark:text-slate-400 text-sm">Access event information and perform operations with our REST APIs.</p>
               </div>
-              <div className="ml-11">
-                <Button asChild size="sm" className="w-full">
+              <div className="flex gap-1 ml-11">
+                <Button asChild size="sm" className="flex-1">
                   <Link to="/api/01-public-api-introduction" className="flex items-center justify-center">
-                    Get Started <ArrowRight className="ml-1 h-3 w-3" />
+                    Public API <ArrowRight className="ml-1 h-3 w-3" />
+                  </Link>
+                </Button>
+                <Button asChild variant="outline" size="sm" className="flex-1">
+                  <Link to="/api/10-private-api-overview" className="flex items-center justify-center">
+                    Private API <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
                 </Button>
               </div>

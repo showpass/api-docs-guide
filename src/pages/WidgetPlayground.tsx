@@ -1,20 +1,6 @@
 import * as React from "react";
 import { useEffect } from "react";
-import {
-  Tabs,
-  TabsContent,
-  TabsList,
-  TabsTrigger,
-} from "@/shared/components/tabs.tsx";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/shared/components/card.tsx";
 import { Input } from "@/shared/components/input.tsx";
-import { Label } from "@/shared/components/label.tsx";
 import { Button } from "@/shared/components/button.tsx";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import SEOHead from "@/shared/components/SEOHead.tsx";
@@ -190,7 +176,7 @@ const WidgetPlayground: React.FC = () => {
                 onClick={() => setActiveTab("popup")}
                 className={`text-xs h-6 px-3 transition-colors ${
                   activeTab === "popup" 
-                    ? "bg-[hsl(var(--site-primary))] text-[hsl(var(--site-primary-foreground))]" 
+                    ? "bg-primary text-primary-foreground" 
                     : "hover:bg-muted"
                 }`}
               >
@@ -202,7 +188,7 @@ const WidgetPlayground: React.FC = () => {
                 onClick={() => setActiveTab("mounted")}
                 className={`text-xs h-6 px-3 transition-colors ${
                   activeTab === "mounted" 
-                    ? "bg-[hsl(var(--site-primary))] text-[hsl(var(--site-primary-foreground))]" 
+                    ? "bg-primary text-primary-foreground" 
                     : "hover:bg-muted"
                 }`}
               >
@@ -221,7 +207,7 @@ const WidgetPlayground: React.FC = () => {
                     onClick={() => setActiveWidget(widget)}
                     className={`text-xs h-6 px-2 transition-colors ${
                       activeWidget === widget 
-                        ? "bg-[hsl(var(--site-primary))] text-[hsl(var(--site-primary-foreground))]" 
+                        ? "bg-primary text-primary-foreground" 
                         : "hover:bg-muted"
                     }`}
                   >
@@ -287,8 +273,12 @@ const WidgetPlayground: React.FC = () => {
                   {eventId ? (
                     <Button
                       onClick={() => {
-                        if (window.showpass && window.showpass.tickets) {
-                          window.showpass.tickets.eventPurchaseWidget(eventId, modalWidgetOptions);
+                        try {
+                          if (typeof window !== 'undefined' && window.showpass?.tickets) {
+                            window.showpass.tickets.eventPurchaseWidget(eventId, modalWidgetOptions);
+                          }
+                        } catch (error) {
+                          console.error('Error opening event widget:', error);
                         }
                       }}
                       className="w-full transition-colors hover:bg-primary hover:text-primary-foreground"

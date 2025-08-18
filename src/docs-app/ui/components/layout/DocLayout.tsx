@@ -14,6 +14,7 @@ import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
 import { useTheme } from "next-themes";
 import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation.tsx";
+import { Separator } from "@/shared/components/separator.tsx";
 
 export interface DocLayoutContextProps {
   tocItems?: TocItem[];
@@ -158,6 +159,7 @@ const DocLayout = () => {
           )}
         >
           <BreadcrumbNavigation />
+          {currentPath !== "/" && <Separator className="my-6 opacity-30" />}
           <Outlet />
         </div>
 
