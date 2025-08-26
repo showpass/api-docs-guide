@@ -1645,11 +1645,11 @@ This variable will read a dynamic nonce value that Showpass makes available on t
 4.  **Variable Configuration:**
     - Click **Choose a variable type to begin setup...**
     - Select **DOM Element**.
-    - **Selection Method:** Choose **ID**.
-    - **Element ID:** Enter \`gtm-showpass-client\`
-      - _This is a specific ID Showpass uses to provide the nonce value._
-    - **Attribute Name:** Enter \`data-ngtm\`
-      - _This is the data attribute on the element above that will hold the nonce string._
+    - **Selection Method:** Choose **CSS Selector**.
+    - **Element Selector:** Enter \`meta[name='csp-nonce']\`
+      - _This is a CSS selector that targets the meta tag Showpass uses to provide the nonce value._
+    - **Attribute Name:** Enter \`content\`
+      - _This is the content attribute on the meta tag that will hold the nonce string._
 5.  Click **Save**.
 
 ### Step 2: Update your custom HTML tags
