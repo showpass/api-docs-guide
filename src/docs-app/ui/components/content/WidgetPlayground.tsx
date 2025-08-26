@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { Button } from "@/shared/components/button";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select";
-import { Input } from "@/shared/components/input";
-import { Switch } from "@/shared/components/switch";
-import { Label } from "@/shared/components/label";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs";
+import { Button } from "@/shared/components/button.tsx";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/shared/components/select.tsx";
+import { Input } from "@/shared/components/input.tsx";
+import { Switch } from "@/shared/components/switch.tsx";
+import { Label } from "@/shared/components/label.tsx";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/shared/components/card.tsx";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/shared/components/tabs.tsx";
 
 interface WidgetPlaygroundProps {
   widgetType: string;

@@ -1,82 +1,58 @@
 import * as React from 'react';
 
 interface ShowpassMountedProductWidgetProps {
-  id?: string;
+  id: string;
   themeColor?: string;
   className?: string;
   options?: Record<string, any>;
 }
 
 const ShowpassMountedProductWidget = ({
-  id = "1894", // Default product ID
-  themeColor = '#FF7F00',
+  id,
+  themeColor = '#24727b',
   className = '',
   options = {}
 }: ShowpassMountedProductWidgetProps) => {
-  const containerId = 'widgets-product-container';
-
+  const containerId = React.useRef(`product-widget-${Date.now()}-${Math.random().toString(36).substring(2, 9)}`);
+  const isInitialized = React.useRef(false);
+  
+  const memoizedOptions = React.useMemo(() => ({
+    'theme-primary': themeColor,
+    'keep-shopping': true,
+    ...options
+  }), [themeColor, options]);
+  
   React.useEffect(() => {
-    if (!id) {
-      console.error('Product ID is required for ShowpassMountedProductWidget');
-      return;
-    }
-
-    // Wait for widgets to be available
+    if (isInitialized.current) return;
+    
     const initWidget = () => {
-      if (typeof window === 'undefined') return;
-
-      const defaultOptions = {
-        'theme-primary': themeColor,
-        'keep-shopping': true
-      };
-
-      const mergedOptions = { ...defaultOptions, ...options };
-
-      if (window.showpass && window.showpass.tickets) {
-        console.log(`Mounting product widget into container: ${containerId}`);
-        try {
-          window.showpass.tickets.productPurchaseWidget(id, mergedOptions, containerId);
-        } catch (error) {
-          console.error('Error mounting Showpass product widget:', error);
-        }
+      if (window.showpass?.tickets) {
+        window.showpass.tickets.productPurchaseWidget(id, memoizedOptions, containerId.current);
+        isInitialized.current = true;
       } else if (window.__shwps) {
-        // Fallback to older API
-        console.log(`Mounting product widget into container: ${containerId} using legacy method`);
-        try {
-          window.__shwps('tickets.productPurchaseWidget', id, mergedOptions, containerId);
-        } catch (error) {
-          console.error('Error mounting Showpass product widget with legacy method:', error);
-        }
-      } else {
-        console.error('Showpass SDK not found in window object');
+        window.__shwps('tickets.productPurchaseWidget', id, memoizedOptions, containerId.current);
+        isInitialized.current = true;
       }
     };
 
-    // Check if SDK is already loaded
     if (window.showpass || window.__shwps) {
       initWidget();
     } else {
-      // Setup a watcher to initialize when SDK becomes available
       const checkInterval = setInterval(() => {
         if (window.showpass || window.__shwps) {
           initWidget();
           clearInterval(checkInterval);
         }
-      }, 500);
-
-      // Clean up interval on component unmount
+      }, 100);
       return () => clearInterval(checkInterval);
     }
-  }, [containerId, id, themeColor, options]);
-
-  if (!id) {
-    return <div className="text-red-500 p-4">Error: Product ID is required</div>;
-  }
+  }, [id, memoizedOptions]);
 
   return (
-    <div id={containerId} className={`showpass-product-container min-h-[500px] ${className}`}>
-      {/* The product widget will be mounted here */}
-    </div>
+    <div 
+      id={containerId.current} 
+      className={`w-full min-h-[400px] ${className}`}
+    />
   );
 };
 

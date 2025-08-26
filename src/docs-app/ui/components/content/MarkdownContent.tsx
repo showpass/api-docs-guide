@@ -14,20 +14,12 @@ import {
   TableRow,
 } from "@/shared/components/table.tsx";
 import { cn } from "@/shared/lib/utils.ts";
+import { generateHeadingId } from "@/docs-app/utils/heading-utils";
+import { Separator } from "@/shared/components/separator.tsx";
 
 interface MarkdownContentProps {
   content: string;
 }
-
-// Helper function to create ID-safe slugs from headings
-const slugify = (text: string): string => {
-  return text
-    .toLowerCase()
-    .trim()
-    .replace(/[^\w\s-]/g, "")
-    .replace(/[\s_-]+/g, "-")
-    .replace(/^-+|-+$/g, "");
-};
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
   // Define components mapping for ReactMarkdown
@@ -88,20 +80,23 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     // Custom components for markdown elements
     h1: ({ node, children, ...props }) => {
       const text = children ? children.toString() : "";
-      const id = slugify(text);
+      const id = generateHeadingId(text);
       return (
-        <h1
-          id={id}
-          className="text-3xl font-bold mt-8 mb-4 scroll-mt-24"
-          {...props}
-        >
-          {children}
-        </h1>
+        <>
+          <h1
+            id={id}
+            className="text-3xl font-bold mt-8 mb-6 scroll-mt-24"
+            {...props}
+          >
+            {children}
+          </h1>
+          <Separator className="mb-6 opacity-30" />
+        </>
       );
     },
     h2: ({ node, children, ...props }) => {
       const text = children ? children.toString() : "";
-      const id = slugify(text);
+      const id = generateHeadingId(text);
       return (
         <h2
           id={id}
@@ -114,7 +109,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     },
     h3: ({ node, children, ...props }) => {
       const text = children ? children.toString() : "";
-      const id = slugify(text);
+      const id = generateHeadingId(text);
       return (
         <h3
           id={id}
@@ -127,7 +122,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     },
     h4: ({ node, children, ...props }) => {
       const text = children ? children.toString() : "";
-      const id = slugify(text);
+      const id = generateHeadingId(text);
       return (
         <h4
           id={id}
