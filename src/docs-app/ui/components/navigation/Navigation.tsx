@@ -38,6 +38,9 @@ const getOpenSections = (currentPath: string): string[] => {
   if (currentPath.startsWith("/facebook/")) {
     return ["facebook"];
   }
+  if (currentPath.startsWith("/security/")) {
+    return ["security"];
+  }
   return [];
 };
 
@@ -626,6 +629,46 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 }
               >
                 Installing Facebook Conversions API
+              </NavLink>
+            </li>
+          </ul>
+        </AccordionContent>
+      </AccordionItem>
+
+      <AccordionItem value="security">
+        <AccordionTrigger className="sidebar-category mt-0">
+          Security & Compliance
+        </AccordionTrigger>
+        <AccordionContent>
+          <ul className="space-y-1 pl-5 border-l border-border/30">
+            <li>
+              <NavLink
+                to="/security/01-compliance-overview"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Overview
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/security/03-certifications"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                Certifications
+              </NavLink>
+            </li>
+            <li>
+              <NavLink
+                to="/security/02-pci-responsibility-matrix"
+                className={({ isActive }) =>
+                  cn("sidebar-link", isActive && "active")
+                }
+              >
+                PCI DSS Responsibilities
               </NavLink>
             </li>
           </ul>

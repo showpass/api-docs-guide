@@ -22,6 +22,7 @@ const sectionLabels: Record<string, string> = {
   webhooks: 'Webhooks',
   'google-tag-manager': 'Google Tag Manager',
   facebook: 'Facebook Integration',
+  security: 'Security & Compliance',
   'widget-playground': 'Widget Playground'
 };
 

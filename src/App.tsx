@@ -61,6 +61,10 @@ const App = () => (
                 path="/facebook/:slug"
                 element={<DynamicDocPage section="facebook" />}
               />
+              <Route
+                path="/security/:slug"
+                element={<DynamicDocPage section="security" />}
+              />
               <Route path="/widget-playground" element={<WidgetPlayground />} />
               <Route
                 path="/wordpress/:slug"
