@@ -653,7 +653,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
             <li>
               <NavLink
-                to="/security/03-certifications"
+                to="/security/02-certifications"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }
@@ -663,7 +663,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
             <li>
               <NavLink
-                to="/security/02-pci-responsibility-matrix"
+                to="/security/03-pci-responsibility-matrix"
                 className={({ isActive }) =>
                   cn("sidebar-link", isActive && "active")
                 }

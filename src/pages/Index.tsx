@@ -284,10 +284,10 @@ const Index = () => {
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="sm">
-                  <Link to="/security/02-pci-compliance">PCI Compliance</Link>
+                  <Link to="/security/02-certifications">Certifications</Link>
                 </Button>
                 <Button asChild variant="outline" size="sm">
-                  <Link to="/security/03-certifications">Certifications</Link>
+                  <Link to="/security/03-pci-responsibility-matrix">PCI Compliance</Link>
                 </Button>
               </div>
             </div>
