@@ -17,8 +17,7 @@ This page provides authoritative references and how to request sensitive documen
 
 - **PCI AOC (Attestation of Compliance)** — Request via **support@showpass.com** (may require NDA).  
 - **Penetration Test Executive Summary** — Available under NDA.  
-- **Security Whitepaper / Architecture Overview** — Available on request.  
-- **Subprocessors & Data Residency** — See /legal/subprocessors and /legal/privacy.
+- **Security Whitepaper / Architecture Overview** — Available on request.
 
 ## Contact
 - **Document requests & vendor security questionnaires:** support@showpass.com  
