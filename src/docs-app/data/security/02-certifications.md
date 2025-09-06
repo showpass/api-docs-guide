@@ -1,24 +1,20 @@
 # Certifications & Reports
 
-This page provides authoritative references and how to request sensitive documents.
-
 ## Certifications
 
-- **PCI DSS Level 1** — Platform attested; current AOC available.  
-  Download: [2025 PCI DSS Attestation (v4.0.1)](https://doavub8d2uzrx.cloudfront.net/security-and-compliance/pci/2025-PCI-DSS-V4.0.1.pdf)
+| Program | Status | Version/Term | Description | Access |
+|---|---|---:|---|---|
+| **PCI DSS Level 1** | Attested | v4.0.1 (2025) | AOC (redacted) available; full AOC/ROC on request (NDA may apply) | [PDF](https://doavub8d2uzrx.cloudfront.net/security-and-compliance/pci/2025-PCI-DSS-V4.0.1-redacted.pdf)<br>[support@showpass.com](mailto:support@showpass.com) |
+| **TX-RAMP** | Certified | — | Official DIR listing (Showpass appears in the spreadsheet) | [TX-RAMP Certified Cloud Products](https://dir.texas.gov/resource-library-item/tx-ramp-certified-cloud-products) |
+| **GDPR (Privacy Program)** | Operational | DPA with SCCs (as applicable) | Standard DPA available on request | [support@showpass.com](mailto:support@showpass.com) |
 
-- **TX-RAMP Certified** — Approved for Texas public sector procurement.  
-  Reference: [DIR Certified Cloud Products](https://dir.texas.gov/resource-library-item/tx-ramp-certified-cloud-products)
+## Reports
 
-- **GDPR (Privacy Program)** — GDPR has no universal "certificate." We maintain a GDPR-aligned compliance program and offer a standard **DPA** (with SCCs, where applicable).  
-  Request DPA: support@showpass.com
+| Document | Description | Access |
+|---|---|---|
+| **PCI ROC / prior-year AOCs** | Available on request (NDA may apply) | [support@showpass.com](mailto:support@showpass.com) |
+| **ASV Scan Attestations (quarterly)** | Available on request (NDA may apply) | [support@showpass.com](mailto:support@showpass.com) |
+| **Penetration Test Executive Summary** | Available on request (NDA) | [support@showpass.com](mailto:support@showpass.com) |
+| **Security Whitepaper / Architecture Overview** | Available on request (NDA) | [support@showpass.com](mailto:support@showpass.com) |
 
-## Reports & Requests
-
-- **PCI AOC (Attestation of Compliance)** — Request via **support@showpass.com** (may require NDA).  
-- **Penetration Test Executive Summary** — Available under NDA.  
-- **Security Whitepaper / Architecture Overview** — Available on request.
-
-## Contact
-- **Document requests & vendor security questionnaires:** support@showpass.com  
-- **Security incidents & vulnerability reports:** security@showpass.com
+_Last updated: 2025-09-06_
