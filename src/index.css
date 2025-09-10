@@ -213,4 +213,9 @@
   .dark pre {
     background-color: hsla(185 60% 6%) !important;
   }
+
+  /* Navigation scroll customization */
+  .navigation-scroll::-webkit-scrollbar {
+    display: none;
+  }
 }
