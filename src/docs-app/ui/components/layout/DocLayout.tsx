@@ -129,7 +129,6 @@ const DocLayout = () => {
             )}
           >
             <BreadcrumbNavigation />
-            {currentPath !== "/" && <Separator className="my-6 opacity-30" />}
             <Outlet />
           </div>
 
