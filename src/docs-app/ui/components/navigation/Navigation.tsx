@@ -7,6 +7,8 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/shared/components/accordion.tsx";
+import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
+import { Separator } from "@/shared/components/separator.tsx";
 
 interface NavigationProps {
   currentPath: string;
@@ -61,13 +63,15 @@ const Navigation = ({ currentPath }: NavigationProps) => {
   }, [currentPath]);
 
   return (
-    <Accordion
-      type="multiple"
-      value={openSections}
-      onValueChange={setOpenSections}
-      className="w-full"
-    >
-      <AccordionItem value="introduction">
+    <div className="w-full h-full flex flex-col">
+      <div className="flex-1">
+        <Accordion
+          type="multiple"
+          value={openSections}
+          onValueChange={setOpenSections}
+          className="w-full"
+        >
+        <AccordionItem value="introduction">
         <AccordionTrigger className="sidebar-category mt-0">
           Introduction
         </AccordionTrigger>
@@ -673,8 +677,15 @@ const Navigation = ({ currentPath }: NavigationProps) => {
             </li>
           </ul>
         </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+        </AccordionItem>
+        </Accordion>
+      </div>
+      
+      {/* Theme Toggle at Bottom - Sticky */}
+      <div className="sticky bottom-0 bg-background border-t px-1 py-1 mt-auto">
+        <ThemeToggle />
+      </div>
+    </div>
   );
 };
 

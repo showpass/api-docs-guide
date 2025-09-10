@@ -13,15 +13,21 @@ export function ThemeToggle() {
 
   return (
     <Button
-      variant="outline"
-      size="icon"
+      variant="ghost"
       onClick={toggleTheme}
       aria-label="Toggle theme"
+      className="w-full justify-start px-1 py-0 h-5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent leading-none"
     >
       {resolvedTheme === "dark" ? (
-        <Sun className="h-[1.2rem] w-[1.2rem]" />
+        <>
+          <Moon className="h-3 w-3 mr-1" />
+          <span>Dark</span>
+        </>
       ) : (
-        <Moon className="h-[1.2rem] w-[1.2rem]" />
+        <>
+          <Sun className="h-3 w-3 mr-1" />
+          <span>Light</span>
+        </>
       )}
     </Button>
   );
