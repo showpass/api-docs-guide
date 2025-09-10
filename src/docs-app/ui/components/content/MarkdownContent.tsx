@@ -85,12 +85,12 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
         <>
           <h1
             id={id}
-            className="text-3xl font-bold mt-8 mb-6 scroll-mt-24"
+            className="text-3xl font-bold mt-12 mb-4 scroll-mt-24 text-foreground leading-tight"
             {...props}
           >
             {children}
           </h1>
-          <Separator className="mb-6 opacity-30" />
+          <Separator className="mb-6 opacity-20" />
         </>
       );
     },
@@ -100,7 +100,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h2
           id={id}
-          className="text-2xl font-bold mt-8 mb-3 scroll-mt-24"
+          className="text-2xl font-semibold mt-10 mb-4 scroll-mt-24 text-foreground leading-snug"
           {...props}
         >
           {children}
@@ -113,7 +113,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h3
           id={id}
-          className="text-xl font-bold mt-6 mb-3 scroll-mt-24"
+          className="text-xl font-semibold mt-8 mb-3 scroll-mt-24 text-foreground leading-snug"
           {...props}
         >
           {children}
@@ -126,27 +126,50 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       return (
         <h4
           id={id}
-          className="text-lg font-bold mt-6 mb-2 scroll-mt-24"
+          className="text-lg font-medium mt-6 mb-2 scroll-mt-24 text-foreground"
           {...props}
         >
           {children}
         </h4>
       );
     },
-    a: ({ node, ...props }) => <a className="underline" {...props} />,
+    a: ({ node, ...props }) => (
+      <a 
+        className="text-primary underline decoration-primary/30 hover:decoration-primary transition-colors font-medium" 
+        {...props} 
+      />
+    ),
     ul: ({ node, ...props }) => (
-      <ul className="list-disc pl-6 my-4" {...props} />
+      <ul className="list-disc pl-6 my-6 space-y-2" {...props} />
     ),
     ol: ({ node, ...props }) => (
-      <ol className="list-decimal pl-6 my-4" {...props} />
+      <ol className="list-decimal pl-6 my-6 space-y-2" {...props} />
+    ),
+    li: ({ node, children, ...props }) => (
+      <li className="text-foreground/90 leading-relaxed" {...props}>
+        {children}
+      </li>
     ),
     p: ({ node, children, ...props }) => {
       return (
-        <p className="my-4" {...props}>
+        <p className="my-6 text-foreground/90 leading-relaxed text-[15px]" {...props}>
           {children}
         </p>
       );
     },
+    blockquote: ({ node, children, ...props }) => (
+      <blockquote 
+        className="border-l-4 border-primary/30 pl-6 my-6 italic text-muted-foreground bg-muted/30 py-4 rounded-r-lg" 
+        {...props}
+      >
+        {children}
+      </blockquote>
+    ),
+    strong: ({ node, children, ...props }) => (
+      <strong className="font-semibold text-foreground" {...props}>
+        {children}
+      </strong>
+    ),
     // Enhanced table components
     table: ({ node, ...props }) => (
       <div className="my-6 rounded-md border overflow-hidden">
