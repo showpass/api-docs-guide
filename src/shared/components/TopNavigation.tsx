@@ -15,11 +15,13 @@ const TopNavigation = () => {
       <div className="flex h-16 items-center">
         {/* Logo - Flush left with padding */}
         <div className="flex items-center flex-shrink-0 pl-4 lg:pl-6">
-          <img
-            src={currentLogo}
-            alt="Showpass Documentation"
-            className="h-8 w-auto"
-          />
+          <a href="https://dev.showpass.com/" className="flex items-center">
+            <img
+              src={currentLogo}
+              alt="Showpass Documentation"
+              className="h-8 w-auto"
+            />
+          </a>
         </div>
 
         {/* Spacer and Search - Center area */}

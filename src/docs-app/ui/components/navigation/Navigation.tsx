@@ -682,7 +682,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </div>
       
       {/* Theme Toggle at Bottom - Sticky */}
-      <div className="sticky bottom-0 bg-background border-t px-1 py-1 mt-auto">
+      <div className="sticky bottom-0 bg-background border-t px-1 py-1 mt-16">
         <ThemeToggle />
       </div>
     </div>
