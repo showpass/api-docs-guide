@@ -63,8 +63,8 @@ const Navigation = ({ currentPath }: NavigationProps) => {
   }, [currentPath]);
 
   return (
-    <div className="w-full h-full flex flex-col">
-      <div className="flex-1">
+    <div className="w-full h-screen flex flex-col overflow-hidden">
+      <div className="flex-1 overflow-y-auto">
         <Accordion
           type="multiple"
           value={openSections}
@@ -682,7 +682,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       </div>
       
       {/* Theme Toggle at Bottom - Sticky */}
-      <div className="sticky bottom-0 bg-background border-t px-1 py-1 mt-16">
+      <div className="fixed bottom-0 left-0 w-[250px] bg-background border-t px-1 py-1 flex-shrink-0">
         <ThemeToggle />
       </div>
     </div>
