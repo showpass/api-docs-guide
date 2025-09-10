@@ -1,6 +1,6 @@
 import React from "react";
 import { useTheme } from "next-themes";
-import { Star, Briefcase } from "lucide-react";
+import { Zap, Briefcase, Newspaper } from "lucide-react";
 import logoRedSrc from "@/shared/assets/images/showpass-logo-red.svg";
 import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { Button } from "@/shared/components/button.tsx";
@@ -24,12 +24,8 @@ const TopNavigation = () => {
           </a>
         </div>
 
-        {/* Spacer and Search - Center area */}
-        <div className="flex-1 flex justify-center px-8 hidden md:flex">
-          <div className="w-full max-w-md">
-            <DocSearch />
-          </div>
-        </div>
+        {/* Spacer */}
+        <div className="flex-1"></div>
 
         <div className="flex items-center gap-2 flex-shrink-0 pr-4 lg:pr-6">
           <div className="hidden md:flex items-center gap-1">
@@ -45,7 +41,7 @@ const TopNavigation = () => {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"
               >
-                <Star className="h-4 w-4" />
+                <Zap className="h-4 w-4" />
                 <span>Platform</span>
               </a>
             </Button>
@@ -65,6 +61,23 @@ const TopNavigation = () => {
                 <span>Careers</span>
               </a>
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              <a
+                href="https://www.showpass.com/sell/ticketing-proof"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <Newspaper className="h-4 w-4" />
+                <span>News</span>
+              </a>
+            </Button>
+            <DocSearch />
           </div>
           
           {/* Mobile dropdown for links */}
