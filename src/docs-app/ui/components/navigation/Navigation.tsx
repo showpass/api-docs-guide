@@ -57,6 +57,14 @@ const Navigation = ({ currentPath }: NavigationProps) => {
     });
   }, [currentPath]);
 
+  // Elegant navigation link styling - subtle text changes with left indicator
+  const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+    cn(
+      "block text-sm py-2 px-3 transition-colors text-muted-foreground hover:text-foreground relative",
+      "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-0.5 before:h-4 before:rounded-full before:transition-colors",
+      isActive && "text-primary font-medium before:bg-primary"
+    );
+
   return (
     <div className="w-full h-screen flex flex-col overflow-hidden">
       <div 
@@ -81,12 +89,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Overview
                   </NavLink>
@@ -104,12 +107,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/api/01-public-api-introduction"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Showpass Discovery API
                   </NavLink>
@@ -117,12 +115,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/api/02-public-api-event-list-by-organization"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Experience list by organization
                   </NavLink>
@@ -130,12 +123,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/api/03-public-api-query-specific-event"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Query a specific experience
                   </NavLink>
@@ -153,12 +141,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/api/10-private-api-overview"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Overview
                   </NavLink>
@@ -166,12 +149,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/api/11-private-api-scan-ticket-by-code"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Ticket Verification
                   </NavLink>
@@ -179,12 +157,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/api/12-private-api-ticket-scan-actions"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Ticket Scan Actions
                   </NavLink>
@@ -202,12 +175,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/01-sdk-getting-started"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Getting started
                   </NavLink>
@@ -215,12 +183,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/02-ticket-purchase-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Ticket purchase widget
                   </NavLink>
@@ -228,12 +191,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/03-product-purchase-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Product purchase widget
                   </NavLink>
@@ -241,12 +199,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/04-membership-purchase-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Membership purchase widget
                   </NavLink>
@@ -254,12 +207,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/05-event-calendar-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Event calendar widget
                   </NavLink>
@@ -267,12 +215,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/06-checkout-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Checkout/shopping cart widget
                   </NavLink>
@@ -280,12 +223,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/07-cart-quantity-listener"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Cart quantity listener
                   </NavLink>
@@ -293,12 +231,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/sdk/08-basic-integration-example"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Basic integration example
                   </NavLink>
@@ -306,12 +239,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/widget-playground"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Widget playground
                   </NavLink>
@@ -329,12 +257,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/01-getting-started-install-and-configure"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Getting started
                   </NavLink>
@@ -342,12 +265,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/02-adding-single-button-embed-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding a single button or widget
                   </NavLink>
@@ -355,12 +273,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/03-adding-event-list"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding an event list
                   </NavLink>
@@ -368,12 +281,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/04-adding-event-detail-page"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding an event detail page
                   </NavLink>
@@ -381,12 +289,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/05-adding-calendar-widget"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding a calendar widget
                   </NavLink>
@@ -394,12 +297,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/06-adding-product-list"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding a product list
                   </NavLink>
@@ -407,12 +305,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/07-adding-membership-list"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding a membership list
                   </NavLink>
@@ -420,12 +313,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/08-adding-checkout-cart-button"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Adding a checkout / cart button
                   </NavLink>
@@ -433,38 +321,23 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/09-advanced-dynamic-cart-counter-jquery"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Dynamic cart counter (jQuery)
+                    Advanced: Dynamic cart counter with jQuery
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/wordpress/10-widgets-and-affiliate-tracking-links"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Widgets & affiliate tracking
+                    Widgets and affiliate tracking links
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/wordpress/11-creating-custom-templates"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Creating custom templates
                   </NavLink>
@@ -472,27 +345,17 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/wordpress/12-automatically-opening-popup-widgets"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Auto-opening popup widgets
+                    Automatically opening popup widgets
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/wordpress/13-tips-and-troubleshooting"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Tips & troubleshooting
+                    Tips and troubleshooting
                   </NavLink>
                 </li>
               </ul>
@@ -508,12 +371,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/webhooks/01-webhooks-introduction"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Introduction
                   </NavLink>
@@ -521,12 +379,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/webhooks/02-webhooks-setup-and-management"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Setup and management
                   </NavLink>
@@ -534,12 +387,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/webhooks/03-webhooks-security"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Security
                   </NavLink>
@@ -547,12 +395,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/webhooks/04-webhooks-event-types"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Event types
                   </NavLink>
@@ -560,25 +403,15 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/webhooks/05-webhooks-payload-invoice-object"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Payload invoice object
+                    Payload: Invoice object
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/webhooks/06-webhooks-logging-and-troubleshooting"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Logging and troubleshooting
                   </NavLink>
@@ -589,32 +422,22 @@ const Navigation = ({ currentPath }: NavigationProps) => {
 
           <AccordionItem value="google-tag-manager">
             <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
-              Google Tag Manager
+              Google Tag Manager integration
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <ul className="px-4 space-y-1">
                 <li>
                   <NavLink
                     to="/google-tag-manager/01-introduction-to-showpass-gtm-integration"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Introduction to Showpass Google Tag Manager (GTM) integration
+                    Introduction to Showpass GTM integration
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/google-tag-manager/02-initial-setup-ga4-and-gtm-basics"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Initial setup: GA4 and GTM basics
                   </NavLink>
@@ -622,12 +445,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/google-tag-manager/03-standard-ecommerce-tracking-with-ga4-via-gtm"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Standard ecommerce tracking with GA4 via GTM
                   </NavLink>
@@ -635,12 +453,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/google-tag-manager/04-cross-domain-tracking-considerations"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Cross-domain tracking considerations
                   </NavLink>
@@ -648,80 +461,49 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/google-tag-manager/05-working-with-custom-html-and-javascript-in-gtm-for-showpass"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Working with custom HTML & JavaScript in GTM for Showpass
+                    Working with custom HTML and JavaScript in GTM for Showpass
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/google-tag-manager/06-tracking-custom-conversions-marketing-pixels"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Tracking custom conversions (e.g., marketing pixels)
+                    Tracking custom conversions / marketing pixels
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/google-tag-manager/07-showpass-data-layer-details"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Showpass data layer details
+                    Showpass Data Layer details
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Advanced & preferred: iFrame purchase tracking via postMessage
+                    Advanced: Iframe purchase tracking via postMessage
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/google-tag-manager/09-advanced-tracking-widget-and-direct-purchases"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Advanced: differentiating widget (iFrame) vs. direct
-                    Showpass.com event tracking
+                    Advanced: Tracking widget and direct purchases
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/google-tag-manager/10-example-google-ads-conversion-tracking-setup"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Example: Google Ads conversion tracking setup with GTM
+                    Example: Google Ads conversion tracking setup
                   </NavLink>
                 </li>
               </ul>
@@ -730,32 +512,22 @@ const Navigation = ({ currentPath }: NavigationProps) => {
 
           <AccordionItem value="facebook">
             <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
-              Facebook Pixels & Conversions API
+              Facebook tracking
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <ul className="px-4 space-y-1">
                 <li>
                   <NavLink
                     to="/facebook/01-introduction-to-facebook-pixel"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    About Facebook Pixel
+                    Introduction to Facebook Pixel
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/facebook/02-installing-facebook-pixel"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Installing Facebook Pixel
                   </NavLink>
@@ -763,12 +535,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/facebook/03-about-facebook-conversions-api"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     About Facebook Conversions API
                   </NavLink>
@@ -776,12 +543,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/facebook/04-installing-facebook-conversions-api"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Installing Facebook Conversions API
                   </NavLink>
@@ -792,32 +554,22 @@ const Navigation = ({ currentPath }: NavigationProps) => {
 
           <AccordionItem value="security">
             <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
-              Security & Compliance
+              Security and compliance
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <ul className="px-4 space-y-1">
                 <li>
                   <NavLink
                     to="/security/01-compliance-overview"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    Overview
+                    Compliance overview
                   </NavLink>
                 </li>
                 <li>
                   <NavLink
                     to="/security/02-certifications"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
                     Certifications
                   </NavLink>
@@ -825,14 +577,9 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                 <li>
                   <NavLink
                     to="/security/03-pci-responsibility-matrix"
-                    className={({ isActive }) =>
-                      cn(
-                        "block text-sm py-2 px-3 rounded-md transition-colors text-muted-foreground hover:text-foreground hover:bg-muted/50",
-                        isActive && "text-primary bg-muted font-medium"
-                      )
-                    }
+                    className={navLinkClass}
                   >
-                    PCI DSS Responsibilities
+                    PCI responsibility matrix
                   </NavLink>
                 </li>
               </ul>
@@ -841,8 +588,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </Accordion>
       </div>
       
-      {/* Theme Toggle at Bottom - Sticky */}
-      <div className="fixed bottom-0 left-0 w-[250px] bg-background border-t px-1 py-1 flex-shrink-0">
+      <div className="border-t border-border p-4 flex justify-between items-center">
         <ThemeToggle />
       </div>
     </div>

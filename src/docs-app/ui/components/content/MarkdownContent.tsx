@@ -90,7 +90,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
           >
             {children}
           </h1>
-          <Separator className="mb-6 opacity-20" />
+          <Separator className="mb-6 opacity-60" />
         </>
       );
     },

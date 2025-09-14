@@ -21,7 +21,6 @@ const TableOfContents = ({ items, activeItem }: TableOfContentsProps) => {
     <div className="space-y-1">
       {items.map((item) => {
         const isActive = activeItem && item.href === `#${activeItem}`;
-
         const isLevel3 = item.level === 3;
         const isLevel4 = item.level === 4;
         
@@ -30,24 +29,15 @@ const TableOfContents = ({ items, activeItem }: TableOfContentsProps) => {
             key={item.href}
             href={item.href}
             className={cn(
-              "flex items-center gap-2 text-sm py-1.5 rounded transition-colors relative",
-              isLevel3 && "ml-4 px-2",
-              isLevel4 && "ml-8 px-2", 
-              !isLevel3 && !isLevel4 && "px-2",
-              isActive
-                ? "text-primary"
-                : "text-muted-foreground hover:text-foreground"
+              "block text-sm py-2 px-3 transition-colors text-muted-foreground hover:text-foreground relative",
+              "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-0.5 before:h-4 before:rounded-full before:transition-colors",
+              isActive && "text-primary font-medium before:bg-primary"
             )}
+            style={{
+              paddingLeft: isLevel4 ? '2rem' : isLevel3 ? '1.5rem' : '0.75rem'
+            }}
           >
-            {isActive && (
-              <div className={cn(
-                "absolute w-0.5 h-4 bg-primary rounded-full",
-                isLevel3 ? "left-4" : isLevel4 ? "left-8" : "left-0"
-              )} />
-            )}
-            <span className={cn(
-              isLevel3 || isLevel4 ? "pl-2" : "pl-3"
-            )}>{item.title}</span>
+            {item.title}
           </a>
         );
       })}
