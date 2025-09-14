@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/shared/components/accordion.tsx";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
+import "./navigation.css";
 
 interface NavigationProps {
   currentPath: string;
@@ -65,6 +66,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       isActive && "text-primary font-medium before:bg-primary"
     );
 
+
   return (
     <div className="w-full h-screen flex flex-col overflow-hidden">
       <div 
@@ -72,13 +74,16 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         style={{ 
           scrollbarWidth: 'none', 
           msOverflowStyle: 'none',
+          height: 'calc(100vh - 50px)',
+          paddingBottom: '10px'
         }}
       >
         <Accordion
           type="multiple"
           value={openSections}
           onValueChange={setOpenSections}
-          className="w-full"
+          className="w-full h-full flex flex-col"
+          style={{ maxHeight: "calc(100vh - 100px)" }}
         >
           <AccordionItem value="introduction">
             <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
@@ -588,7 +593,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </Accordion>
       </div>
       
-      <div className="border-t border-border p-4 flex justify-between items-center">
+      <div className="fixed bottom-0 left-0 w-[250px] border-t border-border p-2 flex justify-between items-center bg-background z-10">
         <ThemeToggle />
       </div>
     </div>

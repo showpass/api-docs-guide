@@ -218,4 +218,16 @@
   .navigation-scroll::-webkit-scrollbar {
     display: none;
   }
+  
+  /* Limit accordion content height */
+  .accordion-content-limit {
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  
+  .accordion-content-limit::-webkit-scrollbar {
+    display: none;
+  }
 }
