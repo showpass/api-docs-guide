@@ -2,6 +2,8 @@
 
 A lightweight, static documentation app built with **Vite + React + TypeScript**, designed to serve Showpass API/SDK documentation using a markdown-driven content loading.
 
+🔗 **Live Demo:** [dev.showpass.com](https://dev.showpass.com/)
+
 ---
 
 ## 🚀 Quick Start
@@ -27,9 +29,12 @@ npm run dev
 - Manages `isLoading`, `error`, and `tableOfContents` state.
 
 ### 3. **UI Composition**
-- `ContentPage` renders markdown via `react-markdown` with custom components.
-- `DocLayout` manages layout: navigation sidebar (left), content center, and table of contents (right).
-- Parameter tables in markdown are parsed and rendered using `<ParameterTable>`.
+- `DynamicDocPage` serves as the main container, routing to appropriate content types.
+- `ContentPage` renders markdown via `react-markdown` with custom syntax highlighting.
+- `DocLayout` orchestrates the three-panel layout: navigation sidebar, main content, and table of contents.
+- `Navigation` component provides collapsible sections with active state indicators.
+- `TableOfContents` auto-generates from markdown headings with smooth scroll behavior.
+- `ApiExamples` renders multi-language code snippets with copy functionality.
 
 ---
 
