@@ -11,7 +11,7 @@ const TopNavigation = () => {
   const currentLogo = resolvedTheme === "dark" ? logoWhiteSrc : logoRedSrc;
 
   return (
-    <header className="sticky top-0 z-50 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 border-b border-sidebar-border bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/60">
       <div className="flex h-16 items-center">
         {/* Logo - Flush left with padding */}
         <div className="flex items-center flex-shrink-0 pl-4 lg:pl-6">

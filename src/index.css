@@ -35,13 +35,13 @@
     --radius: 0.5rem;
 
     /* Sidebar colors */
-    --sidebar-background: var(--background);
+    --sidebar-background: 210 20% 98%;
     --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--site-primary);
     --sidebar-primary-foreground: var(--site-primary-foreground);
     --sidebar-accent: var(--accent);
     --sidebar-accent-foreground: var(--accent-foreground);
-    --sidebar-border: var(--border);
+    --sidebar-border: 214.3 31.8% 88%;
     --sidebar-ring: var(--ring);
 
     --prose-body: var(--foreground);
@@ -82,13 +82,13 @@
     --ring: 186 55% 35%;
 
     /* Sidebar colors for dark mode */
-    --sidebar-background: var(--background);
+    --sidebar-background: 185 68% 6%;
     --sidebar-foreground: var(--foreground);
     --sidebar-primary: var(--site-primary);
     --sidebar-primary-foreground: var(--site-primary-foreground);
     --sidebar-accent: var(--accent);
     --sidebar-accent-foreground: var(--accent-foreground);
-    --sidebar-border: var(--border);
+    --sidebar-border: 185 60% 10%;
     --sidebar-ring: var(--ring);
 
     --prose-body: var(--foreground);

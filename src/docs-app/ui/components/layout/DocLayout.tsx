@@ -90,7 +90,7 @@ const DocLayout = () => {
         {/* Left Sidebar (Navigation) */}
         <div
           className={cn(
-            "fixed inset-0 z-40 bg-background lg:static lg:block lg:border-r border-border lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]",
+            "fixed inset-0 z-40 bg-sidebar lg:static lg:block lg:border-r border-sidebar-border lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]",
             sidebarOpen ? "block" : "hidden"
           )}
         >
@@ -135,7 +135,7 @@ const DocLayout = () => {
           {/* Right Sidebar - API Examples or Table of Contents */}
           {!hideRightSidebar && (
             <div className={cn(
-              "hidden xl:block border-l border-border",
+              "hidden xl:block border-l border-sidebar-border bg-sidebar",
               apiExamplesData ? "w-[600px]" : "w-72"
             )}>
               <div className="sticky top-16 p-6 pt-2 self-start max-h-[calc(100vh-4rem)] overflow-y-auto">
