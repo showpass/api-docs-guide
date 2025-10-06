@@ -16,7 +16,7 @@ export function ThemeToggle() {
       variant="ghost"
       onClick={toggleTheme}
       aria-label="Toggle theme"
-      className="w-full justify-start px-1 py-0 h-5 text-xs text-muted-foreground hover:text-foreground hover:bg-accent leading-none"
+      className="w-full justify-start px-1 py-0 h-5 text-xs text-muted-foreground hover:text-foreground hover:bg-sidebar-accent leading-none bg-transparent"
     >
       {resolvedTheme === "dark" ? (
         <>

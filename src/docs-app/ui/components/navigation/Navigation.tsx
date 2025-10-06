@@ -593,7 +593,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
         </Accordion>
       </div>
       
-      <div className="fixed bottom-0 left-0 w-[250px] border-t border-border p-2 flex justify-between items-center bg-background z-10">
+      <div className="fixed bottom-0 left-0 w-[250px] border-t border-sidebar-border p-2 flex justify-between items-center bg-sidebar z-10">
         <ThemeToggle />
       </div>
     </div>
