@@ -19,8 +19,9 @@ This trigger will fire your GA4 ecommerce tag whenever one of the specified Show
     - Select **Custom Event**.
     - **Event name:** Enter the following, using a pipe `|` to separate event names:
       ```
-      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase
+      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
       ```
+      - `ecommerce_clear`: this is a custom event that clears the ecommerce cache in the data layer
     - Check the box for **Use regex matching**. This allows the trigger to fire on any of the listed events.
     - **This trigger fires on:** Select **All Custom Events**.
 4.  Click **Save**.
