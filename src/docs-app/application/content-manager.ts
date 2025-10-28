@@ -32,11 +32,9 @@ export class ContentManager {
    * Extracts heading information from markdown content for table of contents generation.
    * 
    * @param content - Raw markdown content
-   * @returns Array of heading objects with title and href properties
+   * @returns Array of heading objects with title, href, and level properties
    */
-  extractHeadings(content: string): { title: string; href: string }[] {
-    const headings = extractHeadingsFromMarkdown(content);
-    // Return simplified format for backward compatibility with existing consumers
-    return headings.map(({ title, href }) => ({ title, href }));
+  extractHeadings(content: string): { title: string; href: string; level: number }[] {
+    return extractHeadingsFromMarkdown(content);
   }
 }

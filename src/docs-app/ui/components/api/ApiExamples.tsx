@@ -11,6 +11,7 @@ import { cn } from "@/shared/lib/utils.ts";
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
 import { Highlight, themes } from "prism-react-renderer";
 import { useClipboard } from "@/shared/hooks/use-clipboard.ts";
+import { useTheme } from "next-themes";
 
 type ApiExamplesProps = ApiExamplesData;
 
@@ -23,13 +24,17 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
 }) => {
   const { copy: copyCode, isCopied: isCodeCopied } = useClipboard();
   const { copy: copyResponse, isCopied: isResponseCopied } = useClipboard();
+  const { resolvedTheme } = useTheme();
+  
+  // Use appropriate theme based on current mode
+  const codeTheme = resolvedTheme === 'dark' ? themes.vsDark : themes.github;
 
   const methodColors = {
-    GET: "bg-blue-500",
-    POST: "bg-green-500",
-    PUT: "bg-amber-500",
-    PATCH: "bg-orange-500",
-    DELETE: "bg-red-500",
+    GET: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
+    POST: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800",
+    PUT: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
+    PATCH: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800",
+    DELETE: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800",
   };
 
   // Get the status code from the standardized response format
@@ -38,34 +43,35 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
   const responseText = JSON.stringify(response.body, null, 2);
 
   return (
-    <div className="space-y-8 w-full">
-      <div className="border-b pb-4">
-        <div className="flex items-center gap-3 mb-2">
+    <div className="space-y-6 w-full">
+      <div className="border-b border-border/50 pb-3">
+        <div className="flex items-center gap-2 mb-1.5">
           <span
             className={cn(
-              "text-xs font-mono px-2 py-1 rounded text-white uppercase font-bold",
+              "text-xs font-mono px-2 py-0.5 rounded-md border font-medium",
               methodColors[method]
             )}
           >
             {method}
           </span>
-          <code className="text-sm font-mono bg-muted p-1.5 rounded-md">
+          <code className="text-xs font-mono bg-muted/50 px-2 py-0.5 rounded text-muted-foreground">
             {endpoint}
           </code>
         </div>
         {description && (
-          <p className="text-sm text-muted-foreground">{description}</p>
+          <p className="text-xs text-muted-foreground/80">{description}</p>
         )}
       </div>
 
-      <div className="space-y-4">
-        <div className="text-sm font-medium flex items-center border-b pb-2">
-          <span className="text-primary mr-2">⚡</span> LANGUAGE
+      <div className="space-y-3">
+        <div className="text-xs font-medium text-muted-foreground/70 flex items-center border-b border-border/30 pb-1.5">
+          <Terminal className="h-3 w-3 mr-1.5" />
+          Request Examples
         </div>
         <Tabs defaultValue="python" className="w-full">
-          <TabsList className="w-full grid grid-cols-3">
-            <TabsTrigger value="python" className="flex items-center gap-2">
-              <svg className="h-4 w-4" viewBox="0 0 24 24">
+          <TabsList className="w-full grid grid-cols-3 h-8 bg-muted/30">
+            <TabsTrigger value="python" className="flex items-center gap-1.5 text-xs py-1">
+              <svg className="h-3 w-3" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M12 0C5.371 0 5.125 2.611 5.125 2.611v5.318h6.964v.857H3.354S0 8.737 0 15.429c0 6.691 2.931 6.458 2.931 6.458h4.381v-3.108s-.233-3.109 3.062-3.109h5.289s2.969.049 2.969-2.865V4.692S19.287 0 12 0zM8.857 1.851c.693 0 1.25.557 1.25 1.25a1.25 1.25 0 0 1-2.5 0c0-.693.557-1.25 1.25-1.25z"
@@ -77,8 +83,8 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               <span>Python</span>
             </TabsTrigger>
-            <TabsTrigger value="node" className="flex items-center gap-2">
-              <svg className="h-4 w-4" viewBox="0 0 24 24">
+            <TabsTrigger value="node" className="flex items-center gap-1.5 text-xs py-1">
+              <svg className="h-3 w-3" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M12 0C5.375 0 0 5.375 0 12s5.375 12 12 12 12-5.375 12-12S18.625 0 12 0zm-1.584 17.375a.396.396 0 0 1-.215-.071l-.688-.409c-.103-.058-.052-.078-.019-.09.137-.048.165-.058.312-.143.015-.009.035-.006.05.004l.528.314a.067.067 0 0 0 .064 0l2.058-1.188a.068.068 0 0 0 .032-.058v-2.375c0-.024-.013-.046-.033-.057l-2.057-1.187a.067.067 0 0 0-.064 0l-2.057 1.187a.067.067 0 0 0-.033.057v2.375c0 .023.013.045.031.056l.563.326c.307.154.495-.028.495-.21v-2.344c0-.033.027-.06.06-.06h.261c.033 0 .06.027.06.06v2.344c0 .41-.223.647-.612.647-.12 0-.214 0-.476-.13l-.54-.31a.425.425 0 0 1-.205-.364v-2.375c0-.15.08-.29.205-.365l2.056-1.186a.423.423 0 0 1 .41 0l2.056 1.186a.422.422 0 0 1 .206.365v2.375a.425.425 0 0 1-.206.365l-2.056 1.185a.406.406 0 0 1-.205.073z"
@@ -90,18 +96,18 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               <span>Node.js</span>
             </TabsTrigger>
-            <TabsTrigger value="curl" className="flex items-center gap-2">
-              <Terminal className="h-4 w-4" />
+            <TabsTrigger value="curl" className="flex items-center gap-1.5 text-xs py-1">
+              <Terminal className="h-3 w-3" />
               <span>cURL</span>
             </TabsTrigger>
           </TabsList>
 
-          <TabsContent value="python" className="relative mt-4">
-            <Card className="bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+          <TabsContent value="python" className="relative mt-3">
+            <Card className="bg-muted/20 p-0 overflow-hidden rounded border border-border/50">
               <Highlight
                 code={examples.python}
                 language="python"
-                theme={themes.vsDark}
+                theme={codeTheme}
               >
                 {({
                   className,
@@ -112,10 +118,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="p-4 font-mono text-sm whitespace-pre overflow-x-auto"
+                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto"
                       style={{
                         ...style,
                         margin: 0,
+                        background: 'transparent'
                       }}
                     >
                       <code className={className}>
@@ -130,13 +137,13 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                     </pre>
                     <button
                       onClick={() => copyCode(examples.python)}
-                      className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                      className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
-                        <Check className="h-4 w-4 text-green-500" />
+                        <Check className="h-3 w-3 text-green-600" />
                       ) : (
-                        <Copy className="h-4 w-4 text-gray-400" />
+                        <Copy className="h-3 w-3 text-muted-foreground" />
                       )}
                     </button>
                   </div>
@@ -145,12 +152,12 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             </Card>
           </TabsContent>
 
-          <TabsContent value="node" className="relative mt-4">
-            <Card className="bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+          <TabsContent value="node" className="relative mt-3">
+            <Card className="bg-muted/20 p-0 overflow-hidden rounded border border-border/50">
               <Highlight
                 code={examples.node}
                 language="javascript"
-                theme={themes.vsDark}
+                theme={codeTheme}
               >
                 {({
                   className,
@@ -161,10 +168,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="p-4 font-mono text-sm whitespace-pre overflow-x-auto"
+                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto"
                       style={{
                         ...style,
                         margin: 0,
+                        background: 'transparent'
                       }}
                     >
                       <code className={className}>
@@ -179,13 +187,13 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                     </pre>
                     <button
                       onClick={() => copyCode(examples.node)}
-                      className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                      className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
-                        <Check className="h-4 w-4 text-green-500" />
+                        <Check className="h-3 w-3 text-green-600" />
                       ) : (
-                        <Copy className="h-4 w-4 text-gray-400" />
+                        <Copy className="h-3 w-3 text-muted-foreground" />
                       )}
                     </button>
                   </div>
@@ -194,12 +202,12 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             </Card>
           </TabsContent>
 
-          <TabsContent value="curl" className="relative mt-4">
-            <Card className="bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+          <TabsContent value="curl" className="relative mt-3">
+            <Card className="bg-muted/20 p-0 overflow-hidden rounded border border-border/50">
               <Highlight
                 code={examples.curl}
                 language="bash"
-                theme={themes.vsDark}
+                theme={codeTheme}
               >
                 {({
                   className,
@@ -210,10 +218,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="p-4 font-mono text-sm whitespace-pre overflow-x-auto max-w-full"
+                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto max-w-full"
                       style={{
                         ...style,
                         margin: 0,
+                        background: 'transparent'
                       }}
                     >
                       <code className={className}>
@@ -228,13 +237,13 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                     </pre>
                     <button
                       onClick={() => copyCode(examples.curl)}
-                      className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                      className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
-                        <Check className="h-4 w-4 text-green-500" />
+                        <Check className="h-3 w-3 text-green-600" />
                       ) : (
-                        <Copy className="h-4 w-4 text-gray-400" />
+                        <Copy className="h-3 w-3 text-muted-foreground" />
                       )}
                     </button>
                   </div>
@@ -245,29 +254,31 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
         </Tabs>
       </div>
 
-      <div className="space-y-4 mt-10">
-        <div className="flex items-center justify-between border-b pb-2">
-          <div className="text-sm font-medium flex items-center">
-            <span className="text-green-500 mr-2">✓</span> RESPONSE
+      <div className="space-y-3 mt-8">
+        <div className="flex items-center justify-between border-b border-border/30 pb-1.5">
+          <div className="text-xs font-medium text-muted-foreground/70 flex items-center">
+            <Check className="h-3 w-3 mr-1.5 text-green-600/70" />
+            Response
           </div>
-          <div className="text-xs font-mono px-2 py-1 rounded-full bg-green-100 text-green-800 flex items-center gap-1">
-            <span className="h-2 w-2 rounded-full bg-green-500"></span>
+          <div className="text-xs font-mono px-1.5 py-0.5 rounded bg-green-500/10 text-green-600 dark:text-green-400 flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-green-500/60"></span>
             {statusCode}
           </div>
         </div>
-        <Card className="relative bg-gray-900 p-0 overflow-hidden rounded-md border-2 border-gray-800">
+        <Card className="relative bg-muted/20 p-0 overflow-hidden rounded border border-border/50">
           <Highlight
             code={responseText}
             language="javascript"
-            theme={themes.vsDark}
+            theme={codeTheme}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <div className="relative">
                 <pre
-                  className="p-4 font-mono text-sm whitespace-pre overflow-x-auto"
+                  className="p-3 font-mono text-xs whitespace-pre overflow-x-auto"
                   style={{
                     ...style,
                     margin: 0,
+                    background: 'transparent'
                   }}
                 >
                   <code className={className}>
@@ -282,13 +293,13 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 </pre>
                 <button
                   onClick={() => copyResponse(responseText)}
-                  className="absolute top-2 right-2 p-1.5 rounded-md bg-gray-800 hover:bg-gray-700 transition-colors"
+                  className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
                   aria-label="Copy response"
                 >
                   {isResponseCopied ? (
-                    <Check className="h-4 w-4 text-green-500" />
+                    <Check className="h-3 w-3 text-green-600" />
                   ) : (
-                    <Copy className="h-4 w-4 text-gray-400" />
+                    <Copy className="h-3 w-3 text-muted-foreground" />
                   )}
                 </button>
               </div>

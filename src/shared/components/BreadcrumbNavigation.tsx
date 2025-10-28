@@ -22,6 +22,7 @@ const sectionLabels: Record<string, string> = {
   webhooks: 'Webhooks',
   'google-tag-manager': 'Google Tag Manager',
   facebook: 'Facebook Integration',
+  security: 'Security & Compliance',
   'widget-playground': 'Widget Playground'
 };
 
@@ -65,28 +66,28 @@ const BreadcrumbNavigation: React.FC = () => {
   });
 
   return (
-    <Breadcrumb className="mb-6">
-      <BreadcrumbList>
+    <Breadcrumb className="mb-2 not-prose">
+      <BreadcrumbList className="text-xs text-muted-foreground/70 gap-1">
         {breadcrumbItems.map((item, index) => (
           <div key={index} style={{ display: 'contents' }}>
             <BreadcrumbItem>
               {item.href ? (
                 <BreadcrumbLink asChild>
-                  <Link to={item.href} className="flex items-center gap-1">
-                    {index === 0 && <Home className="h-4 w-4" />}
-                    {item.label}
+                  <Link to={item.href} className="flex items-center gap-1 hover:text-muted-foreground transition-colors">
+                    {index === 0 && <Home className="h-3 w-3" />}
+                    <span className="font-normal">{item.label}</span>
                   </Link>
                 </BreadcrumbLink>
               ) : (
-                <BreadcrumbPage className="flex items-center gap-1">
-                  {index === 0 && <Home className="h-4 w-4" />}
-                  {item.label}
+                <BreadcrumbPage className="flex items-center gap-1 font-normal">
+                  {index === 0 && <Home className="h-3 w-3" />}
+                  <span>{item.label}</span>
                 </BreadcrumbPage>
               )}
             </BreadcrumbItem>
             {index < breadcrumbItems.length - 1 && (
               <BreadcrumbSeparator>
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-3 w-3" />
               </BreadcrumbSeparator>
             )}
           </div>

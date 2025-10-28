@@ -34,6 +34,7 @@ export interface ApiExamplesData {
 export interface TocItem {
   title: string;
   href: string;
+  level: number;
 }
 
 // Parameter Table types

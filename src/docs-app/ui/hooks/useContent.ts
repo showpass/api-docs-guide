@@ -9,7 +9,7 @@ export const useContent = (contentPath: string) => {
   const [content, setContent] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);
-  const [tableOfContents, setTableOfContents] = useState<{title: string; href: string}[]>([]);
+  const [tableOfContents, setTableOfContents] = useState<{title: string; href: string; level: number}[]>([]);
 
   // Memoize so it is only created once
   const contentManager = useMemo(() => {
