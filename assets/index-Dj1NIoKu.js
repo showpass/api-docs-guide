@@ -1286,8 +1286,9 @@ This trigger will fire your GA4 ecommerce tag whenever one of the specified Show
     - Select **Custom Event**.
     - **Event name:** Enter the following, using a pipe \`|\` to separate event names:
       \`\`\`
-      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase
+      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
       \`\`\`
+      - \`ecommerce_clear\`: this is a custom event that clears the ecommerce cache in the data layer
     - Check the box for **Use regex matching**. This allows the trigger to fire on any of the listed events.
     - **This trigger fires on:** Select **All Custom Events**.
 4.  Click **Save**.
@@ -1871,8 +1872,9 @@ This trigger will fire the \`postMessage\` tag whenever an ecommerce event occur
     - Choose trigger type: **Custom Event**.
     - **Event name (Regex):**
       \`\`\`
-      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase
+      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
       \`\`\`
+      - \`ecommerce_clear\`: this is a custom event that clears the ecommerce cache in the data layer
     - Check the box **Use regex matching**.
     - **This trigger fires on:** All Custom Events.
 4.  Click **Save**.
@@ -1919,11 +1921,12 @@ This tag will listen for messages from the iFrame and push the relevant data int
                       // Push specific, expected ecommerce events to the parent dataLayer
                       // You can expand this list based on what you want to track from the iFrame
                       if (
+                        event.data[i].event == "view_item" ||
                         event.data[i].event == "add_to_cart" ||
+                        event.data[i].event == "remove_from_cart" ||
                         event.data[i].event == "begin_checkout" ||
                         event.data[i].event == "purchase" ||
-                        event.data[i].event ==
-                          "view_item" /* Add other events as needed */
+                        event.data[i].event == "ecommerce_clear"
                       ) {
                         // Create a new object to avoid potential reference issues
                         var eventToPush = JSON.parse(
