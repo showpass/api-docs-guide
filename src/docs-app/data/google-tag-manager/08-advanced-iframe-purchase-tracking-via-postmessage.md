@@ -76,7 +76,9 @@ This tag will send data from the iFrame's Data Layer to your parent website.
       </script>
       ```
 
-    - **Crucial:** In the line `var message = window.dataLayer_GTM_CHILD_ID;`, replace `GTM_CHILD_ID` with the actual GTM Container ID of **this Child GTM container** (e.g., if the child GTM ID is `GTM-ABCDEF1`, the line becomes `var message = window.dataLayer_GTM_ABCDEF1;`).
+    - **Crucial:**
+      - Ensure you have enabled the `Support document.write` checkbox
+      - In the line `var message = window.dataLayer_GTM_CHILD_ID;`, replace `GTM_CHILD_ID` with the actual GTM Container ID of **this Child GTM container** (e.g., if the child GTM ID is `GTM-ABCDEF1`, the line becomes `var message = window.dataLayer_GTM_ABCDEF1;`).
 
 4.  **Triggering:** Assign the trigger created in the next step (Step A2).
 
@@ -172,6 +174,9 @@ This tag will listen for messages from the iFrame and push the relevant data int
         })();
       </script>
       ```
+
+    - **Crucial:**
+      - Ensure you have enabled the `Support document.write` checkbox
 
 4.  **Triggering:**
     - Click **Choose a trigger to make this tag fire...**
