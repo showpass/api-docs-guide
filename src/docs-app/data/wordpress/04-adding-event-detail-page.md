@@ -63,6 +63,12 @@ The `[showpass_events type="detail"]` shortcode itself doesn't have many paramet
   - **Use Case**: To explicitly show or hide the description panel within the purchase widget that appears on the detail page. This overrides the global admin setting.
   - **Example**: `[showpass_events type="detail" show_widget_description="false"]`
 
+- **`lang="fr"`**
+  - **Use Case**: To change the widget interface language to French on the event detail page. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_events type="detail" lang="fr"]`
+  - **Important Note**: The `lang` parameter only affects the **purchase widget**, not the event detail page template itself. The default template is in English. For a fully French page, create a custom template using `template="data"` (see "Creating Custom Templates") and add `lang="fr"` to ensure the widget also displays in French.
+
 ## What an event detail page typically shows
 
 By default, using `[showpass_events type="detail"]`, the page will display:

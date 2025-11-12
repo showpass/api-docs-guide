@@ -86,6 +86,13 @@ Here are the common parameters for `[showpass_events type="list"]`:
   - **Use Case**: To explicitly show or hide the description panel within the purchase widget if an event from this list is clicked and opens a widget. This overrides the global admin setting.
   - **Example**: `[showpass_events type="list" show_widget_description="true"]`
 
+- **`lang="fr"`**
+
+  - **Use Case**: To change the widget interface language to French when an event from this list is clicked and opens a widget. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_events type="list" lang="fr"]`
+  - **Important Note**: The `lang` parameter only affects the **purchase widgets**, not the event list template itself. The default template is in English. For a fully French page, create a custom template using `template="data"` (see "Creating Custom Templates") and add `lang="fr"` to ensure widgets also open in French.
+
 - **Recurring Event Parameters**:
 
   - **`hide_children="true|false"`**:

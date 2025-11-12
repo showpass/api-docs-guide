@@ -28,6 +28,7 @@ The checkout widget typically requires items to be present in the shopping cart.
 | `params`                  | Object  | Optional | An object containing additional configuration parameters for the widget.                                                                                      |
 | `params['theme-primary']` | String  | Optional | Hex code value for the main widget color (e.g., `'#dd3333'`).                                                                                                 |
 | `params['keep-shopping']` | Boolean | Optional | Displays "Keep Shopping" instead of "Close" on button verbiage (e.g., `false`). This may be less relevant or behave differently in an embedded checkout flow. |
+| `params['lang']`          | String  | Optional | Language code for the widget interface. Accepts `'fr'` for French. Defaults to English if not specified.                                                    |
 | `params['tracking-id']`   | -       | -        | Not supported for this widget.                                                                                                                                |
 | `containerId`             | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the checkout flow should be mounted.                                                     |
 

@@ -38,6 +38,7 @@ To find the `productId`:
 | `params['theme-dark']`       | Boolean | Optional | If `true`, displays the widget in a dark theme.                                                             |
 | `params['keep-shopping']`    | Boolean | Optional | Displays "Keep Shopping" instead of "Close" on button verbiage (e.g., `false`).                             |
 | `params['show-description']` | Boolean | Optional | Displays or hides the product description.<br>Default: `true`.<br>(Original deploy date: October 15th 2019) |
+| `params['lang']`             | String  | Optional | Language code for the widget interface. Accepts `'fr'` for French. Defaults to English if not specified.    |
 | `params['tracking-id']`      | -       | -        | Not supported for this widget.                                                                              |
 | `containerId`                | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the widget should be mounted.          |
 

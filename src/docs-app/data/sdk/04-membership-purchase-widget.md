@@ -38,6 +38,7 @@ _(Assuming parameters are similar to Product/Event widgets. Adjust if specific m
 | `params['theme-primary']`    | String  | Optional | Hex code value for the main widget color (e.g., `'#dd3333'`).                                      |
 | `params['keep-shopping']`    | Boolean | Optional | Displays "Keep Shopping" instead of "Close" on button verbiage (e.g., `false`).                    |
 | `params['show-description']` | Boolean | Optional | Displays or hides the membership description.<br>Default: `true`.                                  |
+| `params['lang']`             | String  | Optional | Language code for the widget interface. Accepts `'fr'` for French. Defaults to English if not specified. |
 | `params['tracking-id']`      | String  | Optional | Tracking link `tracking-id`, for affiliate tracking or other specialized link behaviors.           |
 | `containerId`                | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the widget should be mounted. |
 

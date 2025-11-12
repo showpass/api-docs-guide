@@ -39,6 +39,11 @@ This will create a button with the default label "Get Tickets".
   - **Example (Show all events)**:
     `[showpass_calendar_widget label="Full Event Calendar"]`
 
+- **`lang="fr"`**
+  - **Use Case**: To change the calendar widget interface language to French. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_calendar_widget label="View Event Calendar" lang="fr"]`
+
 ## 2. Embedded calendar with `[showpass_embed_calendar]`
 
 This shortcode embeds the full calendar directly onto your WordPress page or post.
@@ -65,6 +70,11 @@ This will embed the calendar showing all events.
     `[showpass_embed_calendar tags="workshop"]`
   - **Example (Show all events)**:
     `[showpass_embed_calendar]`
+
+- **`lang="fr"`**
+  - **Use Case**: To change the embedded calendar interface language to French. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_embed_calendar tags="workshop" lang="fr"]`
 
 ## Which calendar option to choose?
 

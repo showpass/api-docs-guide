@@ -29,6 +29,7 @@ Ensure the Showpass SDK is included on your page as described in the "SDK Gettin
 | `params['keep-shopping']`         | Boolean | Optional | Displays "Keep Shopping" instead of "Close" on button verbiage (e.g., `false`).                                                                          |
 | `params['tracking-id']`           | String  | Optional | Tracking link `tracking-id`, for affiliate tracking, bypassing passwords, displaying hidden ticket types, etc.                                           |
 | `params['show-description']`      | Boolean | Optional | Displays or hides event description.<br>Default: `true`.<br>(Original deploy date: October 15th 2019)                                                    |
+| `params['lang']`                  | String  | Optional | Language code for the widget interface. Accepts `'fr'` for French. Defaults to English if not specified.                                                |
 | `containerId`                     | String  | Optional | **For Embedded Mode Only.** The ID of the HTML `<div>` element where the widget should be mounted. If provided, the widget embeds instead of popping up. |
 
 ## Basic usage examples

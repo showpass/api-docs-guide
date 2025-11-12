@@ -118,6 +118,13 @@ Here are the common parameters for `[showpass_widget]`:
 - **How to find Ticket Type IDs**: You'll find these in your Showpass dashboard when managing your event's ticket types.
 - **Example**: `[showpass_widget slug="music-festival" show_specific_tickets="8001,8002"]` (This would only show ticket types with IDs 8001 and 8002 for the "music-festival" event).
 
+**`lang="fr"`**
+
+- **Use Case**: To change the widget interface language to French. If not specified, the widget will default to English.
+- **What it is**: A language code. Currently supports `"fr"` for French.
+- **Example**: `[showpass_widget slug="summer-fest" lang="fr"]`
+- **Example (Embedded with French language)**: `[showpass_widget type="product" id="7734" embedded="true" lang="fr"]`
+
 ## Examples putting it all together:
 
 **A button for an event called "Summer Fest" with custom label "Get Summer Fest Tickets!" and a red button style (assuming 'red-button' is a class in your CSS):**

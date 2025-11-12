@@ -42,6 +42,12 @@ You can customize the layout and which memberships are displayed using these par
   - **Use Case**: To explicitly show or hide the description panel within the purchase widget if a membership is clicked. This overrides the global admin setting.
   - **Example**: `[showpass_memberships show_widget_description="true"]`
 
+- **`lang="fr"`**
+  - **Use Case**: To change the widget interface language to French when a membership from this list is clicked and opens a widget. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_memberships lang="fr"]`
+  - **Important Note**: The `lang` parameter only affects the **purchase widgets**, not the membership list template itself. The default template is in English. For a fully French page, create a custom template using `template="data"` (see "Creating Custom Templates") and add `lang="fr"` to ensure widgets also open in French.
+
 ## Example: A customized membership list
 
 Here's an example combining several parameters:

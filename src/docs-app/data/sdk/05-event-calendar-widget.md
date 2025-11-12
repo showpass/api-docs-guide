@@ -32,6 +32,7 @@ To find your `venueId` (Organization ID):
 | Parameter Property        | Type   | Status   | Description                                                   |
 | ------------------------- | ------ | -------- | ------------------------------------------------------------- |
 | `params['theme-primary']` | String | Optional | Hex code value for the main widget color (e.g., `'#dd3333'`). |
+| `params['lang']`          | String | Optional | Language code for the widget interface. Accepts `'fr'` for French. Defaults to English if not specified. |
 
 ## Standard calendar widget
 
@@ -208,6 +209,7 @@ This specialized version of the calendar widget is designed for attractions (e.g
 | `params['event_id']`                       | String  | Required | The **slug** of the main attraction event on Showpass.                                                                                     |
 | `params['ticket-type-selection-required']` | Boolean | Optional | If `true`, forces ticket type selection _before_ proceeding to the calendar view. Default might be `false`.                                |
 | `params['prompt-for-quantity']`            | Boolean | Optional | If `true`, forces quantity selector _before_ proceeding to calendar view. (Note: Verify current implementation status for this parameter). |
+| `params['lang']`                           | String  | Optional | Language code for the widget interface. Accepts `'fr'` for French. Defaults to English if not specified.                                  |
 
 ### Example: Attraction calendar (pop-up, robust)
 

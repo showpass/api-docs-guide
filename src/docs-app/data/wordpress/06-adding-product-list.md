@@ -43,6 +43,11 @@ You can customize the layout and content of your product list using these parame
   - **Use Case**: To explicitly show or hide the description panel within the purchase widget if a product is clicked. This overrides the global admin setting.
   - **Example**: `[showpass_products show_widget_description="true"]`
 
+- **`lang="fr"`**
+  - **Use Case**: To change the widget interface language to French when a product from this list is clicked and opens a widget. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_products lang="fr"]`
+
 ## Example: A customized product list
 
 Here's an example combining several parameters:

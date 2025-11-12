@@ -37,6 +37,12 @@ This will display the cart interface directly within your page content.
   - **Use Case**: Potentially to change the static part of the button's text, though the item count `(x)` is dynamic.
   - **Example**: `[showpass_cart_button label="View Your Cart"]` (Verify if this customizes the label as expected, or if it's overridden by the dynamic count text).
 
+- **`lang="fr"`**
+  - **Use Case**: To change the cart/checkout widget interface language to French. If not specified, the widget will default to English.
+  - **What it is**: A language code. Currently supports `"fr"` for French.
+  - **Example**: `[showpass_cart_button lang="fr"]`
+  - **Example (Embedded with French language)**: `[showpass_cart_button embedded="true" lang="fr"]`
+
 ## Where to place the cart button
 
 - **Website Header**: Most common and user-friendly location.
