@@ -108,7 +108,7 @@ const DocLayout = () => {
               </Button>
             </div>
             <ScrollArea className="flex-1 px-5 pb-12">
-              <Navigation currentPath={currentPath} />
+              <Navigation currentPath={currentPath} onNavigate={() => setSidebarOpen(false)} />
             </ScrollArea>
           </div>
         </div>

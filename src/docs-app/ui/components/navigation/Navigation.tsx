@@ -12,6 +12,7 @@ import "./navigation.css";
 
 interface NavigationProps {
   currentPath: string;
+  onNavigate?: () => void;
 }
 
 const getOpenSections = (currentPath: string): string[] => {
@@ -45,7 +46,7 @@ const getOpenSections = (currentPath: string): string[] => {
   return [];
 };
 
-const Navigation = ({ currentPath }: NavigationProps) => {
+const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
   const [openSections, setOpenSections] = useState<string[]>(() =>
     getOpenSections(currentPath)
   );
@@ -65,6 +66,11 @@ const Navigation = ({ currentPath }: NavigationProps) => {
       "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-0.5 before:h-4 before:rounded-full before:transition-colors",
       isActive && "text-primary font-medium before:bg-primary"
     );
+
+  // Handle link clicks - close mobile sidebar
+  const handleLinkClick = () => {
+    onNavigate?.();
+  };
 
 
   return (
@@ -95,6 +101,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Overview
                   </NavLink>
@@ -113,6 +120,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/api/01-public-api-introduction"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Showpass Discovery API
                   </NavLink>
@@ -121,6 +129,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/api/02-public-api-event-list-by-organization"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Experience list by organization
                   </NavLink>
@@ -129,6 +138,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/api/03-public-api-query-specific-event"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Query a specific experience
                   </NavLink>
@@ -147,6 +157,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/api/10-private-api-overview"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Overview
                   </NavLink>
@@ -155,6 +166,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/api/11-private-api-scan-ticket-by-code"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Ticket Verification
                   </NavLink>
@@ -163,6 +175,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/api/12-private-api-ticket-scan-actions"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Ticket Scan Actions
                   </NavLink>
@@ -181,6 +194,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/01-sdk-getting-started"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Getting started
                   </NavLink>
@@ -189,6 +203,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/02-ticket-purchase-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Ticket purchase widget
                   </NavLink>
@@ -197,6 +212,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/03-product-purchase-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Product purchase widget
                   </NavLink>
@@ -205,6 +221,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/04-membership-purchase-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Membership purchase widget
                   </NavLink>
@@ -213,6 +230,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/05-event-calendar-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Event calendar widget
                   </NavLink>
@@ -221,6 +239,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/06-checkout-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Checkout/shopping cart widget
                   </NavLink>
@@ -229,6 +248,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/07-cart-quantity-listener"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Cart quantity listener
                   </NavLink>
@@ -237,6 +257,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/sdk/08-basic-integration-example"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Basic integration example
                   </NavLink>
@@ -245,6 +266,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/widget-playground"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Widget playground
                   </NavLink>
@@ -263,6 +285,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/01-getting-started-install-and-configure"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Getting started
                   </NavLink>
@@ -271,6 +294,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/02-adding-single-button-embed-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding a single button or widget
                   </NavLink>
@@ -279,6 +303,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/03-adding-event-list"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding an event list
                   </NavLink>
@@ -287,6 +312,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/04-adding-event-detail-page"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding an event detail page
                   </NavLink>
@@ -295,6 +321,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/05-adding-calendar-widget"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding a calendar widget
                   </NavLink>
@@ -303,6 +330,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/06-adding-product-list"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding a product list
                   </NavLink>
@@ -311,6 +339,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/07-adding-membership-list"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding a membership list
                   </NavLink>
@@ -319,6 +348,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/08-adding-checkout-cart-button"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Adding a checkout / cart button
                   </NavLink>
@@ -327,6 +357,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/09-advanced-dynamic-cart-counter-jquery"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Advanced: Dynamic cart counter with jQuery
                   </NavLink>
@@ -335,6 +366,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/10-widgets-and-affiliate-tracking-links"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Widgets and affiliate tracking links
                   </NavLink>
@@ -343,6 +375,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/11-creating-custom-templates"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Creating custom templates
                   </NavLink>
@@ -351,6 +384,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/12-automatically-opening-popup-widgets"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Automatically opening popup widgets
                   </NavLink>
@@ -359,6 +393,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/wordpress/13-tips-and-troubleshooting"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Tips and troubleshooting
                   </NavLink>
@@ -377,6 +412,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/webhooks/01-webhooks-introduction"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Introduction
                   </NavLink>
@@ -385,6 +421,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/webhooks/02-webhooks-setup-and-management"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Setup and management
                   </NavLink>
@@ -393,6 +430,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/webhooks/03-webhooks-security"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Security
                   </NavLink>
@@ -401,6 +439,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/webhooks/04-webhooks-event-types"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Event types
                   </NavLink>
@@ -409,6 +448,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/webhooks/05-webhooks-payload-invoice-object"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Payload: Invoice object
                   </NavLink>
@@ -417,6 +457,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/webhooks/06-webhooks-logging-and-troubleshooting"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Logging and troubleshooting
                   </NavLink>
@@ -435,6 +476,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/01-introduction-to-showpass-gtm-integration"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Introduction to Showpass GTM integration
                   </NavLink>
@@ -443,6 +485,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/02-initial-setup-ga4-and-gtm-basics"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Initial setup: GA4 and GTM basics
                   </NavLink>
@@ -451,6 +494,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/03-standard-ecommerce-tracking-with-ga4-via-gtm"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Standard ecommerce tracking with GA4 via GTM
                   </NavLink>
@@ -459,6 +503,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/04-cross-domain-tracking-considerations"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Cross-domain tracking considerations
                   </NavLink>
@@ -467,6 +512,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/05-working-with-custom-html-and-javascript-in-gtm-for-showpass"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Working with custom HTML and JavaScript in GTM for Showpass
                   </NavLink>
@@ -475,6 +521,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/06-tracking-custom-conversions-marketing-pixels"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Tracking custom conversions / marketing pixels
                   </NavLink>
@@ -483,6 +530,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/07-showpass-data-layer-details"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Showpass Data Layer details
                   </NavLink>
@@ -491,6 +539,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Advanced: Iframe purchase tracking via postMessage
                   </NavLink>
@@ -499,6 +548,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/09-advanced-tracking-widget-and-direct-purchases"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Advanced: Tracking widget and direct purchases
                   </NavLink>
@@ -507,6 +557,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/google-tag-manager/10-example-google-ads-conversion-tracking-setup"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Example: Google Ads conversion tracking setup
                   </NavLink>
@@ -525,6 +576,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/facebook/01-introduction-to-facebook-pixel"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Introduction to Facebook Pixel
                   </NavLink>
@@ -533,6 +585,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/facebook/02-installing-facebook-pixel"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Installing Facebook Pixel
                   </NavLink>
@@ -541,6 +594,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/facebook/03-about-facebook-conversions-api"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     About Facebook Conversions API
                   </NavLink>
@@ -549,6 +603,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/facebook/04-installing-facebook-conversions-api"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Installing Facebook Conversions API
                   </NavLink>
@@ -567,6 +622,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/security/01-compliance-overview"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Compliance overview
                   </NavLink>
@@ -575,6 +631,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/security/02-certifications"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     Certifications
                   </NavLink>
@@ -583,6 +640,7 @@ const Navigation = ({ currentPath }: NavigationProps) => {
                   <NavLink
                     to="/security/03-pci-responsibility-matrix"
                     className={navLinkClass}
+                    onClick={handleLinkClick}
                   >
                     PCI responsibility matrix
                   </NavLink>
