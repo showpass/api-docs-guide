@@ -1,146 +1,280 @@
-# Adding an event list with [showpass_events]
+# Adding an event list with `[showpass_events]`
 
-To display a list of your upcoming events on any WordPress page or post, you'll use the `[showpass_events]` shortcode. This is a powerful way to showcase multiple events at once, allowing visitors to browse what you have to offer.
+To display a list of your upcoming events on any WordPress page or post, use the `[showpass_events]` shortcode. This is a powerful way to showcase multiple events at once and let visitors browse what you have to offer.
 
-By default, this shortcode will display events in a grid layout.
+By default, the list displays events in a **grid** layout.
+
+---
 
 ## Basic event list
 
 To add a basic event list:
 
-1.  Go to the WordPress page or post where you want to display your events.
-2.  Add a "Shortcode" block (or paste directly into a Paragraph block).
-3.  Type the following shortcode:
+1. Go to the WordPress page or post where you want to display your events.
+2. Add a **Shortcode** block (or paste the shortcode directly into a Paragraph block).
+3. Enter:
 
-    `[showpass_events type="list"]`
+```text
+[showpass_events type="list"]
+```
 
-This will display a list of your upcoming events, using the default settings (grid template, 20 events per page).
+This will display your events using the default template (grid layout, 8 events per page).
+
+---
 
 ## Key parameter: `type="list"`
 
-For the `[showpass_events]` shortcode to display a list of events, the `type="list"` parameter is **required**.
+For `[showpass_events]` to display a list of events, you should include:
 
-## Customizing your event list: Parameters
+```text
+[showpass_events type="list"]
+```
 
-You can customize how your event list appears and which events are shown using various parameters. Remember, parameters are added inside the square brackets `[]` and follow the `parameter="value"` format.
+This tells the shortcode to use the list/grid view (as opposed to detail view).
 
-Here are the common parameters for `[showpass_events type="list"]`:
+---
 
-- **`template="default|list|data"`**
+## Customizing your event list: parameters
 
-  - **Use Case**: To change the visual layout of your event list.
-  - **`"default"`**: Displays events in a grid view (this is the default if the parameter is not used).
-  - **`"list"`**: Displays events in a vertical list view.
-  - **`"data"`**: Returns the raw event data in JSON format. This is for advanced users who want to build completely custom templates with PHP. (See "Creating Custom Templates" page for more info).
-  - **Example (List View)**: `[showpass_events type="list" template="list"]`
+You can customize how your event list appears and which events are shown using parameters. Parameters go inside the shortcode brackets and follow the `name="value"` format, for example:
 
-- **`page_size="number"`**
+```text
+[showpass_events type="list" page_size="5"]
+```
 
-  - **Use Case**: To control how many events are shown per page. If you have more events than this number, pagination links (Next/Previous Page) will usually appear (depending on the template).
-  - **Default**: `20`
-  - **Example (Show 5 events per page)**: `[showpass_events type="list" page_size="5"]`
+Below are the most common parameters for `[showpass_events type="list"]`.
 
-- **`detail_page="your-event-detail-page-slug"`**
+---
 
-  - **Use Case**: To link each event in the list to a dedicated event detail page on your WordPress site. This is highly recommended for a better user experience.
-  - **What it is**: The slug (URL part) of the WordPress page you've created to show individual event details (this page will use `[showpass_events type="detail"]`).
-  - **Example**: If your event detail page has the URL `yourwebsite.com/event-info`, the slug is `event-info`.
-    `[showpass_events type="list" detail_page="event-info"]`
-  - _(See "Adding an Event Detail Page" for instructions on creating this page)._
+### `template="default|list|data"`
 
-- **`tags="your-tag"`** (or `tags="tag1,tag2"`)
+* **Use case:** Change the visual layout of your event list.
+* **Values:**
 
-  - **Use Case**: To filter the list and show only events that have specific tags (categories) in Showpass. For best results, use one-word lowercase tags.
-  - **Example (Show events tagged "featured")**: `[showpass_events type="list" tags="featured"]`
-  - **Example (Show events tagged "music" or "concert")**: `[showpass_events type="list" tags="music,concert"]`
-  - _Note_: You can also filter by tags by adding `?tags=your-tag` to the URL of the page where the event list is displayed.
+  * `"default"` – Grid view (default if omitted).
+  * `"list"` – Vertical list view.
+  * `"data"` – Returns raw event data as JSON (for advanced custom PHP templates).
+* **Example (list view):**
 
-- **`show_past_events="true"`** (or `show_past_events="false"`)
+  ```text
+  [showpass_events type="list" template="list"]
+  ```
 
-  - **Use Case**: To include events that have already happened in your list.
-  - **`"false"` (Default)**: Only upcoming events are shown.
-  - **`"true"`**: Past events are also included.
-  - **Example**: `[showpass_events type="list" show_past_events="true"]`
+---
 
-- **`event_ids="id1,id2,id3"`**
+### `page_size="number"`
 
-  - **Use Case**: To display only a specific selection of events, rather than all upcoming (or past) events.
-  - **What it is**: A comma-separated list of Showpass Event IDs.
-  - **Example (Display only events with IDs 254, 288, and 292)**:
-    `[showpass_events type="list" event_ids="254,288,292"]`
+* **Use case:** Control how many events appear per page.
+* **Default:** `8`
+* **Example (show 5 events per page):**
 
-- **`ordering="parameter_name"`**
+  ```text
+  [showpass_events type="list" page_size="5"]
+  ```
 
-  - **Use Case**: To change the order in which events appear.
-  - **Default**: Events are ordered by start date, earliest to latest (`starts_on`).
-  - **Accepted values**:
-    - `starts_on`: Order by event start date.
-    - `name`: Order alphabetically by event name.
-    - `id`: Order by event ID.
-  - **To reverse the order**, add a hyphen `-` before the parameter name.
-  - **Example (Order by name A-Z)**: `[showpass_events type="list" ordering="name"]`
-  - **Example (Order by start date, latest to earliest)**: `[showpass_events type="list" ordering="-starts_on"]`
+---
 
-- **`show_widget_description="true"`** (or `show_widget_description="false"`)
+### `detail_page="your-event-detail-page-slug"`
 
-  - **Use Case**: To explicitly show or hide the description panel within the purchase widget if an event from this list is clicked and opens a widget. This overrides the global admin setting.
-  - **Example**: `[showpass_events type="list" show_widget_description="true"]`
+* **Use case:** Link each event in the list to a dedicated event detail page on your WordPress site.
+* **What it is:** The slug of the WordPress page that uses `[showpass_events type="detail"]`.
+* **Example:**
+  If your detail page URL is `yourwebsite.com/event-info`, the slug is `event-info`:
 
-- **`lang="fr"`**
+  ```text
+  [showpass_events type="list" detail_page="event-info"]
+  ```
 
-  - **Use Case**: To change the widget interface language to French when an event from this list is clicked and opens a widget. If not specified, the widget will default to English.
-  - **What it is**: A language code. Currently supports `"fr"` for French.
-  - **Example**: `[showpass_events type="list" lang="fr"]`
-  - **Important Note**: The `lang` parameter only affects the **purchase widgets**, not the event list template itself. The default template is in English. For a fully French page, create a custom template using `template="data"` (see "Creating Custom Templates") and add `lang="fr"` to ensure widgets also open in French.
+  *(See “Adding an Event Detail Page” for how to set this up.)*
 
-- **Recurring Event Parameters**:
+---
 
-  - **`hide_children="true|false"`**:
-    - **`"false"` (Default)**: Shows individual occurrences of recurring events.
-    - **`"true"`**: Hides all individual recurring event occurrences.
-  - **`only_parents="true|false"`**:
-    - **`"true"` (Default)**: Shows non-recurring events AND only the main "parent" event of a recurring series (not each instance).
-    - **`"false"`**: Shows non-recurring events AND all individual occurrences of recurring events.
-  - **Use Case**: To control how events that repeat (e.g., a weekly workshop) are displayed in the list.
-  - **Example (Show only the main parent event of a recurring series)**:
-    `[showpass_events type="list" only_parents="true" hide_children="false"]` (or simply `[showpass_events type="list" only_parents="true"]` as `hide_children` defaults to false)
-  - **Example (Hide all recurring events entirely)**:
-    `[showpass_events type="list" hide_children="true"]`
+### `tags="your-tag"` (or `tags="tag1,tag2"`)
 
-- **`ends_on__gte="YYYY-MM-DDTHH:MM:SS.SSSZ"`** or **`ends_on__lt="YYYY-MM-DDTHH:MM:SS.SSSZ"`**
+* **Use case:** Show only events with specific tags from Showpass.
+* **Tip:** Use simple, one-word, lowercase tags where possible.
+* **Examples:**
 
-  - **Use Case**: To filter events based on when they end. `gte` means "greater than or equal to" (ending on or after this date). `lt` means "less than" (ending before this date).
-  - **Format**: The date must be in ISO format.
-  - **Example (Events ending on or after June 23, 2024, 7:30 PM UTC)**:
-    `[showpass_events type="list" ends_on__gte="2024-06-23T19:30:00.000Z"]`
+  ```text
+  [showpass_events type="list" tags="featured"]
+  [showpass_events type="list" tags="music,concert"]
+  ```
+* **Note:** You can also filter by tags via URL (see **URL parameters** below).
 
-- **`show="all"`**
-  - **Use Case**: For testing purposes. This will show all events from your organization, regardless of their visibility settings (e.g., draft or private events) in Showpass.
-  - **Example**: `[showpass_events type="list" show="all"]`
+---
+
+### `show_past_events="true|false"`
+
+* **Use case:** Switch between **upcoming** events and **past** events.
+* **Behavior:**
+
+  * `"false"` (or omitted) – Shows **upcoming** events (default behavior).
+  * `"true"` – Shows **only past** events (events that have already ended).
+* **Example (show only past events):**
+
+  ```text
+  [showpass_events type="list" show_past_events="true"]
+  ```
+
+---
+
+### `event_ids="id1,id2,id3"`
+
+* **Use case:** Display only specific events instead of all upcoming/past events.
+* **What it is:** A comma-separated list of Showpass Event IDs.
+* **Example:**
+
+  ```text
+  [showpass_events type="list" event_ids="254,288,292"]
+  ```
+
+---
+
+### `ordering="parameter_name"`
+
+* **Use case:** Control the order events are shown in.
+* **Common values:**
+
+  * `starts_on` – Order by start date (earliest first, default).
+  * `name` – Order alphabetically by event name.
+  * `id` – Order by event ID.
+* **Reverse order:** Add `-` before the parameter name.
+* **Examples:**
+
+  ```text
+  [showpass_events type="list" ordering="name"]
+  [showpass_events type="list" ordering="-starts_on"]
+  ```
+
+---
+
+### `show_widget_description="true|false"`
+
+* **Use case:** Force the purchase widget’s description panel to show or hide when opening an event from this list, overriding the global admin setting.
+* **Example:**
+
+  ```text
+  [showpass_events type="list" show_widget_description="true"]
+  ```
+
+---
+
+### `lang="fr"`
+
+* **Use case:** Set the **widget** interface language (when a user opens a purchase widget from this list).
+* **Note:** This affects the widget only, not the list template itself (which is in English by default).
+* **Example:**
+
+  ```text
+  [showpass_events type="list" lang="fr"]
+  ```
+* **Tip:** For a fully French page, use `template="data"` to build your own French template and keep `lang="fr"` so widgets also open in French.
+
+---
+
+### Recurring event parameters
+
+Control how recurring events (events with multiple dates) appear in the list.
+
+* **`hide_children="true|false"`**
+
+  * `"false"` (default) – Keep individual occurrences visible.
+  * `"true"` – Hide all child occurrences of recurring events.
+
+* **`only_parents="true|false"`**
+
+  * `"true"` (default) – Show non-recurring events **and** the main parent event for each recurring series.
+  * `"false"` – Show non-recurring events **and** all individual occurrences.
+
+**Common patterns:**
+
+* **Show only the parent event of each recurring series:**
+
+  ```text
+  [showpass_events type="list" only_parents="true"]
+  ```
+
+* **Hide all recurring events entirely:**
+
+  ```text
+  [showpass_events type="list" hide_children="true"]
+  ```
+
+---
+
+### `ends_on__gte="..."` and `ends_on__lt="..."`
+
+* **Use case:** Advanced filtering based on when events end.
+* **Format:** ISO timestamp (`YYYY-MM-DDTHH:MM:SS.SSSZ`).
+* **Example (events ending on or after June 23, 2024, 7:30 PM UTC):**
+
+  ```text
+  [showpass_events type="list" ends_on__gte="2024-06-23T19:30:00.000Z"]
+  ```
+
+---
+
+### `show="all"`
+
+* **Use case:** Show **all** events for your organization, including those that might be hidden or not normally visible. This is mainly for testing or internal views.
+* **Example:**
+
+  ```text
+  [showpass_events type="list" show="all"]
+  ```
+
+---
 
 ## URL parameters for filtering
 
-Some filtering can also be done by adding parameters directly to the URL of the page where your event list is. This is useful for creating dynamic links or allowing users to search/filter.
+You can also filter the event list using URL parameters on the page where `[showpass_events]` is placed. This is useful for dynamic links or search/filter pages.
 
-- **Search query**: `yourwebsite.com/events-page/?q=searchterm`
-  - Will filter the list to events matching "searchterm".
-- **Tags**: `yourwebsite.com/events-page/?tags=rock`
-  - Will filter by the tag "rock". Works with multiple tags: `?tags=tag1,tag2`.
-- **Date filtering (advanced)**: Parameters like `?starts_on__gte=YYYY-MM-DD` (starts on or after) or `?ends_on__lt=YYYY-MM-DD` (ends before) can also be used in the URL.
+Examples (assuming your event list page is `yourwebsite.com/events-page/`):
+
+* **Search query:**
+
+  ```text
+  https://yourwebsite.com/events-page/?q=searchterm
+  ```
+
+  Filters to events matching `searchterm`.
+
+* **Tags:**
+
+  ```text
+  https://yourwebsite.com/events-page/?tags=rock
+  https://yourwebsite.com/events-page/?tags=rock,jazz
+  ```
+
+* **Date filtering (advanced):**
+
+  ```text
+  https://yourwebsite.com/events-page/?starts_on__gte=2024-07-01
+  https://yourwebsite.com/events-page/?ends_on__lt=2024-08-01
+  ```
+
+---
 
 ## Example: A customized event list
 
-Here's an example combining several parameters:
+```text
+[showpass_events
+  type="list"
+  template="list"
+  page_size="10"
+  detail_page="event-details"
+  tags="workshop"
+  ordering="-starts_on"
+]
+```
 
-`[showpass_events type="list" template="list" page_size="10" detail_page="event-details" tags="workshop" ordering="-starts_on"]`
+This shortcode will:
 
-This shortcode would:
+1. Display events in list mode (`type="list"`).
+2. Use a vertical list layout (`template="list"`).
+3. Show 10 events per page (`page_size="10"`).
+4. Link each event to the WordPress page with slug `event-details` (`detail_page="event-details"`).
+5. Only show events tagged `workshop` (`tags="workshop"`).
+6. Order events by start date, newest first (`ordering="-starts_on"`).
 
-1.  Display events because `type="list"`.
-2.  Use a vertical list layout (`template="list"`).
-3.  Show 10 events per page (`page_size="10"`).
-4.  Link each event's "More Info" button to a page with the slug `event-details` (`detail_page="event-details"`).
-5.  Only show events tagged with "workshop" (`tags="workshop"`).
-6.  Order the events by their start date, with the newest events appearing first (`ordering="-starts_on"`).
-
-Experiment with these parameters to create the perfect event listing for your site!
+Experiment with these parameters to create the event list that best fits your site.

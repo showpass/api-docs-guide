@@ -1,148 +1,197 @@
 # Advanced: Adding a dynamic cart counter with custom JavaScript
 
-The standard Showpass WordPress plugin provides a `[showpass_cart_button]` shortcode that conveniently includes a text-based cart counter (e.g., "Shopping Cart (3)"). This is perfect for most users.
+The standard Showpass WordPress plugin provides a `[showpass_cart_button]` shortcode that includes a text-based cart counter (e.g. **“Shopping Cart (3)”**). For most sites, this is enough.
 
-However, if you're looking for a more integrated cart display—perhaps a dynamic counter directly in your website's main navigation menu or a custom header element—you can achieve this with a bit of custom JavaScript. This guide outlines how to implement such a feature.
+If you want a **custom cart counter** in your own header, nav menu, or layout (e.g. “Cart (2)” in the main menu), you can hook into the Showpass JavaScript SDK and update your own elements dynamically.
 
-**Please Note:** This is an advanced customization. It requires familiarity with HTML, CSS, JavaScript (jQuery), and adding custom code to your WordPress theme. If you're not comfortable with these steps, consider working with a web developer.
+> ⚠️ This is an advanced customization. You should be comfortable with HTML, CSS, JavaScript/jQuery, and adding custom code to your theme or via a code-snippets plugin.
+
+---
 
 ## What this custom cart counter does
 
-This custom JavaScript solution will:
+This approach will:
 
-1.  **Listen for Cart Updates:** It actively listens for changes in the Showpass cart (e.g., when a customer adds a ticket).
-2.  **Dynamically Update Your HTML:** It updates a specific element on your webpage to show the current number of items in the cart (e.g., "Cart (2)" or "Cart" if empty).
-3.  **Enable Click-to-Open Cart:** It allows you to designate an element (like your custom counter or a menu item) that, when clicked, will open the Showpass checkout widget.
+1. **Listen for cart updates** – Uses the Showpass SDK to detect when the cart item count changes.
+2. **Update your HTML** – Replaces the text of a specific element (e.g. `Cart` → `Cart (3)`).
+3. **Open the Showpass cart** – Lets you make that element clickable to open the Showpass checkout widget.
 
-## Before you begin: Prerequisites
+---
 
-- **Showpass WordPress Plugin:** Ensure the Showpass plugin is installed and activated.
-- **jQuery:** WordPress includes jQuery by default, so this should be available on your site.
-- **JS-Cookie Library:** This JavaScript library is used to interact with cookies. You'll need to add it to your site.
-  - You can download it from [GitHub](https://github.com/js-cookie/js-cookie) or use a CDN.
-  - A common way to include it is by adding the following line to your theme (ideally via `wp_enqueue_script`, or for testing, in your theme's header before `wp_head()`):
-    `<script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>`
-- **Identifiable HTML Elements:** Your website's theme needs to have specific HTML elements that you can target with jQuery:
-  - An element where the cart count text will be displayed (e.g., a `<span>` inside a menu link).
-  - An element that will act as the click trigger to open the cart (e.g., the menu item itself or the link).
+## Before you begin
 
-## The custom JavaScript code
+You’ll need:
 
-Here's the JavaScript code that powers the dynamic cart counter. You will need to customize parts of this code to match your website's specific HTML structure.
+- **Showpass WordPress plugin activated**  
+  (This loads the Showpass SDK and the `showpass` global object.)
+- **jQuery**  
+  WordPress loads jQuery by default.
+- **JS-Cookie library**  
+  The Showpass plugin already loads JS-Cookie on the front-end. If you’re working outside that context, you can add it yourself (e.g. via CDN):
+
+```html
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+````
+
+* **HTML elements to target**
+
+  * One element where the **cart count text** should appear (e.g. `<span>Cart</span>` in your nav).
+  * One element that should **open the cart** when clicked (often the same link/menu item).
+
+---
+
+## The custom JavaScript
+
+> 🔁 You must update the jQuery selectors in this code (`.your-cart-count-display-element` and `.your-cart-click-trigger-element`) to match your theme.
 
 ```javascript
 (function ($) {
-  // Wait for the document to be fully loaded and ready
-  $(document).on("ready", function () {
-    // Check if Showpass SDK and JS-Cookie library are available
+  // Runs when the DOM is ready
+  $(function () {
+    // Ensure Showpass SDK and JS-Cookie are available
     if (
       typeof showpass !== "undefined" &&
       typeof showpass.tickets !== "undefined" &&
       typeof Cookies !== "undefined"
     ) {
-      // This function runs every time the cart item count changes
+      // Listen for cart count changes
       showpass.tickets.addCartCountListener(function (count) {
-        var cartDisplayText = "";
-        if (count > 0) {
-          cartDisplayText = "Cart (" + count + ")";
-        } else {
-          cartDisplayText = "Cart";
-        }
+        var cartDisplayText = count > 0 ? "Cart (" + count + ")" : "Cart";
 
-        // !!! IMPORTANT ACTION !!!
-        // Update the HTML content of YOUR specific cart display element.
-        // Replace '.your-cart-count-display-element' with the correct jQuery selector for your site.
-        $(".your-cart-count-display-element").html(cartDisplayText);
+        // Update your cart display element
+        // TODO: Replace this selector with something that matches your theme
+        $(".your-cart-count-display-element").text(cartDisplayText);
 
-        // Optional: The original code also set a cookie with this text.
-        // You can uncomment the line below if you have a specific need for this cookie.
+        // Optional: persist the display text in a cookie if needed
         // Cookies.set('showpass_cart_display_text', cartDisplayText, { expires: 7, path: '/' });
       });
 
-      // This makes your chosen element open the Showpass cart widget when clicked
-      // !!! IMPORTANT ACTION !!!
-      // Replace '.your-cart-click-trigger-element' with the correct jQuery selector for your site.
+      // Make a chosen element open the checkout widget when clicked
+      // TODO: Replace this selector with a clickable element in your header/menu
       $(".your-cart-click-trigger-element").on("click", function (event) {
-        event.preventDefault(); // Important if your trigger element is a link (<a> tag)
+        event.preventDefault(); // important if it's an <a> tag
 
         showpass.tickets.checkoutWidget({
-          // Optional: Customize the appearance of the checkout widget
-          "theme-primary": "#9e2a2b", // Example: Showpass default red
-          "keep-shopping": true, // true = "Keep Shopping", false = "Close"
+          "theme-primary": "#9e2a2b", // primary color (change to match your brand)
+          "keep-shopping": true       // true = "Keep Shopping", false = "Close"
         });
       });
     } else {
-      // Log a message to the browser console if dependencies are missing
       console.warn(
-        "Showpass SDK or JS-Cookie library not detected. Custom cart counter may not function."
+        "Showpass SDK or JS-Cookie library not detected. Custom cart counter will not work."
       );
     }
   });
 })(jQuery);
 ```
 
-## How to add this code to your WordPress site
+---
 
-1.  **Include JS-Cookie Library:**
+## Adding the code to WordPress
 
-    - **Recommended (Production):** Enqueue the script in your theme's `functions.php` file.
+### 1. Create a custom JS file
 
-      ```php
-      function my_theme_enqueue_custom_scripts() {
-          // Enqueue JS-Cookie from a CDN
-          wp_enqueue_script('js-cookie', 'https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js', array(), '3.0.1', true);
+1. In your (child) theme, create a file such as:
+   `wp-content/themes/your-child-theme/js/my-showpass-cart.js`
+2. Paste the JavaScript code above into that file.
+3. Update the selectors (see below) before deploying to production.
 
-          // Enqueue your custom cart script (see step 2)
-          wp_enqueue_script('my-showpass-custom-cart', get_stylesheet_directory_uri() . '/js/my-showpass-cart.js', array('jquery', 'js-cookie'), '1.0.0', true);
-      }
-      add_action('wp_enqueue_scripts', 'my_theme_enqueue_custom_scripts');
-      ```
+### 2. Enqueue the script in `functions.php`
 
-      This assumes you will create a file named `my-showpass-cart.js` inside a `js` folder in your theme's directory.
+In your child theme’s `functions.php` (or a custom plugin), enqueue your script:
 
-    - **Simple (Testing):** Add the CDN link for JS-Cookie directly into your theme's `header.php` file, before `<?php wp_head(); ?>`.
+```javascript
+function my_theme_enqueue_showpass_cart() {
+    // If you *need* to load JS-Cookie manually, uncomment below:
+    // wp_enqueue_script(
+    //     'js-cookie',
+    //     'https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js',
+    //     array(),
+    //     '3.0.1',
+    //     true
+    // );
 
-2.  **Add the Custom JavaScript:**
+    wp_enqueue_script(
+        'my-showpass-custom-cart',
+        get_stylesheet_directory_uri() . '/js/my-showpass-cart.js',
+        array('jquery'),
+        '1.0.0',
+        true
+    );
+}
+add_action('wp_enqueue_scripts', 'my_theme_enqueue_showpass_cart');
+```
 
-    - **Recommended:** Create a new JavaScript file (e.g., `my-showpass-cart.js`) in your theme's directory (e.g., inside a `js` subfolder). Paste the customized JavaScript code (from above) into this file. Ensure it's enqueued as shown in step 1.
-    - **Alternative:** For quick tests, you can wrap the JavaScript code in `<script>...</script>` tags and add it to your theme's footer (e.g., in `footer.php` before `</body>`) or using a "Custom HTML/JavaScript" feature if your theme or a plugin provides one.
+If you’re using a code-snippets plugin, you can instead paste the JavaScript into a “front-end JS” snippet (no need to enqueue a file).
 
-3.  **CRITICAL STEP: Customize jQuery Selectors:**
-    The most important part is to tell the script _which_ HTML elements on your page to interact with. You need to replace the placeholder selectors in the JavaScript:
+---
 
-    - `$('.your-cart-count-display-element')`: Change this to the jQuery selector that targets the HTML element where you want the "Cart (X)" text to appear.
-    - `$('.your-cart-click-trigger-element')`: Change this to the jQuery selector that targets the HTML element that users will click to open the cart.
+## Customizing the jQuery selectors (critical)
 
-    **How to Find Your Selectors:**
-    Use your web browser's "Inspect" or "Inspect Element" tool (usually by right-clicking on the element on your page). This will show you the HTML structure and the IDs or classes of your elements.
+You **must** point the code at real elements on your site.
 
-    - **Example Scenario:**
-      Imagine your theme has a menu item in the header like this:
-      ```html
-      <li id="main-nav-cart-item" class="menu-item special-cart-link">
-        <a href="/cart-page">
-          <!-- This link might go to a placeholder page -->
-          <i class="fa fa-shopping-cart"></i>
-          <!-- An icon -->
-          <span class="cart-items-text-holder">Cart</span>
-          <!-- Where the text will update -->
-        </a>
-      </li>
-      ```
-      Your customized selectors in the JavaScript might be:
-      - For the display element: `$('#main-nav-cart-item .cart-items-text-holder')`
-      - For the click trigger: `$('#main-nav-cart-item a')` (to make the link itself open the widget) or `$('#main-nav-cart-item')` (to make the whole list item clickable).
+### Example HTML
 
-4.  **Adjust Widget Options (Optional):**
-    In the `showpass.tickets.checkoutWidget({ ... });` section of the script, you can change:
-    - `'theme-primary'`: Set this to your preferred hex color code to style the primary elements of the Showpass widget.
-    - `'keep-shopping'`: Set to `true` for the close button to say "Keep Shopping," or `false` for it to say "Close."
+Imagine your theme has a nav item like:
+
+```html
+<li id="main-nav-cart-item" class="menu-item special-cart-link">
+  <a href="/cart">
+    <i class="fa fa-shopping-cart"></i>
+    <span class="cart-items-text-holder">Cart</span>
+  </a>
+</li>
+```
+
+Then you might set:
+
+```javascript
+// Show "Cart (X)" here
+$("#main-nav-cart-item .cart-items-text-holder").text(cartDisplayText);
+
+// Make this link open the widget instead of going to /cart
+$("#main-nav-cart-item a").on("click", function (event) {
+  event.preventDefault();
+  showpass.tickets.checkoutWidget({
+    "theme-primary": "#9e2a2b",
+    "keep-shopping": true
+  });
+});
+```
+
+To discover your own selectors:
+
+1. Open your site in a browser.
+2. Right-click the element you want to use and choose **Inspect**.
+3. Note its `id` or `class` and update the jQuery selectors accordingly.
+
+---
+
+## Optional widget tweaks
+
+Inside `showpass.tickets.checkoutWidget({...})` you can adjust:
+
+* **`"theme-primary"`** – Hex color for the widget’s primary accents.
+* **`"keep-shopping"`** –
+
+  * `true` → close button says “Keep Shopping”.
+  * `false` → close button says “Close”.
+
+---
 
 ## Important considerations
 
-- **Child Themes:** If you're modifying theme files or adding custom `functions.php` code, always use a [WordPress child theme](https://developer.wordpress.org/themes/advanced-topics/child-themes/). This ensures your customizations aren't lost when you update your main theme.
-- **JavaScript Errors:** If the counter isn't working, open your browser's JavaScript console (usually by pressing F12 and clicking the "Console" tab). Errors here can provide clues, such as the JS-Cookie library not being loaded, the `showpass.tickets` object not being available, or issues with your jQuery selectors.
-- **Showpass SDK:** This script depends on the Showpass ticketing SDK (`showpass.tickets` object) being loaded on the page. The Showpass plugin usually handles this, but if the SDK is not present, the script won't function.
-- **Theme Structure:** The reliability of this custom solution depends on your theme's HTML structure remaining consistent. If your theme updates and changes the IDs or classes of the elements you've targeted, you may need to update your jQuery selectors.
+* **Use a child theme**
+  Custom code in parent theme files can be lost on update. A child theme or code-snippets plugin is safer.
+* **Check the browser console**
+  If the counter doesn’t work, press **F12 → Console** and look for errors like:
 
-This advanced method offers great flexibility for integrating a Showpass cart counter seamlessly into your website's design. Test thoroughly after implementation!
+  * `showpass is not defined`
+  * `Cookies is not defined`
+  * `$(...).on is not a function` (usually a selector or jQuery loading issue)
+* **SDK must be present**
+  The code requires the Showpass SDK (`showpass.tickets`) to be loaded. The WordPress plugin handles this on normal pages.
+* **Theme changes**
+  If your theme update changes header markup, you may need to update your selectors.
+
+With this approach, you can integrate a Showpass cart counter directly into your site’s navigation, keeping the cart experience consistent with your overall design.

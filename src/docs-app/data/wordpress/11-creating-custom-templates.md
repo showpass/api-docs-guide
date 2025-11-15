@@ -1,182 +1,252 @@
-# Creating custom Wordpress templates with Showpass data
+# Creating custom WordPress templates with Showpass data
 
-While the Showpass WordPress Plugin provides default templates for displaying event lists you might want to create your own unique layouts and designs.
+While the Showpass WordPress plugin provides default templates for displaying event lists, you may want to build your own layouts that match your theme or design system.
 
-This is an advanced topic that requires some knowledge of PHP, HTML, and WordPress theme development.
+This is an advanced topic and assumes some familiarity with PHP, HTML, and WordPress theme development.
+
+---
 
 ## The `template="data"` parameter
 
-The key to creating custom templates is the `template="data"` parameter available for the relevant shortcodes:
+The key to custom templates is the `template="data"` parameter, available on the main Showpass shortcodes:
 
-`[showpass_events template="data"]`
+```text
+[showpass_events template="data"]
+[showpass_products template="data"]
+[showpass_memberships template="data"]
+```
 
-When you use `template="data"`, the shortcode doesn't output any HTML. Instead, it returns the raw data fetched from the Showpass API in JSON (JavaScript Object Notation) format. You can then use this JSON data within your own PHP WordPress template files to structure and style the information exactly how you want.
+When you use `template="data"`, the shortcode does **not** output HTML. Instead, it returns the raw data from the Showpass API as a JSON string. You can then:
+
+1. Run the shortcode via `do_shortcode()` in a PHP template.
+2. `json_decode()` the JSON.
+3. Loop over the data and render your own markup.
+
+---
 
 ## General workflow for custom templates
 
-1.  **Identify the Data You Need:**
+### 1. Inspect the data
 
-    - Use the shortcode with `template="data"` on a test page (e.g., `[showpass_events type="list" template="data"]`).
-    - View the source of that page or temporarily print the output within your test template to see the full structure of the JSON data returned by the Showpass API. The GitHub Readme (Sections 4.1 for a single event and 4.2 for a list of events) also provides examples of the JSON structure.
-    - While the full JSON contains many fields, for typical event displays, you'll likely focus on these key fields within each item of the `results` array:
-      - `slug`: The event slug, crucial for initiating the Showpass purchase widget (e.g., for `[showpass_widget slug="your-event-slug"]`).
-      - `name`: The display name of the event.
-      - `starts_on`: The event's start date and time in UTC format (e.g., "2024-12-25T19:00:00Z").
-      - `ends_on`: The event's end date and time in UTC format.
-      - `timezone`: The timezone of the event (e.g., "America/Denver"). Used with helper functions to display local times.
-      - `description`: The event description, which may include HTML formatting. Use `wp_kses_post()` when displaying this if you want to render the HTML safely.
-      - `description_without_html`: The event description with all HTML tags stripped out (plain text). Use `esc_html()` when displaying this.
-      - `frontend_details_url`: A direct URL to the event page on Showpass.com, useful as a fallback or direct link.
-      - `image`: URL for a square image associated with the event (often a thumbnail or primary image).
-      - `image_banner`: URL for a banner-style image for the event.
-    - For products or memberships (`[showpass_products template="data"]` or `[showpass_memberships template="data"]`), the JSON structure and available fields will differ from events. You'll need to inspect that specific data output similarly. The PHP example below focuses on event data.
+1. Create a test page.
 
-2.  **Create a WordPress Page Template:**
+2. Add a shortcode such as:
 
-    - In your WordPress theme's directory (or child theme's directory, which is recommended), create a custom page template file. For example, `page-custom-event-display.php`.
-    - Refer to the official WordPress documentation on Page Templates: [https://developer.wordpress.org/themes/template-files-section/page-template-files/](https://developer.wordpress.org/themes/template-files-section/page-template-files/)
-    - Your template file will start with a template name comment, e.g.:
-      ```php
-      <?php /* Template Name: Custom Showpass Event Display */ ?>
-      ```
+   ```text
+   [showpass_events type="list" template="data"]
+   ```
 
-3.  **Fetch and Decode the Data in Your Template:**
+3. View the page source, or temporarily `var_dump()` / `print_r()` the decoded JSON in a custom template to inspect the structure.
 
-    - Inside your custom PHP template file, you'll use WordPress's `do_shortcode()` function to execute the Showpass shortcode and get the JSON data.
-    - Then, you'll use `json_decode()` to convert the JSON string into a PHP object that you can easily work with.
+The GitHub README (sections 4.1 for a single event and 4.2 for a list) also shows example JSON.
 
-4.  **Style with CSS:**
+For events, the main fields you’ll usually care about inside each item in `results` are:
 
-    - Add your custom CSS rules to your theme's `style.css` file (or your child theme's stylesheet) to style the HTML elements you've created in your template.
+* `slug` – Event slug, used for `[showpass_widget slug="..."]`.
+* `name` – Event name.
+* `starts_on` – Event start datetime (UTC, e.g. `"2024-12-25T19:00:00Z"`).
+* `ends_on` – Event end datetime (UTC).
+* `timezone` – Timezone (e.g. `"America/Denver"`), used with helper functions.
+* `description` – HTML description (use `wp_kses_post()` when rendering).
+* `description_without_html` – Plain text description (use `esc_html()`).
+* `frontend_details_url` – Direct URL to the event on Showpass.com.
+* `image` – Square image URL (thumbnail-style).
+* `image_banner` – Banner image URL.
 
-5.  **Assign the Template to a WordPress Page:**
-    - Create a new page in WordPress (or edit an existing one).
-    - In the page attributes section of the editor, select your newly created custom template from the "Template" dropdown.
-      - _(Suggested: Include a screenshot of the Page Attributes meta box showing the Template dropdown)_
-    - You do **not** put the `[showpass_events template="data"]` shortcode directly into the content editor of this page, because your PHP template file is already handling it.
+For products (`[showpass_products template="data"]`) and memberships (`[showpass_memberships template="data"]`), the structure is different but follows the same pattern: a top-level object with a `results` array of items. Inspect the JSON to see available fields.
 
-## Focused example: Custom event data display
+---
 
-This example demonstrates how to fetch and display specific event fields within a custom WordPress page template. For product or membership data, the available fields in the JSON will differ.
+### 2. Create a WordPress page template
 
-```php
+In your (child) theme directory, create a PHP file, e.g.:
+
+```text
+wp-content/themes/your-child-theme/page-custom-showpass-events.php
+```
+
+At the top of the file, add a template header so WordPress can select it:
+
+```javascript
 <?php
 /*
 Template Name: Custom Showpass Event Display
 */
-get_header(); // Loads your theme's header.php file
+```
+
+For background on page templates, see:
+[https://developer.wordpress.org/themes/template-files-section/page-template-files/](https://developer.wordpress.org/themes/template-files-section/page-template-files/)
+
+---
+
+### 3. Fetch and decode data in the template
+
+Use `do_shortcode()` to run the Showpass shortcode and get the JSON, then decode it into a PHP object or array.
+
+You handle the loop, markup, and any helper functions directly in your template.
+
+---
+
+### 4. Style with CSS
+
+Add your styles to your theme or child theme stylesheet (`style.css` or equivalent) and target the classes you output in your custom template (e.g. `.custom-events-list`, `.custom-event-item`, etc.).
+
+---
+
+### 5. Assign the template to a page
+
+1. In WordPress admin, go to **Pages → Add New** (or edit an existing page).
+2. In the **Template** dropdown (under “Page Attributes” or “Template”), select your custom template (e.g. **Custom Showpass Event Display**).
+3. Publish or update the page.
+
+> You **do not** place `[showpass_events template="data"]` in the page content. Your PHP template file already runs the shortcode and handles the data.
+
+---
+
+## Example: Custom event data display template
+
+Below is a focused example of a custom Page Template that:
+
+* Fetches event data via `[showpass_events type="list" template="data" page_size="5"]`.
+* Loops through `results`.
+* Uses Showpass helper functions for dates/times.
+* Renders a “Buy Tickets” button via `[showpass_widget]` using the event slug.
+
+You can adapt the same pattern for products or memberships.
+
+```javascript
+<?php
+/*
+Template Name: Custom Showpass Event Display
+*/
+get_header(); // Loads header.php
 ?>
 
 <div id="primary" class="content-area">
     <main id="main" class="site-main">
 
         <?php
-        // Fetch event data using the Showpass shortcode with template="data"
-        // You can add other parameters like page_size, tags, etc., as needed.
-        $json_event_data = do_shortcode('[showpass_events type="list" template="data" page_size="5"]');
+        // 1. Fetch event data as JSON via the shortcode
+        $json_event_data = do_shortcode(
+            '[showpass_events type="list" template="data" page_size="5"]'
+        );
 
-        // Decode the JSON string into a PHP object.
-        // Pass 'true' as the second argument to get an associative array instead of an object: json_decode($json_event_data, true);
+        // 2. Decode JSON into a PHP object
+        // Use json_decode($json_event_data, true) for an associative array instead
         $events_object = json_decode($json_event_data);
 
-        // Check if we have results and the 'results' array exists
-        if ($events_object && isset($events_object->results) && count($events_object->results) > 0) {
+        // 3. Check for results
+        if (
+            $events_object &&
+            isset($events_object->results) &&
+            count($events_object->results) > 0
+        ) {
 
-            echo '<div class="custom-events-list">'; // Your custom wrapper for the list
+            echo '<div class="custom-events-list">';
 
-            // Loop through each event in the 'results' array
+            // 4. Loop through each event
             foreach ($events_object->results as $event) {
-                echo '<div class="custom-event-item">'; // Your custom wrapper for each event
+                echo '<div class="custom-event-item">';
 
-                // --- Using the Key Event Fields ---
-
-                // results.name -> event name
+                // Event name
                 if (isset($event->name)) {
                     echo '<h2>' . esc_html($event->name) . '</h2>';
                 }
 
-                // results.image_banner -> banner image on the event
+                // Banner image
                 if (isset($event->image_banner)) {
-                    echo '<img src="' . esc_url($event->image_banner) . '" alt="' . esc_attr(isset($event->name) ? $event->name : '') . '" style="max-width:100%; height:auto;" />';
+                    echo '<img src="' . esc_url($event->image_banner) . '" alt="' .
+                        esc_attr(isset($event->name) ? $event->name : '') .
+                        '" style="max-width:100%;height:auto;" />';
                 }
 
-                // results.image -> square image on the event (could be a thumbnail)
-                if (isset($event->image)) {
-                    // Example: Displaying it smaller, perhaps as an additional image
-                    // echo '<img src="' . esc_url($event->image) . '" alt="Square image for ' . esc_attr(isset($event->name) ? $event->name : '') . '" style="width:150px; height:150px;" />';
-                }
+                // Date / time using plugin helpers (if available)
+                if (
+                    isset($event->starts_on) &&
+                    isset($event->timezone) &&
+                    function_exists('showpass_get_event_date') &&
+                    function_exists('showpass_get_event_time') &&
+                    function_exists('showpass_get_timezone_abbr')
+                ) {
+                    echo '<p><strong>Date:</strong> ' .
+                        esc_html(showpass_get_event_date($event->starts_on, $event->timezone)) .
+                        '</p>';
 
-                // results.starts_on -> UTC time the event starts
-                // results.ends_on -> UTC time of event end
-                // results.timezone -> timezone of event
-                // It's highly recommended to use the plugin's helper functions for dates and times
-                // as they handle timezones and formatting settings from the Showpass admin page.
-                if (isset($event->starts_on) && isset($event->timezone)) {
-                    // Ensure the helper functions are available. They usually are if the plugin is active.
-                    if (function_exists('showpass_get_event_date')) {
-                        echo '<p><strong>Date:</strong> ' . showpass_get_event_date($event->starts_on, $event->timezone) . '</p>';
+                    echo '<p><strong>Time:</strong> ' .
+                        esc_html(showpass_get_event_time($event->starts_on, $event->timezone));
+
+                    if (isset($event->ends_on)) {
+                        echo ' - ' .
+                            esc_html(showpass_get_event_time($event->ends_on, $event->timezone));
                     }
-                    if (function_exists('showpass_get_event_time')) {
-                        echo '<p><strong>Time:</strong> ' . showpass_get_event_time($event->starts_on, $event->timezone);
-                        if (isset($event->ends_on) && function_exists('showpass_get_event_time')) {
-                            echo ' - ' . showpass_get_event_time($event->ends_on, $event->timezone);
-                        }
-                        if (function_exists('showpass_get_timezone_abbr')) {
-                            echo ' ' . showpass_get_timezone_abbr($event->timezone);
-                        }
-                        echo '</p>';
-                    }
+
+                    echo ' ' .
+                        esc_html(showpass_get_timezone_abbr($event->timezone)) .
+                        '</p>';
                 }
 
-                // results.description -> description with html tags/formatting
-                // Use wp_kses_post() to allow safe HTML from the description.
+                // Description with HTML (safe)
                 if (isset($event->description)) {
-                    echo '<div class="event-description-full">' . wp_kses_post($event->description) . '</div>';
+                    echo '<div class="event-description-full">' .
+                        wp_kses_post($event->description) .
+                        '</div>';
                 }
 
-                // results.description_without_html -> description without html
-                // Use esc_html() if you want to display it as plain text.
+                // Example: plain text description if preferred
                 /*
                 if (isset($event->description_without_html)) {
-                    echo '<p class="event-description-plain">' . esc_html($event->description_without_html) . '</p>';
+                    echo '<p class="event-description-plain">' .
+                        esc_html($event->description_without_html) .
+                        '</p>';
                 }
                 */
 
-                // results.slug -> needed to initiate the widget via the SDK (Showpass Purchase Widget)
-                // You can use this slug to create a "Buy Tickets" button using the [showpass_widget] shortcode.
+                // “Buy Tickets” button using the event slug
                 if (isset($event->slug)) {
-                    $buy_button_shortcode = '[showpass_widget slug="' . esc_attr($event->slug) . '" label="Buy Tickets for ' . esc_attr(isset($event->name) ? $event->name : 'this event') . '"]';
+                    $label = 'Buy Tickets';
+                    if (isset($event->name)) {
+                        $label = 'Buy Tickets for ' . $event->name;
+                    }
+
+                    $buy_button_shortcode = sprintf(
+                        '[showpass_widget slug="%s" label="%s"]',
+                        esc_attr($event->slug),
+                        esc_attr($label)
+                    );
+
                     echo do_shortcode($buy_button_shortcode);
                 }
 
-                // results.frontend_details_url -> if you need to redirect to showpass.com for whatever reason
+                // Optional: Fallback link to Showpass.com
+                /*
                 if (isset($event->frontend_details_url)) {
-                    // Example: A fallback link to view on Showpass.com
-                    // echo '<p><a href="' . esc_url($event->frontend_details_url) . '" target="_blank">View on Showpass.com</a></p>';
+                    echo '<p><a href="' . esc_url($event->frontend_details_url) .
+                        '" target="_blank" rel="noopener noreferrer">View on Showpass.com</a></p>';
                 }
+                */
 
-                echo '</div>'; // End .custom-event-item
+                echo '</div>'; // .custom-event-item
             }
 
-            echo '</div>'; // End .custom-events-list
+            echo '</div>'; // .custom-events-list
 
-            // --- Basic Pagination Example (if data is available in $events_object) ---
-            // The Showpass API typically provides 'next_page_number' and 'previous_page_number'
-            // You would use the plugin's helper function showpass_get_events_next_prev() to build the links.
-            // This requires the main page URL.
+            // 5. Optional pagination example (if API returns page numbers)
             /*
             if (function_exists('showpass_get_events_next_prev')) {
-                if (isset($events_object->previous_page_number) && $events_object->previous_page_number) {
-                    echo '<a href="' . showpass_get_events_next_prev($events_object->previous_page_number) . '">Previous Page</a>';
+                if (!empty($events_object->previous_page_number)) {
+                    echo '<a href="' .
+                        esc_url(showpass_get_events_next_prev($events_object->previous_page_number)) .
+                        '">Previous Page</a>';
                 }
-                if (isset($events_object->next_page_number) && $events_object->next_page_number) {
-                    echo '<a href="' . showpass_get_events_next_prev($events_object->next_page_number) . '">Next Page</a>';
+                if (!empty($events_object->next_page_number)) {
+                    echo '<a href="' .
+                        esc_url(showpass_get_events_next_prev($events_object->next_page_number)) .
+                        '">Next Page</a>';
                 }
             }
             */
 
         } else {
-            // Message if no events are found or if data is not in the expected format
             echo '<p>No events found.</p>';
         }
         ?>
@@ -185,6 +255,13 @@ get_header(); // Loads your theme's header.php file
 </div><!-- #primary -->
 
 <?php
-get_footer(); // Loads your theme's footer.php file
+get_footer(); // Loads footer.php
 ?>
 ```
+
+You can extend this pattern to:
+
+* Build fully custom event grids or cards.
+* Show additional metadata from the API.
+* Integrate with your theme’s existing components.
+* Do the same for products (`[showpass_products template="data"]`) and memberships (`[showpass_memberships template="data"]`) by adjusting the shortcode and the fields you read from the decoded JSON.

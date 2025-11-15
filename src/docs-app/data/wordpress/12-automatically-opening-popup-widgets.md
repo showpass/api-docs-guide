@@ -1,37 +1,60 @@
 # Automatically opening pop-up widgets on page load
 
-Sometimes, you might want the Showpass ticket-buying widget to open automatically as soon as a customer lands on a specific page on your website. This can be useful for targeted landing pages where the primary call to action is to purchase tickets for a particular event.
+In some cases, you may want the Showpass ticket widget to open automatically as soon as a visitor lands on a page. This is useful for dedicated landing pages where the main goal is to buy tickets for a specific event.
 
-The Showpass WordPress plugin supports this functionality using a URL query parameter: `auto`.
+The Showpass WordPress plugin supports this via a URL query parameter: `auto`.
+
+---
 
 ## How it works
 
-You append `?auto=your-event-slug` to the URL of the WordPress page where you want the widget to auto-open.
+Add `?auto=your-event-slug` to the URL of a WordPress page that already loads the Showpass widget scripts (for example, a page that contains `[showpass_widget]` or `[showpass_events]`).
 
-- `your-event-slug`: This is the slug of the Showpass event you want to feature in the pop-up widget. The slug is the unique part of the event's URL on Showpass (e.g., if the event is at `showpass.com/my-big-concert`, the slug is `my-big-concert`).
+- `your-event-slug` is the event slug from Showpass.
+- Example event URL on Showpass:  
+  `https://www.showpass.com/my-big-concert/` → **slug** is `my-big-concert`.
 
-When a user visits this specially crafted URL, the plugin will detect the `auto` parameter and automatically trigger the Showpass ticket widget for the specified event slug to open in a pop-up.
+When a user visits a URL like:
 
-## Use cases
+```text
+https://yourwebsite.com/featured-event/?auto=my-big-concert
+```
 
-- **Directing from Ad Campaigns:** If you run an ad campaign for a specific event, you can link the ad directly to a page on your site with the `?auto=event-slug` parameter. The widget for that event opens immediately, streamlining the purchase process.
-- **Dedicated Event Landing Pages:** If you have a landing page on your WordPress site focused solely on one event, automatically opening the widget can reduce clicks and potentially increase conversions.
-- **Email Marketing Links:** Link from an email newsletter about a specific event to your website page with the widget auto-opening.
+the plugin:
 
-## Examples
+1. Detects the `auto` parameter.
+2. Uses the slug value (`my-big-concert`) to automatically open the Showpass ticket widget for that event in a pop-up.
 
-Let's say you have a WordPress page at `yourwebsite.com/featured-event/`.
-Your Showpass event slug is `annual-gala-2024`.
+---
 
-To make the widget for "Annual Gala 2024" open automatically when someone visits that page, you would use or share this URL:
+## Common use cases
 
-`https://yourwebsite.com/featured-event/?auto=annual-gala-2024`
+* **Ad campaigns**
+  Link ads directly to a page on your site with `?auto=event-slug` so the purchase widget opens immediately.
 
-**Important Considerations:**
+* **Dedicated event landing pages**
+  If a page exists solely to sell one event, auto-opening the widget can remove an extra click and streamline checkout.
 
-- **User Experience:** While auto-opening widgets can be effective, use this feature thoughtfully. Unexpected pop-ups can sometimes be intrusive. Ensure it makes sense in the user's journey.
-- **Page Content:** The underlying WordPress page should ideally still have some content related to the event, even if the widget opens on top. This helps if the user closes the widget or if there's any delay in it loading.
-- **Pop-up Blockers:** Most modern browsers allow user-initiated pop-ups (like clicking a button), but aggressive pop-up blockers _might_ interfere, though this is less common for in-page modal dialogs which the Showpass widget typically uses.
-- **Shortcode Prerequisite:** The page being linked to should ideally contain a Showpass shortcode, such as `[showpass_widget]` or `[showpass_events]`. The `auto` functionality relies on the plugin's scripts being active on the page, which are typically loaded when a Showpass shortcode is present. While it might work globally, it's best practice to have a relevant Showpass element on the destination page.
+* **Email marketing**
+  Include links like `https://yourwebsite.com/event-landing/?auto=event-slug` in newsletters so recipients see the widget right away.
 
-This `auto` parameter provides a simple yet powerful way to create a more direct path to purchase for specific events.
+---
+
+## Best practices and considerations
+
+* **User experience**
+  Auto-opening widgets can be powerful but also intrusive if overused. Reserve this for clearly promotional pages where users expect to buy.
+
+* **Page content still matters**
+  The underlying WordPress page should still include event information (hero image, description, etc.). This is important if:
+
+  * The user closes the widget.
+  * There’s a delay while the widget loads.
+
+* **Pop-up blockers**
+  The Showpass widget typically appears as an in-page modal (not a browser pop-up), so most pop-up blockers should not interfere. Still, behavior can vary by browser and extensions.
+
+* **Shortcode required**
+  The page should include at least one Showpass shortcode (for example, `[showpass_widget]`, `[showpass_events]`, `[showpass_products]`, or `[showpass_memberships]`) so that the plugin’s scripts are loaded. The `auto` parameter relies on those scripts being present.
+
+Using the `auto` parameter is a simple way to build high-conversion landing pages that take visitors straight into the purchase flow for a specific event.

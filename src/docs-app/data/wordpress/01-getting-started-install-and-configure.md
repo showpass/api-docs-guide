@@ -1,50 +1,64 @@
 # Getting started with the Showpass WordPress plugin
 
-Welcome to the Showpass WordPress Plugin! This guide will help you get the plugin installed and configured on your WordPress website. It's designed to be easy to follow, even if you're not a technical expert.
+Welcome to the Showpass WordPress plugin. This guide will help you install and configure it on your WordPress site.
 
 ## What you need before you start
 
 - A WordPress website.
 - Access to your WordPress admin dashboard (usually `yourwebsite.com/wp-admin`).
-- A Showpass account with an Organization ID. If you don't have one, you can register at [showpass.com/organizations/register/](https://www.showpass.com/organizations/register/).
+- A Showpass account with an Organization ID. If you don't have one, you can register at  
+  [https://www.showpass.com/organizations/register/](https://www.showpass.com/organizations/register/).
 
 ## Installation
 
-There are two ways to install the Showpass WordPress Plugin:
+There are two ways to install the Showpass WordPress plugin.
 
-**Method 1: Automatic Installation (Recommended)**
+### Method 1: Automatic installation (recommended)
 
-1.  Log in to your WordPress Dashboard.
-2.  Navigate to **Plugins > Add New**.
-3.  In the search bar in the top right-hand corner, type "Showpass".
-4.  Locate the "Showpass Wordpress Extension" plugin in the search results and click **Install Now**.
+1. Log in to your WordPress dashboard.
+2. Go to **Plugins → Add New**.
+3. In the search bar (top right), type **“Showpass”**.
+4. Find the **“Showpass WordPress Extension”** in the results and click **Install Now**.
 
-    ![Showpass WordPress Extension search result](/images/wordpress/wp-install.png)
+   ![Showpass WordPress Extension search result](/images/wordpress/wp-install.png)
 
-5.  Once the installation is complete, click the **Activate** button.
+5. When the installation finishes, click **Activate**.
 
 ## Configuration
 
-After activating the plugin, you need to configure it to connect to your Showpass account.
+After activating the plugin, you need to connect it to your Showpass account.
 
-1.  In your WordPress admin dashboard, find the new "Showpass API" menu item (usually in the left-hand sidebar). Click on it.
-2.  You'll see a settings page with the following fields: [1, 2]
-    - **Organization ID**: This is a crucial setting. It's the ID of your venue or organization in Showpass. The plugin will display events and products from this organization.
-      - **How to find your Organization ID**: Log in to your Showpass account and go to `https://www.showpass.com/dashboard/venues/edit/` or look for 'Organization Info' in your organizer dashboard. [1, 2] Enter this ID into the field.
-      - _Example_: If your Organization ID is `3823`, the plugin will fetch all events from the venue with ID `3823`. [1, 2]
-    - **Widget Color**: Enter a hex color code for the primary color of the Showpass purchase widget (the pop-up window where customers buy tickets). This helps match the widget to your website's branding.
-      - _Example_: `#ff0000` for red. [1, 2]
-    - **Keep Shopping**: This field allows you to customize the text of the button that closes the purchase widget. By default, it says "Keep Shopping". You can change it to "Close" or any other text you prefer. [1, 2]
-3.  Click **Save Changes** (or the equivalent button on the page).
+1. In your WordPress admin dashboard, click the **Showpass API** menu item in the left-hand sidebar.
+2. On the settings page, fill in the following fields:
 
-    ![Showpass plugin config](/images/wordpress/wp-config.png)
+   - **Organization ID**  
+     This is the ID of your venue/organization in Showpass. The plugin uses it to load your events and products.
+     
+     **How to find it:**  
+     Log in to Showpass and go to `https://www.showpass.com/dashboard/venues/edit/` or look for **Organization Info** in your organizer dashboard. Copy the **Organization ID** from there and paste it into this field.
+     
+     _Example:_ If your Organization ID is `3823`, the plugin will fetch all events for organization `3823`.
 
-**Important Note on Website Domain:**
-For the plugin and widgets to function correctly, ensure your website's domain is added to the "Integrations" section under your organization's settings in the Showpass dashboard. This is a common troubleshooting step if you find the connection is blocked.
+   - **Widget Color**  
+     The primary color of the Showpass purchase widget (the pop-up checkout). Use a hex color code to match your site’s branding.  
+     _Example:_ `#ff0000` for red.
 
-That's it! Your Showpass WordPress Plugin is now installed and configured. You're ready to start adding Showpass content like event listings, buy buttons, and calendars to your website using simple shortcodes.
+   - **Keep Shopping**  
+     This controls the text on the button that closes the purchase widget. By default it says **“Keep Shopping”**, but you can change it to “Close”, “Back to Events”, or any text you prefer.
 
-**Next Steps:**
+3. Click **Save Changes**.
 
-- Learn how to add a "Buy Now" button for your events, products, or memberships.
+   ![Showpass plugin config](/images/wordpress/wp-config.png)
+
+### Important note on website domain
+
+For the plugin and widgets to work correctly, your website’s domain must be added in the **Integrations** section under your organization’s settings in the Showpass dashboard. If the widget doesn’t load or appears blocked, check this setting first.
+
+---
+
+That’s it — your Showpass WordPress plugin is now installed and configured. You’re ready to start adding Showpass content (event listings, buy buttons, calendars, and more) to your site using shortcodes.
+
+**Next steps:**
+
+- Learn how to add a **“Buy Now”** button for your events, products, or memberships.
 - Explore how to display lists of your events or products.
