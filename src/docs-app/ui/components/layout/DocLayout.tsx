@@ -150,6 +150,7 @@ const DocLayout = () => {
                   tocItems &&
                   tocItems.length > 0 && (
                     <TableOfContents
+                      key={currentPath}
                       items={tocItems}
                       activeItem={activeSection}
                     />

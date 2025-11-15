@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useMemo } from "react";
 import { cn } from "@/shared/lib/utils.ts";
 import { TocItem } from "@/docs-app/data/types.ts";
 

@@ -17,29 +17,42 @@ export const useContent = (contentPath: string) => {
   }, []);
 
   useEffect(() => {
+    let didCancel = false;
+    const path = contentPath;
+
     const fetchContent = async () => {
       try {
         setIsLoading(true);
         setError(null);
+        // Clear previous TOC and content immediately to prevent stale data between routes
+        setTableOfContents([]);
+        setContent("");
         
         // Load content directly from file
-        const loadedContent = await contentManager.loadContent(contentPath);
+        const loadedContent = await contentManager.loadContent(path);
+        if (didCancel) return;
         
         // Extract headings for table of contents
         const headings = contentManager.extractHeadings(loadedContent);
         
         setContent(loadedContent);
         setTableOfContents(headings);
-        setIsLoading(false);
       } catch (err) {
+        if (didCancel) return;
         console.error("Failed to load content:", err);
         setError(err instanceof Error ? err : new Error(String(err)));
-        setIsLoading(false);
+      } finally {
+        if (!didCancel) setIsLoading(false);
       }
     };
 
     fetchContent();
-  }, [contentPath]);
+
+    // Cancel any in-flight load when path changes/unmounts to avoid race conditions
+    return () => {
+      didCancel = true;
+    };
+  }, [contentPath, contentManager]);
 
   return {
     content,

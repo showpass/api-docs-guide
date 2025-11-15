@@ -26,6 +26,18 @@ const ContentPage: React.FC<ContentPageProps> = ({
   // Use the hash scroll hook
   useHashScroll(100);
 
+  // Immediately clear right sidebar data on route change to avoid stale TOC during fast navigation
+  useEffect(() => {
+    if (setPageData) {
+      setPageData({
+        tocItems: [],
+        apiExamplesData: undefined,
+        activeSection: undefined,
+        hideRightSidebar: true,
+      });
+    }
+  }, [contentPath, setPageData]);
+
   // Update layout context when page-specific data changes
   useEffect(() => {
     if (setPageData) {
@@ -33,7 +45,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
         tocItems: tableOfContents,
         apiExamplesData: apiExamples,
         activeSection: activeSection,
-        hideRightSidebar: !tableOfContents && !apiExamples,
+        hideRightSidebar: (tableOfContents?.length ?? 0) === 0 && !apiExamples,
       });
     }
     // Cleanup function to reset data when component unmounts (optional, but good practice)
@@ -47,7 +59,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
         });
       }
     };
-  }, [setPageData, tableOfContents, apiExamples, activeSection]);
+  }, [setPageData, tableOfContents, apiExamples, activeSection, contentPath]);
 
   // Show error toast if content failed to load
   useEffect(() => {

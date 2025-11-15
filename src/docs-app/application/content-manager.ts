@@ -1,5 +1,4 @@
 import { DocsLoader, IDocsLoader } from "@/docs-app/infrastructure/docs-loader";
-import { extractHeadingsFromMarkdown } from "@/docs-app/utils/heading-utils";
 
 /**
  * ContentManager provides a clean interface for loading and processing documentation content.
@@ -35,6 +34,70 @@ export class ContentManager {
    * @returns Array of heading objects with title, href, and level properties
    */
   extractHeadings(content: string): { title: string; href: string; level: number }[] {
-    return extractHeadingsFromMarkdown(content);
+    return this.extractHeadingsFromMarkdown(content);
+  }
+
+  /**
+   * Generates a URL-safe ID from heading text.
+   * Converts text to lowercase, removes special characters, and creates kebab-case format.
+   */
+  private generateHeadingId(text: string): string {
+    const result = text
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "")
+      .replace(/[\s_-]+/g, "-")
+      .replace(/^-+|-+$/g, "");
+    
+    return result;
+  }
+
+  /**
+   * Extract headings (H2–H4) from markdown, ignoring fenced code blocks and blockquotes.
+   * Also de-duplicates by href to prevent duplicate items.
+   */
+  private extractHeadingsFromMarkdown(content: string): { title: string; href: string; level: number }[] {
+    const headings: { title: string; href: string; level: number }[] = [];
+    const seen = new Set<string>();
+    const lines = content.split('\n');
+
+    let inFence = false;
+    let fenceMarker: string | null = null; // ``` or ~~~
+
+    for (let raw of lines) {
+      const line = raw.trimEnd();
+
+      // Toggle fenced code block state
+      const fenceMatch = line.match(/^(```|~~~)/);
+      if (fenceMatch) {
+        const marker = fenceMatch[1];
+        if (!inFence) {
+          inFence = true;
+          fenceMarker = marker;
+        } else if (fenceMarker === marker) {
+          inFence = false;
+          fenceMarker = null;
+        }
+        continue; // Skip fence lines
+      }
+
+      if (inFence) continue; // Ignore lines inside code fences
+      if (/^>\s*/.test(line)) continue; // Ignore blockquotes
+
+      // Match H2 (##), H3 (###), H4 (####) with content
+      const match = line.match(/^(#{2,4})\s+(.+?)\s*$/);
+      if (match) {
+        const level = match[1].length; // 2, 3, or 4
+        const title = match[2].trim();
+        const id = this.generateHeadingId(title);
+        if (!id) continue;
+        const href = `#${id}`;
+        if (seen.has(href)) continue; // de-dupe across sections
+        seen.add(href);
+        headings.push({ title, href, level });
+      }
+    }
+
+    return headings;
   }
 }

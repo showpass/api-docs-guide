@@ -14,12 +14,23 @@ import {
   TableRow,
 } from "@/shared/components/table.tsx";
 import { cn } from "@/shared/lib/utils.ts";
-import { generateHeadingId } from "@/docs-app/utils/heading-utils";
 import { Separator } from "@/shared/components/separator.tsx";
 
 interface MarkdownContentProps {
   content: string;
 }
+
+/**
+ * Generates a URL-safe ID from heading text for anchor links
+ */
+const generateHeadingId = (text: string): string => {
+  return text
+    .toLowerCase()
+    .trim()
+    .replace(/[^\w\s-]/g, "")
+    .replace(/[\s_-]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+};
 
 const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
   // Define components mapping for ReactMarkdown
