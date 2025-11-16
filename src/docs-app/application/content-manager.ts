@@ -53,6 +53,29 @@ export class ContentManager {
   }
 
   /**
+   * Cleans up heading text for display in the TOC.
+   * Handles parameter-style headings (e.g., `param="value"`) by extracting just the parameter name.
+   * Removes backticks, excessive quotes, and cleans up formatting.
+   */
+  private cleanHeadingTitle(title: string): string {
+    // Remove backticks first
+    let cleaned = title.replace(/`/g, '');
+    
+    // Check if this is a parameter-style heading: something="value"
+    const paramMatch = cleaned.match(/^([a-z_][a-z0-9_-]*)\s*=/i);
+    if (paramMatch) {
+      // Return just the parameter name
+      return paramMatch[1];
+    }
+    
+    // Otherwise, general cleanup
+    return cleaned
+      .replace(/\s*\(or\s+.*?\)\s*$/i, '') // Remove "(or ...)" suffixes
+      .replace(/^["']|["']$/g, '') // Remove leading/trailing quotes
+      .trim();
+  }
+
+  /**
    * Extract headings (H2–H4) from markdown, ignoring fenced code blocks and blockquotes.
    * Also de-duplicates by href to prevent duplicate items.
    */
@@ -88,13 +111,15 @@ export class ContentManager {
       const match = line.match(/^(#{2,4})\s+(.+?)\s*$/);
       if (match) {
         const level = match[1].length; // 2, 3, or 4
-        const title = match[2].trim();
-        const id = this.generateHeadingId(title);
+        const rawTitle = match[2].trim();
+        const id = this.generateHeadingId(rawTitle);
         if (!id) continue;
         const href = `#${id}`;
         if (seen.has(href)) continue; // de-dupe across sections
         seen.add(href);
-        headings.push({ title, href, level });
+        // Clean the title for display in TOC
+        const cleanTitle = this.cleanHeadingTitle(rawTitle);
+        headings.push({ title: cleanTitle, href, level });
       }
     }
 

@@ -1,106 +1,122 @@
-# Adding a product list with `[showpass_products]`
+# Adding a product list
 
-If you sell merchandise, add-ons, or other non-event items through Showpass, you can display them on your WordPress site using the `[showpass_products]` shortcode. This lets customers browse and purchase your products directly from your site.
+Display merchandise, add-ons, or other non-event items on your WordPress site using the `[showpass_products]` shortcode. Customers can browse and purchase products directly from your site.
+
+
+## Basic usage
+
+Add products to any page or post:
+
+1. Open the WordPress page editor
+2. Add a **Shortcode** block
+3. Enter: `[showpass_products]`
+
+By default, this displays products in a **grid layout** with **8 products per page** (pagination included).
 
 ---
 
-## Basic product list
+## Customizing your product list
 
-To add a basic product list:
+Control the layout and which products appear using these parameters.
 
-1. Go to the WordPress page or post where you want to display your products.
-2. Add a **Shortcode** block.
-3. Enter:
+### Layout template
+
+**Parameter:** `template="grid|list|data"`
+
+Choose how products are displayed:
+
+- **`grid`** (default) - Products in a grid layout
+- **`list`** - Products in a vertical list
+- **`data`** - Returns raw JSON for custom PHP templates
+
+**Example:**
 
 ```text
-[showpass_products]
-````
+[showpass_products template="list"]
+```
 
-By default, products are displayed in a **grid** layout, showing **8 products per page** (with pagination if there are more).
-
----
-
-## Customizing your product list: parameters
-
-You can control the layout and which products are shown using parameters on the shortcode:
+> **Note:** Any value other than `"list"` or `"data"` defaults to grid layout.
 
 ---
 
-### `template="grid|list|data"`
+### Products per page
 
-* **Use case:** Change the visual layout or return raw data.
-* **Values:**
+**Parameter:** `page_size="number"`
 
-  * `"grid"` (default behavior) – Products in a grid format.
-  * `"list"` – Products in a vertical list format.
-  * `"data"` – Returns raw product data (JSON) for custom PHP templates.
-* **Example (list view):**
+Control pagination density.
 
-  ```text
-  [showpass_products template="list"]
-  ```
+- **Default:** `8`
+- **Range:** Any positive integer
 
-> Note: Internally, any value other than `"list"` is treated as the grid template unless you explicitly use `"data"`.
+**Example:**
 
----
-
-### `page_size="number"`
-
-* **Use case:** Control how many products appear per page.
-* **Default:** `8`
-* **Example (show 12 products per page):**
-
-  ```text
-  [showpass_products page_size="12"]
-  ```
+```text
+[showpass_products page_size="12"]
+```
 
 ---
 
-### `product_ids="id1,id2,id3"`
+### Show specific products
 
-* **Use case:** Show only specific products instead of all available ones.
-* **What it is:** A comma-separated list of Showpass Product IDs (found in your Showpass dashboard).
-* **Example (show only products 2, 6, and 7):**
+**Parameter:** `product_ids="id1,id2,id3"`
 
-  ```text
-  [showpass_products product_ids="2,6,7"]
-  ```
+Display only selected products instead of all available ones.
 
----
+**What you need:** Comma-separated list of Showpass Product IDs (find these in your Showpass dashboard under Products).
 
-### `show_widget_description="true|false"`
+**Example:**
 
-* **Use case:** Explicitly show or hide the description panel inside the purchase widget when a product is opened, overriding the global admin setting.
-* **Example:**
-
-  ```text
-  [showpass_products show_widget_description="true"]
-  ```
+```text
+[showpass_products product_ids="2,6,7"]
+```
 
 ---
 
-### `lang="fr"`
+### Widget description visibility
 
-* **Use case:** Set the **widget** interface language when a product is opened.
-* **Behavior:** If omitted, widgets default to English; `lang="fr"` switches them to French.
-* **Example:**
+**Parameter:** `show_widget_description="true|false"`
 
-  ```text
-  [showpass_products lang="fr"]
-  ```
+Override the global admin setting to force show or hide the description panel in the purchase widget.
+
+**Example:**
+
+```text
+[showpass_products show_widget_description="true"]
+```
 
 ---
 
-## Example: a customized product list
+### Language
+
+**Parameter:** `lang="fr"`
+
+Set the widget interface language.
+
+- **Default:** English
+- **Supported:** `fr` (French)
+
+**Example:**
+
+```text
+[showpass_products lang="fr"]
+```
+
+> **Note:** This only affects the purchase widget language, not the product list template.
+
+---
+
+## Complete example
+
+Combine multiple parameters for precise control:
 
 ```text
 [showpass_products template="list" page_size="12" product_ids="101,105,115"]
 ```
 
-This shortcode will:
+This configuration will:
 
-1. Display products in a **vertical list** (`template="list"`).
-2. Show **12 products per page** (`page_size="12"`).
-3. Only include products with IDs **101**, **105**, and **115** (`product_ids="101,105,115"`).
+- Display products in a **vertical list**
+- Show **12 products per page**
+- Include only products **101**, **105**, and **115**
 
-With the standard templates, when a customer clicks on a product, the Showpass widget opens so they can add the product to their cart and purchase it.
+When customers click a product, the Showpass purchase widget opens for checkout.

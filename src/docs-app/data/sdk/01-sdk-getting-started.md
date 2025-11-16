@@ -1,21 +1,24 @@
-# Showpass SDK introduction
+# Showpass SDK Introduction
 
 ## Overview
 
-Showpass provides a JavaScript SDK (Software Development Kit) that makes it easy to integrate Showpass's ticketing and product purchasing functionalities directly into your website. You can use it to open purchase widgets as pop-up dialogs or embed them seamlessly into your page layout.
+The Showpass JavaScript SDK (Software Development Kit) enables seamless integration of Showpass's ticketing and product purchasing functionalities directly into your website. With the SDK, you can display purchase widgets as pop-up dialogs or embed them into your page layout for a fully integrated experience.
 
-**Please note:** Your domain must have a valid SSL certificate (`https://`) installed for the SDK to work properly.
+> **Important:** Your domain must have a valid SSL certificate (`https://`) installed for the SDK to function properly.
 
-## Including the Showpass SDK on your page
+---
 
-You have two primary options for including the Showpass SDK:
+## Including the SDK
 
-### Option 1: Direct script tag with `async` or `defer` (recommended)
+You have two primary methods for including the Showpass SDK on your website:
 
-Include the SDK with a standard `<script>` tag using either the `async` or `defer` attribute to prevent blocking your page's rendering. Place this tag in the `<head>` of your HTML or before your closing `</body>` tag.
+### Option 1: Direct Script Tag (Recommended)
 
-**Using `async`:**
-The script will be downloaded in parallel with the browser parsing the HTML page and executed as soon as it's available.
+Include the SDK using a standard `<script>` tag with either `async` or `defer` attribute to prevent blocking page rendering. Place this tag in the `<head>` section or before the closing `</body>` tag.
+
+#### Using `async`
+
+The script downloads in parallel with HTML parsing and executes immediately when available:
 
 ```html
 <script
@@ -25,8 +28,9 @@ The script will be downloaded in parallel with the browser parsing the HTML page
 ></script>
 ```
 
-**Using `defer` (recommended):**
-The script will be downloaded in parallel with HTML parsing but only executed after the HTML document has been fully parsed. This ensures the DOM is ready when the SDK loads.
+#### Using `defer` (Recommended)
+
+The script downloads in parallel with HTML parsing but only executes after the HTML document is fully parsed, ensuring the DOM is ready:
 
 ```html
 <script
@@ -36,9 +40,11 @@ The script will be downloaded in parallel with HTML parsing but only executed af
 ></script>
 ```
 
-### Option 2: Dynamic script loading
+---
 
-You can dynamically load the SDK script using JavaScript:
+### Option 2: Dynamic Script Loading
+
+You can programmatically load the SDK using JavaScript:
 
 ```javascript
 (function (window, document) {
@@ -51,23 +57,39 @@ You can dynamically load the SDK script using JavaScript:
 })(window, document);
 ```
 
-## Calling SDK functions
+---
 
-Once the SDK has loaded, its functions are available under the `showpass.tickets` namespace (e.g., `showpass.tickets.eventPurchaseWidget(...)`).
+## SDK Function Structure
 
-**Function Signature Pattern:**
-Many SDK functions that display widgets follow a pattern where an optional third parameter can be provided to embed the widget. For example:
-`sdkFunction(requiredArg1, optionalParamsObject, optionalContainerIdForEmbedding)`
+Once loaded, the SDK exposes its functions under the `showpass.tickets` namespace (e.g., `showpass.tickets.eventPurchaseWidget(...)`).
 
-**Widget Behavior (Pop-up vs. Embedded):**
+### Function Signature Pattern
 
-- By default, if you call a widget function like `eventPurchaseWidget(slug, params)` without the third `containerId` argument, it will display the widget as a **pop-up modal dialog**.
-- To **embed** a widget, you pass the ID of your target HTML `<div>` element as the `containerId` argument (e.g., `eventPurchaseWidget(slug, params, 'myDivId')`).
+Most SDK functions that display widgets follow this pattern:
 
-**Ensuring SDK Readiness:**
-Since the SDK loads asynchronously, you need to ensure it's loaded before calling its functions:
+```javascript
+sdkFunction(requiredArg1, optionalParamsObject, optionalContainerIdForEmbedding)
+```
 
-**Method 1: Check for SDK availability**
+### Widget Display Modes
+
+**Pop-up Mode (Default):**
+- Call a widget function without the `containerId` argument
+- Widget displays as a modal dialog overlay
+- Example: `eventPurchaseWidget(slug, params)`
+
+**Embedded Mode:**
+- Pass the ID of your target HTML `<div>` element as the `containerId` argument
+- Widget embeds directly into the specified container
+- Example: `eventPurchaseWidget(slug, params, 'myDivId')`
+
+---
+
+## Ensuring SDK Readiness
+
+Since the SDK loads asynchronously, you must ensure it's available before calling its functions. Here are three recommended approaches:
+
+### Method 1: Check for SDK Availability
 
 ```javascript
 function callSDKWhenReady() {
@@ -90,7 +112,9 @@ if (document.readyState === "loading") {
 }
 ```
 
-**Method 2: Using DOMContentLoaded (when using `defer`)**
+---
+
+### Method 2: Using DOMContentLoaded (When Using `defer`)
 
 ```javascript
 document.addEventListener("DOMContentLoaded", function () {
@@ -103,7 +127,9 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 ```
 
-**Method 3: Script onload callback (for dynamic loading)**
+---
+
+### Method 3: Script Onload Callback (For Dynamic Loading)
 
 ```javascript
 let script = document.createElement("script");
@@ -117,15 +143,30 @@ script.src = "https://showpass.com/static/dist/sdk.js";
 document.head.appendChild(script);
 ```
 
-## Available SDK functions
+---
 
-The Showpass SDK provides several functions to integrate different Showpass widgets and features:
+## Available SDK Functions
 
-1.  **Ticket purchase widget:** For event ticket purchases.
-2.  **Product purchase widget:** For marketplace product purchases.
-3.  **Memberhips purchase widget:** For membership and season pass purchases.
-4.  **Calendar widget:** A calendar for event purcahses.
-5.  **Checkout Widget:** To initiate the final checkout process.
-6.  **Cart quantity listener:** To listen for changes in cart item count.
+The Showpass SDK provides several specialized functions for different integration scenarios:
 
-Refer to the specific documentation page for each function for detailed parameters and examples.
+| Function | Purpose |
+| --- | --- |
+| **Ticket Purchase Widget** | Enable event ticket selection and purchase |
+| **Product Purchase Widget** | Display marketplace product options and add to cart |
+| **Memberships Purchase Widget** | Offer membership and season pass purchases |
+| **Calendar Widget** | Show interactive calendar for event browsing and booking |
+| **Checkout Widget** | Initiate final checkout and payment process |
+| **Cart Quantity Listener** | Monitor real-time changes to shopping cart item count |
+
+Refer to the specific documentation page for each function to learn about detailed parameters, examples, and best practices.
+
+---
+
+## Next Steps
+
+Now that you understand the SDK basics, explore the individual widget documentation to learn how to:
+
+- Integrate specific widgets for your use case
+- Customize widget appearance and behavior
+- Handle advanced scenarios like embedded widgets
+- Implement cart tracking and checkout flows

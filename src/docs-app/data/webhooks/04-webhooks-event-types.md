@@ -1,6 +1,9 @@
 # Showpass webhooks: Event types
 
+
 Showpass webhooks notify your application about various events that occur within the platform. When configuring a webhook endpoint in the Showpass dashboard, you will select the specific event(s) for which you want to receive notifications at that endpoint.
+
+---
 
 ## Available webhook events
 
@@ -15,15 +18,20 @@ Below is a list of the events for which Showpass currently provides webhook supp
 | `invoice.transferred` | Triggered when a ticket transfer has been completed. This event updates the **original invoice and ticket items**, often marking the original tickets as voided or transferred. Use this to manage the status of the original tickets. | Completion of a ticket transfer (original purchaser's side). |
 | `webhook.test`        | A special event that can be triggered manually from the Showpass dashboard to test your webhook endpoint's connectivity and processing capabilities. It usually sends a sample payload.                                                | Manually sent from Showpass webhook settings.                |
 
+---
+
 ## Subscribing to events
 
 When you set up or edit a webhook endpoint in the Showpass dashboard (as described in "Setup and Management"), you will be able to select one or more of these event types. Your endpoint will then only receive notifications for the events it is subscribed to.
 
+---
+
 ## Choosing the right events
 
-- Consider what actions in Showpass are relevant to your integration.
-- For sales and order management, `invoice.purchase`, `invoice.refund`, and `invoice.void` are fundamental.
-- If you need to track the full lifecycle of tickets, especially with resale or transfer features, `invoice.transfer` and `invoice.transferred` become important.
-- Always subscribe your endpoint to `webhook.test` during development and for ongoing health checks.
+Consider what actions in Showpass are relevant to your integration:
 
-The data payload sent with each event (particularly for invoice-related events) will typically be an "Invoice" object, detailed in the next section. The `event_type` field within the payload will indicate which specific event triggered the webhook.
+- **For sales and order management:** `invoice.purchase`, `invoice.refund`, and `invoice.void` are fundamental
+- **For tracking ticket lifecycle:** `invoice.transfer` and `invoice.transferred` become important if you need to track the full lifecycle of tickets, especially with resale or transfer features
+- **For testing:** Always subscribe your endpoint to `webhook.test` during development and for ongoing health checks
+
+> **Note:** The data payload sent with each event (particularly for invoice-related events) will typically be an "Invoice" object, detailed in the next section. The `event_type` field within the payload will indicate which specific event triggered the webhook.

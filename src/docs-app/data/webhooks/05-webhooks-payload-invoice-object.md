@@ -1,15 +1,23 @@
 # Showpass webhooks: Payload - Invoice object
 
+
 When Showpass sends a webhook for invoice-related events (like `invoice.purchase`, `invoice.refund`, etc.), the payload delivered to your endpoint contains detailed information structured as an "Invoice" object. This section describes the format of this object.
+
+---
 
 ## Sample webhook request (Invoice structure)
 
 Here is an example of a request that Showpass sends as a webhook when delivering the invoice structure, typically for an `invoice.purchase` event.
 
-- **HTTP Method:** `POST`
-- **Target URL:** `https://yoursite.com/webhook/` (Your configured endpoint URL)
-- **Header (for security verification):** `X-SHOWPASS-SIGNATURE: "HMAC-SHA1_HASH"` (See "Webhook Security" for details on verifying this signature)
-- **Request Body (JSON Payload):**
+**HTTP Method:** `POST`
+
+**Target URL:** `https://yoursite.com/webhook/` (Your configured endpoint URL)
+
+**Header (for security verification):** `X-SHOWPASS-SIGNATURE: "HMAC-SHA1_HASH"`
+
+> **Note:** See "Webhook Security" for details on verifying this signature.
+
+**Request Body (JSON Payload):**
 
 ```json
 {
@@ -89,14 +97,16 @@ Here is an example of a request that Showpass sends as a webhook when delivering
 }
 ```
 
+---
+
 ## Invoice object fields
 
 The following table describes the fields typically found in the webhook payload when an invoice structure is sent. The exact fields present may vary slightly based on the event type and the specifics of the transaction.
 
 | Path in JSON                                   | Description                                                                                                                                                                                                       |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                                           | The ID used for verifying the `X-SHOWPASS-SIGNATURE` header. For invoice events, this is usually the same as `data.transaction_id`.                                                                               |
-| `event_type`                                   | The type of the event that triggered the webhook. <br>Choices: `['invoice.purchase', 'invoice.refund', 'invoice.void', 'invoice.transfer', 'invoice.transferred', 'webhook.test']`                                |
+| `id`                                           | The unique identifier for the event itself. This corresponds to the event record in Showpass and is useful for referencing in support or logs.                                                                   |
+| `event_type`                                   | The type of event that triggered this webhook. <br>Choices: `['invoice.purchase', 'invoice.refund', 'invoice.void', 'invoice.transfer', 'invoice.transferred', 'webhook.test']`                                  |
 | `webhook_event_uuid`                           | A unique UUID for this specific webhook event instance. You can use this as an idempotency key to prevent processing the same event multiple times.                                                               |
 | `data`                                         | An object containing the core data for the event.                                                                                                                                                                 |
 | `data.transaction_id`                          | Unique identifier for the transaction.                                                                                                                                                                            |
@@ -105,7 +115,7 @@ The following table describes the fields typically found in the webhook payload 
 | `data.customer_email`                          | Email address of the customer.                                                                                                                                                                                    |
 | `data.customer_phone_number`                   | Phone number of the customer, if available.                                                                                                                                                                       |
 | `data.subscribe_to_venue`                      | Boolean indicating if the customer subscribed to marketing from the venue during checkout.                                                                                                                        |
-| `data.payment_type`                            | Payment method used. <br>Choices: `['cash', 'credit', 'interac', 'complimentary', 'free', 'bundled', 'transferred', 'direct_deposit', 'other', 'payment_plan', 'user_credit', 'exchange_credit', 'afterpay']`     |
+| `data.payment_type`                            | Payment method used. <br>**Choices:** `['cash', 'credit', 'interac', 'complimentary', 'free', 'bundled', 'transferred', 'direct_deposit', 'other', 'payment_plan', 'user_credit', 'exchange_credit', 'afterpay']`     |
 | `data.other_payment_type`                      | Type of "other" payment used, if applicable.                                                                                                                                                                      |
 | `data.currency`                                | Currency code for the transaction (e.g., `CAD`, `USD`).                                                                                                                                                           |
 | `data.discounts`                               | The total monetary amount of discounts applied to the entire invoice.                                                                                                                                             |
@@ -114,52 +124,64 @@ The following table describes the fields typically found in the webhook payload 
 | `data.account_credit_applied`                  | Total amount of account credit applied to the transaction, if applicable.                                                                                                                                         |
 | `data.gross_revenue`                           | Total gross revenue on the transaction (typically `net_sales` - `service_fees` + `organizer_fees` + `total_tax`, but verify specific calculation based on your needs).                                            |
 | `data.organizer_fees`                          | Total combined amount of fees charged by the organizer for the transaction.                                                                                                                                       |
-| `data.total_tax`                               | Total combined amount of tax included in the transaction.                                                                                                                                                         |
-| `data.account_credit_type`                     | The type of account credit applied to the invoice. <br>Choices: `['venue_credit', 'user_credit', 'referral_credit', 'exchange_credit']`                                                                           |
-| `data.invoice_type`                            | The type of the invoice generated. <br>Choices: `['sale', 'refund', 'transfer', 'void']`                                                                                                                          |
-| `data.invoice_type_id`                         | Unique identifier for this specific invoice. (Note: The sample has `invoice_type_id`, this might be the main invoice ID distinct from `transaction_id` in some contexts).                                         |
-| `data.ticket_items`                            | An array of objects, where each object contains information about an individual ticket generated as part of this invoice.                                                                                         |
-| `data.ticket_items[].event_id`                 | Unique identifier for the event associated with the ticket.                                                                                                                                                       |
+| `data.total_tax`                               | Total combined amount of applicable taxes for the transaction.                                                                                                                                                    |
+| `data.account_credit_type`                     | The type of account credit applied, if any.                                                                                                                                                                       |
+| `data.invoice_type`                            | The type of invoice. <br>**Choices:** `['Sale', 'Refund']`                                                                                                                                                            |
+| `data.invoice_type_id`                         | Unique identifier for the invoice type.                                                                                                                                                                           |
+| `data.ticket_items`                            | An array of objects, each representing a ticket within the transaction. This is where you'll find details about individual tickets.                                                                               |
+| `data.ticket_items[].event_id`                 | Unique identifier of the event the ticket is for.                                                                                                                                                                 |
 | `data.ticket_items[].event_name`               | Name of the event.                                                                                                                                                                                                |
-| `data.ticket_items[].event_starts_on`          | ISO 8601 date and time the event starts (UTC).                                                                                                                                                                    |
-| `data.ticket_items[].event_ends_on`            | ISO 8601 date and time the event ends (UTC).                                                                                                                                                                      |
-| `data.ticket_items[].first_name_on_ticket`     | First name of the attendee on the ticket.                                                                                                                                                                         |
-| `data.ticket_items[].last_name_on_ticket`      | Last name of the attendee on the ticket.                                                                                                                                                                          |
-| `data.ticket_items[].phone_number_on_ticket`   | Phone number on the ticket, if collected.                                                                                                                                                                         |
-| `data.ticket_items[].email_on_ticket`          | Email address on the ticket.                                                                                                                                                                                      |
-| `data.ticket_items[].id`                       | Unique identifier for this specific ticket instance.                                                                                                                                                              |
-| `data.ticket_items[].ticket_status`            | Current status of the ticket. <br>Choices: `['pending', 'issued', 'resold', 'scanned', 'refund_in_progress', 'refunded', 'voided', 'transferred', 'expired', 'suspected_fraud', 'on_hold', 'selection_required']` |
-| `data.ticket_items[].ticket_status_code`       | Numerical status code of the ticket.                                                                                                                                                                              |
-| `data.ticket_items[].barcode_string`           | The barcode string for the ticket.                                                                                                                                                                                |
-| `data.ticket_items[].name_on_ticket`           | Full name of the attendee on the ticket.                                                                                                                                                                          |
-| `data.ticket_items[].ticket_type_id`           | Unique identifier for the type of ticket (e.g., "General Admission", "VIP").                                                                                                                                      |
-| `data.ticket_items[].ticket_type_name`         | Name of the ticket type.                                                                                                                                                                                          |
-| `data.ticket_items[].ticket_item_type`         | Type of item this ticket represents (e.g., `ticket`, `addon`).                                                                                                                                                    |
-| `data.ticket_items[].created_by_transfer`      | Boolean indicating if this ticket was created as a result of a transfer.                                                                                                                                          |
-| `data.ticket_items[].product_name`             | Name of the product associated with this ticket item (if it's a product or an add-on that's ticketed).                                                                                                            |
-| `data.ticket_items[].product_id`               | Unique ID of the product, if applicable.                                                                                                                                                                          |
-| `data.ticket_items[].product_attribute_name`   | Name of the product attribute (e.g., size, color), if applicable.                                                                                                                                                 |
-| `data.ticket_items[].product_attribute_id`     | Unique ID of the product attribute, if applicable.                                                                                                                                                                |
-| `data.invoice_items`                           | An array of objects, where each object provides a summary of line items on the invoice (e.g., one line item for 2 GA tickets, another for 1 VIP ticket).                                                          |
-| `data.invoice_items[].id`                      | Unique identifier for this specific invoice line item.                                                                                                                                                            |
-| `data.invoice_items[].invoice_item_type`       | Type of the invoice item. <br>Choices: `['product', 'ticket', 'membership', 'refund', 'transfer', ...]` (see sample for more choices)                                                                             |
-| `data.invoice_items[].quantity`                | The quantity of this specific item on the invoice (e.g., 2 for two GA tickets).                                                                                                                                   |
-| `data.invoice_items[].discounts`               | Total discounts applied to this specific line item.                                                                                                                                                               |
-| `data.invoice_items[].net_sales`               | Net sales amount for this line item (after discounts).                                                                                                                                                            |
-| `data.invoice_items[].service_fees`            | Service and processing fees for this line item.                                                                                                                                                                   |
+| `data.ticket_items[].event_starts_on`          | ISO 8601 formatted start date and time of the event (UTC).                                                                                                                                                        |
+| `data.ticket_items[].event_ends_on`            | ISO 8601 formatted end date and time of the event (UTC).                                                                                                                                                          |
+| `data.ticket_items[].first_name_on_ticket`     | First name of the ticket holder.                                                                                                                                                                                  |
+| `data.ticket_items[].last_name_on_ticket`      | Last name of the ticket holder.                                                                                                                                                                                   |
+| `data.ticket_items[].phone_number_on_ticket`   | Phone number of the ticket holder, if provided.                                                                                                                                                                   |
+| `data.ticket_items[].email_on_ticket`          | Email address of the ticket holder.                                                                                                                                                                               |
+| `data.ticket_items[].id`                       | Unique identifier for this specific ticket item within Showpass.                                                                                                                                                  |
+| `data.ticket_items[].ticket_status`            | Human-readable status of the ticket. <br>**Choices:** `['pending', 'issued', 'voided', 'transferred']`                                                                                                                |
+| `data.ticket_items[].barcode_string`           | Barcode or QR code string for the ticket, used for scanning and validation at the event.                                                                                                                          |
+| `data.ticket_items[].name_on_ticket`           | Full name on the ticket (combination of first and last name).                                                                                                                                                     |
+| `data.ticket_items[].ticket_type_id`           | Unique identifier for the ticket type.                                                                                                                                                                            |
+| `data.ticket_items[].ticket_type_name`         | Name of the ticket type (e.g., "General Admission", "VIP").                                                                                                                                                       |
+| `data.ticket_items[].ticket_item_type`         | Type of the ticket item. <br>**Choices:** `['ticket', 'membership', 'product']`                                                                                                                                       |
+| `data.ticket_items[].ticket_status_code`       | Numeric status code for the ticket.                                                                                                                                                                               |
+| `data.ticket_items[].created_by_transfer`      | Boolean indicating if this ticket was created as part of a transfer.                                                                                                                                              |
+| `data.ticket_items[].product_name`             | Name of the product (if the ticket item is a product).                                                                                                                                                            |
+| `data.ticket_items[].product_id`               | Unique identifier for the product (if applicable).                                                                                                                                                                |
+| `data.ticket_items[].product_attribute_name`   | Name of the product attribute (e.g., size, color) if applicable.                                                                                                                                                  |
+| `data.ticket_items[].product_attribute_id`     | Unique identifier for the product attribute (if applicable).                                                                                                                                                      |
+| `data.invoice_items`                           | An array of objects, each representing a line item on the invoice. This provides a summary of each type of item purchased (e.g., each ticket type).                                                               |
+| `data.invoice_items[].id`                      | Unique identifier for the invoice item.                                                                                                                                                                           |
+| `data.invoice_items[].invoice_item_type`       | Type of the invoice item. <br>**Choices:** `['Ticket', 'Membership', 'Product']`                                                                                                                                      |
+| `data.invoice_items[].quantity`                | Quantity of this item purchased.                                                                                                                                                                                  |
+| `data.invoice_items[].discounts`               | Discounts applied to this specific line item.                                                                                                                                                                     |
+| `data.invoice_items[].net_sales`               | Net sales for this line item after discounts.                                                                                                                                                                     |
+| `data.invoice_items[].service_fees`            | Service fees associated with this line item.                                                                                                                                                                      |
 | `data.invoice_items[].account_credit_applied`  | Account credit applied to this line item.                                                                                                                                                                         |
 | `data.invoice_items[].gross_revenue`           | Gross revenue for this line item.                                                                                                                                                                                 |
-| `data.invoice_items[].organizer_fees`          | Organizer fees for this line item.                                                                                                                                                                                |
-| `data.invoice_items[].total_tax`               | Total tax for this line item.                                                                                                                                                                                     |
-| `data.invoice_items[].event_id`                | Event ID associated with this line item (if applicable).                                                                                                                                                          |
-| `data.invoice_items[].event_name`              | Event name for this line item (if applicable).                                                                                                                                                                    |
-| `data.invoice_items[].event_facebook_id`       | Facebook Event ID, if applicable.                                                                                                                                                                                 |
-| `data.invoice_items[].ticket_type_id`          | Ticket type ID for this line item (if it's for tickets).                                                                                                                                                          |
-| `data.invoice_items[].ticket_type_name`        | Ticket type name.                                                                                                                                                                                                 |
-| `data.invoice_items[].ticket_type_external_id` | External ID for the ticket type, if used.                                                                                                                                                                         |
-| `data.invoice_items[].product_name`            | Product name for this line item (if it's for a product).                                                                                                                                                          |
-| `data.invoice_items[].product_id`              | Product ID.                                                                                                                                                                                                       |
-| `data.invoice_items[].product_attribute_id`    | Product attribute ID.                                                                                                                                                                                             |
-| `data.invoice_items[].product_attribute_name`  | Product attribute name.                                                                                                                                                                                           |
+| `data.invoice_items[].organizer_fees`          | Organizer fees associated with this line item.                                                                                                                                                                    |
+| `data.invoice_items[].total_tax`               | Tax applied to this line item.                                                                                                                                                                                    |
+| `data.invoice_items[].event_id`                | Unique identifier for the event associated with this line item.                                                                                                                                                   |
+| `data.invoice_items[].event_name`              | Name of the event.                                                                                                                                                                                                |
+| `data.invoice_items[].event_facebook_id`       | Facebook event ID if the event is linked to Facebook.                                                                                                                                                             |
+| `data.invoice_items[].ticket_type_id`          | Unique identifier for the ticket type.                                                                                                                                                                            |
+| `data.invoice_items[].ticket_type_name`        | Name of the ticket type.                                                                                                                                                                                          |
+| `data.invoice_items[].ticket_type_external_id` | External identifier for the ticket type (if applicable).                                                                                                                                                          |
+| `data.invoice_items[].product_name`            | Name of the product (if the line item is a product).                                                                                                                                                              |
+| `data.invoice_items[].product_id`              | Unique identifier for the product (if applicable).                                                                                                                                                                |
+| `data.invoice_items[].product_attribute_id`    | Unique identifier for the product attribute (if applicable).                                                                                                                                                      |
+| `data.invoice_items[].product_attribute_name`  | Name of the product attribute (if applicable).                                                                                                                                                                    |
 
-Understanding this payload structure is essential for correctly processing the data sent by Showpass webhooks and integrating it into your systems. Always refer to the `event_type` to understand the context of the payload.
+---
+
+## Using the payload
+
+This structured payload allows you to:
+
+- **Process orders:** Extract customer information, items purchased, and payment details
+- **Update inventory:** Track ticket sales and product purchases
+- **Send notifications:** Email confirmations, shipping updates, or custom alerts
+- **Sync with external systems:** Update CRM records, accounting software, or analytics platforms
+- **Handle refunds and transfers:** Track the complete lifecycle of tickets and orders
+
+> **Important:** Always use the `webhook_event_uuid` as an idempotency key to prevent duplicate processing of the same event.

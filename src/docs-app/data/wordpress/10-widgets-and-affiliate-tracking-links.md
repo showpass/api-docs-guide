@@ -1,45 +1,200 @@
-# Widgets and tracking links (affiliate tracking)
+# Widgets and affiliate tracking links
 
-Showpass allows you to use affiliate tracking links to monitor the sales performance of different marketing channels or partners. When a customer arrives at your website through one of these special tracking links, the Showpass WordPress plugin can automatically associate any subsequent purchases made through the `[showpass_widget]` (for events) with that tracking link.
+Showpass allows you to use affiliate tracking links to monitor sales performance across different marketing channels or partners. When customers arrive through special tracking links, the Showpass WordPress plugin automatically associates purchases made through `[showpass_widget]` with that tracking campaign.
 
-## How affiliate tracking works with the plugin
 
-1.  **Create an Affiliate Tracking Link in Showpass:**
+## How affiliate tracking works
 
-    - First, you need to generate an affiliate tracking link within your Showpass dashboard. For detailed instructions on how to do this, please refer to the Showpass support documentation: [http://support.showpass.com/event-organizers/tracking-links/affiliate-tracking-links](http://support.showpass.com/event-organizers/tracking-links/affiliate-tracking-links)
-    - When you create this link, Showpass will provide you with a unique token (e.g., `8ee54af5`).
+### Step 1: Create an affiliate tracking link in Showpass
 
-2.  **Customer Clicks the Tracking Link:**
+1. Log in to your Showpass dashboard
+2. Navigate to your event settings
+3. Generate an affiliate tracking link for your event or campaign
+4. Showpass will provide a unique token (e.g., `8ee54af5`)
 
-    - You share this full tracking link (e.g., `https://www.showpass.com/your-event/?tracking-id=8ee54af5` or however Showpass formats it) in your campaign or with your affiliate.
-    - When a customer clicks this link, they are taken to Showpass.
+> **Need help?** Visit the [Showpass Help Center](https://help.showpass.com/hc/en-us) for assistance with tracking link setup.
 
-3.  **Using the `aff` Query Parameter on Your Website:**
+### Step 2: Customer clicks the tracking link
 
-    - To integrate this with your WordPress site where the Showpass plugin and `[showpass_widget]` shortcode are used, you'll need to get the customer to _your site_ with a special URL parameter.
-    - Add the `aff` query parameter to the URL of your website page where the Showpass widget button is. The value of this parameter should be the unique token from your Showpass tracking link.
-    - **Example URL for your website:**
-      `https://yourwebsite.com/event-page/?aff=8ee54af5`
-      (Replace `8ee54af5` with your actual tracking token).
-    - When a user visits your site using such a URL, the plugin creates a cookie on their browser that stores this `aff` token.
+Share your full tracking link in campaigns or with affiliates:
 
-4.  **Automatic Tracking ID Injection:**
-    - The `[showpass_widget]` shortcode (specifically when `type="event"`) is automatically designed to look for this cookie.
-    - If the cookie with the `aff` token is present, the plugin will inject the corresponding `tracking-id` into the Showpass purchase widget when it opens.
-    - This ensures that the sale is attributed to the correct affiliate or campaign in your Showpass sales reports.
+```text
+https://www.showpass.com/your-event/?tracking-id=8ee54af5
+```
 
-## Examples of URLs with the `aff` parameter:
+When customers click this link, they're taken to Showpass and the tracking token is recorded.
 
-- **Linking to a general page on your site:**
-  `https://yourwebsite.com/upcoming-events/?aff=your_tracking_token`
+### Step 3: Use the `aff` parameter on your website
 
-- **Linking to a specific event detail page (if using `?event=` or `?slug=` for other plugin functions):**
-  `https://yourwebsite.com/event-detail-page/?slug=my-cool-event&aff=your_tracking_token`
+To integrate tracking with your WordPress site where `[showpass_widget]` is used:
 
-## Important notes:
+**Parameter:** `aff=your_tracking_token`
 
-- **Currently Supported for Events:** The GitHub readme states that this tracking is currently supported for the `[showpass_widget type="event"]` parameter. Check for updates or test if you need it for products or memberships.
-- **Cookie-Based:** This method relies on browser cookies. If a user has cookies disabled or clears their cookies, tracking might not work.
-- **Widget Interaction:** The tracking ID is applied when the Showpass widget is opened via the `[showpass_widget]` shortcode on your site, after the user has visited your site with the `aff` parameter in the URL.
+Add this query parameter to your WordPress page URL where the Showpass widget button is located:
 
-By using tracking links this way, you can effectively measure the ROI of your promotional efforts and partnerships.
+```text
+https://yourwebsite.com/event-page/?aff=8ee54af5
+```
+
+**What happens:**
+- When users visit this URL, the plugin creates a browser cookie storing the `aff` token
+- The cookie persists across page views during the user's session
+
+### Step 4: Automatic tracking ID injection
+
+The `[showpass_widget]` shortcode (specifically `type="event"`) automatically:
+
+1. Looks for the `aff` cookie
+2. If found, injects the `tracking-id` into the Showpass purchase widget
+3. Attributes the sale to the correct affiliate/campaign in Showpass reports
+
+---
+
+## Example URLs
+
+### Basic event page
+
+```text
+https://yourwebsite.com/upcoming-events/?aff=your_tracking_token
+```
+
+### Combined with event slug parameter
+
+```text
+https://yourwebsite.com/event-detail/?slug=my-cool-event&aff=your_tracking_token
+```
+
+### Multiple tracking campaigns
+
+```text
+Campaign A: https://yourwebsite.com/events/?aff=facebook_campaign
+Campaign B: https://yourwebsite.com/events/?aff=email_newsletter
+Campaign C: https://yourwebsite.com/events/?aff=partner_xyz
+```
+
+---
+
+## Common use cases
+
+### Email marketing campaigns
+
+Include tracking URLs in newsletters:
+
+```text
+https://yourwebsite.com/featured-event/?aff=newsletter_march2024
+```
+
+Track performance of different email campaigns by using unique tokens per campaign.
+
+### Social media advertising
+
+Use different tracking tokens for each platform:
+
+```text
+Facebook: ?aff=fb_campaign_spring
+Instagram: ?aff=ig_story_march
+Twitter: ?aff=twitter_promo_q1
+```
+
+### Affiliate partnerships
+
+Provide partners with unique tracking URLs:
+
+```text
+Partner 1: ?aff=partner_cityguide
+Partner 2: ?aff=partner_eventblog
+Partner 3: ?aff=partner_radiopromo
+```
+
+### QR codes
+
+Generate QR codes pointing to tracking URLs:
+
+```text
+Print materials: ?aff=qr_poster_downtown
+Event flyers: ?aff=qr_flyer_march
+Business cards: ?aff=qr_businesscard
+```
+
+---
+
+## Important considerations
+
+### Current support scope
+
+> **Note:** Affiliate tracking is currently supported for `[showpass_widget type="event"]`. Check with Showpass support or test if you need tracking for products or memberships.
+
+### Cookie-based system
+
+This method relies on browser cookies:
+
+- **Cookie duration:** Typically 7 days (check Showpass documentation for current settings)
+- **If cookies are disabled:** Tracking may not work
+- **If cookies are cleared:** Attribution is lost
+- **Cross-device:** Not supported (user must complete purchase on the same device/browser)
+
+### Widget interaction required
+
+The tracking ID is applied when:
+1. User visits your site with `?aff=token`
+2. Cookie is set
+3. User clicks a `[showpass_widget]` button to open the purchase widget
+
+**Direct links to Showpass.com with `tracking-id` parameter work independently of this WordPress plugin feature.**
+
+---
+
+## Testing your tracking setup
+
+### Step 1: Verify cookie is set
+
+1. Visit your page with `?aff=test_token`
+2. Open browser DevTools → Application/Storage → Cookies
+3. Look for a cookie containing your tracking token
+
+### Step 2: Test widget opening
+
+1. Click your `[showpass_widget]` button
+2. Open browser DevTools → Network tab
+3. Look for requests to Showpass with your `tracking-id` included
+
+### Step 3: Check Showpass reports
+
+1. Complete a test purchase (or use test mode if available)
+2. Log in to your Showpass dashboard
+3. Check affiliate reporting to confirm attribution
+
+---
+
+## Troubleshooting
+
+### Tracking not appearing in reports
+
+- **Verify the token matches** your Showpass tracking link
+- **Check cookie expiration** – test shortly after clicking the tracking URL
+- **Ensure the widget is for events** (products/memberships may not be supported)
+- **Confirm the plugin is active** and up to date
+
+### Cookie not being set
+
+- **Check for HTTPS** – cookies may have restrictions on HTTP sites
+- **Verify URL format** – use `?aff=token` not `?tracking-id=token`
+- **Test in incognito mode** to rule out browser extensions blocking cookies
+
+### Multiple tracking sources
+
+If a user visits multiple tracking URLs:
+- **Latest wins:** The most recent `aff` parameter overwrites previous values
+- **Cookie is replaced:** Each new tracking URL updates the cookie
+
+---
+
+## Measuring ROI
+
+Track the effectiveness of your marketing efforts by:
+
+1. **Creating unique tokens** for each channel/campaign
+2. **Using consistent naming conventions** (e.g., `platform_campaign_date`)
+3. **Reviewing Showpass analytics** regularly to compare performance
+4. **Calculating cost per acquisition** for paid campaigns
+5. **Optimizing spend** based on which channels drive the most sales

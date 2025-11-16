@@ -1,64 +1,41 @@
-# Adding an event list with `[showpass_events]`
+# Adding an event list
 
-To display a list of your upcoming events on any WordPress page or post, use the `[showpass_events]` shortcode. This is a powerful way to showcase multiple events at once and let visitors browse what you have to offer.
+Display your upcoming events on any WordPress page or post using the `[showpass_events]` shortcode. Showcase multiple events and let visitors browse your offerings.
 
-By default, the list displays events in a **grid** layout.
+
+## Basic usage
+
+Add an event list to any page or post:
+
+1. Open the WordPress page editor
+2. Add a **Shortcode** block
+3. Enter: `[showpass_events type="list"]`
+
+By default, this displays events in a **grid layout** with **8 events per page** (pagination included).
+
+> **Note:** The `type="list"` parameter tells the shortcode to display a list/grid view (as opposed to a detail view for single events).
 
 ---
 
-## Basic event list
+## Customizing your event list
 
-To add a basic event list:
+Control the appearance and content using these parameters.
 
-1. Go to the WordPress page or post where you want to display your events.
-2. Add a **Shortcode** block (or paste the shortcode directly into a Paragraph block).
-3. Enter:
+### Layout template
+
+**Parameter:** `template="default|list|data"`
+
+Choose how events are displayed:
+
+- **`default`** (default) - Grid view layout
+- **`list`** - Vertical list layout
+- **`data`** - Returns raw JSON for custom PHP templates
+
+**Example:**
 
 ```text
-[showpass_events type="list"]
+[showpass_events type="list" template="list"]
 ```
-
-This will display your events using the default template (grid layout, 8 events per page).
-
----
-
-## Key parameter: `type="list"`
-
-For `[showpass_events]` to display a list of events, you should include:
-
-```text
-[showpass_events type="list"]
-```
-
-This tells the shortcode to use the list/grid view (as opposed to detail view).
-
----
-
-## Customizing your event list: parameters
-
-You can customize how your event list appears and which events are shown using parameters. Parameters go inside the shortcode brackets and follow the `name="value"` format, for example:
-
-```text
-[showpass_events type="list" page_size="5"]
-```
-
-Below are the most common parameters for `[showpass_events type="list"]`.
-
----
-
-### `template="default|list|data"`
-
-* **Use case:** Change the visual layout of your event list.
-* **Values:**
-
-  * `"default"` – Grid view (default if omitted).
-  * `"list"` – Vertical list view.
-  * `"data"` – Returns raw event data as JSON (for advanced custom PHP templates).
-* **Example (list view):**
-
-  ```text
-  [showpass_events type="list" template="list"]
-  ```
 
 ---
 

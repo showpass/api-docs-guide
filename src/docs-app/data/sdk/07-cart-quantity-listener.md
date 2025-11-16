@@ -1,36 +1,47 @@
-# Cart quantity listener
+# Cart Quantity Listener
 
 ## Overview
 
-The `addCartCountListener` function allows your website to react in real-time to changes in the Showpass shopping cart quantity. It calls a function you provide, passing the current number of items in the cart.
+The `addCartCountListener` function enables your website to react in real-time to changes in the Showpass shopping cart quantity. It invokes a callback function you provide, passing the current number of items in the cart, making it essential for creating dynamic cart counters and other cart-aware UI elements.
 
-This is essential for creating dynamic cart counters or other UI elements that reflect the cart's state.
+---
 
-**SDK Function Signature:**
+## SDK Function Signature
 
 ```javascript
 showpass.tickets.addCartCountListener(callbackFunction);
 ```
 
-- `callbackFunction` (Function, Required): A function that will be executed whenever the cart count changes. This function will receive one argument: `count` (Integer), which is the current number of items in the cart.
+### Parameters
+
+| Parameter | Type | Status | Description |
+| --- | --- | --- | --- |
+| **callbackFunction** | Function | Required | A function executed whenever the cart count changes. Receives one argument: **count** (Integer) - the current number of items in the cart |
+
+---
 
 ## Prerequisites
 
-- Ensure the Showpass SDK is included on your page as described in the "SDK Getting Started" guide. You'll need to ensure the SDK is loaded before calling its functions.
-- This listener should typically be set up once the page is ready (e.g., DOMContentLoaded) to ensure the SDK is available.
+- The Showpass SDK must be included on your page (see "SDK Getting Started" guide)
+- Ensure the SDK is loaded before calling its functions
+- The listener should typically be set up once the page is ready (e.g., `DOMContentLoaded`)
 
-## Basic example
+---
 
-This example simply logs the cart count to the console whenever it changes. For reliable execution, especially on initial page load, see the "Advanced Implementation" below.
+## Basic Example
+
+This simple example logs the cart count to the console whenever it changes. For production-ready implementations, see the "Advanced Implementation" section below.
 
 ```javascript
+// Define callback function to handle cart updates
 function handleCartUpdate(count) {
   console.log("Showpass Cart Count Changed:", count);
-  // You could update a UI element here directly
+  
+  // Update a UI element directly
   // document.getElementById('my-cart-display').innerText = 'Cart: ' + count;
 }
 
-// Check if SDK is loaded before calling
+// Check if SDK is loaded before adding listener
 if (window.showpass && window.showpass.tickets) {
   window.showpass.tickets.addCartCountListener(handleCartUpdate);
   console.log("Showpass cart count listener added.");
@@ -39,141 +50,199 @@ if (window.showpass && window.showpass.tickets) {
 }
 ```
 
-## Advanced implementation: Dynamic cart counter with click-to-open cart
+---
 
-This more comprehensive example demonstrates how to:
+## Advanced Implementation: Dynamic Cart Counter
 
-1.  Use `addCartCountListener` to update the text of an HTML element (e.g., in your site header) with the current cart count.
-2.  Optionally, use a cookie (with a library like `js-cookie`) to maintain the cart display text across page loads.
-3.  Make this HTML element clickable to open the Showpass Shopping Cart or Checkout widget.
+This comprehensive example demonstrates how to:
 
-### 1. HTML structure
+1. Use `addCartCountListener` to update an HTML element with the current cart count
+2. Optionally use cookies (via `js-cookie` library) to maintain cart display across page loads
+3. Make the cart element clickable to open the Showpass Shopping Cart or Checkout widget
 
-You'll need an HTML element for your cart display and trigger. This could be a link, a list item, or any other suitable element.
+### Step 1: HTML Structure
+
+Create an HTML element for your cart display. This could be a link, button, or any suitable element.
 
 ```html
 <!-- Example: A cart link in a navigation menu -->
 <a href="#" id="my-dynamic-cart-link" class="cart-link">
   <span id="my-cart-text">Cart</span>
-  <!-- This span will be updated -->
 </a>
 ```
 
-### 2. JavaScript dependencies (optional but recommended)
+---
 
-- **jQuery (Optional):** While not strictly necessary, jQuery can simplify DOM manipulation and event handling.
-- **js-cookie (Optional):** If you want the cart count to persist visually across page loads, a cookie library is helpful. ([https://github.com/js-cookie/js-cookie](https://github.com/js-cookie/js-cookie)).
-  ```html
-  <!-- Example: Include js-cookie from a CDN -->
-  <script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
-  ```
+### Step 2: Optional JavaScript Dependencies
 
-### 3. JavaScript implementation
-
-This script should be placed after you've included the Showpass SDK and any optional libraries like js-cookie.
+- **jQuery (Optional):** Simplifies DOM manipulation and event handling
+- **js-cookie (Optional):** Persists cart count visually across page loads ([GitHub: js-cookie](https://github.com/js-cookie/js-cookie))
 
 ```html
-<script>
-  function initializeCartListener() {
-    const cartTextElementId = "my-cart-text";
-    const cartLinkElementId = "my-dynamic-cart-link";
+<!-- Include js-cookie from CDN -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js"></script>
+```
 
-    const cartTextElement = document.getElementById(cartTextElementId);
-    const cartLinkElement = document.getElementById(cartLinkElementId);
+---
 
-    if (!cartTextElement || !cartLinkElement) {
-      console.error(
-        "Cart display or link element not found. Please check IDs."
-      );
-      return;
+### Step 3: JavaScript Implementation
+
+Place this script after including the Showpass SDK and any optional libraries.
+
+```javascript
+function initializeCartListener() {
+  const cartTextElementId = "my-cart-text";
+  const cartLinkElementId = "my-dynamic-cart-link";
+
+  const cartTextElement = document.getElementById(cartTextElementId);
+  const cartLinkElement = document.getElementById(cartLinkElementId);
+
+  if (!cartTextElement || !cartLinkElement) {
+    console.error("Cart display or link element not found. Please check IDs.");
+    return;
+  }
+
+  // Update cart display text
+  function updateCartDisplay(count) {
+    let displayText = "Cart";
+    if (count > 0) {
+      displayText = "Cart (" + count + ")";
     }
-
-    function updateCartDisplay(count) {
-      let displayText = "Cart";
-      if (count > 0) {
-        displayText = "Cart (" + count + ")";
-      }
-      cartTextElement.innerHTML = displayText;
-      if (typeof Cookies !== "undefined") {
-        Cookies.set("showpassCartDisplay", displayText, {
-          expires: 7,
-          path: "/",
-        });
-      }
-    }
-
-    function openCartWidget(event) {
-      event.preventDefault();
-      const widgetParams = {
-        "theme-primary": "#9e2a2b",
-        "keep-shopping": true,
-      };
-
-      // Check if SDK is loaded before calling
-      if (
-        window.showpass &&
-        window.showpass.tickets &&
-        window.showpass.tickets.shoppingCartWidget
-      ) {
-        window.showpass.tickets.shoppingCartWidget(widgetParams);
-        console.log("Showpass SDK called for cart widget pop-up.");
-      } else {
-        console.error("Showpass SDK or shopping cart widget not available");
-      }
-    }
-
-    cartLinkElement.addEventListener("click", openCartWidget);
-
-    // Check if SDK is loaded before adding listener
-    if (
-      window.showpass &&
-      window.showpass.tickets &&
-      window.showpass.tickets.addCartCountListener
-    ) {
-      window.showpass.tickets.addCartCountListener(updateCartDisplay);
-      console.log("Showpass cart count listener added.");
-    } else {
-      // SDK not ready yet - wait and try again
-      setTimeout(initializeCartListener, 100);
-      return;
-    }
-
-    // Optional: Display cart quantity from cookie on page load
+    cartTextElement.innerHTML = displayText;
+    
+    // Save to cookie if js-cookie is available
     if (typeof Cookies !== "undefined") {
-      const savedCartText = Cookies.get("showpassCartDisplay");
-      if (savedCartText) {
-        cartTextElement.innerHTML = savedCartText;
-      }
+      Cookies.set("showpassCartDisplay", displayText, {
+        expires: 7,
+        path: "/",
+      });
     }
   }
 
+  // Load initial display from cookie
+  if (typeof Cookies !== "undefined") {
+    const savedDisplay = Cookies.get("showpassCartDisplay");
+    if (savedDisplay) {
+      cartTextElement.innerHTML = savedDisplay;
+    }
+  }
+
+  // Add cart count listener
+  if (window.showpass && window.showpass.tickets) {
+    window.showpass.tickets.addCartCountListener(updateCartDisplay);
+    console.log("Cart listener successfully added.");
+  } else {
+    console.error("Showpass SDK not available.");
+    // Retry after a short delay
+    setTimeout(initializeCartListener, 500);
+    return;
+  }
+
+  // Make cart element clickable to open checkout
+  cartLinkElement.addEventListener("click", function (event) {
+    event.preventDefault();
+    if (window.showpass && window.showpass.tickets) {
+      // Open checkout widget with your preferred styling
+      window.showpass.tickets.checkoutWidget({
+        "theme-primary": "#007bff",
+      });
+    } else {
+      console.error("Showpass SDK not available for checkout.");
+    }
+  });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === "loading") {
   document.addEventListener("DOMContentLoaded", initializeCartListener);
-</script>
+} else {
+  initializeCartListener();
+}
 ```
 
-**Explanation:**
+---
 
-1.  **`cartTextElementId` & `cartLinkElementId`:** Set these to the IDs of your HTML elements.
-2.  **`updateCartDisplay(count)`:** This function is passed to `addCartCountListener`. It updates the `innerHTML` of your `cartTextElement` and optionally sets a cookie.
-3.  **`openCartWidget(event)`:** Attached as a click listener to your `cartLinkElement`, it opens the Showpass shopping cart (or checkout) widget.
-4.  **Initialization:** The function checks if the SDK is loaded before adding the listener, with a retry mechanism if not ready.
-5.  **Cookie on Load (Optional):** Sets initial cart text from a cookie if available.
+### Alternative: Using Script Onload Callback
 
-**Customization:**
-
-- Update `cartTextElementId` and `cartLinkElementId` to match your HTML.
-- Adjust `widgetParams` for the cart/checkout widget as needed.
-- Remove cookie logic if not using `js-cookie`.
-
-**Alternative: Using script onload callback**
-If you're dynamically loading the SDK, you can use the onload callback approach:
+If you're dynamically loading the SDK, use the `onload` callback:
 
 ```javascript
 let script = document.createElement("script");
 script.onload = function () {
-  // SDK is now loaded - safe to call functions
-  window.showpass.tickets.addCartCountListener(callbackFunction);
+  // SDK is now loaded - safe to add listener
+  function handleCartUpdate(count) {
+    console.log("Cart count updated:", count);
+    document.getElementById("cart-badge").innerText = count || "";
+  }
+  
+  window.showpass.tickets.addCartCountListener(handleCartUpdate);
 };
 script.src = "https://showpass.com/static/dist/sdk.js";
 document.head.appendChild(script);
 ```
+
+---
+
+## Complete Example with jQuery
+
+Here's a complete example using jQuery for simplified DOM manipulation:
+
+```javascript
+$(document).ready(function () {
+  function initShowpassCartListener() {
+    const $cartText = $("#my-cart-text");
+    const $cartLink = $("#my-dynamic-cart-link");
+
+    if ($cartText.length === 0 || $cartLink.length === 0) {
+      console.error("Cart elements not found.");
+      return;
+    }
+
+    // Update cart display function
+    function updateCartDisplay(count) {
+      const displayText = count > 0 ? `Cart (${count})` : "Cart";
+      $cartText.html(displayText);
+      Cookies.set("showpassCartDisplay", displayText, {
+        expires: 7,
+        path: "/",
+      });
+    }
+
+    // Load from cookie
+    const savedDisplay = Cookies.get("showpassCartDisplay");
+    if (savedDisplay) {
+      $cartText.html(savedDisplay);
+    }
+
+    // Add listener if SDK is ready
+    if (window.showpass && window.showpass.tickets) {
+      window.showpass.tickets.addCartCountListener(updateCartDisplay);
+      
+      // Handle cart link click
+      $cartLink.on("click", function (e) {
+        e.preventDefault();
+        window.showpass.tickets.checkoutWidget({
+          "theme-primary": "#28a745",
+        });
+      });
+    } else {
+      // Retry if SDK not ready
+      setTimeout(initShowpassCartListener, 500);
+    }
+  }
+
+  initShowpassCartListener();
+});
+```
+
+---
+
+## Key Takeaways
+
+- **Real-time updates:** `addCartCountListener` provides instant feedback when cart contents change
+- **Single callback:** The listener accepts one function that receives the cart count as an argument
+- **Check SDK availability:** Always verify `window.showpass.tickets` exists before adding the listener
+- **Cookie persistence:** Use cookies to maintain cart display across page loads
+- **Clickable cart:** Combine with `checkoutWidget()` to create an interactive cart button
+- **Retry logic:** Implement retry mechanism if SDK hasn't loaded when listener is initialized
+- **jQuery optional:** jQuery simplifies implementation but isn't required

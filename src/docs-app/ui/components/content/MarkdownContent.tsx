@@ -21,6 +21,25 @@ interface MarkdownContentProps {
 }
 
 /**
+ * Extracts plain text from React children (handles nested elements like code tags)
+ */
+const extractTextFromChildren = (children: React.ReactNode): string => {
+  if (typeof children === 'string') {
+    return children;
+  }
+  if (typeof children === 'number') {
+    return String(children);
+  }
+  if (Array.isArray(children)) {
+    return children.map(extractTextFromChildren).join('');
+  }
+  if (React.isValidElement(children) && children.props.children) {
+    return extractTextFromChildren(children.props.children);
+  }
+  return '';
+};
+
+/**
  * Generates a URL-safe ID from heading text for anchor links
  */
 const generateHeadingId = (text: string): string => {
@@ -90,28 +109,28 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     },
     // Custom components for markdown elements
     h1: ({ node, children, ...props }) => {
-      const text = children ? children.toString() : "";
+      const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
         <>
           <h1
             id={id}
-            className="text-3xl font-bold mt-12 mb-4 scroll-mt-24 text-foreground leading-tight"
+            className="text-3xl font-bold mt-12 mb-2 scroll-mt-24 text-foreground leading-tight"
             {...props}
           >
             {children}
           </h1>
-          <Separator className="mb-6 opacity-60" />
+          <Separator className="mb-2 opacity-60" />
         </>
       );
     },
     h2: ({ node, children, ...props }) => {
-      const text = children ? children.toString() : "";
+      const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
         <h2
           id={id}
-          className="text-2xl font-semibold mt-10 mb-4 scroll-mt-24 text-foreground leading-snug"
+          className="text-2xl font-semibold mt-6 mb-4 scroll-mt-24 text-foreground leading-snug"
           {...props}
         >
           {children}
@@ -119,7 +138,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       );
     },
     h3: ({ node, children, ...props }) => {
-      const text = children ? children.toString() : "";
+      const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
         <h3
@@ -132,7 +151,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       );
     },
     h4: ({ node, children, ...props }) => {
-      const text = children ? children.toString() : "";
+      const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
         <h4
@@ -170,7 +189,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
     },
     blockquote: ({ node, children, ...props }) => (
       <blockquote 
-        className="border-l-4 border-primary/30 pl-6 my-6 italic text-muted-foreground bg-muted/30 py-4 rounded-r-lg" 
+        className="border-l-4 border-primary/30 pl-4 my-4 italic text-muted-foreground bg-muted/30 py-3 rounded-r-lg [&>p]:my-2" 
         {...props}
       >
         {children}

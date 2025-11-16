@@ -1,94 +1,103 @@
-# Tips & troubleshooting for the Showpass WordPress plugin
+# Tips and troubleshooting
 
-Here are some common tips and troubleshooting steps to help you get the most out of the Showpass WordPress plugin and resolve issues quickly.
+Common solutions and best practices to help you get the most out of the Showpass WordPress plugin.
 
----
 
 ## Understanding shortcodes
 
-Shortcodes are the backbone of this plugin. They are small snippets of text in square brackets `[]` that WordPress transforms into dynamic content from Showpass.
+Shortcodes are the backbone of this plugin—small snippets of text in square brackets `[]` that WordPress transforms into dynamic Showpass content.
 
 ### Shortcode anatomy
 
-Example:
-
 ```text
 [showpass_events parameter="value" parameter_2="value"]
-````
+```
 
-* **`[ ]` (square brackets):** Required. Every shortcode starts with `[` and ends with `]`.
-* **`showpass_events` (shortcode tag):** Tells WordPress which Showpass feature to load (e.g., `showpass_events` for event lists/details, `showpass_widget` for buy buttons, `showpass_products` for products).
-* **`parameter` / `parameter_2` (parameters):** Options that control what the shortcode displays or how it behaves.
-* **`="value"` (parameter value):** The specific setting for each parameter. Values are usually quoted.
+**Components:**
+
+- **`[ ]`** (square brackets) – Required to define a shortcode
+- **`showpass_events`** (shortcode tag) – Tells WordPress which Showpass feature to load
+- **`parameter="value"`** – Options that control behavior and display
+- **Multiple parameters** – Can be combined in one shortcode
 
 **Key points:**
 
-* You can include multiple parameters in a single shortcode.
-* Only one shortcode tag per set of brackets (no `[showpass_events showpass_widget]`).
-* If you omit a parameter, the plugin uses a default value (when one exists).
+- Use **straight quotes** (`"` or `'`), not curly quotes (`"` or `"`)
+- Only one shortcode tag per set of brackets
+- Parameters are optional; defaults are used when omitted
+- Parameter order doesn't matter
 
 ---
 
-## Common issues & solutions
+## Common issues and solutions
 
-### 1. Event list is empty or showing the wrong events
+### Event list is empty or shows wrong events
 
-**Likely cause:** Incorrect or missing **Organization ID**.
-
-**What to check:**
-
-1. Go to **Showpass API** in your WordPress admin.
-2. Confirm that **Organization ID** matches your Showpass organization.
-3. In your Showpass dashboard, verify the ID under Organization/Venue settings (e.g., in your “Organization Info” or venues edit page).
-4. Save changes in WordPress.
-
-If the Organization ID is wrong or blank, no (or incorrect) events will display.
-
----
-
-### 2. Shortcode is visible as text or looks broken
-
-#### a) Check your quotes
-
-**Symptoms:**
-
-* The shortcode shows as plain text on the page.
-* Layout is broken or shortcode doesn’t render.
+**Likely cause:** Incorrect or missing Organization ID
 
 **Solution:**
 
-Use **straight quotes**, not curly “smart” quotes.
+1. Go to **WordPress Admin → Showpass API**
+2. Verify **Organization ID** matches your Showpass account
+3. Find your Organization ID in Showpass dashboard under **Organization/Venue Settings**
+4. Save changes in WordPress
 
-* ✅ Correct:
-
-  * `[showpass_events type="list" tags="concert"]`
-  * `[showpass_events type='list' tags='concert']`
-* ❌ Incorrect (curly quotes):
-
-  * `[showpass_events type=”list” tags=”concert”]`
-
-Curly quotes are often introduced when copying from Word, Google Docs, email, etc. Paste as plain text or switch to the **Shortcode** block / HTML mode and fix them manually.
-
-Also avoid mixing quote types within the same value (e.g., `type="list'`).
-
-#### b) Check for typos
-
-* Ensure the shortcode tag is correct:
-  `showpass_events`, `showpass_widget`, `showpass_products`, `showpass_memberships`, etc.
-* Check parameter names: `page_size`, `detail_page`, `ordering`, etc. (not `pagesize`, `details_page`, etc.).
-
-#### c) Make sure the plugin is active
-
-If shortcodes show as plain text:
-
-1. Go to **Plugins** in WordPress admin.
-2. Confirm **Showpass WordPress Extension** is installed and **Activated**.
+> **Note:** If the Organization ID is wrong or blank, no events (or incorrect events) will display.
 
 ---
 
-### 3. The purchase widget opens, but shows the wrong item or an error
+### Shortcode appears as plain text
 
-**Check the `slug` (events) or `id` (products/memberships).**
+#### Issue A: Curly quotes
+
+**Symptoms:**
+- Shortcode shows as text on the page
+- Layout is broken or nothing renders
+
+**Solution:** Use straight quotes, not curly "smart" quotes
+
+✅ **Correct:**
+```text
+[showpass_events type="list" tags="concert"]
+[showpass_events type='list' tags='concert']
+```
+
+❌ **Incorrect (curly quotes):**
+```text
+[showpass_events type="list" tags="concert"]
+```
+
+> **Tip:** Curly quotes often come from copying from Word, Google Docs, or email. Paste as plain text or use the Shortcode block in WordPress.
+
+---
+
+#### Issue B: Typos in shortcode
+
+**Common mistakes:**
+
+- Incorrect tag: `showpas_events` instead of `showpass_events`
+- Wrong parameter: `pagesize` instead of `page_size`
+- Mixed quotes: `type="list'` (mixes double and single quotes)
+
+**Solution:** Double-check spelling and syntax against documentation examples.
+
+---
+
+#### Issue C: Plugin not active
+
+**Symptoms:** All shortcodes show as plain text
+
+**Solution:**
+
+1. Go to **Plugins** in WordPress admin
+2. Find **Showpass WordPress Extension**
+3. Click **Activate** if not already active
+
+---
+
+### Widget shows wrong item or error
+
+**Issue:** Purchase widget opens but displays incorrect event or shows error
 
 #### For events
 
@@ -96,106 +105,354 @@ If shortcodes show as plain text:
 [showpass_widget slug="your-event-slug"]
 ```
 
-* `slug` = the part of the Showpass URL after `showpass.com/`.
-* Example:
+**Finding the correct slug:**
 
-  * Event URL: `https://www.showpass.com/my-big-show-2024/`
-  * Slug: `my-big-show-2024`
-* Do **not** include:
+1. Go to your event page on Showpass.com
+2. Check the URL: `https://www.showpass.com/my-big-show-2024/`
+3. The slug is: `my-big-show-2024`
 
-  * `https://www.showpass.com/`
-  * Extra spaces
-  * Trailing slashes
+**Do NOT include:**
+- `https://www.showpass.com/`
+- Trailing slashes
+- Extra spaces
 
-#### For products / memberships
+---
+
+#### For products/memberships
 
 ```text
 [showpass_widget type="product" id="12345"]
 [showpass_widget type="membership" id="67890"]
 ```
 
-* `id` = the numeric ID from your Showpass dashboard.
-* Make sure you’re using the correct ID and type.
+**Finding the ID:**
+
+1. Log in to Showpass dashboard
+2. Go to Products or Memberships section
+3. Note the numeric ID (not the name)
+4. Ensure `type` matches (`product` or `membership`)
 
 ---
 
-### 4. "Connection is blocked" / widget not loading
+### "Connection is blocked" or widget not loading
 
-**Likely cause:** Your website domain is not authorized in Showpass.
+**Likely cause:** WordPress site domain not whitelisted in Showpass settings
 
-**Fix:**
+**Solution:**
 
-1. Log into your Showpass dashboard.
-2. Go to your organization / venue settings (look for **Integrations**, **Allowed Domains**, or similar).
-3. Add your site domain, e.g.:
+1. Log in to your Showpass dashboard
+2. Go to **Settings → Website Integration**
+3. Add your WordPress domain to the **Allowed Domains** list:
+   - Include: `https://yourwebsite.com`
+   - Also add: `https://www.yourwebsite.com` if applicable
+4. Save changes
+5. Clear browser cache and test again
 
-   * `yourwebsite.com`
-   * (Include both `www.yourwebsite.com` and `yourwebsite.com` if needed.)
-4. Save changes.
-
-If the domain isn’t whitelisted, the widget may refuse to load.
+> **Note:** This is a security feature that prevents unauthorized sites from embedding your content.
 
 ---
 
-### 5. Styles look wrong or conflict with your theme
+### Styles conflict with theme
 
 **Symptoms:**
+- Widget button looks wrong
+- Event list layout is broken
+- Text colors are unreadable
 
-* Buttons look strange or misaligned.
-* Event or product grids don’t line up.
-* Fonts/colors don’t match your brand.
+**Solution:** Add custom CSS to override styles
 
-**What to do:**
+#### Method 1: WordPress Customizer
 
-1. Open your browser’s **Inspect / Inspector** tool on the problematic element.
-2. Check which CSS rules are being applied (theme vs. plugin).
-3. Add custom CSS in your theme or child theme to override as needed:
+1. Go to **Appearance → Customize → Additional CSS**
+2. Add your custom styles:
 
-   * Target plugin elements (e.g., `.showpass-widget-button`).
-   * Or add your own class via shortcode, for example:
+```css
+/* Override button styles */
+.showpass-widget-button {
+    background-color: #9e2a2b !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: 6px !important;
+}
 
-     ```text
-     [showpass_widget slug="my-event" class="my-custom-button"]
-     ```
+/* Fix event list spacing */
+.showpass-events-list {
+    gap: 2rem !important;
+}
+```
 
-   Then style `.my-custom-button` in your CSS.
-
-Using a **child theme** is recommended so your changes aren’t lost on theme updates.
-
----
-
-### 6. Changes don’t appear right away
-
-**Likely cause:** Caching.
-
-**Steps to try:**
-
-* **Browser cache**
-
-  * Hard refresh the page:
-
-    * Windows: `Ctrl + F5`
-    * macOS: `Cmd + Shift + R`
-  * Or open the page in a private/incognito window.
-
-* **WordPress caching plugins**
-
-  * If you use plugins like WP Rocket, LiteSpeed Cache, W3 Total Cache, etc., clear their caches from the plugin settings.
-
-* **Server-side caching**
-
-  * Some hosts provide server-level caching (e.g., via your hosting control panel). Clear or purge caches there if available.
-
-* **Showpass data caching**
-
-  * The plugin or API may cache event data briefly for performance.
-  * New events or updates may take a few minutes to show.
-  * If the plugin offers a **Clear Cache** option in its settings, try using it.
+3. Click **Publish**
 
 ---
 
-If you’ve gone through these steps and still have issues, check:
+#### Method 2: Child theme
 
-* The Showpass plugin page on WordPress.org for FAQs and support.
-* Showpass support/documentation for known issues, requirements, or recent changes.
+Add styles to your child theme's `style.css`:
 
+```css
+/* Showpass custom overrides */
+.showpass-event-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+```
+
+> **Best practice:** Use a child theme to prevent loss of customizations when the parent theme updates.
+
+---
+
+#### Finding conflicting styles
+
+1. Right-click the problematic element
+2. Select **Inspect** or **Inspect Element**
+3. View the **Styles** panel in DevTools
+4. Identify which CSS rules are applying
+5. Override with more specific selectors or `!important`
+
+---
+
+### Changes not appearing
+
+**Issue:** Updated shortcode parameters or plugin settings but nothing changed
+
+**Solutions to try (in order):**
+
+#### 1. Clear browser cache
+
+**Chrome/Edge:**
+- Press `Ctrl+Shift+Delete` (Windows) or `Cmd+Shift+Delete` (Mac)
+- Select "Cached images and files"
+- Click "Clear data"
+
+**Or use incognito/private mode:**
+- Chrome: `Ctrl+Shift+N` (Windows) or `Cmd+Shift+N` (Mac)
+- Firefox: `Ctrl+Shift+P` (Windows) or `Cmd+Shift+P` (Mac)
+
+---
+
+#### 2. Clear WordPress cache plugin
+
+If using a caching plugin (W3 Total Cache, WP Super Cache, WP Rocket):
+
+1. Find the cache plugin in WordPress admin
+2. Look for "Clear Cache" or "Purge Cache"
+3. Clear all caches
+
+---
+
+#### 3. Clear server-side cache
+
+Some hosts have server-level caching:
+
+- **Cloudflare:** Dashboard → Caching → Purge Everything
+- **Host control panel:** Look for "Clear Cache" or "Purge CDN Cache"
+
+---
+
+#### 4. Disable caching temporarily
+
+To test if caching is the issue:
+
+1. Temporarily deactivate caching plugins
+2. Test your changes
+3. Reactivate if that wasn't the issue
+
+---
+
+### Images not displaying
+
+**Issue:** Event images are broken or missing
+
+**Possible causes:**
+
+1. **Images not uploaded in Showpass:** Check your event in Showpass dashboard
+2. **Incorrect image URLs:** View page source and check image `src` attributes
+3. **HTTPS/HTTP mismatch:** Ensure images use HTTPS if your site uses HTTPS
+4. **Firewall blocking:** Some firewalls block external images
+
+**Solution:**
+
+1. Verify images exist in Showpass dashboard
+2. Check browser console for 404 errors
+3. Test image URLs directly in a new browser tab
+4. Contact Showpass support if images consistently fail
+
+---
+
+### Event list shows events from wrong organization
+
+**Issue:** Seeing events that don't belong to you
+
+**Solution:**
+
+1. Go to **Showpass API** settings
+2. Verify the **Organization ID** is correct
+3. Get the correct ID from Showpass dashboard
+4. Save and clear cache
+
+**For multi-venue organizations:**
+
+Use the `venue_ids` parameter to filter by specific venues:
+
+```text
+[showpass_events type="list" venue_ids="123,456"]
+```
+
+---
+
+### Calendar widget not displaying correctly
+
+**Issue:** Calendar appears broken or events don't show
+
+**Solutions:**
+
+1. **Check calendar slug:**
+   ```text
+   [showpass_calendar slug="your-calendar-slug"]
+   ```
+
+2. **Verify events are published** in Showpass dashboard
+
+3. **Clear all caches** (browser, WordPress, server)
+
+4. **Check for JavaScript errors:**
+   - Open browser DevTools → Console
+   - Look for red error messages
+   - Share errors with Showpass support if needed
+
+---
+
+### Cart button doesn't update count
+
+**Issue:** Cart counter shows "0" even after adding items
+
+**Possible causes:**
+
+1. Using custom cart counter without proper integration
+2. Multiple Showpass scripts loading
+3. JavaScript conflicts
+
+**Solutions:**
+
+1. Use standard `[showpass_cart_button]` shortcode first to test
+2. Check browser console for JavaScript errors
+3. Temporarily disable other plugins to identify conflicts
+4. See [Advanced: Dynamic cart counter](./09-advanced-dynamic-cart-counter-jquery) for custom implementations
+
+---
+
+## Best practices
+
+### Use shortcode blocks
+
+In the WordPress block editor:
+
+1. Click **+** to add a new block
+2. Search for "Shortcode"
+3. Paste your shortcode into the Shortcode block
+
+**Benefits:**
+- Prevents WordPress from auto-formatting quotes
+- Reduces chance of syntax errors
+- Easier to edit later
+
+---
+
+### Test before deploying
+
+Before launching:
+
+1. **Test on staging site** if available
+2. **View in multiple browsers** (Chrome, Firefox, Safari, Edge)
+3. **Test on mobile devices** (phone and tablet)
+4. **Complete a test purchase** (use test mode if available)
+5. **Verify tracking** (affiliate links, Google Analytics)
+
+---
+
+### Keep plugin updated
+
+Regularly check for updates:
+
+1. Go to **Dashboard → Updates** in WordPress
+2. Install Showpass plugin updates when available
+3. Review release notes for new features and fixes
+
+---
+
+### Use child themes
+
+Always use a child theme for customizations:
+
+**Why:**
+- Parent theme updates won't overwrite your changes
+- Easier to troubleshoot issues
+- More maintainable long-term
+
+**How to create:** [WordPress Child Themes Guide](https://developer.wordpress.org/themes/advanced-topics/child-themes/)
+
+---
+
+### Document your customizations
+
+Keep notes about:
+
+- Custom CSS added
+- Shortcode parameters used
+- Template modifications
+- JavaScript customizations
+
+**Where to document:**
+
+- WordPress page/post notes
+- Separate documentation file
+- Comments in code files
+- Team wiki or shared document
+
+---
+
+## Getting help
+
+### Check the documentation
+
+1. Review all WordPress plugin documentation pages
+2. Check Showpass support articles
+3. Search for similar issues in support forums
+
+---
+
+### Contact Showpass support
+
+When contacting support, provide:
+
+1. **WordPress version** (Dashboard → Updates)
+2. **Plugin version** (Plugins → Installed Plugins)
+3. **Active theme name**
+4. **Description of the issue** with specific examples
+5. **Screenshots** if applicable
+6. **Browser console errors** (copy/paste or screenshot)
+7. **Steps to reproduce** the issue
+
+---
+
+### WordPress debugging
+
+Enable WordPress debug mode in `wp-config.php`:
+
+```php
+define('WP_DEBUG', true);
+define('WP_DEBUG_LOG', true);
+define('WP_DEBUG_DISPLAY', false);
+```
+
+Check the log file at `wp-content/debug.log` for errors.
+
+> **Important:** Disable debug mode on production sites after troubleshooting.
+
+---
+
+## Additional resources
+
+- **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
+- **WordPress documentation:** [wordpress.org/documentation](https://wordpress.org/documentation/)
+- **WordPress support forums:** [wordpress.org/support](https://wordpress.org/support/)

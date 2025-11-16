@@ -1,55 +1,190 @@
 # Showpass webhooks: Security
 
-When Showpass sends a webhook to your configured endpoint URL, it includes a special HTTP header in the request: `X-SHOWPASS-SIGNATURE`. This signature allows you to verify that the webhook request genuinely originated from Showpass and was not tampered with during transmission.
-
-It is crucial to implement signature verification on your server to ensure the security and integrity of your webhook integration.
+Every webhook request from Showpass includes an `X-SHOWPASS-SIGNATURE` header that allows you to verify the request's authenticity. Implementing signature verification is crucial for secure webhook integration.
 
 ## How signature verification works
 
-1.  **Secret Key:** When you create a new webhook endpoint in the Showpass dashboard, Showpass generates a unique **Secret Key** (also referred to as a Webhook Token). This key is shared only between Showpass and you. You must store this key securely on your server.
+### On Showpass's side
 
-2.  **Signature Generation (Showpass side):**
+1. **Secret key generation:** When you create a webhook endpoint, Showpass generates a unique Secret Key shared only with you
+2. **Signature creation:** Before sending each webhook, Showpass generates an HMAC-SHA1 hash using:
+   - The `id` field from the payload (typically the `transaction_id`)
+   - Your unique Secret Key
+3. **Header inclusion:** The signature is sent in the `X-SHOWPASS-SIGNATURE` header
 
-    - Before sending a webhook, Showpass creates a signature using the **HMAC-SHA1** algorithm.
-    - The signature is a hash generated from the `id` field of the webhook payload (which is typically the `transaction_id` for invoice-related events) and your unique Secret Key.
-    - The formula looks something like this: `HMAC-SHA1(payload_id, your_secret_key)`
+---
 
-3.  **Sending the Webhook:** Showpass sends the HTTP POST request to your endpoint. The request includes:
+### On your server
 
-    - The JSON payload in the request body.
-    - The `X-SHOWPASS-SIGNATURE` header containing the generated signature.
+When receiving a webhook request:
 
-4.  **Signature Verification (Your server side):**
-    - When your endpoint receives a webhook request:
-      a. Extract the `id` from the JSON payload in the request body.
-      b. Retrieve the `X-SHOWPASS-SIGNATURE` header value.
-      c. Using the same HMAC-SHA1 algorithm, generate your own signature using the extracted `id` from the payload and your securely stored Secret Key for that endpoint.
-      d. **Compare** the signature you generated with the signature received in the `X-SHOWPASS-SIGNATURE` header.
-      e. If the signatures match, the request is authentic and can be trusted.
-      f. If the signatures do not match, the request may be fraudulent or corrupted, and you should discard it.
+1. **Extract the payload ID** - Get the `id` field from the JSON body
+2. **Retrieve the signature** - Read the `X-SHOWPASS-SIGNATURE` header value
+3. **Generate your signature** - Use HMAC-SHA1 with the payload ID and your Secret Key
+4. **Compare signatures** - Match your generated signature with the received one
+5. **Accept or reject** - Process if matched, discard if mismatched
 
-## Example header format
+---
 
-The `X-SHOWPASS-SIGNATURE` header will look like this:
+## Verification example (Node.js)
 
+```javascript
+const crypto = require('crypto');
+
+function verifyShowpassSignature(payloadId, receivedSignature, secretKey) {
+  // Generate signature using HMAC-SHA1
+  const hmac = crypto.createHmac('sha1', secretKey);
+  hmac.update(payloadId);
+  const computedSignature = hmac.digest('hex');
+  
+  // Use constant-time comparison to prevent timing attacks
+  return crypto.timingSafeEqual(
+    Buffer.from(computedSignature),
+    Buffer.from(receivedSignature)
+  );
+}
+
+// In your webhook endpoint handler
+app.post('/webhook/showpass', (req, res) => {
+  const payload = req.body;
+  const receivedSignature = req.headers['x-showpass-signature'];
+  const secretKey = process.env.SHOWPASS_WEBHOOK_SECRET;
+  
+  if (verifyShowpassSignature(payload.id, receivedSignature, secretKey)) {
+    // Signature valid - process the webhook
+    processWebhook(payload);
+    res.status(200).send('OK');
+  } else {
+    // Signature invalid - reject the request
+    console.error('Invalid webhook signature');
+    res.status(401).send('Unauthorized');
+  }
+});
 ```
-X-SHOWPASS-SIGNATURE: "HMAC-SHA1_HASH_VALUE"
+
+---
+
+## Verification example (Python)
+
+```python
+import hmac
+import hashlib
+
+def verify_showpass_signature(payload_id, received_signature, secret_key):
+    """Verify the webhook signature using HMAC-SHA1"""
+    computed_signature = hmac.new(
+        secret_key.encode('utf-8'),
+        payload_id.encode('utf-8'),
+        hashlib.sha1
+    ).hexdigest()
+    
+    # Use constant-time comparison
+    return hmac.compare_digest(computed_signature, received_signature)
+
+# In your webhook handler
+@app.route('/webhook/showpass', methods=['POST'])
+def handle_webhook():
+    payload = request.json
+    received_signature = request.headers.get('X-SHOWPASS-SIGNATURE')
+    secret_key = os.environ['SHOWPASS_WEBHOOK_SECRET']
+    
+    if verify_showpass_signature(payload['id'], received_signature, secret_key):
+        # Valid signature - process webhook
+        process_webhook(payload)
+        return 'OK', 200
+    else:
+        # Invalid signature - reject
+        app.logger.error('Invalid webhook signature')
+        return 'Unauthorized', 401
 ```
 
-(Note: The exact formatting, including the presence of quotes or the `HMAC-SHA1` prefix within the header value itself, should be confirmed by inspecting a live webhook request or Showpass's specific implementation details if available. The core idea is that the hash value is provided.)
+---
 
-The sample request in the "Invoice Object" documentation provides this example for the header:
-`Header: 'X-SHOWPASS-SIGNATURE: "HMAC-SHA1(id, $YOUR_WEBHOOK_TOKEN)"'`
-This suggests the value might be a string literally representing the function call, but typically, it would be the _result_ of that function (the hash). You should verify this by inspecting a test webhook. Most systems send the computed hash.
+## Security best practices
 
-Assuming the header contains the computed hash:
+### Secure key storage
 
-## Implementation best practices
+- **Never hardcode** secret keys in your source code
+- Use **environment variables** or secure secrets management
+- Rotate keys periodically if exposed
 
-- **Secure Storage of Secret Keys:** Treat your Secret Keys like passwords. Store them securely on your server (e.g., as environment variables or in a secure secrets management system). Do not embed them directly in your application code if it's publicly accessible or version-controlled.
-- **Use Constant-Time Comparison:** When comparing the generated signature with the received signature, use a constant-time string comparison function if available in your programming language. This helps mitigate timing attacks.
-- **Timestamp Verification (Optional but Recommended):** Although not explicitly mentioned as part of the Showpass signature scheme in the provided document, some webhook systems also include a timestamp in the request or as part of the signed payload. You can check this timestamp to prevent replay attacks by ensuring the webhook is recent.
-- **Log Verification Failures:** If signature verification fails, log the incident for security monitoring. Do not process the payload.
-- **Endpoint Security (HTTPS):** Always use `https://` for your webhook endpoint URLs to ensure the payload and headers are encrypted during transit.
+### Constant-time comparison
 
-By correctly implementing signature verification, you add a critical layer of security to your Showpass webhook integration. If you regenerate a Secret Key in the Showpass dashboard, remember to update it on your server immediately.
+Always use constant-time string comparison functions to prevent timing attacks:
+
+- **Node.js:** `crypto.timingSafeEqual()`
+- **Python:** `hmac.compare_digest()`
+- **PHP:** `hash_equals()`
+
+### Timestamp validation (optional but recommended)
+
+Although not part of Showpass's current implementation, consider tracking webhook timestamps to:
+
+- Reject old webhook requests
+- Prevent replay attacks
+- Ensure requests are recent
+
+### HTTPS only
+
+- **Always use `https://`** for webhook endpoint URLs
+- Ensure SSL/TLS certificates are valid and up-to-date
+- This encrypts payload and headers during transit
+
+### Log verification failures
+
+Track and monitor signature verification failures:
+
+```javascript
+if (!isValidSignature) {
+  logger.warn('Webhook signature verification failed', {
+    ip: req.ip,
+    timestamp: new Date().toISOString(),
+    payloadId: payload.id
+  });
+  return res.status(401).send('Unauthorized');
+}
+```
+
+---
+
+## Key rotation
+
+If your Secret Key is compromised:
+
+1. **Generate a new key** in the Showpass dashboard
+2. **Update your server** with the new key immediately
+3. **Test thoroughly** before removing old key support
+4. **Monitor logs** for any issues
+
+> **Warning:** Regenerating a Secret Key invalidates the old one. Update your server configuration before the change takes effect.
+
+---
+
+## Common issues
+
+### Signature mismatch
+
+**Causes:**
+- Wrong Secret Key on your server
+- Incorrect HMAC algorithm (must be SHA1)
+- Using wrong field for hashing (must be payload `id`)
+- Character encoding issues
+
+**Solutions:**
+- Verify Secret Key matches Showpass dashboard
+- Confirm HMAC-SHA1 implementation
+- Check you're hashing the `id` field only
+- Ensure UTF-8 encoding
+
+### Missing signature header
+
+**Causes:**
+- Proxy or CDN stripping headers
+- Testing with tools that don't include custom headers
+
+**Solutions:**
+- Check proxy/CDN configuration
+- Use test webhook feature from Showpass dashboard
+- Verify headers aren't being filtered
+
+By implementing proper signature verification, you ensure that only legitimate Showpass webhooks are processed by your application.

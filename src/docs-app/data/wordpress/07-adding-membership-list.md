@@ -1,12 +1,11 @@
-# Adding a membership list with `[showpass_memberships]`
+# Adding a membership list
 
-If your organization offers memberships through Showpass, you can showcase them on your WordPress site using the `[showpass_memberships]` shortcode. This lets visitors see your membership options and sign up directly from your site.
+Showcase memberships on your WordPress site using the `[showpass_memberships]` shortcode. Visitors can view membership options and sign up directly from your site.
 
----
 
-## Basic membership list
+## Basic usage
 
-To add a basic membership list:
+Add memberships to any page or post:
 
 1. Go to the WordPress page or post where you want to display your memberships.
 2. Add a **Shortcode** block.
@@ -95,16 +94,18 @@ You can control the layout and which memberships are shown using these parameter
 
 ---
 
-## Example: a customized membership list
+## Complete example
+
+Combine multiple parameters for precise control:
 
 ```text
 [showpass_memberships page_size="10" membership_ids="15,25"]
 ```
 
-This shortcode will:
+This configuration will:
 
-1. Display memberships using the default **grid** layout.
-2. Show **10 membership groups per page** (`page_size="10"`).
-3. Only include membership groups with IDs **15** and **25** (`membership_ids="15,25"`).
+- Use the default **grid layout**
+- Show **10 membership groups per page**
+- Include only memberships **15** and **25**
 
-When a visitor clicks a membership option in the list, the Showpass widget typically opens so they can purchase that membership.
+When visitors click a membership option, the Showpass purchase widget opens for signup.
