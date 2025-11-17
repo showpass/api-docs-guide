@@ -1,6 +1,5 @@
 # Advanced & Preferred: iFrame Purchase Tracking via postMessage
 
-
 Tracking conversions and user activity accurately within an iFrame (like the Showpass embedded purchase widget) is a significant challenge due to browser privacy measures that increasingly block third-party cookies and tracking mechanisms.
 
 To overcome this, Showpass advocates for a more robust method: **iFrame tracking using the postMessage API**. This technique allows secure communication between the Showpass iFrame (child) and your website (parent page), enabling the iFrame to send event data directly to your GTM container on the parent page.
@@ -25,6 +24,7 @@ For more context on iFrame tracking challenges and solutions:
 This setup involves two Google Tag Manager containers:
 
 1. **Child GTM Container (for the Showpass iFrame):**
+
    - Create a new **empty GTM Container ID**
    - This container is specifically for the Showpass widget environment
    - Its role is to capture ecommerce events within the iFrame and `postMessage` them to the parent window (your website)
@@ -77,17 +77,17 @@ This tag will send data from the iFrame's Data Layer to your parent website.
 </script>
 ```
 
-   - **Crucial:**
-     - Ensure you have enabled the **Support document.write** checkbox (under Advanced Settings) if required
-     - **Replace `GTM_CHILD_ID`** in the script with your actual Child GTM Container ID (e.g., `GTM-XXXXXXX`)
-     - The script above assumes your child GTM Data Layer is named `dataLayer_GTM-XXXXXXX` (where `GTM-XXXXXXX` is your Child Container ID). GTM creates this namespace automatically to avoid conflicts
+- **Crucial:**
+  - Ensure you have enabled the **Support document.write** checkbox (under Advanced Settings) if required
+  - **Replace `GTM_CHILD_ID`** in the script with your actual Child GTM Container ID (e.g., `GTM-XXXXXXX`)
+  - The script above assumes your child GTM Data Layer is named `dataLayer_GTM-XXXXXXX` (where `GTM-XXXXXXX` is your Child Container ID). GTM creates this namespace automatically to avoid conflicts
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
    - Select a trigger like **Custom Event**
    - **Event name:** Use regex matching to fire on all Showpass ecommerce events:
      ```text
-     view_item|add_to_cart|remove_from_cart|begin_checkout|purchase
+     view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
      ```
    - Check **Use regex matching**
 5. Click **Save**
@@ -128,45 +128,58 @@ This tag listens for messages from the Showpass iFrame and processes them.
    - Paste the following script:
 
 ```html
-<script>
+<script nonce="{{nonce}}">
+  // Assuming you've set up a 'nonce' variable as per Section 5
   (function () {
-    // Prevent adding multiple listeners
-    if (window.showpassPostMessageListenerAdded) {
-      return;
-    }
-    window.showpassPostMessageListenerAdded = true;
-
-    window.addEventListener(
-      "message",
-      function (event) {
+    try {
+      var receiveMessage = function (event) {
         try {
-          // IMPORTANT: For production, verify origin for security
-          // Example: if (event.origin !== 'https://showpass.com') return;
+          // Optional: Add origin check for security if Showpass iFrame origin is fixed and known
+          // if (event.origin !== "https://widgets.showpass.com") return;
 
-          var data = event.data;
-
-          // Ensure the received message is an array (child GTM dataLayer)
-          if (Array.isArray(data) && data.length > 0) {
-            // Process each item in the received dataLayer array
-            data.forEach(function (item) {
-              if (item && typeof item === "object" && item.event) {
-                // Push the ecommerce event to the parent's dataLayer
-                window.dataLayer = window.dataLayer || [];
-                window.dataLayer.push(item);
+          if (
+            event &&
+            typeof event.data != "undefined" &&
+            Array.isArray(event.data)
+          ) {
+            for (var i = 0; i < event.data.length; i++) {
+              if (event.data[i] && typeof event.data[i].event != "undefined") {
+                // Push specific, expected ecommerce events to the parent dataLayer
+                // You can expand this list based on what you want to track from the iFrame
+                if (
+                  event.data[i].event == "view_item" ||
+                  event.data[i].event == "add_to_cart" ||
+                  event.data[i].event == "remove_from_cart" ||
+                  event.data[i].event == "begin_checkout" ||
+                  event.data[i].event == "purchase" ||
+                  event.data[i].event == "ecommerce_clear"
+                ) {
+                  // Create a new object to avoid potential reference issues
+                  var eventToPush = JSON.parse(JSON.stringify(event.data[i]));
+                  dataLayer.push(eventToPush);
+                }
               }
-            });
+            }
           }
         } catch (err) {
-          console.error("Showpass postMessage Listener Error:", err);
+          // console.error("Parent GTM postMessage Listener Error (inner): ", err);
         }
-      },
-      false
-    );
+      };
+
+      if (typeof window.addEventListener !== "undefined") {
+        window.addEventListener("message", receiveMessage, false);
+      } else if (typeof window.attachEvent !== "undefined") {
+        // For older IE
+        window.attachEvent("onmessage", receiveMessage);
+      }
+    } catch (err) {
+      // console.error("Parent GTM postMessage Listener Error (outer): ", err);
+    }
   })();
 </script>
 ```
 
-   > **Security Note:** In production, you should verify `event.origin` to ensure messages are only accepted from trusted sources (e.g., `https://showpass.com` or your own domain).
+> **Security Note:** In production, you should verify `event.origin` to ensure messages are only accepted from trusted sources (e.g., `https://showpass.com` or your own domain).
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
