@@ -2791,7 +2791,7 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
 | **params** | Object | Optional | Configuration object containing widget customization options |
 | **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., \`'#dd3333'\`) |
 | **params['show-specific-tickets']** | String | Optional | Comma-separated list of ticket type IDs to display (e.g., \`'1234,5678'\`) |
-| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button |
+| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button. Default: \`true\` |
 | **params['tracking-id']** | String | Optional | Tracking link ID for affiliate tracking, password bypass, or hidden ticket access |
 | **params['show-description']** | Boolean | Optional | Control event description visibility. Default: \`true\` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use \`'fr'\` for French (defaults to English) |
@@ -3010,7 +3010,7 @@ To locate your **productId**:
 | **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., \`'#dd3333'\`) |
 | **params['theme-secondary']** | String | Optional | Hex code for accent widget color |
 | **params['theme-dark']** | Boolean | Optional | If \`true\`, displays the widget in dark theme |
-| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button |
+| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button. Default: \`true\` |
 | **params['show-description']** | Boolean | Optional | Control product description visibility. Default: \`true\` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use \`'fr'\` for French (defaults to English) |
 | **params['tracking-id']** | - | - | **Not supported** for product widgets |
@@ -3234,10 +3234,10 @@ To locate your **membershipId**:
 | **membershipId** | Integer | Required | The unique numerical ID of the membership |
 | **params** | Object | Optional | Configuration object containing widget customization options |
 | **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., \`'#dd3333'\`) |
-| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button |
+| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" butto. Default: \`true\`n |
 | **params['show-description']** | Boolean | Optional | Control membership description visibility. Default: \`true\` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use \`'fr'\` for French (defaults to English) |
-| **params['tracking-id']** | String | Optional | Tracking link ID for affiliate tracking or specialized link behaviors |
+| **params['tracking-id']** | - | - | Currently not supported for membership widgets |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML \`<div>\` element where the widget will mount |
 
 ---
@@ -3751,7 +3751,7 @@ showpass.tickets.checkoutWidget(params, containerId);
 | --- | --- | --- | --- |
 | **params** | Object | Optional | Configuration object containing widget customization options |
 | **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., \`'#dd3333'\`) |
-| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button (may behave differently in checkout flow) |
+| **params['keep-shopping']** | Boolean | Optional | If \`true\`, displays "Keep Shopping" instead of "Close" button (may behave differently in checkout flow). Default: \`true\` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use \`'fr'\` for French (defaults to English) |
 | **params['tracking-id']** | - | - | **Not supported** for checkout widget |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML \`<div>\` element where the checkout flow will mount |
@@ -3867,7 +3867,6 @@ function embedCheckoutWidget() {
   if (window.showpass && window.showpass.tickets) {
     const params = {
       "theme-primary": "#6c757d",
-      lang: "en", // Can be changed to 'fr' for French
     };
     window.showpass.tickets.checkoutWidget(params, containerId);
   } else {
