@@ -46,7 +46,7 @@ To locate your **productId**:
 | **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
 | **params['theme-secondary']** | String | Optional | Hex code for accent widget color |
 | **params['theme-dark']** | Boolean | Optional | If `true`, displays the widget in dark theme |
-| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button |
+| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
 | **params['show-description']** | Boolean | Optional | Control product description visibility. Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
 | **params['tracking-id']** | - | - | **Not supported** for product widgets |

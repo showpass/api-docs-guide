@@ -34,7 +34,7 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
 | **params** | Object | Optional | Configuration object containing widget customization options |
 | **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
 | **params['show-specific-tickets']** | String | Optional | Comma-separated list of ticket type IDs to display (e.g., `'1234,5678'`) |
-| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button |
+| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
 | **params['tracking-id']** | String | Optional | Tracking link ID for affiliate tracking, password bypass, or hidden ticket access |
 | **params['show-description']** | Boolean | Optional | Control event description visibility. Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
