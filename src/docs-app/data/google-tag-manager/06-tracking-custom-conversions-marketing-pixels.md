@@ -1,6 +1,5 @@
 # Tracking Custom Conversions (Marketing Pixels)
 
-
 Google Tag Manager (GTM) allows you to implement various third-party tracking tags (often called "pixels") for services like TikTok, Twitter, Facebook, Google Ads, and others. This section explains the general process of setting up these tags to fire on specific Showpass ecommerce events, using the data Showpass provides to the Data Layer.
 
 ## General Workflow
@@ -80,6 +79,7 @@ This is where you configure the actual pixel from your marketing platform (e.g.,
      - `value` → `{{DLV - ecommerce.value}}`
      - `currency` → `{{DLV - ecommerce.currency}}`
      - `contents` or `items` → `{{DLV - ecommerce.items}}`
+     - `transaction_id` → `{{DLV - ecommerce.transaction_id}}`
    - **For Custom HTML:** Paste the base pixel code and modify it to include the GTM variables dynamically
 
 **Example Custom HTML for a Generic Pixel:**
@@ -124,13 +124,13 @@ This is where you configure the actual pixel from your marketing platform (e.g.,
 
 Below is a reference table of common Showpass ecommerce events and the parameters they send to the Data Layer. Use this as a guide for setting up variables and triggers.
 
-| Event Name | Description | Key Parameters Sent |
-| --- | --- | --- |
-| **view_item** | User views an event/product detail page | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items` |
-| **add_to_cart** | User adds an item to the cart | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items` |
-| **remove_from_cart** | User removes an item from the cart | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items` |
-| **begin_checkout** | User initiates the checkout process | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items` |
-| **purchase** | User completes a purchase | `ecommerce.currency`, `ecommerce.value`, `ecommerce.transaction_id`, `ecommerce.items` |
+| Event Name           | Description                             | Key Parameters Sent                                                                    |
+| -------------------- | --------------------------------------- | -------------------------------------------------------------------------------------- |
+| **view_item**        | User views an event/product detail page | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items`                             |
+| **add_to_cart**      | User adds an item to the cart           | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items`                             |
+| **remove_from_cart** | User removes an item from the cart      | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items`                             |
+| **begin_checkout**   | User initiates the checkout process     | `ecommerce.currency`, `ecommerce.value`, `ecommerce.items`                             |
+| **purchase**         | User completes a purchase               | `ecommerce.currency`, `ecommerce.value`, `ecommerce.transaction_id`, `ecommerce.items` |
 
 > **Note:** For detailed information about the structure of these parameters, refer to **Section 7: Showpass Data Layer Details**.
 

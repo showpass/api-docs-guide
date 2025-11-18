@@ -44,6 +44,25 @@ You (or Showpass, with your input) will configure this GTM container provided by
 
 This tag will send data from the iFrame's Data Layer to your parent website.
 
+#### Set Up the nonce Variable in GTM
+
+This variable will read a dynamic nonce value that Showpass makes available on the page.
+
+1. In your GTM container, navigate to **Variables**
+2. Under "User-Defined Variables," click **New**
+3. **Name your variable:** `nonce` (lowercase is conventional)
+4. **Variable Configuration:**
+   - Click **Choose a variable type to begin setup...**
+   - Select **DOM Element**
+   - **Selection Method:** Choose **CSS Selector**
+   - **Element Selector:** Enter `meta[name='csp-nonce']`
+     > **Note:** This is a CSS selector that targets the meta tag Showpass uses to provide the nonce value.
+   - **Attribute Name:** Enter `content`
+     > **Note:** This is the content attribute on the meta tag that will hold the nonce string.
+5. Click **Save**
+
+#### Set Up the postMessage tag
+
 1. In the **Child GTM container**, go to **Tags** and click **New**
 2. **Name the tag:** `Custom HTML - Post Message Ecommerce Data to Parent`
 3. **Tag Configuration:**
@@ -183,7 +202,7 @@ This tag listens for messages from the Showpass iFrame and processes them.
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
-   - Select **Window Loaded** or **DOM Ready** trigger
+   - Select **All Pages** trigger
    - This ensures the listener is set up as soon as the page loads
 5. Click **Save**
 
@@ -207,6 +226,8 @@ Ensure that your main GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketi
 ---
 
 ## Testing the postMessage Setup
+
+Test your setup using https://tagassistant.google.com/
 
 1. **Enable GTM Preview Mode** on both your Main and Child GTM containers (if possible)
 2. **Navigate to a page** on your website that contains the Showpass embedded widget
