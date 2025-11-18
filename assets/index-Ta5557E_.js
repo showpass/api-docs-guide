@@ -2234,8 +2234,7 @@ This variable will read a dynamic nonce value that Showpass makes available on t
 
 - **Crucial:**
   - Ensure you have enabled the **Support document.write** checkbox (under Advanced Settings) if required
-  - **Replace \`GTM_CHILD_ID\`** in the script with your actual Child GTM Container ID (e.g., \`GTM-XXXXXXX\`)
-  - The script above assumes your child GTM Data Layer is named \`dataLayer_GTM-XXXXXXX\` (where \`GTM-XXXXXXX\` is your Child Container ID). GTM creates this namespace automatically to avoid conflicts
+  - **Replace \`GTM_CHILD_ID\`** in the script with your actual Child GTM Container ID (e.g., \`dataLayer_GTM_XXXXXX\`). Note the underscore, not dash
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
