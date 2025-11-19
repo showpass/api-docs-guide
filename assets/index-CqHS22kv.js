@@ -2238,7 +2238,7 @@ This variable will read a dynamic nonce value that Showpass makes available on t
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
-   - Select a trigger like **Custom Event**
+   - Select **Custom Event**
    - **Event name:** Use regex matching to fire on all Showpass ecommerce events:
      \`\`\`text
      view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
@@ -2337,13 +2337,34 @@ This tag listens for messages from the Showpass iFrame and processes them.
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
-   - Select **All Pages** trigger
+   - Select **Window loded** trigger
    - This ensures the listener is set up as soon as the page loads
 5. Click **Save**
 
 ---
 
-### Step B2: Verify Your Main GTM Ecommerce Tags
+### Step B2: Create a trigger for ecommerce events
+
+1. In your GTM container, go to **Triggers** and click **New**
+2. **Name your trigger:** A descriptive name like \`Custom - Showpass Ecommerce Events\` or \`Ecommerce Triggers | All Events\`
+3. **Trigger Configuration:**
+   - Click **Choose a trigger type to begin setup...**
+   - Select **Custom Event**
+   - **Event name:** Enter the following, using a pipe \`|\` to separate event names:
+     \`\`\`text
+     view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
+     \`\`\`
+     > **Note:** \`ecommerce_clear\` is a custom event that clears the ecommerce cache in the data layer
+   - Check the box for **Use regex matching**. This allows the trigger to fire on any of the listed events
+   - **This trigger fires on:** Select **All Custom Events**
+4. Click **Save**
+5. Update your existing tags to use this trigger.
+
+For tracking specific single events like \`add_to_cart\` - please see [Tracking Custom Conversions](https://dev.showpass.com/google-tag-manager/06-tracking-custom-conversions-marketing-pixels)
+
+---
+
+### Step B3: Verify Your Main GTM Ecommerce Tags
 
 Ensure that your main GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketing pixel tags) are configured to fire on the events pushed to the \`dataLayer\` by the postMessage listener.
 
@@ -2352,7 +2373,7 @@ Ensure that your main GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketi
 
 ---
 
-### Step B3: Publish Your Main GTM Container
+### Step B4: Publish Your Main GTM Container
 
 1. In your Main GTM container, click **Submit**
 2. Provide a version name (e.g., "Added iFrame postMessage Listener")
