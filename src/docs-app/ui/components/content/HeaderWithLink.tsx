@@ -19,7 +19,7 @@ const HeaderWithLink: React.FC<HeaderWithLinkProps> = ({
 
   const handleCopyLink = async () => {
     const url = `${window.location.origin}${window.location.pathname}#${id}`;
-    
+
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
@@ -40,18 +40,15 @@ const HeaderWithLink: React.FC<HeaderWithLinkProps> = ({
   const baseClasses = "group relative scroll-mt-24 text-foreground";
   const levelClasses = {
     1: "text-3xl font-bold mt-12 mb-2 leading-tight",
-    2: "text-2xl font-semibold mt-6 mb-4 leading-snug", 
+    2: "text-2xl font-semibold mt-6 mb-4 leading-snug",
     3: "text-xl font-semibold mt-8 mb-3 leading-snug",
-    4: "text-lg font-medium mt-6 mb-2"
+    4: "text-lg font-medium mt-6 mb-2",
   };
 
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;
 
   return (
-    <Tag
-      id={id}
-      className={cn(baseClasses, levelClasses[level], className)}
-    >
+    <Tag id={id} className={cn(baseClasses, levelClasses[level], className)}>
       <span className="flex items-center gap-2">
         {children}
         <button

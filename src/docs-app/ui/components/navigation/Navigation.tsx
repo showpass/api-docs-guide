@@ -72,16 +72,15 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
     onNavigate?.();
   };
 
-
   return (
     <div className="w-full h-screen flex flex-col overflow-hidden">
-      <div 
-        className="flex-1 overflow-y-auto navigation-scroll" 
-        style={{ 
-          scrollbarWidth: 'none', 
-          msOverflowStyle: 'none',
-          height: 'calc(100vh - 50px)',
-          paddingBottom: '10px'
+      <div
+        className="flex-1 overflow-y-auto navigation-scroll"
+        style={{
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
+          height: "calc(100vh - 50px)",
+          paddingBottom: "10px",
         }}
       >
         <Accordion
@@ -562,6 +561,15 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     Example: Google Ads conversion tracking setup
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/google-tag-manager/11-gtm-faq-troubleshooting-guide"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    FAQ and Troubleshooting guide
+                  </NavLink>
+                </li>
               </ul>
             </AccordionContent>
           </AccordionItem>
@@ -650,8 +658,8 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
         </Accordion>
       </div>
-      
-      <div className="fixed bottom-0 left-0 w-[250px] border-t border-sidebar-border p-2 flex justify-between items-center bg-sidebar z-10">
+
+      <div className="fixed bottom-0 left-0 w-full md:w-[329px] border-t border-sidebar-border p-2 flex justify-between items-center bg-sidebar z-10">
         <ThemeToggle />
       </div>
     </div>
