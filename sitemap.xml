@@ -2,247 +2,271 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://dev.showpass.com/api/01-public-api-introduction</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/api/02-public-api-event-list-by-organization</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/api/03-public-api-query-specific-event</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/01-sdk-getting-started</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/02-ticket-purchase-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/03-product-purchase-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/04-membership-purchase-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/05-event-calendar-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/06-checkout-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/sdk/07-cart-quantity-listener</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/01-getting-started-install-and-configure</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/02-adding-single-button-embed-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/03-adding-event-list</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/04-adding-event-detail-page</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/05-adding-calendar-widget</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/06-adding-product-list</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/07-adding-membership-list</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/08-adding-checkout-cart-button</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/09-advanced-dynamic-cart-counter-jquery</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/10-widgets-and-affiliate-tracking-links</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/11-creating-custom-templates</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/12-automatically-opening-popup-widgets</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/wordpress/13-tips-and-troubleshooting</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/webhooks/01-webhooks-introduction</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/webhooks/02-webhooks-setup-and-management</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/webhooks/03-webhooks-security</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/webhooks/04-webhooks-event-types</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/webhooks/05-webhooks-payload-invoice-object</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/webhooks/06-webhooks-logging-and-troubleshooting</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/01-introduction-to-showpass-gtm-integration</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/02-initial-setup-ga4-and-gtm-basics</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/03-standard-ecommerce-tracking-with-ga4-via-gtm</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/04-cross-domain-tracking-considerations</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/05-working-with-custom-html-and-javascript-in-gtm-for-showpass</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/06-tracking-custom-conversions-marketing-pixels</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/07-showpass-data-layer-details</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/09-advanced-tracking-widget-and-direct-purchases</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/google-tag-manager/10-example-google-ads-conversion-tracking-setup</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/widget-playground</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dev.showpass.com/facebook/01-introduction-to-facebook-pixel</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dev.showpass.com/facebook/02-installing-facebook-pixel</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dev.showpass.com/facebook/03-about-facebook-conversions-api</loc>
+    <lastmod>2025-11-19</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://dev.showpass.com/facebook/04-installing-facebook-conversions-api</loc>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://dev.showpass.com/widget-playground</loc>
-    <lastmod>2025-06-11</lastmod>
+    <lastmod>2025-11-19</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
