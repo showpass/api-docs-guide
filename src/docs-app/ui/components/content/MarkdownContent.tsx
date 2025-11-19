@@ -3,6 +3,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
+import HeaderWithLink from "@/docs-app/ui/components/content/HeaderWithLink.tsx";
 import type { Components } from "react-markdown";
 import type { Root, Element as MdElement, Text as MdText } from "hast"; // Import HAST types
 import {
@@ -113,13 +114,9 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       const id = generateHeadingId(text);
       return (
         <>
-          <h1
-            id={id}
-            className="text-3xl font-bold mt-12 mb-2 scroll-mt-24 text-foreground leading-tight"
-            {...props}
-          >
+          <HeaderWithLink id={id} level={1} {...props}>
             {children}
-          </h1>
+          </HeaderWithLink>
           <Separator className="mb-2 opacity-60" />
         </>
       );
@@ -128,39 +125,27 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
       const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
-        <h2
-          id={id}
-          className="text-2xl font-semibold mt-6 mb-4 scroll-mt-24 text-foreground leading-snug"
-          {...props}
-        >
+        <HeaderWithLink id={id} level={2} {...props}>
           {children}
-        </h2>
+        </HeaderWithLink>
       );
     },
     h3: ({ node, children, ...props }) => {
       const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
-        <h3
-          id={id}
-          className="text-xl font-semibold mt-8 mb-3 scroll-mt-24 text-foreground leading-snug"
-          {...props}
-        >
+        <HeaderWithLink id={id} level={3} {...props}>
           {children}
-        </h3>
+        </HeaderWithLink>
       );
     },
     h4: ({ node, children, ...props }) => {
       const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
       return (
-        <h4
-          id={id}
-          className="text-lg font-medium mt-6 mb-2 scroll-mt-24 text-foreground"
-          {...props}
-        >
+        <HeaderWithLink id={id} level={4} {...props}>
           {children}
-        </h4>
+        </HeaderWithLink>
       );
     },
     a: ({ node, ...props }) => (
