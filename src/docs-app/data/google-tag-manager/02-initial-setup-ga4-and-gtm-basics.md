@@ -1,4 +1,4 @@
-# Initial Setup: GA4 and GTM Basics
+# 2. Initial Setup: GA4 and GTM Basics
 
 
 This section guides you through the foundational steps of setting up a Google Tag Manager (GTM) container and a Google Analytics 4 (GA4) property, then linking them for basic page view tracking. This is the first step before implementing more advanced ecommerce tracking.
@@ -64,9 +64,9 @@ This tag will send basic page view data and initialize GA4 on pages where GTM is
 
 ## Step 4: Add Your GTM Container ID to Showpass
 
-- As mentioned in the Introduction, this step is currently in BETA and requires Showpass assistance
-- You will need to provide your **GTM Container ID** (e.g., `GTM-XXXXXXX` from Step 1) to your Showpass account manager or support contact
-- They will add this ID to your organization's settings in the Showpass platform. This enables Showpass to load your GTM container on its pages and widgets
+- Go to your [Organization Info](https://www.showpass.com/dashboard/venues/edit/) and click on "Analytics" section 
+- Copy your **GTM Container ID** (e.g., `GTM-XXXXXXX` from Step 1) to "Google Tag Manager" field
+- Click on "Save Changes". This enables Showpass to load your GTM container on your events landings and widgets
 
 ---
 

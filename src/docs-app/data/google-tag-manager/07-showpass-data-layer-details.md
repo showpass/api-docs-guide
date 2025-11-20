@@ -1,4 +1,4 @@
-# Showpass Data Layer Details
+# 7. Showpass Data Layer Details
 
 
 This section provides detailed information about the ecommerce data that Showpass pushes to the Google Tag Manager (GTM) Data Layer. Understanding this structure is crucial for creating accurate variables, triggers, and tags in your GTM container.

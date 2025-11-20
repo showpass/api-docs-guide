@@ -1,4 +1,4 @@
-# Example: Google Ads Conversion Tracking Setup with GTM
+# 10. Example: Google Ads Conversion Tracking Setup with GTM
 
 
 This section provides a step-by-step example of how to set up Google Ads conversion tracking and remarketing using Google Tag Manager (GTM) for Showpass events. This assumes you have already configured GTM to receive ecommerce data from Showpass (as outlined in previous sections, especially Section 3 and Section 6).

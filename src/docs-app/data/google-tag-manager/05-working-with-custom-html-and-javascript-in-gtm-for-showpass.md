@@ -1,4 +1,4 @@
-# Working with Custom HTML & JavaScript in GTM for Showpass
+# 5. Working with Custom HTML & JavaScript in GTM for Showpass
 
 
 When using Google Tag Manager (GTM) with Showpass, you might need to implement Custom HTML tags for third-party tracking pixels or other custom JavaScript functionalities. Due to Showpass's security settings, there are specific configurations required to ensure these custom scripts load and fire correctly.
@@ -69,7 +69,7 @@ For every Custom HTML tag in GTM that contains a `<script>...</script>` block, y
 Some older third-party scripts might use `document.write`. If your Custom HTML tag requires this:
 
 1. Edit your Custom HTML tag
-2. Under **Advanced Settings**, check the box for **Support document.write**
+2. Under the HTML field, check the box for **Support document.write**
 3. Click **Save**
 
 ---

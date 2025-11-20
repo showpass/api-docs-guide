@@ -1,4 +1,4 @@
-# Standard Ecommerce Tracking with GA4 via GTM
+# 3. Standard Ecommerce Tracking with GA4 via GTM
 
 
 After setting up the basic GA4 Configuration Tag, the next step is to configure Google Tag Manager (GTM) to capture and send detailed ecommerce events from Showpass to your Google Analytics 4 (GA4) property.
@@ -42,7 +42,7 @@ This tag will send the ecommerce data to GA4.
    - Select **Google Analytics: GA4 Event**
    - **Measurement ID:** Enter your **GA4 Measurement ID** (e.g., `G-XXXXXXXXXX`). This should be the same ID used in your GA4 Configuration Tag
      > **Tip:** You can create a Constant Variable in GTM for your Measurement ID to reuse it easily and avoid typos. For example, create a variable named `{{GA4 Measurement ID}}` and use that here.
-   - **Event Name:** Click the variable icon (the lego block with a plus) next to the field and select **`{{Event}}`**. This is a built-in GTM variable that automatically captures the name of the event from the Data Layer (e.g., `view_item`, `add_to_cart`)
+   - **Event Name:** Click the variable icon (the lego block with a plus) next to the field and select "Event". You'll see it automatically put **`{{Event}}`** in the field. This is a built-in GTM variable that automatically captures the name of the event from the Data Layer (e.g., `view_item`, `add_to_cart`)
    - Click on **More Settings**
    - Under the **Ecommerce** section:
      - Check the box **Send Ecommerce data**
@@ -68,7 +68,7 @@ It's crucial to test your setup to ensure data is flowing correctly.
 
 1. **Enable GTM Preview Mode:** In your GTM container, click **Preview** in the top right
    - Enter the URL of a page where Showpass events occur (e.g., an event page on Showpass.com if your GTM is live there, or a page on your website with an embedded Showpass widget)
-   - Click **Connect**. A new browser window or tab will open with your page, and the Tag Assistant debug panel will connect at the bottom or in a separate window
+   - Click **Connect**. A new browser window or tab will open with your page, and the Tag Assistant debug panel will connect at the bottom or in a separate window. Don't close the window during the test
 2. **Perform Ecommerce Actions:** On your website or Showpass page:
    - View an event/product (`view_item`)
    - Add an item to the cart (`add_to_cart`)
