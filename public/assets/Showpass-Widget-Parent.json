@@ -111,7 +111,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script nonce=\"{{nonce}}\">\nttq.track('AddToCart', {\n  \"contents\": {{Custom JS - TikTok Contents Mapping}},\n\t\"value\": \"{{DLV - Showpass ecommerce.value}}\",\n\t\"currency\": \"{{DLV - Showpass ecommerce.currency}}\"\n});\n</script>"
+            "value": "<script nonce=\"{{nonce}}\">\nttq.track('AddToCart', {\n  \"contents\": {{CJS - TikTok Contents Mapping}},\n\t\"value\": \"{{DLV - Showpass ecommerce.value}}\",\n\t\"currency\": \"{{DLV - Showpass ecommerce.currency}}\"\n});\n</script>"
           },
           {
             "type": "BOOLEAN",
@@ -370,7 +370,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script nonce=\"{{nonce}}\">\nttq.track('Purchase', {\n  \"contents\": {{Custom JS - TikTok Contents Mapping}},\n\t\"value\": \"{{DLV - Showpass ecommerce.value}}\",\n\t\"currency\": \"{{DLV - Showpass ecommerce.currency}}\"\n});\n</script>"
+            "value": "<script nonce=\"{{nonce}}\">\nttq.track('Purchase', {\n  \"contents\": {{CJS - TikTok Contents Mapping}},\n\t\"value\": \"{{DLV - Showpass ecommerce.value}}\",\n\t\"currency\": \"{{DLV - Showpass ecommerce.currency}}\"\n});\n</script>"
           },
           {
             "type": "BOOLEAN",
@@ -402,7 +402,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<!-- Snap Pixel Code -->\n<script type=text/javascript>\n(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()\n{a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};\na.queue=[];var s=script;r=t.createElement(s);r.async=!0;\nr.src=n;var u=t.getElementsByTagName(s)[0];\nu.parentNode.insertBefore(r,u);})(window,document,\nhttps://sc-static.net/scevent.min.js);\n\nsnaptr(init, \"{{Snapchat Pixel ID}}\", {\nuser_email: ''\n});\n\nsnaptr(track, PAGE_VIEW);\n\n</script>\n<!-- End Snap Pixel Code -->"
+            "value": "<!-- Snap Pixel Code -->\n<script nonce=\"{{nonce}}\">\n(function(e,t,n){if(e.snaptr)return;var a=e.snaptr=function()\n{a.handleRequest?a.handleRequest.apply(a,arguments):a.queue.push(arguments)};\na.queue=[];var s='script';r=t.createElement(s);r.async=!0;\nr.src=n;var u=t.getElementsByTagName(s)[0];\nu.parentNode.insertBefore(r,u);})(window,document,\n'https://sc-static.net/scevent.min.js');\n\nsnaptr('init', '{{Snapchat Pixel ID}}', {});\nsnaptr('track', 'PAGE_VIEW');\n\n</script>\n<!-- End Snap Pixel Code -->\n"
           },
           {
             "type": "BOOLEAN",
@@ -503,7 +503,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script nonce=\"{{nonce}}\">\nttq.track('InitiateCheckout', {\n  \"contents\": {{Custom JS - TikTok Contents Mapping}},\n\t\"value\": \"{{DLV - Showpass ecommerce.value}}\",\n\t\"currency\": \"{{DLV - Showpass ecommerce.currency}}\"\n});\n</script>"
+            "value": "<script nonce=\"{{nonce}}\">\nttq.track('InitiateCheckout', {\n  \"contents\": {{CJS - TikTok Contents Mapping}},\n\t\"value\": \"{{DLV - Showpass ecommerce.value}}\",\n\t\"currency\": \"{{DLV - Showpass ecommerce.currency}}\"\n});\n</script>"
           },
           {
             "type": "BOOLEAN",
@@ -988,7 +988,7 @@
         "accountId": "0000000000",
         "containerId": "000000000",
         "variableId": "19",
-        "name": "Custom JS - TikTok Contents Mapping",
+        "name": "CJS - TikTok Contents Mapping",
         "type": "jsm",
         "parameter": [
           {
@@ -1008,11 +1008,11 @@
         "name": "CJS - Showpass Item IDs Array",
         "type": "jsm",
         "parameter": [
-          {
-            "type": "TEMPLATE",
-            "key": "javascript",
-            "value": "function() {\n  var itemIdsString = {{DLV - Showpass ecommerce.items}};\n  if (itemIdsString && typeof itemIdsString === 'string') {\n    return itemIdsString.split(',').map(id => id.trim());\n  } else if (Array.isArray(itemIdsString)) {\n    return itemIdsString;\n  }\n  return [];\n}"
-          }
+            {
+                "type": "TEMPLATE",
+                "key": "javascript",
+                "value": "function() {\n  var items = {{DLV - Showpass ecommerce.items}};\n\n  if (items && typeof items === 'string') {\n    return items.split(',').map(function(id) {\n      return id.trim();\n    });\n  }\n\n  if (Array.isArray(items)) {\n    return items\n      .map(function(item) {\n        return item.item_id || item.id || null;\n      })\n      .filter(function(id) {\n        return id !== null;\n      });\n  }\n\n  return [];\n}\n"
+            }
         ],
         "fingerprint": "0",
         "parentFolderId": "6",
