@@ -69,9 +69,12 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
           Request Examples
         </div>
         <Tabs defaultValue="python" className="w-full">
-          <TabsList className="w-full grid grid-cols-3 h-8 bg-muted/30">
-            <TabsTrigger value="python" className="flex items-center gap-1.5 text-xs py-1">
-              <svg className="h-3 w-3" viewBox="0 0 24 24">
+          <TabsList className="w-full grid grid-cols-3 h-10 bg-background/50 backdrop-blur-sm border border-border/50 p-1">
+            <TabsTrigger 
+              value="python" 
+              className="flex items-center justify-center gap-2 text-xs font-medium py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200 hover:bg-muted/50"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M12 0C5.371 0 5.125 2.611 5.125 2.611v5.318h6.964v.857H3.354S0 8.737 0 15.429c0 6.691 2.931 6.458 2.931 6.458h4.381v-3.108s-.233-3.109 3.062-3.109h5.289s2.969.049 2.969-2.865V4.692S19.287 0 12 0zM8.857 1.851c.693 0 1.25.557 1.25 1.25a1.25 1.25 0 0 1-2.5 0c0-.693.557-1.25 1.25-1.25z"
@@ -83,8 +86,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               <span>Python</span>
             </TabsTrigger>
-            <TabsTrigger value="node" className="flex items-center gap-1.5 text-xs py-1">
-              <svg className="h-3 w-3" viewBox="0 0 24 24">
+            <TabsTrigger 
+              value="node" 
+              className="flex items-center justify-center gap-2 text-xs font-medium py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200 hover:bg-muted/50"
+            >
+              <svg className="h-3.5 w-3.5" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
                   d="M12 0C5.375 0 0 5.375 0 12s5.375 12 12 12 12-5.375 12-12S18.625 0 12 0zm-1.584 17.375a.396.396 0 0 1-.215-.071l-.688-.409c-.103-.058-.052-.078-.019-.09.137-.048.165-.058.312-.143.015-.009.035-.006.05.004l.528.314a.067.067 0 0 0 .064 0l2.058-1.188a.068.068 0 0 0 .032-.058v-2.375c0-.024-.013-.046-.033-.057l-2.057-1.187a.067.067 0 0 0-.064 0l-2.057 1.187a.067.067 0 0 0-.033.057v2.375c0 .023.013.045.031.056l.563.326c.307.154.495-.028.495-.21v-2.344c0-.033.027-.06.06-.06h.261c.033 0 .06.027.06.06v2.344c0 .41-.223.647-.612.647-.12 0-.214 0-.476-.13l-.54-.31a.425.425 0 0 1-.205-.364v-2.375c0-.15.08-.29.205-.365l2.056-1.186a.423.423 0 0 1 .41 0l2.056 1.186a.422.422 0 0 1 .206.365v2.375a.425.425 0 0 1-.206.365l-2.056 1.185a.406.406 0 0 1-.205.073z"
@@ -96,8 +102,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               <span>Node.js</span>
             </TabsTrigger>
-            <TabsTrigger value="curl" className="flex items-center gap-1.5 text-xs py-1">
-              <Terminal className="h-3 w-3" />
+            <TabsTrigger 
+              value="curl" 
+              className="flex items-center justify-center gap-2 text-xs font-medium py-2 data-[state=active]:bg-primary/10 data-[state=active]:text-primary data-[state=active]:shadow-sm transition-all duration-200 hover:bg-muted/50"
+            >
+              <Terminal className="h-3.5 w-3.5" />
               <span>cURL</span>
             </TabsTrigger>
           </TabsList>

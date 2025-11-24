@@ -40,47 +40,47 @@ const Index = () => {
         <div className="mb-8">
           <div className="flex items-baseline gap-2 mb-2">
             <div className="h-px bg-primary/60 w-8"></div>
-            <span className="text-xs uppercase tracking-wider text-slate-500 dark:text-slate-400">Showpass Developer Platform</span>
+            <span className="text-xs uppercase tracking-wider text-muted-foreground">Showpass Developer Platform</span>
           </div>
           <h1 className="text-3xl font-bold mb-2 !mt-0">
-            <span className="text-slate-900 dark:text-slate-100">Developer </span>
+            <span className="text-foreground">Developer </span>
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Documentation</span>
           </h1>
-          <p className="text-sm text-slate-600 dark:text-slate-400 max-w-2xl !my-2">
+          <p className="text-sm text-muted-foreground max-w-2xl !my-2">
             Start building powerful event experiences today with just a few lines of code.
           </p>
         </div>
 
         {/* Section Divider */}
         <div className="flex items-center my-6">
-          <div className="w-1/3 h-px bg-slate-200 dark:bg-slate-700/60"></div>
+          <div className="w-1/3 h-px bg-border"></div>
         </div>
 
         {/* Core Integrations */}
         <div className="mb-12 relative">
           <div className="flex flex-col mt-0 mb-1">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 !mt-0 !mb-0">Core Integrations</h2>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Essential tools for seamless API, SDK, and WordPress integration</p>
+            <h2 className="text-lg font-bold text-foreground !mt-0 !mb-0">Core Integrations</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Essential tools for seamless API, SDK, and WordPress integration</p>
           </div>
 
-          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-4 mx-auto"></div>
+          <div className="w-full h-px bg-border mb-4 mx-auto"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Public API */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Code className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">API Reference</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">API Reference</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Event listings</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Event filtering</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Ticket management</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event listings</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event filtering</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Ticket management</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">Access event information and perform operations with our REST APIs.</p>
+                <p className="text-muted-foreground text-sm">Access event information and perform operations with our REST APIs.</p>
               </div>
               <div className="flex flex-col gap-2 ml-11 lg:flex-row">
                 <Button asChild size="sm" className="w-full lg:flex-1">
@@ -97,20 +97,20 @@ const Index = () => {
             </div>
 
             {/* JavaScript SDK */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">JavaScript SDK</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">JavaScript SDK</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Interactive widgets</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Shopping cart</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Event calendars</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Interactive widgets</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Shopping cart</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event calendars</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">Embeddable widgets and functions to integrate Showpass directly into your frontend.</p>
+                <p className="text-muted-foreground text-sm">Embeddable widgets and functions to integrate Showpass directly into your frontend.</p>
               </div>
               <div className="flex flex-col gap-2 ml-11 lg:flex-row">
                 <Button asChild size="sm" className="w-full lg:flex-1">
@@ -125,20 +125,20 @@ const Index = () => {
             </div>
 
             {/* WordPress Plugin */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Globe className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">WordPress Plugin</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">WordPress Plugin</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Simple shortcodes</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Custom templates</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Easy config</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Simple shortcodes</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Custom templates</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Easy config</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">Effortlessly integrate Showpass into your WordPress site with our official plugin.</p>
+                <p className="text-muted-foreground text-sm">Effortlessly integrate Showpass into your WordPress site with our official plugin.</p>
               </div>
               <div className="ml-11">
                 <Button asChild size="sm" className="w-full">
@@ -153,34 +153,34 @@ const Index = () => {
 
         {/* Section Divider */}
         <div className="flex items-center my-6">
-          <div className="w-1/3 h-px bg-slate-200 dark:bg-slate-700/60"></div>
+          <div className="w-1/3 h-px bg-border"></div>
         </div>
 
         {/* Advanced Integrations */}
         <div className="mb-12 relative">
           <div className="flex flex-col mt-0 mb-1">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 !mt-0 !mb-0">Advanced Integrations</h2>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">Extend functionality with webhooks, analytics, and marketing tools</p>
+            <h2 className="text-lg font-bold text-foreground !mt-0 !mb-0">Advanced Integrations</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">Extend functionality with webhooks, analytics, and marketing tools</p>
           </div>
 
-          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-4 mx-auto"></div>
+          <div className="w-full h-px bg-border mb-4 mx-auto"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Webhooks */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Webhook className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">Webhooks</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Webhooks</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Real-time updates</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Secure delivery</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Event automation</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Real-time updates</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Secure delivery</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event automation</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   Automate workflows and receive real-time notifications for Showpass events.
                 </p>
               </div>
@@ -192,20 +192,20 @@ const Index = () => {
             </div>
 
             {/* Google Tag Manager */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <BarChart3 className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">Google Tag Manager</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Google Tag Manager</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">GA4 integration</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Ecommerce tracking</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Custom events</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">GA4 integration</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Ecommerce tracking</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Custom events</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   Advanced analytics and marketing tag integration with comprehensive tracking.
                 </p>
               </div>
@@ -217,20 +217,20 @@ const Index = () => {
             </div>
 
             {/* Facebook Pixels */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Target className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">Facebook Integration</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Facebook Integration</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Pixel tracking</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Conversions API</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Custom audiences</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Pixel tracking</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Conversions API</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Custom audiences</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   Track conversions and optimize advertising campaigns with Meta integration.
                 </p>
               </div>
@@ -245,35 +245,35 @@ const Index = () => {
 
         {/* Section Divider */}
         <div className="flex items-center my-6">
-          <div className="w-1/3 h-px bg-slate-200 dark:bg-slate-700/60"></div>
+          <div className="w-1/3 h-px bg-border"></div>
         </div>
 
         {/* Security & Compliance */}
         <div className="mb-12 relative">
           <div className="flex flex-col mt-0 mb-1">
-            <h2 className="text-lg font-bold text-slate-900 dark:text-slate-100 !mt-0 !mb-0">Security & Compliance</h2>
-            <p className="text-xs text-slate-600 dark:text-slate-400 mt-0.5">PCI compliance, certifications, and security documentation</p>
+            <h2 className="text-lg font-bold text-foreground !mt-0 !mb-0">Security & Compliance</h2>
+            <p className="text-xs text-muted-foreground mt-0.5">PCI compliance, certifications, and security documentation</p>
           </div>
 
-          <div className="w-full h-px bg-slate-200 dark:bg-slate-700/60 mb-4 mx-auto"></div>
+          <div className="w-full h-px bg-border mb-4 mx-auto"></div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {/* Security & Compliance */}
-            <div className="group border border-slate-200 dark:border-slate-700 rounded-lg p-4 md:col-span-2 lg:col-span-3">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md md:col-span-2 lg:col-span-3">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Shield className="h-5 w-5 text-primary" />
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-slate-800 dark:text-slate-200 leading-tight flex-1">Security & Compliance</h3>
+                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Security & Compliance</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">PCI DSS Level 1</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">TX-RAMP Certified</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">GDPR Compliant</span>
-                <span className="bg-slate-50 dark:bg-slate-800/50 px-1.5 py-0.5 rounded text-slate-600 dark:text-slate-300 border border-slate-200/50 dark:border-slate-700/50">Responsibility Matrix</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">PCI DSS Level 1</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">TX-RAMP Certified</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">GDPR Compliant</span>
+                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Responsibility Matrix</span>
               </div>
               <div className="mb-4 ml-11">
-                <p className="text-slate-600 dark:text-slate-400 text-sm">
+                <p className="text-muted-foreground text-sm">
                   Access compliance certificates, security documentation, and understand our shared responsibility model for enterprise and government customers.
                 </p>
               </div>

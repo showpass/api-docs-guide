@@ -19,7 +19,13 @@ const queryClient = new QueryClient();
 const basename = "/";
 
 const App = () => (
-  <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+  <ThemeProvider 
+    attribute="class" 
+    defaultTheme="system" 
+    enableSystem={true} 
+    storageKey="showpass-docs-theme"
+    themes={["light", "ocean", "forest"]}
+  >
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />

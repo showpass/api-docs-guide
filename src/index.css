@@ -2,101 +2,126 @@
 @tailwind components;
 @tailwind utilities;
 
+/* 
+ * Theme System: Centralized Configuration
+ * 
+ * All theme definitions are managed in src/shared/themes/
+ * - theme-config.ts: Single source of truth for colors and syntax
+ * - theme-registry.ts: Theme metadata and utilities
+ * - theme-types.ts: TypeScript type definitions
+ * 
+ * To add a new theme, edit theme-config.ts and theme-registry.ts
+ * See src/shared/themes/README.md for detailed instructions
+ */
+
 @layer base {
   :root {
-    --background: 0 0% 100%;
+    --radius: 0.5rem;
+    --background: 210 20% 98%;
     --foreground: 222.2 84% 4.9%;
-
     --card: 0 0% 100%;
     --card-foreground: 222.2 84% 4.9%;
-
     --popover: 0 0% 100%;
     --popover-foreground: 222.2 84% 4.9%;
-
     --site-primary: 186 55% 31%;
     --site-primary-foreground: 210 40% 98%;
-
     --secondary: 210 40% 96.1%;
     --secondary-foreground: 222.2 47.4% 11.2%;
-
     --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
-
+    --muted-foreground: 215 20% 50%;
     --accent: 210 40% 96.1%;
     --accent-foreground: 222.2 47.4% 11.2%;
-
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 210 40% 98%;
-
     --border: 214.3 31.8% 91.4%;
     --input: 214.3 31.8% 91.4%;
     --ring: 186 55% 31%;
-
-    --radius: 0.5rem;
-
-    /* Sidebar colors */
     --sidebar-background: 210 20% 98%;
-    --sidebar-foreground: var(--foreground);
-    --sidebar-primary: var(--site-primary);
-    --sidebar-primary-foreground: var(--site-primary-foreground);
-    --sidebar-accent: var(--accent);
-    --sidebar-accent-foreground: var(--accent-foreground);
+    --sidebar-foreground: 222.2 84% 4.9%;
+    --sidebar-primary: 186 55% 31%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
     --sidebar-border: 214.3 31.8% 88%;
-    --sidebar-ring: var(--ring);
-
-    --prose-body: var(--foreground);
-    --prose-headings: var(--foreground);
-    --prose-links: var(--site-primary);
-    --prose-code-fg: hsl(0, 0%, 15%);
-    --prose-code-bg: hsl(0, 0%, 80%);
-    --prose-pre-bg: hsl(0, 0%, 80%);
+    --sidebar-ring: 186 55% 31%;
+    --prose-body: 222.2 84% 4.9%;
+    --prose-headings: 222.2 84% 4.9%;
+    --prose-links: 186 55% 31%;
+    --prose-code-fg: 0 0% 15%;
+    --prose-code-bg: 0 0% 90%;
+    --prose-pre-bg: 0 0% 96%;
   }
 
-  .dark {
-    --background: 185 68% 3%;
-    --foreground: 210 10% 95%;
-
-    --card: 185 65% 5%;
-    --card-foreground: var(--foreground);
-
-    --popover: hsl(var(--card));
-    --popover-foreground: var(--card-foreground);
-
+  .ocean {
+    --background: 222 47% 11%;
+    --foreground: 0 0% 98%;
+    --card: 222 47% 14%;
+    --card-foreground: 0 0% 98%;
+    --popover: 222 47% 14%;
+    --popover-foreground: 0 0% 98%;
     --site-primary: 186 55% 35%;
-    --site-primary-foreground: 210 20% 82%;
-
-    --secondary: 185 60% 8%;
-    --secondary-foreground: var(--foreground);
-
-    --muted: 185 60% 6%;
-    --muted-foreground: 210 10% 60%;
-
+    --site-primary-foreground: 0 0% 98%;
+    --secondary: 217 33% 17%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 217 33% 17%;
+    --muted-foreground: 215 18% 70%;
     --accent: 183 62% 30%;
-    --accent-foreground: 210 20% 95%;
-
+    --accent-foreground: 0 0% 98%;
     --destructive: 0 60% 50%;
     --destructive-foreground: 0 0% 98%;
-
-    --border: 185 60% 6%;
-    --input: 185 60% 8%;
+    --border: 217 33% 17%;
+    --input: 217 33% 17%;
     --ring: 186 55% 35%;
+    --sidebar-background: 222 47% 13%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 186 55% 35%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 183 62% 30%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 217 33% 17%;
+    --sidebar-ring: 186 55% 35%;
+    --prose-body: 0 0% 98%;
+    --prose-headings: 0 0% 98%;
+    --prose-links: 186 55% 35%;
+    --prose-code-fg: 210 15% 85%;
+    --prose-code-bg: 215 30% 20%;
+    --prose-pre-bg: 200 28% 10%;
+  }
 
-    /* Sidebar colors for dark mode */
-    --sidebar-background: 185 68% 6%;
-    --sidebar-foreground: var(--foreground);
-    --sidebar-primary: var(--site-primary);
-    --sidebar-primary-foreground: var(--site-primary-foreground);
-    --sidebar-accent: var(--accent);
-    --sidebar-accent-foreground: var(--accent-foreground);
-    --sidebar-border: 185 60% 10%;
-    --sidebar-ring: var(--ring);
-
-    --prose-body: var(--foreground);
-    --prose-headings: var(--foreground);
-    --prose-links: var(--site-primary);
-    --prose-code-fg: var(--foreground);
-    --prose-code-bg: 185 60% 10%;
-    --prose-pre-bg: 185 60% 10%;
+  .forest {
+    --background: 200 25% 12%;
+    --foreground: 180 10% 95%;
+    --card: 200 25% 15%;
+    --card-foreground: 180 10% 95%;
+    --popover: 200 25% 15%;
+    --popover-foreground: 180 10% 95%;
+    --site-primary: 168 76% 42%;
+    --site-primary-foreground: 180 20% 98%;
+    --secondary: 200 20% 20%;
+    --secondary-foreground: 180 10% 95%;
+    --muted: 200 20% 20%;
+    --muted-foreground: 180 15% 68%;
+    --accent: 168 76% 36%;
+    --accent-foreground: 180 10% 98%;
+    --destructive: 0 60% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 200 20% 20%;
+    --input: 200 20% 20%;
+    --ring: 168 76% 42%;
+    --sidebar-background: 200 25% 14%;
+    --sidebar-foreground: 180 10% 95%;
+    --sidebar-primary: 168 76% 42%;
+    --sidebar-primary-foreground: 180 20% 98%;
+    --sidebar-accent: 168 76% 36%;
+    --sidebar-accent-foreground: 180 10% 98%;
+    --sidebar-border: 200 20% 20%;
+    --sidebar-ring: 168 76% 42%;
+    --prose-body: 180 10% 95%;
+    --prose-headings: 180 10% 95%;
+    --prose-links: 168 76% 42%;
+    --prose-code-fg: 180 10% 95%;
+    --prose-code-bg: 200 20% 20%;
+    --prose-pre-bg: 200 28% 10%;
   }
 }
 
@@ -114,15 +139,15 @@
   }
 
   h2 {
-    @apply text-2xl font-semibold tracking-tight mt-8 scroll-m-20;
+    @apply text-2xl font-semibold tracking-tighter mt-8 scroll-m-20;
   }
 
   h3 {
-    @apply text-xl font-semibold tracking-tight mt-6 scroll-m-20;
+    @apply text-xl font-semibold tracking-tighter mt-6 scroll-m-20;
   }
 
   h4 {
-    @apply text-lg font-semibold tracking-tight mt-4 scroll-m-20;
+    @apply text-lg font-semibold tracking-tighter mt-4 scroll-m-20;
   }
 
   p {
@@ -165,34 +190,34 @@
     @apply p-4 align-top;
   }
 
-  .dark .prose {
+  .forest .prose {
     color: var(--prose-body);
   }
 
-  .dark .prose :where(a):not(:where([class~="not-prose"] *)) {
+  .forest .prose :where(a):not(:where([class~="not-prose"] *)) {
     color: var(--prose-links);
   }
 
-  .dark .prose :where(strong):not(:where([class~="not-prose"] *)) {
+  .forest .prose :where(strong):not(:where([class~="not-prose"] *)) {
     color: var(--prose-headings);
   }
 
-  .dark .prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"] *)) {
+  .forest .prose :where(h1, h2, h3, h4):not(:where([class~="not-prose"] *)) {
     color: var(--prose-headings);
   }
 }
 
 @layer components {
   .sidebar-link {
-    @apply block text-sm py-1.5 hover:text-primary transition-colors;
+    @apply block text-sm py-2 px-3 rounded-lg hover:text-foreground hover:bg-accent/50 transition-all duration-200;
   }
 
   .sidebar-link.active {
-    @apply text-primary font-medium;
+    @apply text-primary font-medium bg-accent/30;
   }
 
   .sidebar-category {
-    @apply text-sm font-medium text-foreground py-2 mb-1.5 uppercase tracking-wide text-xs text-muted-foreground;
+    @apply text-sm font-medium text-foreground py-2 mb-1.5 uppercase tracking-wide text-xs text-muted-foreground px-3;
   }
 
   /* Ensure primary color is applied correctly */
@@ -209,9 +234,183 @@
     @apply mt-5;
   }
 
-  /* ... in @layer base ... */
-  .dark pre {
-    background-color: hsla(185 60% 6%) !important;
+  /* Light theme code blocks and syntax highlighting */
+  :root pre,
+  .light pre {
+    background-color: hsl(0 0% 96%) !important;
+  }
+  
+  :root pre code .token.keyword,
+  .light pre code .token.keyword {
+    color: hsl(220 90% 45%) !important; /* Deep blue for keywords */
+  }
+  
+  :root pre code .token.operator,
+  .light pre code .token.operator {
+    color: hsl(200 80% 40%) !important; /* Medium blue for operators */
+  }
+  
+  :root pre code .token.string,
+  .light pre code .token.string {
+    color: hsl(120 60% 35%) !important; /* Forest green for strings */
+  }
+  
+  :root pre code .token.function,
+  :root pre code .token.method,
+  .light pre code .token.function,
+  .light pre code .token.method {
+    color: hsl(280 65% 50%) !important; /* Purple for functions */
+  }
+  
+  :root pre code .token.punctuation,
+  .light pre code .token.punctuation {
+    color: hsl(0 0% 40%) !important; /* Dark grey for punctuation */
+  }
+  
+  :root pre code .token.plain,
+  .light pre code .token.plain {
+    color: hsl(0 0% 20%) !important; /* Near black for plain text */
+  }
+  
+  :root pre code .token.comment,
+  .light pre code .token.comment {
+    color: hsl(0 0% 55%) !important; /* Medium grey for comments */
+    font-style: italic;
+  }
+  
+  :root pre code .token.number,
+  :root pre code .token.boolean,
+  .light pre code .token.number,
+  .light pre code .token.boolean {
+    color: hsl(15 80% 45%) !important; /* Orange for numbers */
+  }
+  
+  :root pre code .token.class-name,
+  :root pre code .token.builtin,
+  .light pre code .token.class-name,
+  .light pre code .token.builtin {
+    color: hsl(260 60% 50%) !important; /* Purple-blue for classes */
+  }
+  
+  :root pre code .token.property,
+  :root pre code .token.attr-name,
+  .light pre code .token.property,
+  .light pre code .token.attr-name {
+    color: hsl(180 60% 35%) !important; /* Cyan for properties */
+  }
+  
+  :root pre code .token.constant,
+  .light pre code .token.constant {
+    color: hsl(25 80% 45%) !important; /* Warm orange for constants */
+  }
+
+  /* Ocean theme code blocks and syntax highlighting */
+  .ocean pre {
+    background-color: hsl(200 28% 10%) !important;
+  }
+  
+  .ocean pre code .token.keyword {
+    color: hsl(168 85% 65%) !important;
+  }
+  
+  .ocean pre code .token.operator {
+    color: hsl(175 75% 68%) !important;
+  }
+  
+  .ocean pre code .token.string {
+    color: hsl(142 70% 65%) !important;
+  }
+  
+  .ocean pre code .token.function,
+  .ocean pre code .token.method {
+    color: hsl(50 95% 68%) !important;
+  }
+  
+  .ocean pre code .token.punctuation {
+    color: hsl(200 15% 75%) !important;
+  }
+  
+  .ocean pre code .token.plain,
+  .ocean pre code .token.parameter {
+    color: hsl(180 15% 92%) !important;
+  }
+  
+  .ocean pre code .token.comment {
+    color: hsl(200 12% 55%) !important;
+    font-style: italic;
+  }
+  
+  .ocean pre code .token.number,
+  .ocean pre code .token.boolean {
+    color: hsl(35 90% 68%) !important;
+  }
+  
+  .ocean pre code .token.class-name,
+  .ocean pre code .token.builtin {
+    color: hsl(200 75% 70%) !important;
+  }
+  
+  .ocean pre code .token.property,
+  .ocean pre code .token.attr-name {
+    color: hsl(160 70% 68%) !important;
+  }
+  
+  .ocean pre code .token.constant {
+    color: hsl(38 88% 68%) !important;
+  }
+
+  /* Forest theme code blocks and syntax highlighting */
+  .forest pre {
+    background-color: hsl(200 28% 10%) !important;
+  }
+  
+  .forest pre code .token.keyword {
+    color: hsl(168 85% 65%) !important;
+  }
+  
+  .forest pre code .token.operator {
+    color: hsl(175 75% 68%) !important;
+  }
+  
+  .forest pre code .token.string {
+    color: hsl(142 70% 65%) !important;
+  }
+  
+  .forest pre code .token.function,
+  .forest pre code .token.method {
+    color: hsl(50 95% 68%) !important;
+  }
+  
+  .forest pre code .token.punctuation {
+    color: hsl(200 15% 70%) !important;
+  }
+  
+  .forest pre code .token.plain {
+    color: hsl(180 18% 88%) !important;
+  }
+  
+  .forest pre code .token.comment {
+    color: hsl(200 12% 50%) !important;
+    font-style: italic;
+  }
+  
+  .forest pre code .token.number,
+  .forest pre code .token.boolean {
+    color: hsl(35 90% 68%) !important;
+  }
+  
+  .forest pre code .token.class-name,
+  .forest pre code .token.builtin {
+    color: hsl(200 75% 70%) !important;
+  }
+  
+  .forest pre code .token.property,
+  .forest pre code .token.attr-name {
+    color: hsl(160 70% 68%) !important;
+  }
+  
+  .forest pre code .token.constant {
+    color: hsl(38 88% 68%) !important;
   }
 
   /* Navigation scroll customization */

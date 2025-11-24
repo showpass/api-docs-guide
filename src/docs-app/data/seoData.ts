@@ -244,5 +244,27 @@ export const seoDataMap: Record<string, SEOData> = {
     title: "Installing Facebook Conversions API - Showpass Integration",
     description: "Complete guide to setting up Facebook Conversions API with Showpass. Configure server-side tracking for improved ad performance and attribution.",
     keywords: "conversions api setup, facebook capi installation, server-side tracking setup, facebook api integration, enhanced conversions"
+  },
+
+  // Security
+  "/security/01-compliance-overview": {
+    title: "Security & Compliance Overview - Showpass Documentation",
+    description: "Learn about Showpass security practices including PCI DSS Level 1 compliance, operational controls, and privacy protection measures.",
+    keywords: "showpass security, pci compliance, security compliance, data protection, security overview, compliance documentation"
+  },
+  "/security/02-certifications": {
+    title: "Security Certifications & Reports - Showpass Documentation",
+    description: "Access Showpass security certifications including PCI DSS Level 1, TX-RAMP certification, GDPR compliance documentation and security reports.",
+    keywords: "security certifications, pci attestation, compliance reports, security documentation, gdpr compliance, tx-ramp certification"
+  },
+  "/security/03-pci-responsibility-matrix": {
+    title: "PCI Responsibility Matrix - Showpass Security Documentation",
+    description: "Understand PCI DSS compliance responsibilities between Showpass and clients. Detailed responsibility matrix for payment security.",
+    keywords: "pci responsibility, pci compliance matrix, payment security, pci dss responsibilities, compliance responsibilities"
+  },
+  "/security/04-outgoing-ip-addresses": {
+    title: "Outgoing IP Addresses - Showpass Security Documentation",
+    description: "Showpass outgoing IP addresses for firewall allowlisting. Required for Authorize.net users and third-party integrations with IP restrictions.",
+    keywords: "showpass ip addresses, ip allowlist, firewall configuration, authorize.net ip, payment gateway ip, api ip addresses"
   }
-}; 
+};

@@ -8,10 +8,10 @@ import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
 
 const TopNavigation = () => {
   const { resolvedTheme } = useTheme();
-  const currentLogo = resolvedTheme === "dark" ? logoWhiteSrc : logoRedSrc;
+  const currentLogo = (resolvedTheme === "forest" || resolvedTheme === "ocean") ? logoWhiteSrc : logoRedSrc;
 
   return (
-    <header className="sticky top-0 z-50 border-b border-sidebar-border bg-sidebar/95 backdrop-blur supports-[backdrop-filter]:bg-sidebar/60">
+    <header className="sticky top-0 z-50 border-b border-border/50 bg-sidebar/95 backdrop-blur shadow-sm supports-[backdrop-filter]:bg-sidebar/60">
       <div className="flex h-16 items-center">
         {/* Logo - Flush left with padding */}
         <div className="flex items-center flex-shrink-0 pl-4 lg:pl-6">

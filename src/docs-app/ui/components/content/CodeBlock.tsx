@@ -19,9 +19,10 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
   };
 
   const currentPrismTheme =
-    resolvedTheme === "dark" ? themes.jettwaveDark : themes.jettwaveLight;
+    resolvedTheme === "light" ? themes.jettwaveLight : themes.jettwaveDark;
 
-  // No preBackgroundColor variable needed here, we rely on CSS override for .dark .prose pre
+  // No preBackgroundColor variable needed here, we rely on CSS override for .dark/.ocean .prose pre
+
 
   return (
     <div className={cn("relative group rounded-md overflow-hidden my-4")}>
@@ -34,13 +35,14 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
           <div className="relative">
             <button
               onClick={copyToClipboard}
-              className="absolute right-2 top-2 p-1.5 rounded-md bg-white/10 dark:bg-white/5 hover:bg-white/20 dark:hover:bg-white/10 focus:outline-none focus:ring-2 focus:ring-primary opacity-0 group-hover:opacity-100 z-10"
+              className="absolute right-2 top-2 p-2 rounded-md bg-background/90 hover:bg-background border border-border shadow-sm hover:shadow-md focus:outline-none focus:ring-2 focus:ring-primary transition-all z-10"
               aria-label="Copy code"
+              title={isCopied ? "Copied!" : "Copy to clipboard"}
             >
               {isCopied ? (
-                <Check className="h-4 w-4 text-green-400" />
+                <Check className="h-4 w-4 text-green-500" />
               ) : (
-                <Copy className="h-4 w-4 text-slate-400 dark:text-slate-500" />
+                <Copy className="h-4 w-4 text-muted-foreground hover:text-foreground" />
               )}
             </button>
             <pre
