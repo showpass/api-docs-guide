@@ -1,4 +1,4 @@
-# Cross-Domain Tracking Considerations
+# 4. Cross-Domain Tracking Considerations
 
 
 Cross-domain tracking is essential when a user's journey spans across multiple domains (e.g., your website `yourdomain.com` and Showpass `showpass.com`) and you want to maintain a single, consistent session and user view in Google Analytics.
@@ -7,6 +7,10 @@ There are two primary scenarios where cross-domain tracking is relevant with Sho
 
 1. **Redirecting from your website to showpass.com** (e.g., a "Buy Tickets" button links directly to an event page on Showpass)
 2. **Using the embedded Showpass widget (iFrame) on your website**
+
+
+> **Note:** For both scenarios, make sure you’ve added the GTM snippet to your website, inside the `head` tag.
+
 
 ---
 
@@ -20,13 +24,32 @@ Google provides detailed instructions on how to configure cross-domain tracking 
 
 - **Google Analytics Help - Set up cross-domain measurement [GA4]:** [https://support.google.com/analytics/answer/10071811](https://support.google.com/analytics/answer/10071811)
 
-### Key Steps
+You only need to configure cross-domain tracking inside GA4.
 
-Typically involve:
+#### Step 1 — Open Cross-Domain Settings in GA4
 
-1. Navigating to your **Google Tag** (the one used for GA4 Configuration, e.g., `GA4 - Configuration - All Pages`) in GTM
-2. Under **Configuration Settings > Configure domains**, add the domains involved (e.g., `yourdomain.com`, `showpass.com`)
-3. Ensure your GA4 data stream settings in the GA4 UI are also configured for cross-domain tracking by adding the relevant domains
+1. Go to **Admin → Data Streams**
+2. Click your **Web data stream**
+3. Find the card **Google tag**
+4. Click **Configure tag settings**
+5. Click **Show all**
+6. Click **Configure your domains** under **Cross-domain tracking**
+7. Add your domain(s) + showpass.com and Save:
+
+```bash
+yourdomain.com
+showpass.com
+```
+
+#### Step 2 — Verify
+
+Check any link going between domains. It should add parameters like:
+
+```
+?_gl=1*abcd1234
+```
+
+If that appears — cross-domain tracking is active.
 
 ---
 

@@ -75,10 +75,10 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
 
   return (
     <div className="w-full h-screen flex flex-col overflow-hidden">
-      <div 
-        className="flex-1 overflow-y-auto navigation-scroll" 
-        style={{ 
-          scrollbarWidth: 'none', 
+      <div
+        className="flex-1 overflow-y-auto navigation-scroll"
+        style={{
+          scrollbarWidth: 'none',
           msOverflowStyle: 'none',
           height: 'calc(100vh - 50px)',
           paddingBottom: '10px'
@@ -478,7 +478,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Introduction to Showpass GTM integration
+                    1. Introduction to Showpass GTM integration
                   </NavLink>
                 </li>
                 <li>
@@ -487,7 +487,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Initial setup: GA4 and GTM basics
+                    2. Initial setup: GA4 and GTM basics
                   </NavLink>
                 </li>
                 <li>
@@ -496,7 +496,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Standard ecommerce tracking with GA4 via GTM
+                    3. Standard ecommerce tracking with GA4 via GTM
                   </NavLink>
                 </li>
                 <li>
@@ -505,7 +505,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Cross-domain tracking considerations
+                    4. Cross-domain tracking considerations
                   </NavLink>
                 </li>
                 <li>
@@ -514,7 +514,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Working with custom HTML and JavaScript in GTM for Showpass
+                    5. Working with custom HTML and JavaScript in GTM for Showpass
                   </NavLink>
                 </li>
                 <li>
@@ -523,7 +523,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Tracking custom conversions / marketing pixels
+                    6. Tracking custom conversions / marketing pixels
                   </NavLink>
                 </li>
                 <li>
@@ -532,7 +532,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Showpass Data Layer details
+                    7. Showpass Data Layer details
                   </NavLink>
                 </li>
                 <li>
@@ -541,7 +541,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Advanced: Iframe purchase tracking via postMessage
+                    8. Advanced: Iframe purchase tracking via postMessage
                   </NavLink>
                 </li>
                 <li>
@@ -550,7 +550,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Advanced: Tracking widget and direct purchases
+                    9. Advanced: Tracking widget and direct purchases
                   </NavLink>
                 </li>
                 <li>
@@ -559,7 +559,25 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Example: Google Ads conversion tracking setup
+                    10. Example: Google Ads conversion tracking setup
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/google-tag-manager/11-gtm-faq-troubleshooting-guide"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    11. FAQ and Troubleshooting guide
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/google-tag-manager/12-json-ready-to-use-importable-containers"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    12. Ready To Use Importable Containers
                   </NavLink>
                 </li>
               </ul>
@@ -659,7 +677,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
         </Accordion>
       </div>
-      
+
       <div className="fixed bottom-0 left-0 w-[250px] border-t border-sidebar-border p-2 flex justify-between items-center bg-sidebar z-10">
         <ThemeToggle />
       </div>

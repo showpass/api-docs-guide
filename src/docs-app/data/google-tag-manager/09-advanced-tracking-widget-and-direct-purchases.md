@@ -1,4 +1,4 @@
-# Advanced: Differentiating Widget (iFrame) vs. Direct Showpass.com Event Tracking
+# 9. Advanced: Differentiating Widget (iFrame) vs. Direct Showpass.com Event Tracking
 
 In some advanced scenarios, you might want to differentiate GTM tag firing behavior based on whether an event originates from within the embedded Showpass widget (iFrame on your site) or from a direct interaction on `showpass.com` (if your GTM container is also deployed there, or if Showpass sends server-side events that populate your website's GTM).
 
@@ -16,7 +16,7 @@ The key is to create a GTM variable that detects if the current context is an iF
 
 This variable will return `true` if the GTM container is currently operating within an iFrame, and `false` otherwise.
 
-1. In your **Main/Parent GTM container** (your website's GTM), go to **Variables**
+1. In your **Parent GTM container** (your website's GTM), go to **Variables**
 2. Under "User-Defined Variables," click **New**
 3. **Name your variable:** `Custom JS - Is iFrame` (or similar)
 4. **Variable Configuration:**

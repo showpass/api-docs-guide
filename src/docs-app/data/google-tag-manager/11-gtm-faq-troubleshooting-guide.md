@@ -1,4 +1,4 @@
-# Google Tag Manager: FAQ and Troubleshooting Guide
+# 11. Google Tag Manager: FAQ and Troubleshooting Guide
 
 This guide covers common issues regarding Google Tag Manager (GTM) integrations with Showpass, including advanced iframe setups, standard ecommerce tracking, third-party pixel configuration, and resolving console errors.
 
@@ -9,7 +9,7 @@ This guide covers common issues regarding Google Tag Manager (GTM) integrations 
 The Showpass GTM integration allows you to inject your own GTM container into the purchase flow. This enables you to:
 
 - Trigger tags for standard GA4 pagviews and ecommerce events (`add_to_cart`, `begin_checkout`, `purchase`).
-- Install third-party tracking pixels (e.g., Spotify, TikTok, Pinterest) that are not natively supported by Showpass.
+- Install third-party tracking pixels (e.g., Spotify, TikTok, Snapchat) that are not natively supported by Showpass.
 - Pass revenue, currency, and item data using the Data Layer.
 
 ### 2. Should I use the Native Showpass Facebook/Meta integration OR GTM?
@@ -17,7 +17,7 @@ The Showpass GTM integration allows you to inject your own GTM container into th
 **Do not use both.**
 
 - **Recommendation:** Use the **Showpass Native Integration** for Facebook/Meta. Our native integration includes the Conversions API (CAPI) on the backend, which is complex to set up manually in GTM.
-- **Warning:** If you enter a Pixel ID in the Showpass dashboard _and_ add a Facebook Pixel tag in GTM, you will double-count conversions and inflate your data.
+- **Warning:** If you enter a Facebook/Meta Pixel ID in the Showpass dashboard _and_ add a Facebook/Meta Pixel tag in GTM, you will double-count conversions and inflate your data.
 - **Best Practice:** Use Showpass Native settings for Facebook, and use GTM for all other third-party scripts (GA4, Google Ads, Spotify, TikTok, etc.).
 
 ### 3. Can I track conversions for 3rd party platforms?

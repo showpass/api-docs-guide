@@ -1,4 +1,4 @@
-# Advanced & Preferred: iFrame Purchase Tracking via postMessage
+# 8. Advanced & Preferred: iFrame Purchase Tracking via postMessage
 
 Tracking conversions and user activity accurately within an iFrame (like the Showpass embedded purchase widget) is a significant challenge due to browser privacy measures that increasingly block third-party cookies and tracking mechanisms.
 
@@ -30,7 +30,7 @@ This setup involves two Google Tag Manager containers:
    - Its role is to capture ecommerce events within the iFrame and `postMessage` them to the parent window (your website)
    - Add this to your Organizer Info > Analytics section in the Showpass Dashboard
 
-2. **Main/Parent GTM Container (on your website):**
+2. **Parent GTM Container (on your website):**
    - This is your existing GTM container that manages tracking for your primary website
    - Its role is to listen for messages from the Showpass iFrame and then push that data into its own `dataLayer` to trigger your standard ecommerce tags (e.g., GA4, marketing pixels)
 
@@ -38,7 +38,6 @@ This setup involves two Google Tag Manager containers:
 
 ## A. Child GTM Container Setup (Showpass iFrame GTM)
 
-You (or Showpass, with your input) will configure this GTM container provided by Showpass.
 
 ### Step A1: Create the "Post Message to Parent" Tag
 
@@ -97,7 +96,7 @@ This variable will read a dynamic nonce value that Showpass makes available on t
 ```
 
 - **Crucial:**
-  - Ensure you have enabled the **Support document.write** checkbox (under Advanced Settings) if required
+  - Ensure you have enabled the **Support document.write** checkbox, under the HTML field
   - **Replace `GTM_CHILD_ID`** in the script with your actual Child GTM Container ID (e.g., `dataLayer_GTM_XXXXXX`). Note the underscore, not dash
 
 4. **Triggering:**
@@ -131,15 +130,15 @@ Showpass will now load this Child GTM container within the iFrame, allowing it t
 
 ---
 
-## B. Parent/Main GTM Container Setup (Your Website)
+## B. Parent GTM Container Setup (Your Website)
 
-On your main website's GTM container, you need to set up a listener that receives the messages from the Showpass iFrame and pushes them to your main `dataLayer`.
+On your parent website's GTM container, you need to set up a listener that receives the messages from the Showpass iFrame (child GTM) and pushes them to `dataLayer` of your Parent GTM.
 
 ### Step B1: Create the "postMessage Listener" Custom HTML Tag
 
 This tag listens for messages from the Showpass iFrame and processes them.
 
-1. In your **Main/Parent GTM container**, go to **Tags** and click **New**
+1. In your **Parent GTM container**, go to **Tags** and click **New**
 2. **Name the tag:** `Custom HTML - Listen for Showpass iFrame postMessage`
 3. **Tag Configuration:**
    - Choose tag type: **Custom HTML**
@@ -209,7 +208,7 @@ This tag listens for messages from the Showpass iFrame and processes them.
 
 ### Step B2: Create a trigger for ecommerce events
 
-1. In your GTM container, go to **Triggers** and click **New**
+1. In the current GTM container, go to **Triggers** and click **New**
 2. **Name your trigger:** A descriptive name like `Custom - Showpass Ecommerce Events` or `Ecommerce Triggers | All Events`
 3. **Trigger Configuration:**
    - Click **Choose a trigger type to begin setup...**
@@ -222,24 +221,24 @@ This tag listens for messages from the Showpass iFrame and processes them.
    - Check the box for **Use regex matching**. This allows the trigger to fire on any of the listed events
    - **This trigger fires on:** Select **All Custom Events**
 4. Click **Save**
-5. Update your existing tags to use this trigger.
+5. Update your existing tag to use this trigger. Your `Custom HTML - Listen for Showpass iFrame postMessage` should now trigger both `Window Loaded` and `Custom - Custom - Showpass Ecommerce Events`
 
 For tracking specific single events like `add_to_cart` - please see [Tracking Custom Conversions](https://dev.showpass.com/google-tag-manager/06-tracking-custom-conversions-marketing-pixels)
 
 ---
 
-### Step B3: Verify Your Main GTM Ecommerce Tags
+### Step B3: Verify Your Parent GTM Ecommerce Tags
 
-Ensure that your main GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketing pixel tags) are configured to fire on the events pushed to the `dataLayer` by the postMessage listener.
+Ensure that your parent GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketing pixel tags) are configured to fire on the events pushed to the `dataLayer` by the postMessage listener.
 
 - Your existing triggers for events like `purchase`, `add_to_cart`, etc., should automatically catch these events once they're pushed to the parent's `dataLayer`
-- No additional changes are typically needed if your main GTM setup is already configured to listen for these standard ecommerce events
+- No additional changes are typically needed if your parent GTM setup is already configured to listen for these standard ecommerce events
 
 ---
 
-### Step B4: Publish Your Main GTM Container
+### Step B4: Publish Your Parent GTM Container
 
-1. In your Main GTM container, click **Submit**
+1. In your parent GTM container, click **Submit**
 2. Provide a version name (e.g., "Added iFrame postMessage Listener")
 3. Click **Publish**
 
@@ -249,10 +248,10 @@ Ensure that your main GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketi
 
 Test your setup using https://tagassistant.google.com/
 
-1. **Enable GTM Preview Mode** on both your Main and Child GTM containers (if possible)
+1. **Enable GTM Preview Mode** on both your Parent and Child GTM containers (if possible)
 2. **Navigate to a page** on your website that contains the Showpass embedded widget
 3. **Perform ecommerce actions** within the widget (e.g., add to cart, purchase)
-4. **In the Main GTM Tag Assistant:**
+4. **In the Parent GTM Tag Assistant:**
    - Look for your ecommerce events (e.g., `add_to_cart`, `purchase`) appearing in the event timeline
    - Verify that your GA4 Ecommerce Event tag and other marketing tags fire as expected
 5. **Check browser console:**
@@ -264,6 +263,6 @@ Test your setup using https://tagassistant.google.com/
 ## Summary
 
 - **Child GTM Container:** Captures ecommerce events within the Showpass iFrame and sends them via `postMessage` to the parent page
-- **Parent GTM Container:** Listens for `postMessage` events and pushes them to the main `dataLayer`, triggering standard ecommerce tags
+- **Parent GTM Container:** Listens for `postMessage` events and pushes them to its own `dataLayer`, triggering standard ecommerce tags
 - **Benefits:** More accurate tracking, bypasses third-party cookie restrictions, privacy-focused approach
 - Always test thoroughly and verify `event.origin` in production for security

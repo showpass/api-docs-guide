@@ -1,4 +1,4 @@
-# Introduction to Showpass Google Tag Manager (GTM) Integration
+# 1. Introduction to Showpass Google Tag Manager (GTM) Integration
 
 
 
@@ -25,6 +25,10 @@ Integrating Showpass with Google Tag Manager allows you to:
 **Advanced Knowledge:** Effective use of Google Tag Manager requires advanced knowledge and practical experience with GTM concepts, tags, triggers, and variables.
 
 **Showpass Disclaimer:** Showpass is not responsible for GTM containers that are incorrectly set up or for any tracking issues that may arise from misconfiguration. Users are responsible for the correct implementation and testing of their GTM setup.
+
+## Ready to Use JSON
+
+If you want to skip the step-by-step documentation and simply download our ready-to-use JSON file to import into your GTM, please go to [section 12](/google-tag-manager/12-json-ready-to-use-importable-containers).
 
 ## Recommended GTM Learning Resources
 
