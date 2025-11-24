@@ -211,7 +211,7 @@ Examples (assuming your event list page is `yourwebsite.com/events-page/`):
 * **Search query:**
 
   ```text
-  https://yourwebsite.com/events-page/?q=searchterm
+  https://yourwebsite.com/events-page/?search_string=searchterm
   ```
 
   Filters to events matching `searchterm`.
