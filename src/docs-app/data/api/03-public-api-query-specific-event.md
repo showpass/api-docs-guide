@@ -4,11 +4,13 @@
 
 To retrieve detailed information for a single public experience using its unique slug:
 
-```
+```text
 https://www.showpass.com/api/public/events/{SLUG}/
 ```
 
 Replace `{SLUG}` with the actual slug of the experience or the event `{ID}`.
+
+---
 
 ## Overview
 
@@ -22,6 +24,9 @@ This endpoint returns comprehensive details about a specific experience, includi
 
 This is the primary endpoint for displaying experience detail pages and initializing the Showpass purchase widget.
 
+
+---
+
 ## Finding the Experience Slug
 
 The slug is the URL-friendly identifier for an experience. You can find it in several ways:
@@ -30,13 +35,17 @@ The slug is the URL-friendly identifier for an experience. You can find it in se
 2. **From Discovery API**: The `slug` field in the Discovery API response
 3. **From the Dashboard**: In your event management dashboard
 
+---
+
 ## Basic Example
 
-```
+```text
 https://www.showpass.com/api/public/events/summer-concert-2025/
 ```
 
 This returns complete details for the experience with slug `summer-concert-2025`.
+
+---
 
 ## Parameters
 
@@ -46,13 +55,15 @@ This returns complete details for the experience with slug `summer-concert-2025`
 | --------- | ------ | -------- | ----------------------------------------------------------------------------------------------- |
 | `slug`    | String | Required | The unique slug identifying the experience (part of the URL path) |
 
+---
+
 ## Use Cases
 
 ### 1. Display Experience Detail Page
 
 Fetch full experience details to display on your website:
 
-```
+```text
 https://www.showpass.com/api/public/events/my-experience-slug/
 ```
 
@@ -66,11 +77,13 @@ Use the response to show:
 
 Check if an experience is sold out or has limited inventory:
 
-```
+```text
 https://www.showpass.com/api/public/events/my-experience-slug/
 ```
 
 Check the `sold_out` field and `ticket_types[].inventory_left` in the response.
+
+---
 
 ## Error Responses
 
@@ -78,7 +91,7 @@ Check the `sold_out` field and `ticket_types[].inventory_left` in the response.
 
 Returned when the slug doesn't exist:
 
-```json
+```javascript
 {
   "detail": "Not found."
 }

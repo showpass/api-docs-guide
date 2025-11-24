@@ -4,19 +4,23 @@
 
 To fetch experiences for your organization, use the [Discovery API](/api/01-public-api-introduction) with the `venue` parameter to filter by organization ID.
 
+---
+
 ## Endpoint
 
 **Single organization:**
-```
+```text
 https://www.showpass.com/api/public/discovery/?venue=ORGANIZATION_ID
 ```
 
 **Multiple organizations:**
-```
+```text
 https://www.showpass.com/api/public/discovery/?venue__in=ORGANIZATION_ID1,ORGANIZATION_ID2
 ```
 
 Replace `ORGANIZATION_ID` with your numerical organization ID.
+
+---
 
 ## Finding Your Organization ID
 
@@ -24,27 +28,31 @@ Replace `ORGANIZATION_ID` with your numerical organization ID.
 2. Navigate to [https://www.showpass.com/dashboard/venues/edit/](https://www.showpass.com/dashboard/venues/edit/)
 3. Your Organization ID is displayed in the top right corner
 
+---
+
 ## Quick Examples
 
 **Single organization:**
-```
+```text
 https://www.showpass.com/api/public/discovery/?venue=123
 ```
 
 **Multiple organizations:**
-```
+```text
 https://www.showpass.com/api/public/discovery/?venue__in=123,456,789
 ```
 
 **Upcoming events only:**
-```
+```text
 https://www.showpass.com/api/public/discovery/?venue=123&starts_on__gte=2025-01-01T00:00
 ```
 
 **Homepage widget (next 5 featured events):**
-```
+```text
 https://www.showpass.com/api/public/discovery/?venue=123&is_featured=true&starts_on__gte=2025-01-01T00:00&ordering=starts_on&page_size=5
 ```
+
+---
 
 ## Available Parameters
 
@@ -57,6 +65,7 @@ The `venue` parameter can be combined with any parameter from the Discovery API,
 - **Pagination**: `page_size`, `page`
 - **Ordering**: `ordering`
 
+---
 
 ## Important Notes
 
