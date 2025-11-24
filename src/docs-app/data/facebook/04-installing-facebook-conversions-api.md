@@ -21,7 +21,6 @@ Domain verification is required for Conversions API to work properly.
 ### Navigate to Business Settings
 
 1. Go to [Facebook Business Manager](https://business.facebook.com)
-2. Click **Business Settings** in the top right
 
 ### Access Brand Safety
 
@@ -94,7 +93,6 @@ Domain verification is required for Conversions API to work properly.
 
 - **Access Token:** Paste the token from Step 2
 - **Pixel ID:** Your Facebook Pixel ID (should already be configured from pixel setup)
-- **Test Event Code:** Leave blank for now (we'll add this during testing)
 
 ### Configure Event Settings
 
@@ -120,24 +118,16 @@ Domain verification is required for Conversions API to work properly.
 
 ### Use Test Events in Facebook
 
-1. **Generate Test Event Code**
-   - In Facebook Events Manager, go to **Test Events**
-   - Generate a test event code
-
-2. **Add Test Code to Showpass**
-   - In your Showpass Conversions API settings
-   - Enter the test event code
-   - Save settings
-
-3. **Trigger Test Events**
+1. **Trigger Test Events**
    - Visit your event pages
    - Add items to cart
    - Complete a test purchase
 
-4. **Verify in Facebook**
-   - Check Facebook Events Manager **Test Events** tab
+2. **Verify in Facebook**
+   - Check Facebook Events Manager in the **Overview** tab
    - You should see events appear within 1-2 minutes
-   - Green checkmarks indicate successful event transmission
+   - Check Facebook Events Manager in the **Diagnostics** tab
+   - Facebook's diagnostics should not raise any concerns or issues with the configuration
 
 ### Check Event Quality
 
