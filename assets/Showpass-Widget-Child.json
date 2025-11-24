@@ -1,0 +1,169 @@
+{
+  "exportFormatVersion": 2,
+  "exportTime": "2025-11-20 00:00:00",
+  "containerVersion": {
+    "path": "accounts/0000000000/containers/000000000/versions/0",
+    "accountId": "0000000000",
+    "containerId": "000000000",
+    "containerVersionId": "0",
+    "container": {
+      "path": "accounts/0000000000/containers/000000000",
+      "accountId": "0000000000",
+      "containerId": "000000000",
+      "name": "Showpass-Widget-Child",
+      "publicId": "GTM-XXXXXXX",
+      "usageContext": [
+        "WEB"
+      ],
+      "fingerprint": "0",
+      "tagManagerUrl": "https://tagmanager.google.com",
+      "features": {
+        "supportUserPermissions": true,
+        "supportEnvironments": true,
+        "supportWorkspaces": true,
+        "supportGtagConfigs": false,
+        "supportBuiltInVariables": true,
+        "supportClients": false,
+        "supportFolders": true,
+        "supportTags": true,
+        "supportTemplates": true,
+        "supportTriggers": true,
+        "supportVariables": true,
+        "supportVersions": true,
+        "supportZones": true,
+        "supportTransformations": false
+      },
+      "tagIds": [
+        "GTM-XXXXXXX"
+      ]
+    },
+    "tag": [
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "tagId": "5",
+        "name": "Custom HTML - Post Message Ecommerce Data to Parent",
+        "type": "html",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "html",
+            "value": "<script nonce=\"{{nonce}}\">\n  (function () {\n    try {\n      if (typeof parent != \"undefined\" && parent != window) {\n        if (typeof parent.postMessage != \"undefined\") {\n          var modifiedContainerID = \"{{Container ID}}\".replace(/-/g, \"_\");\n          var dataLayerName = \"dataLayer_\" + modifiedContainerID;\n          var message = window[dataLayerName];\n          if (Array.isArray(message) && message.length > 0) {\n            var clonedMessage = JSON.parse(JSON.stringify(message));\n            parent.postMessage(clonedMessage, \"*\");\n          }\n        }\n      }\n    } catch (err) {\n      // console.error(\"Showpass Child GTM postMessage Error: \", err);\n    }\n  })();\n</script>"
+          },
+          {
+            "type": "BOOLEAN",
+            "key": "supportDocumentWrite",
+            "value": "true"
+          }
+        ],
+        "fingerprint": "0",
+        "firingTriggerId": [
+          "4"
+        ],
+        "tagFiringOption": "ONCE_PER_EVENT",
+        "paused": true,
+        "monitoringMetadata": {
+          "type": "MAP"
+        },
+        "consentSettings": {
+          "consentStatus": "NOT_SET"
+        }
+      }
+    ],
+    "trigger": [
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "triggerId": "4",
+        "name": "Custom - All Showpass Events",
+        "type": "CUSTOM_EVENT",
+        "customEventFilter": [
+          {
+            "type": "MATCH_REGEX",
+            "parameter": [
+              {
+                "type": "TEMPLATE",
+                "key": "arg0",
+                "value": "{{_event}}"
+              },
+              {
+                "type": "TEMPLATE",
+                "key": "arg1",
+                "value": "view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear"
+              }
+            ]
+          }
+        ],
+        "fingerprint": "0"
+      }
+    ],
+    "variable": [
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "variableId": "3",
+        "name": "nonce",
+        "type": "d",
+        "parameter": [
+          {
+            "type": "TEMPLATE",
+            "key": "elementSelector",
+            "value": "meta[name='csp-nonce']"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "attributeName",
+            "value": "content"
+          },
+          {
+            "type": "TEMPLATE",
+            "key": "selectorType",
+            "value": "CSS"
+          }
+        ],
+        "fingerprint": "0",
+        "formatValue": {}
+      }
+    ],
+    "builtInVariable": [
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "type": "PAGE_URL",
+        "name": "Page URL"
+      },
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "type": "PAGE_HOSTNAME",
+        "name": "Page Hostname"
+      },
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "type": "PAGE_PATH",
+        "name": "Page Path"
+      },
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "type": "REFERRER",
+        "name": "Referrer"
+      },
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "type": "EVENT",
+        "name": "Event"
+      },
+      {
+        "accountId": "0000000000",
+        "containerId": "000000000",
+        "type": "CONTAINER_ID",
+        "name": "Container ID"
+      }
+    ],
+    "fingerprint": "0",
+    "tagManagerUrl": "https://tagmanager.google.com"
+  }
+}
