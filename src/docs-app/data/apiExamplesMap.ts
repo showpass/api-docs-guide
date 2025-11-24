@@ -576,12 +576,12 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
     method: "GET",
     description: "Search for events using various criteria",
     examples: {
-      curl: `curl -X GET "https://www.showpass.com/api/public/discovery/?q=concert&location=Calgary" \\
+      curl: `curl -X GET "https://www.showpass.com/api/public/discovery/?search_string=concert&location=Calgary" \\
 -H "Content-Type: application/json"`,
       python: `import requests
 
 params = {
-    "q": "concert",
+    "search_string": "concert",
     "location": "Calgary"
 }
 
@@ -598,7 +598,7 @@ print(data)`,
 axios.get('https://www.showpass.com/api/public/discovery/', {
   headers: { 'Content-Type': 'application/json' },
   params: {
-    q: 'concert',
+    search_string: 'concert',
     location: 'Calgary'
   }
 })
@@ -613,7 +613,7 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
       status: 200,
       body: {
         count: 728,
-        next: "https://www.showpass.com/api/public/discovery/?location=Calgary&page=2&page_size=1&q=concert",
+        next: "https://www.showpass.com/api/public/discovery/?location=Calgary&page=2&page_size=1&search_string=concert",
         previous: null,
         next_page_number: 2,
         previous_page_number: null,
