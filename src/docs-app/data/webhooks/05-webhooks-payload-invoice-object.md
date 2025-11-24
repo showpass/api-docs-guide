@@ -1,4 +1,4 @@
-# Showpass webhooks: Payload - Invoice object
+# Showpass Webhooks: Payload - Invoice object
 
 
 When Showpass sends a webhook for invoice-related events (like `invoice.purchase`, `invoice.refund`, etc.), the payload delivered to your endpoint contains detailed information structured as an "Invoice" object. This section describes the format of this object.
@@ -15,85 +15,85 @@ Here is an example of a request that Showpass sends as a webhook when delivering
 
 **Header (for security verification):** `X-SHOWPASS-SIGNATURE: "HMAC-SHA1_HASH"`
 
-> **Note:** See "Webhook Security" for details on verifying this signature.
+> **Note:** See section "3. Security" for details on verifying this signature.
 
 **Request Body (JSON Payload):**
 
 ```json
 {
-  "id": "fd-3bc3-463c-8f41-a92971330c06",
-  "event_type": "invoice.purchase",
-  "webhook_event_uuid": "06d5dc13-2eea-48ad-9f40-2a5bfc9e4c2c",
+  "id": "f1-1068-4af6-be8f-1222417da0f2",
   "data": {
-    "transaction_id": "b3-3eb2-405b-b640-39ec45d04fda",
-    "showpass_organization_id": "20",
-    "customer_name": "Test User #0",
-    "customer_email": "test.user0@test.com",
-    "customer_phone_number": null,
-    "subscribe_to_venue": true,
-    "payment_type": "Credit",
-    "other_payment_type": null,
     "currency": "CAD",
-    "discounts": 0,
-    "net_sales": 107,
-    "service_fees": 0,
-    "account_credit_applied": 0,
-    "gross_revenue": 100,
-    "organizer_fees": 0,
-    "total_tax": 0,
-    "account_credit_type": null,
-    "invoice_type": "Sale",
-    "invoice_type_id": "101",
+    "discounts": "0.00",
+    "net_sales": "5.84",
+    "total_tax": "0.25",
+    "invoice_type": "sale",
+    "payment_type": "credit",
+    "service_fees": "0.59",
     "ticket_items": [
       {
-        "event_id": "7",
-        "event_name": "Event #0",
-        "event_starts_on": "2023-02-18T08:00:00Z",
-        "event_ends_on": "2023-02-18T12:00:00Z",
-        "first_name_on_ticket": "Test",
-        "last_name_on_ticket": "User #0",
-        "phone_number_on_ticket": null,
-        "email_on_ticket": "test.user0@test.com",
-        "id": 7,
-        "ticket_status": "Issued",
-        "barcode_string": "J6S5UA9OQ",
-        "name_on_ticket": "Test User #0",
-        "ticket_type_id": "7",
-        "ticket_type_name": "Ticket Type #0",
+        "id": 41349751,
+        "event_id": "474708",
+        "event_name": "Scanning",
+        "product_id": null,
+        "product_name": null,
+        "event_ends_on": "2026-12-03T04:00:00Z",
+        "ticket_status": "issued",
+        "barcode_string": "5GHOEEHUG",
+        "name_on_ticket": null,
+        "ticket_type_id": "1657978",
+        "email_on_ticket": null,
+        "event_starts_on": "2026-12-02T04:00:00Z",
         "ticket_item_type": "ticket",
+        "ticket_type_name": "A test ticket",
         "ticket_status_code": "2",
         "created_by_transfer": false,
-        "product_name": null,
-        "product_id": null,
-        "product_attribute_name": null,
-        "product_attribute_id": null
-      }
-    ],
-    "invoice_items": [
-      {
-        "id": 16,
-        "invoice_item_type": "Ticket",
-        "quantity": 1,
-        "discounts": 0,
-        "net_sales": 107,
-        "service_fees": 0,
-        "account_credit_applied": 0,
-        "gross_revenue": 100,
-        "organizer_fees": 0,
-        "total_tax": 0,
-        "event_id": "10",
-        "event_name": "Event #0",
-        "event_facebook_id": null,
-        "ticket_type_id": "10",
-        "ticket_type_name": "Ticket Type #0",
-        "ticket_type_external_id": null,
-        "product_name": null,
-        "product_id": null,
+        "last_name_on_ticket": null,
+        "first_name_on_ticket": null,
         "product_attribute_id": null,
+        "phone_number_on_ticket": null,
         "product_attribute_name": null
       }
-    ]
-  }
+    ],
+    "customer_name": "No Name",
+    "gross_revenue": "5.20",
+    "invoice_items": [
+      {
+        "id": 21110231,
+        "event_id": "474708",
+        "quantity": 1,
+        "discounts": "0.00",
+        "net_sales": "5.84",
+        "total_tax": "0.25",
+        "event_name": "Scanning",
+        "product_id": null,
+        "product_name": null,
+        "service_fees": "0.59",
+        "gross_revenue": "5.20",
+        "organizer_fees": "0.00",
+        "ticket_type_id": "1657978",
+        "ticket_type_name": "A test ticket",
+        "event_facebook_id": null,
+        "invoice_item_type": "ticket",
+        "product_attribute_id": null,
+        "account_credit_applied": "0.00",
+        "product_attribute_name": null,
+        "ticket_type_external_id": null
+      }
+    ],
+    "customer_email": "amir@showpass.com",
+    "organizer_fees": "0.00",
+    "transaction_id": "f1-1068-4af6-be8f-1222417da0f2",
+    "invoice_type_id": "101",
+    "other_payment_type": null,
+    "subscribe_to_venue": false,
+    "account_credit_type": null,
+    "customer_phone_number": null,
+    "account_credit_applied": "0.00",
+    "showpass_organization_id": "5796"
+  },
+  "event_type": "invoice.purchase",
+  "webhook_event_uuid": "09117c09-e1f8-4913-b2f5-52cc161cf5f7"
 }
 ```
 
@@ -105,7 +105,7 @@ The following table describes the fields typically found in the webhook payload 
 
 | Path in JSON                                   | Description                                                                                                                                                                                                       |
 | ---------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `id`                                           | The unique identifier for the event itself. This corresponds to the event record in Showpass and is useful for referencing in support or logs.                                                                   |
+| `id`                                           | The unique identifier for the webhook event itself. This corresponds to the webhook event record in Showpass and is useful for referencing in support or logs.                                                                   |
 | `event_type`                                   | The type of event that triggered this webhook. <br>Choices: `['invoice.purchase', 'invoice.refund', 'invoice.void', 'invoice.transfer', 'invoice.transferred', 'webhook.test']`                                  |
 | `webhook_event_uuid`                           | A unique UUID for this specific webhook event instance. You can use this as an idempotency key to prevent processing the same event multiple times.                                                               |
 | `data`                                         | An object containing the core data for the event.                                                                                                                                                                 |
@@ -126,7 +126,7 @@ The following table describes the fields typically found in the webhook payload 
 | `data.organizer_fees`                          | Total combined amount of fees charged by the organizer for the transaction.                                                                                                                                       |
 | `data.total_tax`                               | Total combined amount of applicable taxes for the transaction.                                                                                                                                                    |
 | `data.account_credit_type`                     | The type of account credit applied, if any.                                                                                                                                                                       |
-| `data.invoice_type`                            | The type of invoice. <br>**Choices:** `['Sale', 'Refund']`                                                                                                                                                            |
+| `data.invoice_type`                            | The type of invoice. <br>**Choices:** `['sale', 'refund']`                                                                                                                                                            |
 | `data.invoice_type_id`                         | Unique identifier for the invoice type.                                                                                                                                                                           |
 | `data.ticket_items`                            | An array of objects, each representing a ticket within the transaction. This is where you'll find details about individual tickets.                                                                               |
 | `data.ticket_items[].event_id`                 | Unique identifier of the event the ticket is for.                                                                                                                                                                 |
@@ -152,7 +152,7 @@ The following table describes the fields typically found in the webhook payload 
 | `data.ticket_items[].product_attribute_id`     | Unique identifier for the product attribute (if applicable).                                                                                                                                                      |
 | `data.invoice_items`                           | An array of objects, each representing a line item on the invoice. This provides a summary of each type of item purchased (e.g., each ticket type).                                                               |
 | `data.invoice_items[].id`                      | Unique identifier for the invoice item.                                                                                                                                                                           |
-| `data.invoice_items[].invoice_item_type`       | Type of the invoice item. <br>**Choices:** `['Ticket', 'Membership', 'Product']`                                                                                                                                      |
+| `data.invoice_items[].invoice_item_type`       | Type of the invoice item. <br>**Choices:** `['ticket', 'membership', 'product']`                                                                                                                                      |
 | `data.invoice_items[].quantity`                | Quantity of this item purchased.                                                                                                                                                                                  |
 | `data.invoice_items[].discounts`               | Discounts applied to this specific line item.                                                                                                                                                                     |
 | `data.invoice_items[].net_sales`               | Net sales for this line item after discounts.                                                                                                                                                                     |

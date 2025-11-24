@@ -1,4 +1,4 @@
-# Showpass webhooks: Security
+# Showpass Webhooks: Security
 
 Every webhook request from Showpass includes an `X-SHOWPASS-SIGNATURE` header that allows you to verify the request's authenticity. Implementing signature verification is crucial for secure webhook integration.
 
@@ -153,7 +153,7 @@ If your Secret Key is compromised:
 
 1. **Generate a new key** in the Showpass dashboard
 2. **Update your server** with the new key immediately
-3. **Test thoroughly** before removing old key support
+3. **Test thoroughly** before removing old key support (You can pause the old key first)
 4. **Monitor logs** for any issues
 
 > **Warning:** Regenerating a Secret Key invalidates the old one. Update your server configuration before the change takes effect.

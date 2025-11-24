@@ -1,52 +1,68 @@
-# Showpass webhooks: Logging and troubleshooting
+# Showpass Webhooks: Logging and troubleshooting
 
 
 Showpass provides logging features within its dashboard to help you monitor the status of your webhook deliveries and troubleshoot any issues that may arise. Understanding these logs is key to maintaining a healthy webhook integration.
 
 ---
 
-## Viewing webhook event logs
+## Viewing Webhook Events History
 
-The Webhook Event Logs provide a detailed history of each individual webhook event that Showpass has attempted to send to your configured endpoints.
+The Webhook "Events" provide a detailed history of each individual webhook event that Showpass has attempted to send to your configured endpoints.
 
 ### Accessing Event Logs
 
 1. Log in to your Showpass Dashboard
 2. Navigate to **Organization Settings > Webhooks**
-3. You should see a list of your configured webhook endpoints
-4. Look for an option associated with each endpoint to view its "Event Logs," "Delivery Logs," or similar (this might be a button, a link, or an icon)
+3. Go to "Events" tab.
 
-### Information in Event Logs
+### Information in Events
 
-Each log entry contains the following information:
+Each event entry contains the following information:
 
-- **Timestamp:** The date and time Showpass attempted to send the event
-- **Event Type:** The type of event that was triggered (e.g., `invoice.purchase`, `webhook.test`)
-- **Endpoint URL:** The URL to which the event was sent
+- **Event Name:** Title of the event based on event type.
+- **Date:** The date event was created.
+- **Event Data:** The actual JSON payload that was created.
+
+In the "Webhook Attempts" Section you can see attempts to send this event to your webhook endpoints in the past 15 days:
+
 - **Status:** The delivery status of the webhook (e.g., "Success," "Failed," "Pending")
-- **HTTP Status Code:** The HTTP response code received from your endpoint (e.g., `200 OK`, `404 Not Found`, `500 Internal Server Error`)
-- **Payload/Response (Details):** Often, you can click on a specific log entry to view more details, which might include:
-  - The actual JSON payload that was sent
-  - The response body received from your server (if any)
-  - Error messages if the delivery failed
+- **Webhook URL:** The URL to which the event was sent
+- **Date:** The date and time Showpass attempted to send the event
+- **Resend Menu:** The trigger for resending the webhook
+
 
 ### Resending Events
 
 If a webhook event failed to deliver (e.g., due to a temporary issue with your server or network), the Showpass dashboard may offer an option to **resend** that specific event.
+This is useful for recovering missed notifications without needing the original action to be performed again in Showpass
 
-- This is useful for recovering missed notifications without needing the original action to be performed again in Showpass
-- Be mindful of idempotency in your receiving application if you resend events, to avoid duplicate processing
+> **Note:** Be mindful of idempotency in your receiving application if you resend events, to avoid duplicate processing
 
-> **Note:** The `webhook_event_uuid` in the payload can help with idempotency tracking.
 
 ---
 
-## Viewing general webhook logs (Delivery Status)
+## Viewing General Webhook Logs
 
-Separate from individual event logs, there might be a more general "Webhook Logs" section or a summary view that provides an overview of the health and delivery status of your webhook endpoints.
+Separate from individual event logs, there is a more general Webhook "Logs" section or a summary view that provides an overview of the health and delivery status of your webhook endpoints.
+It helps in identifying if a particular endpoint is consistently failing or experiencing issues
 
-- This view might show aggregated statistics like the number of successful deliveries, failures, and error rates over a period
-- It helps in identifying if a particular endpoint is consistently failing or experiencing issues
+In this section you can see 3 tabs:
+
+- **All**
+- **Succeeded**
+- **Failed**
+
+Each webhook log has these details:
+
+- **HTTP Status Code:** The HTTP response code received from your endpoint (e.g., `200 OK`, `404 Not Found`, `500 Internal Server Error`)
+- **ID:** Identifier of the webhook attempt.
+- **Time:** The time Showpass attempted to send the event
+- **Event:** The type of event that was triggered (e.g., `invoice.purchase`, `webhook.test`)
+- **Idempotency:** A unique string for each event.
+- **Response Body:** The response body received from the server (if any) or error messages if the delivery failed
+
+> **Note:** The `webhook_event_uuid` in the payload can help with idempotency tracking.
+
 
 ---
 

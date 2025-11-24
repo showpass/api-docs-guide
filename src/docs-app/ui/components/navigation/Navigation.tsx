@@ -413,7 +413,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Introduction
+                    1. Introduction
                   </NavLink>
                 </li>
                 <li>
@@ -422,7 +422,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Setup and management
+                    2. Setup and management
                   </NavLink>
                 </li>
                 <li>
@@ -431,7 +431,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Security
+                    3. Security
                   </NavLink>
                 </li>
                 <li>
@@ -440,7 +440,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Event types
+                    4. Event types
                   </NavLink>
                 </li>
                 <li>
@@ -449,7 +449,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Payload: Invoice object
+                    5. Payload: Invoice object
                   </NavLink>
                 </li>
                 <li>
@@ -458,7 +458,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Logging and troubleshooting
+                    6. Logging and troubleshooting
                   </NavLink>
                 </li>
               </ul>

@@ -1,10 +1,12 @@
-# Showpass webhooks: Introduction
+# Showpass Webhooks: Introduction
 
 Showpass webhooks enable real-time notifications when events occur in your account, allowing you to automate workflows and integrate with external systems.
 
 ## What are webhooks?
 
-Webhooks are HTTP callbacks that Showpass sends to your server when specific events happen—like a new purchase, refund, or ticket transfer. Your application receives instant notifications and can respond automatically.
+Webhooks are HTTP callbacks that Showpass sends to your server when specific events happen. Like a new purchase, refund, or ticket transfer. Your application receives instant notifications and can respond automatically.
+
+Learn more about webhooks here: https://hookdeck.com/webhooks/guides/what-are-webhooks-how-they-work
 
 ---
 
@@ -12,7 +14,7 @@ Webhooks are HTTP callbacks that Showpass sends to your server when specific eve
 
 ### Endpoint
 
-A publicly accessible URL on your server (or third-party service like Zapier) where Showpass sends HTTP POST requests containing event data.
+A publicly accessible URL on your server (or on a third-party service such as Zapier) where Showpass can send HTTP POST requests containing event data. You will listen for Showpass events at this endpoint.
 
 **Example:** `https://yoursite.com/api/showpass-webhook`
 
@@ -20,13 +22,7 @@ A publicly accessible URL on your server (or third-party service like Zapier) wh
 
 ### Event
 
-An action within Showpass that triggers a webhook notification:
-
-- `invoice.purchase` - New order completed
-- `invoice.refund` - Transaction refunded
-- `invoice.void` - Transaction voided
-- `invoice.transfer` - Ticket transferred to recipient
-- `invoice.transferred` - Original ticket marked as transferred
+Event is an action within Showpass that triggers a webhook notification. You can find the list of events in section 4.
 
 ---
 

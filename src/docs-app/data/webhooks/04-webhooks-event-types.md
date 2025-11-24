@@ -1,4 +1,4 @@
-# Showpass webhooks: Event types
+# Showpass Webhooks: Event types
 
 
 Showpass webhooks notify your application about various events that occur within the platform. When configuring a webhook endpoint in the Showpass dashboard, you will select the specific event(s) for which you want to receive notifications at that endpoint.
