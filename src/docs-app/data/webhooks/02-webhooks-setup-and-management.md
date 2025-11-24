@@ -51,7 +51,7 @@ From the Webhooks section in your Showpass dashboard, you can typically manage y
     - Update the Description.
     - Add or remove subscribed Events.
     - Change the Status (Active/Paused).
-    - Copy or Regenerate the Secrek Key
+    - Copy or Regenerate the Secret Key
 
 - **Pause/Activate an Endpoint:**
 

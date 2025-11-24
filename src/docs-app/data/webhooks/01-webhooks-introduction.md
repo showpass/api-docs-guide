@@ -6,8 +6,6 @@ Showpass webhooks enable real-time notifications when events occur in your accou
 
 Webhooks are HTTP callbacks that Showpass sends to your server when specific events happen. Like a new purchase, refund, or ticket transfer. Your application receives instant notifications and can respond automatically.
 
-Learn more about webhooks here: https://hookdeck.com/webhooks/guides/what-are-webhooks-how-they-work
-
 ---
 
 ## Key concepts
@@ -69,4 +67,4 @@ Eliminate manual data entry and frequent API polling to check for changes.
 
 ## Getting started
 
-Ready to set up webhooks? Continue to the next section on **Setup and Management** to configure your first endpoint.
+Ready to set up webhooks? Continue to the next section on [Setup and Management](/webhooks/02-webhooks-setup-and-management) to configure your first endpoint.

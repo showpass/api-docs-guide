@@ -81,7 +81,7 @@ Here is an example of a request that Showpass sends as a webhook when delivering
         "ticket_type_external_id": null
       }
     ],
-    "customer_email": "amir@showpass.com",
+    "customer_email": "example@showpass.com",
     "organizer_fees": "0.00",
     "transaction_id": "f1-1068-4af6-be8f-1222417da0f2",
     "invoice_type_id": "101",
