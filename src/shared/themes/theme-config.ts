@@ -1,0 +1,170 @@
+/**
+ * Centralized Theme Configuration
+ * All theme colors and syntax highlighting in one place
+ */
+
+import { ThemeDefinition } from './theme-types';
+
+export const themes: Record<string, ThemeDefinition> = {
+  light: {
+    id: 'light',
+    name: 'Light',
+    colors: {
+      background: '210 20% 98%',
+      foreground: '222.2 84% 4.9%',
+      card: '0 0% 100%',
+      cardForeground: '222.2 84% 4.9%',
+      popover: '0 0% 100%',
+      popoverForeground: '222.2 84% 4.9%',
+      sitePrimary: '186 55% 31%',
+      sitePrimaryForeground: '210 40% 98%',
+      secondary: '210 40% 96.1%',
+      secondaryForeground: '222.2 47.4% 11.2%',
+      muted: '210 40% 96.1%',
+      mutedForeground: '215 20% 50%',
+      accent: '210 40% 96.1%',
+      accentForeground: '222.2 47.4% 11.2%',
+      destructive: '0 84.2% 60.2%',
+      destructiveForeground: '210 40% 98%',
+      border: '214.3 31.8% 91.4%',
+      input: '214.3 31.8% 91.4%',
+      ring: '186 55% 31%',
+      sidebarBackground: '210 20% 98%',
+      sidebarForeground: '222.2 84% 4.9%',
+      sidebarPrimary: '186 55% 31%',
+      sidebarPrimaryForeground: '210 40% 98%',
+      sidebarAccent: '210 40% 96.1%',
+      sidebarAccentForeground: '222.2 47.4% 11.2%',
+      sidebarBorder: '214.3 31.8% 88%',
+      sidebarRing: '186 55% 31%',
+      proseBody: '222.2 84% 4.9%',
+      proseHeadings: '222.2 84% 4.9%',
+      proseLinks: '186 55% 31%',
+      proseCodeFg: '0 0% 15%',
+      proseCodeBg: '0 0% 90%',
+      prosePreBg: '0 0% 96%',
+    },
+    syntax: {
+      keyword: '220 90% 45%',      // Deep blue for keywords
+      operator: '200 80% 40%',     // Medium blue for operators
+      string: '120 60% 35%',       // Forest green for strings
+      function: '280 65% 50%',     // Purple for functions
+      punctuation: '0 0% 40%',     // Dark grey for punctuation
+      plain: '0 0% 20%',           // Near black for plain text
+      comment: '0 0% 55%',         // Medium grey for comments
+      number: '15 80% 45%',        // Orange for numbers
+      className: '260 60% 50%',    // Purple-blue for classes
+      property: '180 60% 35%',     // Cyan for properties
+      constant: '25 80% 45%',      // Warm orange for constants
+    },
+  },
+  
+  ocean: {
+    id: 'ocean',
+    name: 'Ocean',
+    colors: {
+      background: '222 47% 11%',
+      foreground: '0 0% 98%',
+      card: '222 47% 14%',
+      cardForeground: '0 0% 98%',
+      popover: '222 47% 14%',
+      popoverForeground: '0 0% 98%',
+      sitePrimary: '186 55% 35%',
+      sitePrimaryForeground: '0 0% 98%',
+      secondary: '217 33% 17%',
+      secondaryForeground: '0 0% 98%',
+      muted: '217 33% 17%',
+      mutedForeground: '215 18% 70%',
+      accent: '183 62% 30%',
+      accentForeground: '0 0% 98%',
+      destructive: '0 60% 50%',
+      destructiveForeground: '0 0% 98%',
+      border: '217 33% 17%',
+      input: '217 33% 17%',
+      ring: '186 55% 35%',
+      sidebarBackground: '222 47% 13%',
+      sidebarForeground: '0 0% 98%',
+      sidebarPrimary: '186 55% 35%',
+      sidebarPrimaryForeground: '0 0% 98%',
+      sidebarAccent: '183 62% 30%',
+      sidebarAccentForeground: '0 0% 98%',
+      sidebarBorder: '217 33% 17%',
+      sidebarRing: '186 55% 35%',
+      proseBody: '0 0% 98%',
+      proseHeadings: '0 0% 98%',
+      proseLinks: '186 55% 35%',
+      proseCodeFg: '210 15% 85%',
+      proseCodeBg: '215 30% 20%',
+      prosePreBg: '200 28% 10%',
+    },
+    syntax: {
+      keyword: '168 85% 65%',
+      operator: '175 75% 68%',
+      string: '142 70% 65%',
+      function: '50 95% 68%',
+      punctuation: '200 15% 75%',
+      plain: '180 15% 92%',
+      comment: '200 12% 55%',
+      number: '35 90% 68%',
+      className: '200 75% 70%',
+      property: '160 70% 68%',
+      constant: '38 88% 68%',
+      parameter: '180 15% 92%',
+    },
+  },
+  
+  forest: {
+    id: 'forest',
+    name: 'Forest',
+    colors: {
+      background: '200 25% 12%',
+      foreground: '180 10% 95%',
+      card: '200 25% 15%',
+      cardForeground: '180 10% 95%',
+      popover: '200 25% 15%',
+      popoverForeground: '180 10% 95%',
+      sitePrimary: '168 76% 42%',
+      sitePrimaryForeground: '180 20% 98%',
+      secondary: '200 20% 20%',
+      secondaryForeground: '180 10% 95%',
+      muted: '200 20% 20%',
+      mutedForeground: '180 15% 68%',
+      accent: '168 76% 36%',
+      accentForeground: '180 10% 98%',
+      destructive: '0 60% 50%',
+      destructiveForeground: '0 0% 98%',
+      border: '200 20% 20%',
+      input: '200 20% 20%',
+      ring: '168 76% 42%',
+      sidebarBackground: '200 25% 14%',
+      sidebarForeground: '180 10% 95%',
+      sidebarPrimary: '168 76% 42%',
+      sidebarPrimaryForeground: '180 20% 98%',
+      sidebarAccent: '168 76% 36%',
+      sidebarAccentForeground: '180 10% 98%',
+      sidebarBorder: '200 20% 20%',
+      sidebarRing: '168 76% 42%',
+      proseBody: '180 10% 95%',
+      proseHeadings: '180 10% 95%',
+      proseLinks: '168 76% 42%',
+      proseCodeFg: '180 10% 95%',
+      proseCodeBg: '200 20% 20%',
+      prosePreBg: '200 28% 10%',
+    },
+    syntax: {
+      keyword: '168 85% 65%',
+      operator: '175 75% 68%',
+      string: '142 70% 65%',
+      function: '50 95% 68%',
+      punctuation: '200 15% 70%',
+      plain: '180 18% 88%',
+      comment: '200 12% 50%',
+      number: '35 90% 68%',
+      className: '200 75% 70%',
+      property: '160 70% 68%',
+      constant: '38 88% 68%',
+    },
+  },
+};
+
+export const defaultTheme = 'light';
