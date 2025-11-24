@@ -20,11 +20,11 @@ If you haven't already created a Facebook Pixel, follow these steps:
 ### Navigate to Facebook Events Manager
 
 1. Go to [Facebook Events Manager](https://business.facebook.com/events_manager)
-2. Select your Business Account from the dropdown
+2. Select your Business Account from the dropdown found on the top right
 
 ### Create a New Data Source
 
-1. Click **Connect Data Sources**
+1. Click **Connect Data** from the top left
 2. Select **Web** as your platform
 3. Choose **Meta Pixel** and click **Connect**
 
