@@ -2,7 +2,7 @@
 
 ## Overview
 
-To fetch experiences for your organization, use the [Discovery API](./01-public-api-introduction.md) with the `venue` parameter to filter by organization ID.
+To fetch experiences for your organization, use the [Discovery API](/api/01-public-api-introduction) with the `venue` parameter to filter by organization ID.
 
 ## Endpoint
 
