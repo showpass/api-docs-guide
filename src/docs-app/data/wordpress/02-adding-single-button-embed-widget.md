@@ -164,18 +164,18 @@ Control what the widget loads and how it behaves using these parameters.
 
 ### Button text
 
-**Parameter:** `button_text="Your Custom Text"`
+**Parameter:** `label="Your Custom Text"`
 
 **Use case:** Change the button label
 
-**Default:** "Tickets"
+**Default:** "Get Tickets"
 
 **Examples:**
 
 ```text
-[showpass_widget slug="summer-fest" button_text="Buy Tickets"]
-[showpass_widget slug="workshop" button_text="Register Now"]
-[showpass_widget type="product" id="123" button_text="Shop Now"]
+[showpass_widget slug="summer-fest" label="Buy Tickets"]
+[showpass_widget slug="workshop" label="Register Now"]
+[showpass_widget type="product" id="123" label="Shop Now"]
 ```
 
 ---
@@ -201,54 +201,114 @@ Control what the widget loads and how it behaves using these parameters.
 
 ---
 
-### Height
+### Tracking ID
 
-**Parameter:** `height="600px"`
+**Parameter:** `tracking_id="your-tracking-token"`
 
-**Use case:** Set custom height for embedded widgets
+**Use case:** Directly set an affiliate tracking ID for this widget (alternative to URL-based `aff` parameter)
 
-**Default:** Auto-adjusts based on content
-
-**Valid values:** Any CSS height value (px, vh, rem)
+**Value:** Your Showpass tracking token
 
 **Example:**
 
 ```text
-[showpass_widget slug="event" embedded="true" height="800px"]
+[showpass_widget slug="concert" tracking_id="8ee54af5"]
+```
+
+**Note:** This is a shortcode parameter alternative to using `?aff=token` in the URL. See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links) for more details.
+
+---
+
+### Show specific tickets
+
+**Parameter:** `show_specific_tickets="ticket-id-1,ticket-id-2"`
+
+**Use case:** Show only specific ticket types in the widget
+
+**Value:** Comma-separated list of ticket type IDs
+
+**Example:**
+
+```text
+[showpass_widget slug="event" show_specific_tickets="123,456"]
 ```
 
 ---
 
-### Width
+### Theme
 
-**Parameter:** `width="100%"`
+**Parameter:** `theme="dark"`
 
-**Use case:** Set custom width for embedded widgets
+**Use case:** Override the global dark theme setting for this specific widget
 
-**Default:** `100%`
+**Default:** Uses global admin setting (`option_theme_dark`)
 
-**Valid values:** Any CSS width value (%, px, vw, rem)
+**Values:** `"dark"` to enable dark theme, or omit to use global setting
 
 **Example:**
 
 ```text
-[showpass_widget slug="event" embedded="true" width="800px"]
+[showpass_widget slug="concert" theme="dark"]
 ```
+
+**Note:** This per-widget setting overrides the global admin setting if set.
 
 ---
 
-### Hide sold out events
+### Custom CSS class
 
-**Parameter:** `hide_sold_out="true"`
+**Parameter:** `class="your-css-class"`
 
-**Use case:** Automatically hide tickets that are sold out
+**Use case:** Apply custom CSS classes to the button for styling
 
-**Default:** `false` (shows sold out items)
+**Default:** `"showpass-button"` (with default icon)
+
+**Important:** When you provide a custom `class`, the default ticket icon is **not included**. If you want the icon, use the default class or add your own icon via CSS.
 
 **Example:**
 
 ```text
-[showpass_widget slug="festival" hide_sold_out="true"]
+[showpass_widget slug="event" class="btn btn-primary my-custom-button"]
+```
+
+**Note:** If you've set a default button class in admin settings (`option_showpass_default_button_class`), that will be used instead of `showpass-button` when `class` is not specified.
+
+---
+
+### Keep shopping button text
+
+**Parameter:** `keep_shopping="true|false"`
+
+**Use case:** Override the global "Keep Shopping" button setting for this widget
+
+**Default:** Uses global admin setting (`option_keep_shopping`)
+
+**Values:** 
+- `"true"` - Show "Keep Shopping" button
+- `"false"` - Show "Close" button instead
+
+**Example:**
+
+```text
+[showpass_widget slug="event" keep_shopping="false"]
+```
+
+**Note:** This per-widget setting overrides the global admin setting.
+
+---
+
+### Widget description visibility
+
+**Parameter:** `show_widget_description="true|false"`
+
+**Use case:** Override the global widget description setting for this widget
+
+**Default:** Uses global admin setting (`option_show_widget_description`)
+
+**Example:**
+
+```text
+[showpass_widget slug="event" show_widget_description="true"]
 ```
 
 ---
@@ -266,7 +326,7 @@ Control what the widget loads and how it behaves using these parameters.
 ### Custom button with text
 
 ```text
-[showpass_widget slug="summer-concert" button_text="Get Your Tickets"]
+[showpass_widget slug="summer-concert" label="Get Your Tickets"]
 ```
 
 ---
@@ -282,7 +342,7 @@ Control what the widget loads and how it behaves using these parameters.
 ### Product purchase button
 
 ```text
-[showpass_widget type="product" id="12345" button_text="Buy Merchandise"]
+[showpass_widget type="product" id="12345" label="Buy Merchandise"]
 ```
 
 ---
@@ -290,15 +350,15 @@ Control what the widget loads and how it behaves using these parameters.
 ### Membership signup (embedded)
 
 ```text
-[showpass_widget type="membership" id="67890" embedded="true" height="700px"]
+[showpass_widget type="membership" id="67890" embedded="true"]
 ```
 
 ---
 
-### Custom sized embedded widget
+### Widget with tracking and custom styling
 
 ```text
-[showpass_widget slug="annual-gala" embedded="true" height="800px" width="90%"]
+[showpass_widget slug="annual-gala" label="Buy Tickets" tracking_id="campaign-123" theme="dark" class="custom-btn"]
 ```
 
 ---
@@ -346,9 +406,9 @@ Create a dedicated page for each event with embedded widget:
 Add multiple buttons for different events:
 
 ```text
-[showpass_widget slug="concert-a" button_text="Concert A Tickets"]
-[showpass_widget slug="concert-b" button_text="Concert B Tickets"]
-[showpass_widget slug="concert-c" button_text="Concert C Tickets"]
+[showpass_widget slug="concert-a" label="Concert A Tickets"]
+[showpass_widget slug="concert-b" label="Concert B Tickets"]
+[showpass_widget slug="concert-c" label="Concert C Tickets"]
 ```
 
 ---
@@ -358,7 +418,7 @@ Add multiple buttons for different events:
 Add a button in your sidebar (using a Shortcode widget or block):
 
 ```text
-[showpass_widget slug="next-show" button_text="Buy Tickets"]
+[showpass_widget slug="next-show" label="Buy Tickets"]
 ```
 
 ---
@@ -368,7 +428,7 @@ Add a button in your sidebar (using a Shortcode widget or block):
 Embed product purchase widgets on product pages:
 
 ```text
-[showpass_widget type="product" id="501" embedded="true" height="600px"]
+[showpass_widget type="product" id="501" embedded="true"]
 ```
 
 ---
@@ -399,11 +459,11 @@ Embed product purchase widgets on product pages:
 
 ---
 
-### Embedded widget is too small/large
+### Embedded widget styling issues
 
-- **Adjust height parameter:** Use `height="800px"` or other values
-- **Test different sizes:** Try various heights until optimal
-- **Use responsive units:** Consider `vh` units for viewport-relative sizing
+- **Use custom CSS:** Target the embedded widget container with CSS
+- **Check container width:** Ensure parent container has adequate width
+- **Theme conflicts:** Check for CSS conflicts with your theme
 
 ---
 

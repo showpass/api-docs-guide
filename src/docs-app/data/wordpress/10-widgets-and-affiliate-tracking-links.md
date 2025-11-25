@@ -5,7 +5,14 @@ Showpass allows you to use affiliate tracking links to monitor sales performance
 
 ## How affiliate tracking works
 
-### Step 1: Create an affiliate tracking link in Showpass
+There are two ways to set tracking IDs for Showpass widgets:
+
+1. **URL-based tracking** (using `?aff=` parameter) - Cookie-based, persists across page views
+2. **Direct tracking** (using `tracking_id` parameter) - Set directly in the shortcode
+
+### Method 1: URL-based tracking with `aff` parameter
+
+#### Step 1: Create an affiliate tracking link in Showpass
 
 1. Log in to your Showpass dashboard
 2. Navigate to your event settings
@@ -14,7 +21,7 @@ Showpass allows you to use affiliate tracking links to monitor sales performance
 
 > **Need help?** Visit the [Showpass Help Center](https://help.showpass.com/hc/en-us) for assistance with tracking link setup.
 
-### Step 2: Customer clicks the tracking link
+#### Step 2: Customer clicks the tracking link
 
 Share your full tracking link in campaigns or with affiliates:
 
@@ -24,7 +31,7 @@ https://www.showpass.com/your-event/?tracking-id=8ee54af5
 
 When customers click this link, they're taken to Showpass and the tracking token is recorded.
 
-### Step 3: Use the `aff` parameter on your website
+#### Step 3: Use the `aff` parameter on your website
 
 To integrate tracking with your WordPress site where `[showpass_widget]` is used:
 
@@ -40,13 +47,39 @@ https://yourwebsite.com/event-page/?aff=8ee54af5
 - When users visit this URL, the plugin creates a browser cookie storing the `aff` token
 - The cookie persists across page views during the user's session
 
-### Step 4: Automatic tracking ID injection
+#### Step 4: Automatic tracking ID injection
 
 The `[showpass_widget]` shortcode (specifically `type="event"`) automatically:
 
 1. Looks for the `aff` cookie
 2. If found, injects the `tracking-id` into the Showpass purchase widget
 3. Attributes the sale to the correct affiliate/campaign in Showpass reports
+
+### Method 2: Direct tracking with `tracking_id` parameter
+
+**Parameter:** `tracking_id="your-tracking-token"`
+
+You can also set tracking directly in the shortcode without using URL parameters:
+
+```text
+[showpass_widget slug="my-event" tracking_id="8ee54af5"]
+```
+
+**Advantages:**
+- No cookie dependency
+- Works immediately without URL parameters
+- Can be different for each widget on the same page
+
+**When to use:**
+- When you want tracking set directly in the shortcode
+- When you don't want to rely on cookies
+- When different widgets on the same page need different tracking IDs
+
+**Example:**
+```text
+[showpass_widget slug="event-a" tracking_id="campaign-a"]
+[showpass_widget slug="event-b" tracking_id="campaign-b"]
+```
 
 ---
 
@@ -122,7 +155,7 @@ Business cards: ?aff=qr_businesscard
 
 ### Current support scope
 
-> **Note:** Affiliate tracking is currently supported for `[showpass_widget type="event"]`. Check with Showpass support or test if you need tracking for products or memberships.
+> **Note:** Affiliate tracking via URL `aff` parameter is currently supported for `[showpass_widget type="event"]`. The `tracking_id` shortcode parameter works for events, products, and memberships. Check with Showpass support or test if you need tracking for products or memberships via URL parameters.
 
 ### Cookie-based system
 

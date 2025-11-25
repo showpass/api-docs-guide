@@ -163,12 +163,20 @@ Control how recurring events (events with multiple dates) appear in the list.
   * `"true"` (default) – Show non-recurring events **and** the main parent event for each recurring series.
   * `"false"` – Show non-recurring events **and** all individual occurrences.
 
+**Important:** By default, `only_parents="true"` is automatically applied, meaning only parent events are shown unless you explicitly set `only_parents="false"`.
+
 **Common patterns:**
 
 * **Show only the parent event of each recurring series:**
 
   ```text
   [showpass_events type="list" only_parents="true"]
+  ```
+
+* **Show all individual occurrences of recurring events:**
+
+  ```text
+  [showpass_events type="list" only_parents="false"]
   ```
 
 * **Hide all recurring events entirely:**
@@ -199,6 +207,46 @@ Control how recurring events (events with multiple dates) appear in the list.
   ```text
   [showpass_events type="list" show="all"]
   ```
+
+---
+
+### `show_eyereturn="true|false"`
+
+* **Use case:** Control whether eye return functionality is enabled for events in this list.
+* **Default:** Not set (uses default behavior)
+* **Example:**
+
+  ```text
+  [showpass_events type="list" show_eyereturn="true"]
+  ```
+
+---
+
+### `override_q="true"`
+
+* **Use case:** Prevent URL query parameter `q` (search query) from being applied to the API request.
+* **Default:** `false` (URL `q` parameter is applied if present)
+* **Example:**
+
+  ```text
+  [showpass_events type="list" override_q="true"]
+  ```
+
+**Note:** When `override_q="true"`, any `?q=searchterm` in the URL will be ignored. This is useful when you want to control search behavior entirely through shortcode parameters.
+
+---
+
+### `tracking_id="your-tracking-token"`
+
+* **Use case:** Set an affiliate tracking ID for all events in this list.
+* **Value:** Your Showpass tracking token
+* **Example:**
+
+  ```text
+  [showpass_events type="list" tracking_id="campaign-123"]
+  ```
+
+**Note:** This applies tracking to all events displayed in the list. For per-event tracking, use the `tracking_id` parameter in individual `[showpass_widget]` shortcodes.
 
 ---
 

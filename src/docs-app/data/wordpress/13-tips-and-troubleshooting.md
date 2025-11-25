@@ -341,6 +341,67 @@ Use the `venue_ids` parameter to filter by specific venues:
 
 ---
 
+### Pricing table is empty or shows wrong events
+
+**Issue:** `[showpass_pricing_table]` shortcode displays no events or incorrect events
+
+**Possible causes:**
+
+1. Invalid or missing event IDs
+2. Events not published/visible
+3. Spaces in the `ids` parameter
+4. Organization ID mismatch
+
+**Solutions:**
+
+1. **Verify Event IDs:** Check that all IDs in the `ids` parameter exist in your Showpass dashboard
+2. **Remove spaces:** Ensure no spaces in comma-separated IDs: `ids="123,456"` not `ids="123, 456"`
+3. **Check event status:** Events must be published and visible to appear in the table
+4. **Verify Organization ID:** Ensure your Organization ID in plugin settings matches the events' organization
+5. **Test individual events:** Try using `[showpass_widget]` with each event ID to verify they're accessible
+
+---
+
+### Admin meta box doesn't appear
+
+**Issue:** "Showpass URL & Shortcode Generator" meta box is not visible in page/post editor
+
+**Possible causes:**
+
+1. Access token not configured
+2. Wrong post type
+3. User permissions
+4. Plugin not active
+
+**Solutions:**
+
+1. **Check access token:** Go to **Showpass API** settings and verify `option_showpass_access_token` is set
+2. **Verify post type:** Meta box only appears on **Pages** and **Posts**, not custom post types
+3. **Check permissions:** Your user account must have `edit_posts` capability
+4. **Verify plugin:** Ensure Showpass WordPress Extension is activated
+5. **Refresh page:** After adding access token, refresh the editor page
+
+See [Admin meta box documentation](./15-admin-meta-box-shortcode-generator) for complete details.
+
+---
+
+### Default behaviors not working as expected
+
+**Issue:** Events or widgets behave differently than documented
+
+**Common default behaviors to be aware of:**
+
+1. **`only_parents` defaults to `true`:** Event lists show only parent events by default, not individual occurrences
+   - **Solution:** Add `only_parents="false"` to show all occurrences
+
+2. **Custom `class` disables icon:** When using `class` parameter in `[showpass_widget]`, the default ticket icon is not included
+   - **Solution:** Add your own icon via CSS or use the default `showpass-button` class
+
+3. **Default button label:** Widget buttons default to "Get Tickets" (not "Tickets")
+   - **Solution:** Use `label="Your Text"` to customize
+
+---
+
 ## Best practices
 
 ### Use shortcode blocks
