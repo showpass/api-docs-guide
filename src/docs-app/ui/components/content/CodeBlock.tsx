@@ -1,8 +1,7 @@
 import React from "react";
-import { Highlight, themes } from "prism-react-renderer";
+import { Highlight } from "prism-react-renderer";
 import { Copy, Check } from "lucide-react";
 import { useClipboard } from "../../../../shared/hooks/use-clipboard";
-import { useTheme } from "next-themes";
 import { cn } from "@/shared/lib/utils.ts";
 
 interface CodeBlockProps {
@@ -12,16 +11,16 @@ interface CodeBlockProps {
 
 const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
   const { copy, isCopied } = useClipboard();
-  const { resolvedTheme } = useTheme();
 
   const copyToClipboard = () => {
     copy(code);
   };
 
-  const currentPrismTheme =
-    resolvedTheme === "light" ? themes.jettwaveLight : themes.jettwaveDark;
-
-  // No preBackgroundColor variable needed here, we rely on CSS override for .dark/.ocean .prose pre
+  // Use a minimal theme - our CSS will handle all the colors
+  const minimalTheme = {
+    plain: {},
+    styles: [],
+  };
 
 
   return (
@@ -29,7 +28,7 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
       <Highlight
         code={code}
         language={language || "text"}
-        theme={currentPrismTheme}
+        theme={minimalTheme}
       >
         {({ className, style, tokens, getLineProps, getTokenProps }) => (
           <div className="relative">
@@ -40,18 +39,16 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
               title={isCopied ? "Copied!" : "Copy to clipboard"}
             >
               {isCopied ? (
-                <Check className="h-4 w-4 text-green-500" />
+                <Check className="h-4 w-4 text-[hsl(var(--success))]" />
               ) : (
                 <Copy className="h-4 w-4 text-muted-foreground hover:text-foreground" />
               )}
             </button>
             <pre
-              className="overflow-x-auto relative cursor-pointer m-0"
+              className="overflow-x-auto relative cursor-pointer m-0 bg-[hsl(var(--prose-pre-bg))]"
               style={{
-                ...style, // This will include prism theme's default background and text colors
                 margin: 0,
                 padding: "1rem",
-                // NO explicit backgroundColor here, relying on CSS to override prism theme's default bg
               }}
               onClick={copyToClipboard}
             >

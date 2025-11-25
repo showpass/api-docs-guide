@@ -28,6 +28,14 @@ export interface ThemeColors {
   destructive: string;
   destructiveForeground: string;
   
+  // Semantic colors
+  success: string;
+  successForeground: string;
+  warning: string;
+  warningForeground: string;
+  error: string;
+  errorForeground: string;
+  
   // Borders and inputs
   border: string;
   input: string;
@@ -65,6 +73,39 @@ export interface SyntaxColors {
   property: string;
   constant: string;
   parameter?: string;
+  import?: string;
+  decorator?: string;
+  type?: string;
+  tag?: string;
+  attribute?: string;
+}
+
+export interface ApiBadgeColors {
+  GET: {
+    bg: string;
+    text: string;
+    border: string;
+  };
+  POST: {
+    bg: string;
+    text: string;
+    border: string;
+  };
+  PUT: {
+    bg: string;
+    text: string;
+    border: string;
+  };
+  PATCH: {
+    bg: string;
+    text: string;
+    border: string;
+  };
+  DELETE: {
+    bg: string;
+    text: string;
+    border: string;
+  };
 }
 
 export interface ThemeDefinition {
@@ -72,6 +113,7 @@ export interface ThemeDefinition {
   name: string;
   colors: ThemeColors;
   syntax: SyntaxColors;
+  badges: ApiBadgeColors;
 }
 
 export interface ThemeMetadata {

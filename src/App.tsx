@@ -4,6 +4,7 @@ import { Toaster as Sonner } from "./shared/components/sonner";
 import { TooltipProvider } from "./shared/components/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeStyles } from "./shared/themes/ThemeStyles.tsx";
 
 // Layout and Pages
 // Import DocLayout directly. DocLayoutDataProvider will be used by child page components.
@@ -26,6 +27,7 @@ const App = () => (
     storageKey="showpass-docs-theme"
     themes={["light", "ocean", "forest"]}
   >
+    <ThemeStyles />
     <QueryClientProvider client={queryClient}>
       <TooltipProvider>
         <Toaster />

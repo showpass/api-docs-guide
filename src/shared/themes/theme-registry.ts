@@ -112,6 +112,21 @@ export function generateSyntaxCSS(themeId: string): string {
       case 'parameter':
         if (color) selectors.push('.token.parameter');
         break;
+      case 'import':
+        if (color) selectors.push('.token.keyword.module', '.token.keyword.control.import', '.token.keyword.control.from');
+        break;
+      case 'decorator':
+        if (color) selectors.push('.token.decorator', '.token.annotation');
+        break;
+      case 'type':
+        if (color) selectors.push('.token.type', '.token.type-annotation', '.token.primitive');
+        break;
+      case 'tag':
+        if (color) selectors.push('.token.tag');
+        break;
+      case 'attribute':
+        if (color) selectors.push('.token.attr-name');
+        break;
     }
     
     if (selectors.length === 0) return '';
@@ -129,4 +144,24 @@ export function generateSyntaxCSS(themeId: string): string {
   }).filter(Boolean);
   
   return [...rules, ...tokenRules].join('\n');
+}
+
+/**
+ * Generate API badge CSS for a theme
+ */
+export function generateBadgeCSS(themeId: string): string {
+  const theme = themes[themeId];
+  if (!theme) return '';
+  
+  const className = themeId === 'light' ? '' : `.${themeId}`;
+  
+  const badgeRules = Object.entries(theme.badges).map(([method, colors]) => {
+    return `  ${className} .api-badge-${method} {
+    background-color: hsl(${colors.bg});
+    color: hsl(${colors.text});
+    border-color: hsl(${colors.border});
+  }`;
+  }).join('\n\n');
+  
+  return `  /* ${theme.name} theme API badges */\n${badgeRules}`;
 }

@@ -26,6 +26,12 @@ export const themes: Record<string, ThemeDefinition> = {
       accentForeground: '222.2 47.4% 11.2%',
       destructive: '0 84.2% 60.2%',
       destructiveForeground: '210 40% 98%',
+      success: '142 76% 36%',
+      successForeground: '210 40% 98%',
+      warning: '38 92% 50%',
+      warningForeground: '222.2 84% 4.9%',
+      error: '0 84.2% 60.2%',
+      errorForeground: '210 40% 98%',
       border: '214.3 31.8% 91.4%',
       input: '214.3 31.8% 91.4%',
       ring: '186 55% 31%',
@@ -57,6 +63,33 @@ export const themes: Record<string, ThemeDefinition> = {
       property: '180 60% 35%',     // Cyan for properties
       constant: '25 80% 45%',      // Warm orange for constants
     },
+    badges: {
+      GET: {
+        bg: '217 91% 60% / 0.1',
+        text: '217 91% 45%',
+        border: '217 91% 60% / 0.2',
+      },
+      POST: {
+        bg: '142 76% 36% / 0.1',
+        text: '142 76% 30%',
+        border: '142 76% 36% / 0.2',
+      },
+      PUT: {
+        bg: '38 92% 50% / 0.1',
+        text: '38 92% 40%',
+        border: '38 92% 50% / 0.2',
+      },
+      PATCH: {
+        bg: '25 95% 53% / 0.1',
+        text: '25 95% 43%',
+        border: '25 95% 53% / 0.2',
+      },
+      DELETE: {
+        bg: '0 72% 51% / 0.1',
+        text: '0 72% 41%',
+        border: '0 72% 51% / 0.2',
+      },
+    },
   },
   
   ocean: {
@@ -79,6 +112,12 @@ export const themes: Record<string, ThemeDefinition> = {
       accentForeground: '0 0% 98%',
       destructive: '0 60% 50%',
       destructiveForeground: '0 0% 98%',
+      success: '142 70% 45%',
+      successForeground: '0 0% 98%',
+      warning: '45 90% 55%',
+      warningForeground: '222 47% 11%',
+      error: '0 70% 55%',
+      errorForeground: '0 0% 98%',
       border: '217 33% 17%',
       input: '217 33% 17%',
       ring: '186 55% 35%',
@@ -93,23 +132,55 @@ export const themes: Record<string, ThemeDefinition> = {
       proseBody: '0 0% 98%',
       proseHeadings: '0 0% 98%',
       proseLinks: '186 55% 35%',
-      proseCodeFg: '210 15% 85%',
-      proseCodeBg: '215 30% 20%',
-      prosePreBg: '200 28% 10%',
+      proseCodeFg: '190 25% 88%',
+      proseCodeBg: '210 70% 11%',
+      prosePreBg: '210 65% 8%',
     },
     syntax: {
-      keyword: '168 85% 65%',
-      operator: '175 75% 68%',
-      string: '142 70% 65%',
-      function: '50 95% 68%',
-      punctuation: '200 15% 75%',
-      plain: '180 15% 92%',
-      comment: '200 12% 55%',
-      number: '35 90% 68%',
-      className: '200 75% 70%',
-      property: '160 70% 68%',
-      constant: '38 88% 68%',
-      parameter: '180 15% 92%',
+      keyword: '190 85% 60%',        // Bright cyan for keywords (distinct from forest)
+      operator: '200 70% 65%',       // Sky blue for operators
+      string: '160 75% 55%',         // Aqua green for strings (more blue than forest)
+      function: '45 100% 65%',       // Bright yellow for functions
+      punctuation: '195 20% 70%',    // Light blue-grey for punctuation
+      plain: '190 25% 88%',          // Slightly blue-tinted white for plain text
+      comment: '200 18% 50%',        // Blue-grey for comments
+      number: '30 95% 62%',          // Orange-amber for numbers
+      className: '210 80% 65%',      // Blue for classes
+      property: '175 70% 60%',       // Teal for properties
+      constant: '35 90% 65%',        // Warm orange for constants
+      parameter: '190 25% 88%',      // Same as plain
+      import: '280 70% 65%',         // Purple for imports
+      decorator: '320 75% 60%',      // Pink-purple for decorators
+      type: '210 80% 65%',           // Blue for types
+      tag: '190 85% 60%',            // Same as keyword
+      attribute: '175 70% 60%',      // Same as property
+    },
+    badges: {
+      GET: {
+        bg: '190 80% 50% / 0.15',
+        text: '190 80% 70%',
+        border: '190 80% 50% / 0.3',
+      },
+      POST: {
+        bg: '142 70% 50% / 0.15',
+        text: '142 70% 65%',
+        border: '142 70% 50% / 0.3',
+      },
+      PUT: {
+        bg: '45 90% 55% / 0.15',
+        text: '45 90% 70%',
+        border: '45 90% 55% / 0.3',
+      },
+      PATCH: {
+        bg: '30 85% 55% / 0.15',
+        text: '30 85% 70%',
+        border: '30 85% 55% / 0.3',
+      },
+      DELETE: {
+        bg: '0 70% 55% / 0.15',
+        text: '0 70% 70%',
+        border: '0 70% 55% / 0.3',
+      },
     },
   },
   
@@ -133,6 +204,12 @@ export const themes: Record<string, ThemeDefinition> = {
       accentForeground: '180 10% 98%',
       destructive: '0 60% 50%',
       destructiveForeground: '0 0% 98%',
+      success: '142 70% 50%',
+      successForeground: '180 10% 95%',
+      warning: '50 85% 55%',
+      warningForeground: '200 25% 12%',
+      error: '0 65% 50%',
+      errorForeground: '180 10% 95%',
       border: '200 20% 20%',
       input: '200 20% 20%',
       ring: '168 76% 42%',
@@ -152,17 +229,49 @@ export const themes: Record<string, ThemeDefinition> = {
       prosePreBg: '200 28% 10%',
     },
     syntax: {
-      keyword: '168 85% 65%',
-      operator: '175 75% 68%',
-      string: '142 70% 65%',
-      function: '50 95% 68%',
-      punctuation: '200 15% 70%',
-      plain: '180 18% 88%',
-      comment: '200 12% 50%',
-      number: '35 90% 68%',
-      className: '200 75% 70%',
-      property: '160 70% 68%',
-      constant: '38 88% 68%',
+      keyword: '168 85% 58%',        // Emerald green for keywords
+      operator: '145 65% 60%',       // Green for operators
+      string: '142 70% 55%',         // Forest green for strings
+      function: '50 85% 60%',        // Muted yellow for functions
+      punctuation: '150 15% 65%',    // Grey-green for punctuation
+      plain: '155 20% 85%',          // Green-tinted white for plain text
+      comment: '150 15% 48%',        // Muted green for comments
+      number: '35 85% 62%',          // Orange for numbers
+      className: '168 75% 62%',      // Teal-green for classes
+      property: '160 70% 58%',       // Aqua-green for properties
+      constant: '38 85% 62%',        // Warm orange for constants
+      import: '280 60% 60%',         // Purple for imports
+      decorator: '310 65% 58%',      // Pink for decorators
+      type: '168 75% 62%',           // Same as className
+      tag: '168 85% 58%',            // Same as keyword
+      attribute: '160 70% 58%',      // Same as property
+    },
+    badges: {
+      GET: {
+        bg: '168 76% 42% / 0.15',
+        text: '168 76% 60%',
+        border: '168 76% 42% / 0.3',
+      },
+      POST: {
+        bg: '142 70% 50% / 0.15',
+        text: '142 70% 65%',
+        border: '142 70% 50% / 0.3',
+      },
+      PUT: {
+        bg: '50 90% 55% / 0.15',
+        text: '50 90% 70%',
+        border: '50 90% 55% / 0.3',
+      },
+      PATCH: {
+        bg: '35 85% 55% / 0.15',
+        text: '35 85% 70%',
+        border: '35 85% 55% / 0.3',
+      },
+      DELETE: {
+        bg: '0 65% 50% / 0.15',
+        text: '0 65% 65%',
+        border: '0 65% 50% / 0.3',
+      },
     },
   },
 };

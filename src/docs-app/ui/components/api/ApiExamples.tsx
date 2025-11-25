@@ -9,9 +9,8 @@ import { Card } from "@/shared/components/card.tsx";
 import { Check, Copy, Terminal } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
-import { Highlight, themes } from "prism-react-renderer";
+import { Highlight } from "prism-react-renderer";
 import { useClipboard } from "@/shared/hooks/use-clipboard.ts";
-import { useTheme } from "next-themes";
 
 type ApiExamplesProps = ApiExamplesData;
 
@@ -24,17 +23,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
 }) => {
   const { copy: copyCode, isCopied: isCodeCopied } = useClipboard();
   const { copy: copyResponse, isCopied: isResponseCopied } = useClipboard();
-  const { resolvedTheme } = useTheme();
   
-  // Use appropriate theme based on current mode
-  const codeTheme = resolvedTheme === 'dark' ? themes.vsDark : themes.github;
-
-  const methodColors = {
-    GET: "bg-blue-500/10 text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-800",
-    POST: "bg-green-500/10 text-green-600 dark:text-green-400 border-green-200 dark:border-green-800",
-    PUT: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-200 dark:border-amber-800",
-    PATCH: "bg-orange-500/10 text-orange-600 dark:text-orange-400 border-orange-200 dark:border-orange-800",
-    DELETE: "bg-red-500/10 text-red-600 dark:text-red-400 border-red-200 dark:border-red-800",
+  // Use a minimal theme - our CSS will handle all the colors
+  const minimalTheme = {
+    plain: {},
+    styles: [],
   };
 
   // Get the status code from the standardized response format
@@ -49,7 +42,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
           <span
             className={cn(
               "text-xs font-mono px-2 py-0.5 rounded-md border font-medium",
-              methodColors[method]
+              `api-badge-${method}`
             )}
           >
             {method}
@@ -116,7 +109,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               <Highlight
                 code={examples.python}
                 language="python"
-                theme={codeTheme}
+                theme={minimalTheme}
               >
                 {({
                   className,
@@ -127,11 +120,9 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto"
+                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))]"
                       style={{
-                        ...style,
                         margin: 0,
-                        background: 'transparent'
                       }}
                     >
                       <code className={className}>
@@ -150,7 +141,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
-                        <Check className="h-3 w-3 text-green-600" />
+                        <Check className="h-3 w-3 text-[hsl(var(--success))]" />
                       ) : (
                         <Copy className="h-3 w-3 text-muted-foreground" />
                       )}
@@ -166,7 +157,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               <Highlight
                 code={examples.node}
                 language="javascript"
-                theme={codeTheme}
+                theme={minimalTheme}
               >
                 {({
                   className,
@@ -177,11 +168,9 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto"
+                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))]"
                       style={{
-                        ...style,
                         margin: 0,
-                        background: 'transparent'
                       }}
                     >
                       <code className={className}>
@@ -200,7 +189,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
-                        <Check className="h-3 w-3 text-green-600" />
+                        <Check className="h-3 w-3 text-[hsl(var(--success))]" />
                       ) : (
                         <Copy className="h-3 w-3 text-muted-foreground" />
                       )}
@@ -216,7 +205,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               <Highlight
                 code={examples.curl}
                 language="bash"
-                theme={codeTheme}
+                theme={minimalTheme}
               >
                 {({
                   className,
@@ -227,11 +216,9 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto max-w-full"
+                      className="p-3 font-mono text-xs whitespace-pre overflow-x-auto max-w-full bg-[hsl(var(--prose-pre-bg))]"
                       style={{
-                        ...style,
                         margin: 0,
-                        background: 'transparent'
                       }}
                     >
                       <code className={className}>
@@ -250,7 +237,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
-                        <Check className="h-3 w-3 text-green-600" />
+                        <Check className="h-3 w-3 text-[hsl(var(--success))]" />
                       ) : (
                         <Copy className="h-3 w-3 text-muted-foreground" />
                       )}
@@ -266,11 +253,11 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
       <div className="space-y-3 mt-8">
         <div className="flex items-center justify-between border-b border-border/30 pb-1.5">
           <div className="text-xs font-medium text-muted-foreground/70 flex items-center">
-            <Check className="h-3 w-3 mr-1.5 text-green-600/70" />
+            <Check className="h-3 w-3 mr-1.5 text-[hsl(var(--success))]" />
             Response
           </div>
-          <div className="text-xs font-mono px-1.5 py-0.5 rounded bg-green-500/10 text-green-600 dark:text-green-400 flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-green-500/60"></span>
+          <div className="text-xs font-mono px-1.5 py-0.5 rounded bg-[hsl(var(--success)/0.1)] text-[hsl(var(--success))] flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-[hsl(var(--success)/0.6)]"></span>
             {statusCode}
           </div>
         </div>
@@ -278,16 +265,14 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
           <Highlight
             code={responseText}
             language="javascript"
-            theme={codeTheme}
+            theme={minimalTheme}
           >
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <div className="relative">
                 <pre
-                  className="p-3 font-mono text-xs whitespace-pre overflow-x-auto"
+                  className="p-3 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))]"
                   style={{
-                    ...style,
                     margin: 0,
-                    background: 'transparent'
                   }}
                 >
                   <code className={className}>
@@ -306,7 +291,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                   aria-label="Copy response"
                 >
                   {isResponseCopied ? (
-                    <Check className="h-3 w-3 text-green-600" />
+                    <Check className="h-3 w-3 text-[hsl(var(--success))]" />
                   ) : (
                     <Copy className="h-3 w-3 text-muted-foreground" />
                   )}
