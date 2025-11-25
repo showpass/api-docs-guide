@@ -44,7 +44,7 @@ const Index = () => {
           </div>
           <h1 className="text-3xl font-bold mb-2 !mt-0">
             <span className="text-foreground">Developer </span>
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary to-primary/70">Documentation</span>
+            <span className="text-primary">Documentation</span>
           </h1>
           <p className="text-sm text-muted-foreground max-w-2xl !my-2">
             Start building powerful event experiences today with just a few lines of code.
@@ -75,9 +75,9 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">API Reference</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event listings</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event filtering</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Ticket management</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Event listings</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Event filtering</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Ticket management</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">Access event information and perform operations with our REST APIs.</p>
@@ -105,9 +105,9 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">JavaScript SDK</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Interactive widgets</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Shopping cart</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event calendars</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Interactive widgets</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Shopping cart</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Event calendars</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">Embeddable widgets and functions to integrate Showpass directly into your frontend.</p>
@@ -133,9 +133,9 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">WordPress Plugin</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Simple shortcodes</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Custom templates</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Easy config</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Simple shortcodes</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Custom templates</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Easy config</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">Effortlessly integrate Showpass into your WordPress site with our official plugin.</p>
@@ -175,9 +175,9 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Webhooks</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Real-time updates</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Secure delivery</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Event automation</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Real-time updates</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Secure delivery</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Event automation</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">
@@ -200,9 +200,9 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Google Tag Manager</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">GA4 integration</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Ecommerce tracking</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Custom events</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">GA4 integration</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Ecommerce tracking</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Custom events</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">
@@ -225,9 +225,9 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Facebook Integration</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Pixel tracking</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Conversions API</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Custom audiences</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Pixel tracking</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Conversions API</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Custom audiences</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">
@@ -267,10 +267,10 @@ const Index = () => {
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Security & Compliance</h3>
               </div>
               <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">PCI DSS Level 1</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">TX-RAMP Certified</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">GDPR Compliant</span>
-                <span className="bg-muted/50 px-1.5 py-0.5 rounded text-muted-foreground border border-border/50">Responsibility Matrix</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">PCI DSS Level 1</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">TX-RAMP Certified</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">GDPR Compliant</span>
+                <span className="feature-badge px-1.5 py-0.5 rounded border">Responsibility Matrix</span>
               </div>
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">

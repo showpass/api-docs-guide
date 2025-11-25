@@ -176,7 +176,7 @@ const WidgetPlayground: React.FC = () => {
                 onClick={() => setActiveTab("popup")}
                 className={`text-xs h-6 px-3 transition-colors ${
                   activeTab === "popup" 
-                    ? "bg-primary text-primary-foreground" 
+                    ? "playground-nav-active" 
                     : "hover:bg-muted"
                 }`}
               >
@@ -188,7 +188,7 @@ const WidgetPlayground: React.FC = () => {
                 onClick={() => setActiveTab("mounted")}
                 className={`text-xs h-6 px-3 transition-colors ${
                   activeTab === "mounted" 
-                    ? "bg-primary text-primary-foreground" 
+                    ? "playground-nav-active" 
                     : "hover:bg-muted"
                 }`}
               >
@@ -207,7 +207,7 @@ const WidgetPlayground: React.FC = () => {
                     onClick={() => setActiveWidget(widget)}
                     className={`text-xs h-6 px-2 transition-colors ${
                       activeWidget === widget 
-                        ? "bg-primary text-primary-foreground" 
+                        ? "playground-nav-active" 
                         : "hover:bg-muted"
                     }`}
                   >
@@ -252,7 +252,7 @@ const WidgetPlayground: React.FC = () => {
                       options={modalWidgetOptions}
                     />
                   ) : (
-                    <div className="text-amber-600 dark:text-amber-400 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+                    <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
                       <p className="text-sm">Enter your Venue ID above to see the calendar widget in action.</p>
                     </div>
@@ -287,7 +287,7 @@ const WidgetPlayground: React.FC = () => {
                       🎫 Buy Tickets
                     </Button>
                   ) : (
-                    <div className="text-amber-600 dark:text-amber-400 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+                    <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
                       <p className="text-sm">Enter your Event ID above to enable ticket purchasing.</p>
                     </div>
@@ -311,7 +311,7 @@ const WidgetPlayground: React.FC = () => {
                       options={modalWidgetOptions}
                     />
                   ) : (
-                    <div className="text-amber-600 dark:text-amber-400 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+                    <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
                       <p className="text-sm">Enter your Membership ID above to show the join button.</p>
                     </div>
@@ -335,7 +335,7 @@ const WidgetPlayground: React.FC = () => {
                       options={modalWidgetOptions}
                     />
                   ) : (
-                    <div className="text-amber-600 dark:text-amber-400 p-4 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800">
+                    <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
                       <p className="text-sm">Enter your Product ID above to enable product sales.</p>
                     </div>
@@ -380,7 +380,7 @@ const WidgetPlayground: React.FC = () => {
                     <ShowpassMountedCalendarWidget venueId={venueId} themeColor={themeColor} />
                   </div>
                 ) : (
-                  <div className="text-amber-600 dark:text-amber-400 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800 text-center">
+                  <div className="warning-box p-6 rounded-md border text-center">
                     <div className="text-2xl mb-2">⚠️</div>
                     <p className="font-medium">Venue ID Required</p>
                   </div>
@@ -394,7 +394,7 @@ const WidgetPlayground: React.FC = () => {
                     <ShowpassMountedEventWidget id={eventId} themeColor={themeColor} />
                   </div>
                 ) : (
-                  <div className="text-amber-600 dark:text-amber-400 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800 text-center">
+                  <div className="warning-box p-6 rounded-md border text-center">
                     <div className="text-2xl mb-2">⚠️</div>
                     <p className="font-medium">Event ID Required</p>
                   </div>
@@ -408,7 +408,7 @@ const WidgetPlayground: React.FC = () => {
                     <ShowpassMountedMembershipWidget id={membershipId} themeColor={themeColor} />
                   </div>
                 ) : (
-                  <div className="text-amber-600 dark:text-amber-400 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800 text-center">
+                  <div className="warning-box p-6 rounded-md border text-center">
                     <div className="text-2xl mb-2">⚠️</div>
                     <p className="font-medium">Membership ID Required</p>
                   </div>
@@ -422,7 +422,7 @@ const WidgetPlayground: React.FC = () => {
                     <ShowpassMountedProductWidget id={productId} themeColor={themeColor} />
                   </div>
                 ) : (
-                  <div className="text-amber-600 dark:text-amber-400 p-6 bg-amber-50 dark:bg-amber-900/20 rounded-md border border-amber-200 dark:border-amber-800 text-center">
+                  <div className="warning-box p-6 rounded-md border text-center">
                     <div className="text-2xl mb-2">⚠️</div>
                     <p className="font-medium">Product ID Required</p>
                   </div>

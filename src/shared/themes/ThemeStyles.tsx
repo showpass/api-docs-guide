@@ -5,6 +5,7 @@
 
 import { useEffect } from 'react';
 import { getAllThemes, generateSyntaxCSS, generateBadgeCSS } from './theme-registry';
+import { generateWarningBoxCSS, generatePlaygroundNavCSS, generateFeatureBadgeCSS } from './theme-config';
 
 export function ThemeStyles() {
   useEffect(() => {
@@ -25,7 +26,13 @@ export function ThemeStyles() {
       return `${syntaxCSS}\n\n${badgeCSS}`;
     }).join('\n\n');
     
-    styleElement.textContent = css;
+    // Add all custom CSS
+    const warningBoxCSS = generateWarningBoxCSS();
+    const playgroundNavCSS = generatePlaygroundNavCSS();
+    const featureBadgeCSS = generateFeatureBadgeCSS();
+    const finalCSS = `${css}\n\n  /* Warning Box Styles */\n${warningBoxCSS}\n\n  /* Playground Navigation Styles */\n${playgroundNavCSS}\n\n  /* Feature Badge Styles */\n${featureBadgeCSS}`;
+    
+    styleElement.textContent = finalCSS;
     
     return () => {
       // Cleanup on unmount

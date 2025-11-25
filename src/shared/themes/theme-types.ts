@@ -58,6 +58,22 @@ export interface ThemeColors {
   proseCodeFg: string;
   proseCodeBg: string;
   prosePreBg: string;
+  
+  // Warning box colors (for Widget Playground and similar alerts)
+  warningBox: string;
+  warningBoxForeground: string;
+  warningBoxBackground: string;
+  warningBoxBorder: string;
+  
+  // Widget Playground navigation colors
+  playgroundNav: string;
+  playgroundNavForeground: string;
+  playgroundNavHover: string;
+  
+  // Feature badge colors
+  featureBadgeBackground: string;
+  featureBadgeForeground: string;
+  featureBadgeBorder: string;
 }
 
 export interface SyntaxColors {

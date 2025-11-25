@@ -49,6 +49,16 @@ export const themes: Record<string, ThemeDefinition> = {
       proseCodeFg: '0 0% 15%',
       proseCodeBg: '0 0% 90%',
       prosePreBg: '0 0% 96%',
+      warningBox: '38 92% 50%',
+      warningBoxForeground: '38 92% 40%',
+      warningBoxBackground: '38 92% 50% / 0.1',
+      warningBoxBorder: '38 92% 50% / 0.2',
+      playgroundNav: '217 91% 60%',
+      playgroundNavForeground: '0 0% 100%',
+      playgroundNavHover: '217 91% 65%',
+      featureBadgeBackground: '210 40% 96.1% / 0.5',
+      featureBadgeForeground: '215 20% 50%',
+      featureBadgeBorder: '214.3 31.8% 91.4% / 0.5',
     },
     syntax: {
       keyword: '220 90% 45%',      // Deep blue for keywords
@@ -135,6 +145,16 @@ export const themes: Record<string, ThemeDefinition> = {
       proseCodeFg: '190 25% 88%',
       proseCodeBg: '210 70% 11%',
       prosePreBg: '210 65% 8%',
+      warningBox: '45 90% 55%',
+      warningBoxForeground: '45 90% 70%',
+      warningBoxBackground: '45 90% 55% / 0.15',
+      warningBoxBorder: '45 90% 55% / 0.25',
+      playgroundNav: '190 80% 50%',
+      playgroundNavForeground: '222 47% 11%',
+      playgroundNavHover: '190 80% 55%',
+      featureBadgeBackground: '190 80% 50% / 0.12',
+      featureBadgeForeground: '190 70% 70%',
+      featureBadgeBorder: '190 80% 50% / 0.25',
     },
     syntax: {
       keyword: '190 85% 60%',        // Bright cyan for keywords (distinct from forest)
@@ -227,6 +247,16 @@ export const themes: Record<string, ThemeDefinition> = {
       proseCodeFg: '180 10% 95%',
       proseCodeBg: '200 20% 20%',
       prosePreBg: '200 28% 10%',
+      warningBox: '50 85% 55%',
+      warningBoxForeground: '50 90% 70%',
+      warningBoxBackground: '50 85% 55% / 0.15',
+      warningBoxBorder: '50 85% 55% / 0.25',
+      playgroundNav: '168 76% 42%',
+      playgroundNavForeground: '180 20% 98%',
+      playgroundNavHover: '168 76% 48%',
+      featureBadgeBackground: '168 76% 42% / 0.12',
+      featureBadgeForeground: '168 76% 60%',
+      featureBadgeBorder: '168 76% 42% / 0.25',
     },
     syntax: {
       keyword: '168 85% 58%',        // Emerald green for keywords
@@ -277,3 +307,48 @@ export const themes: Record<string, ThemeDefinition> = {
 };
 
 export const defaultTheme = 'light';
+
+/**
+ * Generate warning box CSS classes for all themes
+ */
+export function generateWarningBoxCSS(): string {
+  return Object.entries(themes).map(([themeId, theme]) => {
+    const className = themeId === 'light' ? '' : `.${themeId}`;
+    return `  ${className} .warning-box {
+    color: hsl(${theme.colors.warningBoxForeground});
+    background-color: hsl(${theme.colors.warningBoxBackground});
+    border-color: hsl(${theme.colors.warningBoxBorder});
+  }`;
+  }).join('\n\n');
+}
+
+/**
+ * Generate playground navigation CSS classes for all themes
+ */
+export function generatePlaygroundNavCSS(): string {
+  return Object.entries(themes).map(([themeId, theme]) => {
+    const className = themeId === 'light' ? '' : `.${themeId}`;
+    return `  ${className} .playground-nav-active {
+    background-color: hsl(${theme.colors.playgroundNav});
+    color: hsl(${theme.colors.playgroundNavForeground});
+  }
+  
+  ${className} .playground-nav-active:hover {
+    background-color: hsl(${theme.colors.playgroundNavHover});
+  }`;
+  }).join('\n\n');
+}
+
+/**
+ * Generate feature badge CSS classes for all themes
+ */
+export function generateFeatureBadgeCSS(): string {
+  return Object.entries(themes).map(([themeId, theme]) => {
+    const className = themeId === 'light' ? '' : `.${themeId}`;
+    return `  ${className} .feature-badge {
+    background-color: hsl(${theme.colors.featureBadgeBackground});
+    color: hsl(${theme.colors.featureBadgeForeground});
+    border-color: hsl(${theme.colors.featureBadgeBorder});
+  }`;
+  }).join('\n\n');
+}
