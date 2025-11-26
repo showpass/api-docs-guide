@@ -235,26 +235,6 @@ Control what the widget loads and how it behaves using these parameters.
 
 ---
 
-### Theme
-
-**Parameter:** `theme="dark"`
-
-**Use case:** Override the global dark theme setting for this specific widget
-
-**Default:** Uses global admin setting (`option_theme_dark`)
-
-**Values:** `"dark"` to enable dark theme, or omit to use global setting
-
-**Example:**
-
-```text
-[showpass_widget slug="concert" theme="dark"]
-```
-
-**Note:** This per-widget setting overrides the global admin setting if set.
-
----
-
 ### Custom CSS class
 
 **Parameter:** `class="your-css-class"`
