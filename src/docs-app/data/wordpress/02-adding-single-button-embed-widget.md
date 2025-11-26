@@ -46,7 +46,7 @@ Create a simple button that opens the Showpass purchase widget in a pop-up:
 [showpass_widget slug="my-awesome-concert"]
 ```
 
-This creates a button with the default label **"Tickets"**. When clicked, the widget opens for ticket purchases.
+This creates a button with the default label **"Get Tickets"**. When clicked, the widget opens for ticket purchases.
 
 ---
 
@@ -338,7 +338,7 @@ Control what the widget loads and how it behaves using these parameters.
 ### Widget with tracking and custom styling
 
 ```text
-[showpass_widget slug="annual-gala" label="Buy Tickets" tracking_id="campaign-123" theme="dark" class="custom-btn"]
+[showpass_widget slug="annual-gala" label="Buy Tickets" tracking_id="campaign-123" class="custom-btn"]
 ```
 
 ---
