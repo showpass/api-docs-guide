@@ -338,7 +338,7 @@
           {
             "type": "TEMPLATE",
             "key": "html",
-            "value": "<script nonce=\"{{nonce}}\">\nsnaptr('track', 'PURCHASE', {\n  'price': {{DLV - Showpass ecommerce.value}}, \n  'currency': {{DLV - Showpass ecommerce.currency}}', \n  'transaction_id': '{{DLV - Showpass ecommerce.transaction_id}}', \n  'item_ids': {{CJS - Showpass Item IDs Array}}, \n  'item_category': '', \n  'number_items': {{CJS - Showpass Total Items Quantity}}, \n  'uuid_c1': '', \n  'user_email': '', \n  'user_phone_number': '', \n  'user_hashed_email': '', \n  'user_hashed_phone_number': ''\n});\n</script>"
+            "value": "<script nonce=\"{{nonce}}\">\nsnaptr('track', 'PURCHASE', {\n  'price': {{DLV - Showpass ecommerce.value}}, \n  'currency': '{{DLV - Showpass ecommerce.currency}}', \n  'transaction_id': '{{DLV - Showpass ecommerce.transaction_id}}', \n  'item_ids': {{CJS - Showpass Item IDs Array}}, \n  'item_category': '', \n  'number_items': {{CJS - Showpass Total Items Quantity}}, \n  'uuid_c1': '', \n  'user_email': '', \n  'user_phone_number': '', \n  'user_hashed_email': '', \n  'user_hashed_phone_number': ''\n});\n</script>"
           },
           {
             "type": "BOOLEAN",
