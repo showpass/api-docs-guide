@@ -47,7 +47,7 @@ Copy and install the GTM snippet into the `<head>` and `<body>` of your website.
 
 Download the container template:
 
-* [**Showpass-Default.json**](../public/assets/Showpass-Default.json)
+* [**Showpass-Default.json**](../assets/Showpass-Default.json)
 
 This template includes everything needed for direct or redirect-based tracking.
 
@@ -137,8 +137,8 @@ Install each snippet in the correct environment:
 
 Download both templates:
 
-1. [**Showpass-Widget-Child.json**](../public/assets/Showpass-Widget-Child.json)
-2. [**Showpass-Widget-Parent.json**](../public/assets/Showpass-Widget-Parent.json)
+1. [**Showpass-Widget-Child.json**](../assets/Showpass-Widget-Child.json)
+2. [**Showpass-Widget-Parent.json**](../assets/Showpass-Widget-Parent.json)
 
 The child template handles event forwarding from the iframe.
 The parent template handles cross-domain tracking and event merging.
