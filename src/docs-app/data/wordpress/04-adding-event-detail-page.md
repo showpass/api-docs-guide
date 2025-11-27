@@ -121,6 +121,16 @@ The `[showpass_events type="detail"]` shortcode doesn’t need many parameters, 
   `lang` affects the **purchase widget only**, not the HTML of the detail template itself.
   For a fully French detail page, use `template="data"` with your own French template and include `lang="fr"` so the widget matches.
 
+### `tracking_id="your-tracking-token"`
+
+* **Use case:** Set an affiliate tracking ID for purchases made from this event detail page.
+* **Value:** Your Showpass tracking token
+* **Example:**
+  ```text
+  [showpass_events type="detail" tracking_id="campaign-123"]
+  ```
+* **Note:** This applies tracking to purchases made from the widget on this detail page. See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links) for more details.
+
 ---
 
 ## What an event detail page shows by default

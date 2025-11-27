@@ -109,6 +109,43 @@ Controls the text on the button that closes the purchase widget.
 
 ---
 
+#### Default Button Class
+
+**Parameter:** Default Button Class (optional)
+
+If your theme has custom button classes, you can set a default class that will be applied to all Showpass widget buttons.
+
+**Example values:**
+- `btn btn-primary`
+- `button button-large`
+- `wp-block-button__link`
+
+**Note:** When a default button class is set, the default ticket icon is not included. You can add your own icon via CSS if needed.
+
+---
+
+#### Show Widget Description
+
+**Parameter:** Show Product/Event description tab (optional)
+
+Controls whether the description panel is shown in the purchase widget by default.
+
+**Default:** Unchecked (description hidden)
+
+**When enabled:** Users will see a description tab in the purchase widget when opening events/products.
+
+---
+
+#### Disable SSL Verification
+
+**Parameter:** Disable SSL verification (optional)
+
+**Use case:** Fix SSL certificate issues when connecting to the Showpass API (mainly for local development).
+
+**Warning:** Only use this for local development. Disabling SSL verification in production is a security risk.
+
+---
+
 ### Save your settings
 
 1. After filling in all fields, click **Save Changes**
