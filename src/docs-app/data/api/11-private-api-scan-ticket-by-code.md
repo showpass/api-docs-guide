@@ -23,10 +23,12 @@ Authorization: Token YOUR_API_TOKEN
 
 ## Endpoint
 
-The ticket verification endpoint allows you to look up a ticket by its barcode or code:
+The ticket verification endpoint allows you to look up a ticket by its barcode or code.
+This endpoint supports both GET and POST methods:
 
 ```
 GET https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code}
+POST https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/
 ```
 
 ### Path Parameters
@@ -35,11 +37,15 @@ GET https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code
 | ---------- | ------- | -------- | --------------------------------------------- |
 | `venue_id` | Integer | Required | The ID of your venue                          |
 
-### Query Parameters
+### Query Parameters (GET) / Request Body (POST)
 
-| Parameter | Type   | Status   | Description                                    |
-| --------- | ------ | -------- | ---------------------------------------------- |
-| `code`    | String | Required | The barcode or code of the ticket to look up   |
+| Parameter          | Type   | Status   | Description                                                                 |
+| ------------------ | ------ | -------- | --------------------------------------------------------------------------- |
+| `code`             | String | Required | The barcode or code of the ticket to look up                                |
+| `permittedTypeIDs` | String | Optional | Comma-separated list of ticket type IDs that are allowed to be scanned. If provided, only tickets matching these types will be returned. |
+
+**Note:** When using POST, you need to send the parameters in the request body instead of the query parameters.
+This is useful when you want to send a large number of permitted ticket types.
 
 ### Response
 
