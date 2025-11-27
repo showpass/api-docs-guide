@@ -37,12 +37,12 @@ The "pickup" action marks a ticket as used, changing its status from "payed" to 
 ### Request Body for Pickup
 
 | Parameter        | Type    | Status   | Description                                                |
-| ---------------- | ------- | -------- | ---------------------------------------------------------- |
+| ---------------- | ------- |----------| ---------------------------------------------------------- |
 | `item`           | Integer | Required | The ticket item ID (obtained from verification endpoint)   |
 | `action`         | String  | Required | Must be "pickup" for scanning a ticket                     |
 | `scanner_device` | String  | Required | The device used for scanning (e.g., "web_app")            |
-| `barcode_type`   | String  | Required | The type of barcode (e.g., "static")                      |
 | `barcode_string` | String  | Required | The barcode value of the ticket                           |
+| `barcode_type`   | String  | Optional | The type of barcode (e.g., "static")                      |
 
 ### Notes for Pickup
 

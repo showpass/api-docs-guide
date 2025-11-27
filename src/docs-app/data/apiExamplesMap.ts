@@ -740,61 +740,114 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
  * DRF Token auth: -H "Authorization: Token YOUR_API_TOKEN"
  */
 const privateApiExamplesMap: Record<string, ApiExamplesData> = {
-  // ---- Scan a ticket by code (GET) ----
+  // ---- Scan a ticket by code (GET and POST) ----
   "/api/11-private-api-scan-ticket-by-code": {
-    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code}",
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/",
     method: "GET",
-    description: "Lookup a ticket item by barcode/code for scanning.",
+    description: "Lookup a ticket item by barcode/code for scanning. Supports both GET and POST methods.",
     examples: {
-      curl: `curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123" \\
--H "Authorization: Token YOUR_API_TOKEN"`,
+      curl: `# GET method (with query parameters)
+curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# GET method
+curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123&permittedTypeIDs=3001,3002" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# POST method (with request body)
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/scan/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "code": "test123"
+}'
+
+# POST method with permittedTypeIDs filter
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/scan/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "code": "test123",
+  "permittedTypeIDs": "3001,3002"
+}'`,
       python: `import requests
 
 # Define the venue_id and construct the base URL
 venue_id = 123456789
 base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/"
 
-# Define the parameters
-params = {"code": "test123"}
-
 # Define the headers
 headers = {
     "Authorization": "Token YOUR_API_TOKEN"
 }
 
-# Make the GET request
+# Method 1: GET request with query parameters
+params = {"code": "test123"}
 response = requests.get(base_url, headers=headers, params=params)
+print("GET - Status Code:", response.status_code)
+print("GET - Response JSON:", response.json())
 
-# Print the response status code and JSON content
-print("Status Code:", response.status_code)
-print("Response JSON:", response.json())`,
+# Method 2: POST request with request body
+payload = {"code": "test123"}
+headers_post = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+response = requests.post(base_url, headers=headers_post, json=payload)
+print("POST - Status Code:", response.status_code)
+print("POST - Response JSON:", response.json())
+
+# Method 3: POST request with permittedTypeIDs filter
+payload_filtered = {"code": "test123", "permittedTypeIDs": "3001,3002"}
+response = requests.post(base_url, headers=headers_post, json=payload_filtered)
+print("POST (filtered) - Status Code:", response.status_code)
+print("POST (filtered) - Response JSON:", response.json())`,
       node: `const axios = require('axios');
 
 // Define the venue_id and construct the base URL
 const venueId = 123456789;
 const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/scan/\`;
 
-// Define the parameters
-const params = {
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+// --- Example 1: GET Request ---
+const getParams = {
   code: 'test123'
 };
 
-// Define the headers
-const headers = {
-  'Authorization': 'Token YOUR_API_TOKEN'
-};
-
-// Make the GET request
 axios.get(baseUrl, {
   headers: headers,
-  params: params
+  params: getParams
 })
 .then(response => {
-  console.log('Status Code:', response.status);
-  console.log('Response Data:', response.data);
+  console.log('GET Status Code:', response.status);
+  console.log('GET Response Data:', response.data);
 })
 .catch(error => {
-  console.error('Error:', error);
+  console.error('GET Error:', error);
+});
+
+
+// --- Example 2: POST Request ---
+const postData = {
+  code: 'test123',
+  // Optional: Add permittedTypeIDs if needed
+  // permittedTypeIDs: '3001,3002' 
+};
+
+axios.post(baseUrl, postData, {
+  headers: headers
+})
+.then(response => {
+  console.log('POST Status Code:', response.status);
+  console.log('POST Response Data:', response.data);
+})
+.catch(error => {
+  console.error('POST Error:', error);
 });`
     },
     response: {
