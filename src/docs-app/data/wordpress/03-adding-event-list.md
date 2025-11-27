@@ -210,18 +210,6 @@ Control how recurring events (events with multiple dates) appear in the list.
 
 ---
 
-### `show_eyereturn="true|false"`
-
-* **Use case:** Control whether eye return functionality is enabled for events in this list.
-* **Default:** Not set (uses default behavior)
-* **Example:**
-
-  ```text
-  [showpass_events type="list" show_eyereturn="true"]
-  ```
-
----
-
 ### `override_q="true"`
 
 * **Use case:** Prevent URL query parameter `q` (search query) from being applied to the API request.
