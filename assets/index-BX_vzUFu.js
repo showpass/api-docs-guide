@@ -626,10 +626,12 @@ Authorization: Token YOUR_API_TOKEN
 
 ## Endpoint
 
-The ticket verification endpoint allows you to look up a ticket by its barcode or code:
+The ticket verification endpoint allows you to look up a ticket by its barcode or code.
+This endpoint supports both GET and POST methods:
 
 \`\`\`
 GET https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code}
+POST https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/
 \`\`\`
 
 ### Path Parameters
@@ -638,11 +640,15 @@ GET https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code
 | ---------- | ------- | -------- | --------------------------------------------- |
 | \`venue_id\` | Integer | Required | The ID of your venue                          |
 
-### Query Parameters
+### Query Parameters (GET) / Request Body (POST)
 
-| Parameter | Type   | Status   | Description                                    |
-| --------- | ------ | -------- | ---------------------------------------------- |
-| \`code\`    | String | Required | The barcode or code of the ticket to look up   |
+| Parameter          | Type   | Status   | Description                                                                 |
+| ------------------ | ------ | -------- | --------------------------------------------------------------------------- |
+| \`code\`             | String | Required | The barcode or code of the ticket to look up                                |
+| \`permittedTypeIDs\` | String | Optional | Comma-separated list of ticket type IDs that are allowed to be scanned. If provided, only tickets matching these types will be returned. |
+
+**Note:** When using POST, you need to send the parameters in the request body instead of the query parameters.
+This is useful when you want to send a large number of permitted ticket types.
 
 ### Response
 
@@ -704,12 +710,12 @@ The "pickup" action marks a ticket as used, changing its status from "payed" to 
 ### Request Body for Pickup
 
 | Parameter        | Type    | Status   | Description                                                |
-| ---------------- | ------- | -------- | ---------------------------------------------------------- |
+| ---------------- | ------- |----------| ---------------------------------------------------------- |
 | \`item\`           | Integer | Required | The ticket item ID (obtained from verification endpoint)   |
 | \`action\`         | String  | Required | Must be "pickup" for scanning a ticket                     |
 | \`scanner_device\` | String  | Required | The device used for scanning (e.g., "web_app")            |
-| \`barcode_type\`   | String  | Required | The type of barcode (e.g., "static")                      |
 | \`barcode_string\` | String  | Required | The barcode value of the ticket                           |
+| \`barcode_type\`   | String  | Optional | The type of barcode (e.g., "static")                      |
 
 ### Notes for Pickup
 
@@ -10210,53 +10216,106 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
 })
 .catch(error => {
   console.error(error);
-});`},response:{status:200,body:{count:728,next:"https://www.showpass.com/api/public/discovery/?location=Calgary&page=2&page_size=1&search_string=concert",previous:null,next_page_number:2,previous_page_number:null,page_number:1,num_pages:728,next_list:[2,3,4,5,6,7,8,9,10,11],previous_list:[],results:[{uuid:"a1b2c3d4-e5f6-4789-a123-456789abcdef",item_id:1234567,type:"event",venue:{id:1234,name:"Example Music Hall",slug:"example-music-hall",currency:"CAD",low_inventory_threshold_low:"0.50",low_inventory_threshold_middle:"0.60",low_inventory_threshold_high:"0.75",low_inventory_warning_enabled:!1,all_in_pricing_is_enabled:!0},venue_id:1234,name:"Summer Music Festival 2025",description_without_html:"Join us for an incredible summer music festival featuring multiple artists across various genres. This outdoor event will showcase local and international talent with food vendors, craft booths, and family-friendly activities. Gates open at 2:00 PM with performances starting at 3:00 PM. This is an all-ages event with designated areas for different age groups. Parking is available on-site for $10 per vehicle. No outside food or beverages permitted.",starts_on:"2025-07-15T19:00:00Z",ends_on:"2025-07-15T23:00:00Z",date_time_to_be_determined:null,timezone:"America/Edmonton",is_recurring:!1,is_recurring_parent:!1,child_count:0,external_link:null,frontend_details_url:"https://www.showpass.com/summer-music-festival-2025/",image:"https://example.cloudfront.net/media/images/events/summer-festival/images/abc123.png",image_banner:"https://example.cloudfront.net/media/images/events/summer-festival/img-banner/def456.png",thumbnail:"https://example.cloudfront.net/media/images/events/summer-festival/thumbnail/ghi789.png",inventory:null,inventory_sold_out:!1,public_inventory_sold_out:!1,low_ticket_inventory:0,no_sub_items:!1,opens_at:null,slug:"summer-music-festival-2025",sold_out:!1,status:"sp_event_active",virtual_type:null,categories:["music","fairs_and_festivals","family_friendly"],tags:["concert","festival","outdoor","music","summer","family","local artists"],sub_items:[{id:3001,name:"General Admission",price:"35.00",inventory_left:150,low_ticket_inventory:0,fees_pricing_info:{psp_web:{2:{taxes:"1.75",total_price:"39.70",service_charges:"2.95",sum_custom_fees:[{name:"GST",fee_total:"1.75"}],sum_internal_fees:"2.95",total_price_no_tax:"37.95"}}}},{id:3002,name:"VIP Experience",price:"85.00",inventory_left:25,low_ticket_inventory:0,fees_pricing_info:{psp_web:{2:{taxes:"4.25",total_price:"93.20",service_charges:"3.95",sum_custom_fees:[{name:"GST",fee_total:"4.25"}],sum_internal_fees:"3.95",total_price_no_tax:"88.95"}}}}],location:{city:"Calgary",name:"Festival Grounds",country:"Canada",position:"51.0447,-114.0719",province:"Alberta",postal_code:"T2P 2M5",street_name:"123 Festival Way"},point_location:"SRID=4326;POINT (-114.0719 51.0447)",is_sponsored:!1,ranking_factor:"8.5432",artists:null,renewal_frequency:null}]}}}},WV={"/api/11-private-api-scan-ticket-by-code":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/?code={code}",method:"GET",description:"Lookup a ticket item by barcode/code for scanning.",examples:{curl:`curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123" \\
--H "Authorization: Token YOUR_API_TOKEN"`,python:`import requests
+});`},response:{status:200,body:{count:728,next:"https://www.showpass.com/api/public/discovery/?location=Calgary&page=2&page_size=1&search_string=concert",previous:null,next_page_number:2,previous_page_number:null,page_number:1,num_pages:728,next_list:[2,3,4,5,6,7,8,9,10,11],previous_list:[],results:[{uuid:"a1b2c3d4-e5f6-4789-a123-456789abcdef",item_id:1234567,type:"event",venue:{id:1234,name:"Example Music Hall",slug:"example-music-hall",currency:"CAD",low_inventory_threshold_low:"0.50",low_inventory_threshold_middle:"0.60",low_inventory_threshold_high:"0.75",low_inventory_warning_enabled:!1,all_in_pricing_is_enabled:!0},venue_id:1234,name:"Summer Music Festival 2025",description_without_html:"Join us for an incredible summer music festival featuring multiple artists across various genres. This outdoor event will showcase local and international talent with food vendors, craft booths, and family-friendly activities. Gates open at 2:00 PM with performances starting at 3:00 PM. This is an all-ages event with designated areas for different age groups. Parking is available on-site for $10 per vehicle. No outside food or beverages permitted.",starts_on:"2025-07-15T19:00:00Z",ends_on:"2025-07-15T23:00:00Z",date_time_to_be_determined:null,timezone:"America/Edmonton",is_recurring:!1,is_recurring_parent:!1,child_count:0,external_link:null,frontend_details_url:"https://www.showpass.com/summer-music-festival-2025/",image:"https://example.cloudfront.net/media/images/events/summer-festival/images/abc123.png",image_banner:"https://example.cloudfront.net/media/images/events/summer-festival/img-banner/def456.png",thumbnail:"https://example.cloudfront.net/media/images/events/summer-festival/thumbnail/ghi789.png",inventory:null,inventory_sold_out:!1,public_inventory_sold_out:!1,low_ticket_inventory:0,no_sub_items:!1,opens_at:null,slug:"summer-music-festival-2025",sold_out:!1,status:"sp_event_active",virtual_type:null,categories:["music","fairs_and_festivals","family_friendly"],tags:["concert","festival","outdoor","music","summer","family","local artists"],sub_items:[{id:3001,name:"General Admission",price:"35.00",inventory_left:150,low_ticket_inventory:0,fees_pricing_info:{psp_web:{2:{taxes:"1.75",total_price:"39.70",service_charges:"2.95",sum_custom_fees:[{name:"GST",fee_total:"1.75"}],sum_internal_fees:"2.95",total_price_no_tax:"37.95"}}}},{id:3002,name:"VIP Experience",price:"85.00",inventory_left:25,low_ticket_inventory:0,fees_pricing_info:{psp_web:{2:{taxes:"4.25",total_price:"93.20",service_charges:"3.95",sum_custom_fees:[{name:"GST",fee_total:"4.25"}],sum_internal_fees:"3.95",total_price_no_tax:"88.95"}}}}],location:{city:"Calgary",name:"Festival Grounds",country:"Canada",position:"51.0447,-114.0719",province:"Alberta",postal_code:"T2P 2M5",street_name:"123 Festival Way"},point_location:"SRID=4326;POINT (-114.0719 51.0447)",is_sponsored:!1,ranking_factor:"8.5432",artists:null,renewal_frequency:null}]}}}},WV={"/api/11-private-api-scan-ticket-by-code":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/",method:"GET",description:"Lookup a ticket item by barcode/code for scanning. Supports both GET and POST methods.",examples:{curl:`# GET method (with query parameters)
+curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# GET method
+curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/scan/?code=test123&permittedTypeIDs=3001,3002" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# POST method (with request body)
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/scan/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "code": "test123"
+}'
+
+# POST method with permittedTypeIDs filter
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/scan/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "code": "test123",
+  "permittedTypeIDs": "3001,3002"
+}'`,python:`import requests
 
 # Define the venue_id and construct the base URL
 venue_id = 123456789
 base_url = f"https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/"
-
-# Define the parameters
-params = {"code": "test123"}
 
 # Define the headers
 headers = {
     "Authorization": "Token YOUR_API_TOKEN"
 }
 
-# Make the GET request
+# Method 1: GET request with query parameters
+params = {"code": "test123"}
 response = requests.get(base_url, headers=headers, params=params)
+print("GET - Status Code:", response.status_code)
+print("GET - Response JSON:", response.json())
 
-# Print the response status code and JSON content
-print("Status Code:", response.status_code)
-print("Response JSON:", response.json())`,node:`const axios = require('axios');
+# Method 2: POST request with request body
+payload = {"code": "test123"}
+headers_post = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+response = requests.post(base_url, headers=headers_post, json=payload)
+print("POST - Status Code:", response.status_code)
+print("POST - Response JSON:", response.json())
+
+# Method 3: POST request with permittedTypeIDs filter
+payload_filtered = {"code": "test123", "permittedTypeIDs": "3001,3002"}
+response = requests.post(base_url, headers=headers_post, json=payload_filtered)
+print("POST (filtered) - Status Code:", response.status_code)
+print("POST (filtered) - Response JSON:", response.json())`,node:`const axios = require('axios');
 
 // Define the venue_id and construct the base URL
 const venueId = 123456789;
 const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/tickets/items/scan/\`;
 
-// Define the parameters
-const params = {
+// Define the headers
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+// --- Example 1: GET Request ---
+const getParams = {
   code: 'test123'
 };
 
-// Define the headers
-const headers = {
-  'Authorization': 'Token YOUR_API_TOKEN'
-};
-
-// Make the GET request
 axios.get(baseUrl, {
   headers: headers,
-  params: params
+  params: getParams
 })
 .then(response => {
-  console.log('Status Code:', response.status);
-  console.log('Response Data:', response.data);
+  console.log('GET Status Code:', response.status);
+  console.log('GET Response Data:', response.data);
 })
 .catch(error => {
-  console.error('Error:', error);
+  console.error('GET Error:', error);
+});
+
+
+// --- Example 2: POST Request ---
+const postData = {
+  code: 'test123',
+  // Optional: Add permittedTypeIDs if needed
+  // permittedTypeIDs: '3001,3002' 
+};
+
+axios.post(baseUrl, postData, {
+  headers: headers
+})
+.then(response => {
+  console.log('POST Status Code:', response.status);
+  console.log('POST Response Data:', response.data);
+})
+.catch(error => {
+  console.error('POST Error:', error);
 });`},response:{status:200,body:{id:123456,event_id:98765,status:"payed",barcode_string:"1234567890",type:{id:3001,name:"General Admission",multiscan_limit:1},included_in_stats:!0}}},"/api/12-private-api-ticket-scan-actions":{endpoint:"https://www.showpass.com/api/venue/tickets/items/histories/",method:"POST",description:"Create a scan history with various actions (pickup, return, void).",examples:{curl:`# Example for pickup action (scan)
 curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
