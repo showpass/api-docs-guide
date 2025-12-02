@@ -90,19 +90,20 @@ const DocLayout = () => {
         {/* Left Sidebar (Navigation) */}
         <div
           className={cn(
-            "fixed inset-0 z-40 bg-sidebar lg:static lg:block lg:border-r border-sidebar-border lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]",
+            "fixed inset-x-0 top-16 bottom-0 z-40 bg-sidebar lg:static lg:block lg:border-r border-sidebar-border lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]",
             sidebarOpen ? "block" : "hidden"
           )}
         >
           <div className="flex h-full flex-col">
             {/* Mobile Sidebar Header */}
-            <div className="flex items-center justify-end border-b p-4 lg:hidden">
+            <div className="flex items-center justify-end border-b lg:hidden">
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarOpen(false)}
+                className="mr-[1rem] h-9 w-9"
               >
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
                 <span className="sr-only">Close sidebar</span>
               </Button>
             </div>

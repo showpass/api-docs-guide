@@ -92,7 +92,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           style={{ maxHeight: "calc(100vh - 100px)" }}
         >
           <AccordionItem value="introduction">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Introduction
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -111,7 +111,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="api-reference">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Public API reference
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -148,7 +148,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="private-api-reference">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Private Organizer API
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -185,7 +185,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="sdk">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Javascript SDK
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -276,7 +276,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="showpass-wordpress-plugin">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Showpass Wordpress plugin
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -403,7 +403,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="webhooks">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Webhooks
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -467,7 +467,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="google-tag-manager">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Google Tag Manager integration
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -585,7 +585,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="facebook">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Facebook tracking
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -631,7 +631,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="security">
-            <AccordionTrigger className="px-4 py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
               Security and compliance
             </AccordionTrigger>
             <AccordionContent className="pb-2">
