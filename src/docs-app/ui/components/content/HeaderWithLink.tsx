@@ -37,12 +37,12 @@ const HeaderWithLink: React.FC<HeaderWithLinkProps> = ({
     }
   };
 
-  const baseClasses = "group relative scroll-mt-24 text-foreground";
+  const baseClasses = "group relative";
   const levelClasses = {
-    1: "text-3xl font-bold mt-12 mb-2 leading-tight",
-    2: "text-2xl font-semibold mt-6 mb-4 leading-snug",
-    3: "text-xl font-semibold mt-8 mb-3 leading-snug",
-    4: "text-lg font-medium mt-6 mb-2",
+    1: "text-3xl font-bold mt-12 mb-2 scroll-mt-24 text-foreground leading-tight",
+    2: "text-2xl font-semibold mt-6 mb-4 scroll-mt-24 text-foreground leading-snug",
+    3: "text-xl font-semibold mt-8 mb-3 scroll-mt-24 text-foreground leading-snug",
+    4: "text-lg font-medium mt-6 mb-2 scroll-mt-24 text-foreground",
   };
 
   const Tag = `h${level}` as keyof JSX.IntrinsicElements;

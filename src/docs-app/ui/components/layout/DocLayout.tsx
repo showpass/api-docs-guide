@@ -96,8 +96,7 @@ const DocLayout = () => {
         >
           <div className="flex h-full flex-col">
             {/* Mobile Sidebar Header */}
-            <div className="flex items-center justify-between border-b p-4 lg:hidden">
-              <span className="ml-2 font-semibold">Navigation</span>
+            <div className="flex items-center justify-end border-b p-4 lg:hidden">
               <Button
                 variant="ghost"
                 size="icon"
