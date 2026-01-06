@@ -152,9 +152,9 @@ export const themes: Record<string, ThemeDefinition> = {
       playgroundNav: '190 80% 50%',
       playgroundNavForeground: '222 47% 11%',
       playgroundNavHover: '190 80% 55%',
-      featureBadgeBackground: '190 80% 50% / 0.12',
-      featureBadgeForeground: '190 70% 70%',
-      featureBadgeBorder: '190 80% 50% / 0.25',
+      featureBadgeBackground: '200 20% 25% / 0.5',
+      featureBadgeForeground: '195 18% 62%',
+      featureBadgeBorder: '200 18% 35% / 0.4',
     },
     syntax: {
       keyword: '190 85% 60%',        // Bright cyan for keywords (distinct from forest)
@@ -182,9 +182,9 @@ export const themes: Record<string, ThemeDefinition> = {
         border: '190 80% 50% / 0.3',
       },
       POST: {
-        bg: '142 70% 50% / 0.15',
-        text: '142 70% 65%',
-        border: '142 70% 50% / 0.3',
+        bg: '190 80% 50% / 0.15',
+        text: '190 80% 70%',
+        border: '190 80% 50% / 0.3',
       },
       PUT: {
         bg: '45 90% 55% / 0.15',
@@ -254,9 +254,9 @@ export const themes: Record<string, ThemeDefinition> = {
       playgroundNav: '168 76% 42%',
       playgroundNavForeground: '180 20% 98%',
       playgroundNavHover: '168 76% 48%',
-      featureBadgeBackground: '168 76% 42% / 0.12',
-      featureBadgeForeground: '168 76% 60%',
-      featureBadgeBorder: '168 76% 42% / 0.25',
+      featureBadgeBackground: '180 15% 24% / 0.5',
+      featureBadgeForeground: '175 15% 60%',
+      featureBadgeBorder: '180 14% 32% / 0.4',
     },
     syntax: {
       keyword: '168 85% 58%',        // Emerald green for keywords
@@ -283,9 +283,9 @@ export const themes: Record<string, ThemeDefinition> = {
         border: '168 76% 42% / 0.3',
       },
       POST: {
-        bg: '142 70% 50% / 0.15',
-        text: '142 70% 65%',
-        border: '142 70% 50% / 0.3',
+        bg: '155 65% 45% / 0.15',
+        text: '155 65% 60%',
+        border: '155 65% 45% / 0.3',
       },
       PUT: {
         bg: '50 90% 55% / 0.15',
