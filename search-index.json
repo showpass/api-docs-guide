@@ -39,7 +39,7 @@
     "id": "/cli/01-overview",
     "title": "Showpass CLI",
     "path": "/cli/01-overview",
-    "content": "Build and manage event websites that connect directly to your Showpass venue.\n``bash\ncurl -fsSL \"https://www.showpass.com/install.sh\" | bash\n`\n`bash\nshowpass init my-event-site\n`\nThis launches an interactive wizard that:\n- Signs you in to your Showpass account\n- Connects to your venue\n- Generates a React + TypeScript site with Showpass SDK pre-configured\n- Installs dependencies and starts the dev server\nYour site will be running at http://localhost:8080`.\n| | |\n|---|---|\n| OS | macOS, Linux |\n| Account | Showpass account with venue access |\n- Commands Reference"
+    "content": "Build and manage event websites that connect directly to your Showpass venue.\n``bash\ncurl -fsSL \"https://www.showpass.com/install.sh\" | bash\n`\n`bash\nshowpass init my-event-site\n`\nThis launches an interactive wizard that:\n- Signs you in to your Showpass account\n- Connects to your venue\n- Generates a React + TypeScript site with Showpass SDK pre-configured\n- Installs dependencies and starts the dev server\nYour site will be running at http://localhost:8080`.\n| | |\n|---|---|\n| OS | macOS, Linux |\n| Account | Showpass account with venue access |"
   },
   {
     "id": "/cli/02-commands",

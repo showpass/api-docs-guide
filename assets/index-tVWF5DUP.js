@@ -810,10 +810,6 @@ Your site will be running at \`http://localhost:8080\`.
 |---|---|
 | **OS** | macOS, Linux |
 | **Account** | Showpass account with venue access |
-
-## See Also
-
-- [Commands Reference](/cli/02-commands/)
 `,yG=`# Commands
 
 ## init
