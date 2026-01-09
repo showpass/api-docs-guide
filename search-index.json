@@ -36,6 +36,18 @@
     "content": "After verifying a ticket using the ticket verification endpoint, you can perform various actions on the ticket by creating a scan history record. This document covers the three main ticket actions:\n1. Pickup - Mark a ticket as used (scan for entry)\n2. Return - Undo a previous scan (return to usable state)\n3. Void - Invalidate a ticket (make it unusable)\nAll these actions use the same endpoint but with different action parameters.\n``\nPOST https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/\n`\nThis endpoint requires authentication using a DRF token:\n`\nAuthorization: Token YOUR_API_TOKEN\n`\nThe typical workflow for ticket scanning is:\n1. Verify the ticket using the verification endpoint\n2. Extract the ticket item ID from the verification response\n3. Create a scan history record with the appropriate action\nThe \"pickup\" action marks a ticket as used, changing its status from \"payed\" to \"used\". This is the standard action for scanning a ticket for entry.\n| Parameter        | Type    | Status   | Description                                                |\n| ---------------- | ------- |----------| ---------------------------------------------------------- |\n| item           | Integer | Required | The ticket item ID (obtained from verification endpoint)   |\n| action         | String  | Required | Must be \"pickup\" for scanning a ticket                     |\n| scanner_device | String  | Required | The device used for scanning (e.g., \"web_app\")            |\n| barcode_string | String  | Required | The barcode value of the ticket                           |\n| barcode_type   | String  | Optional | The type of barcode (e.g., \"static\")                      |\n- A ticket can only be scanned once unless it has a multiscan_limit greater than 1\n- If a ticket has already been scanned, the API will return an error\n- You can undo a scan using the \"return\" action\nThe \"return\" action undoes a previous scan, changing a ticket's status from \"used\" back to \"payed\". This is usef"
   },
   {
+    "id": "/cli/01-overview",
+    "title": "Showpass CLI",
+    "path": "/cli/01-overview",
+    "content": "Build and manage event websites that connect directly to your Showpass venue.\n``bash\ncurl -fsSL \"https://www.showpass.com/install.sh\" | bash\n`\n`bash\nshowpass init my-event-site\n`\nThis launches an interactive wizard that:\n- Signs you in to your Showpass account\n- Connects to your venue\n- Generates a React + TypeScript site with Showpass SDK pre-configured\n- Installs dependencies and starts the dev server\nYour site will be running at http://localhost:8080`.\n| | |\n|---|---|\n| OS | macOS, Linux |\n| Account | Showpass account with venue access |\n- Commands Reference"
+  },
+  {
+    "id": "/cli/02-commands",
+    "title": "Commands",
+    "path": "/cli/02-commands",
+    "content": "Create a new Showpass project. Opens an interactive wizard.\n``bash\nshowpass init my-event-site\n`\nWithout a name, one is generated for you:\n`bash\nshowpass init\n`\nStart the local development server with hot reload.\n`bash\nshowpass dev\n`\nRuns on http://localhost:8080 by default.\nCreate a production-optimized build.\n`bash\nshowpass build\n`\nOutput is written to dist/.\nDisplay current authentication status.\n`bash\nshowpass whoami\n`\nClear saved credentials and venue selection.\n`bash\nshowpass logout\n`\nShow available commands:\n`bash\nshowpass --help\n`\nGet help for a specific command:\n`bash\nshowpass init --help\n``"
+  },
+  {
     "id": "/facebook/01-introduction-to-facebook-pixel",
     "title": "About Facebook Pixel",
     "path": "/facebook/01-introduction-to-facebook-pixel",
