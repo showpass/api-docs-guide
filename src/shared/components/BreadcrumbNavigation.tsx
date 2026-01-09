@@ -18,6 +18,7 @@ interface BreadcrumbItem {
 const sectionLabels: Record<string, string> = {
   api: 'API Reference',
   sdk: 'JavaScript SDK',
+  cli: 'CLI',
   wordpress: 'WordPress Plugin',
   webhooks: 'Webhooks',
   'google-tag-manager': 'Google Tag Manager',

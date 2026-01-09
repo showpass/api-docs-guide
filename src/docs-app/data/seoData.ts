@@ -66,6 +66,18 @@ export const seoDataMap: Record<string, SEOData> = {
     keywords: "cart listener, cart quantity, cart monitoring, dynamic cart, cart events"
   },
 
+  // CLI
+  "/cli/01-overview": {
+    title: "Showpass CLI - Command Line Tool for Event Websites",
+    description: "Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured.",
+    keywords: "showpass cli, command line tool, event website builder, react cli, typescript cli, showpass sdk, event site generator"
+  },
+  "/cli/02-commands": {
+    title: "CLI Commands Reference - Showpass Developer Documentation",
+    description: "Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags.",
+    keywords: "showpass cli commands, cli reference, command line reference, cli documentation, showpass commands, cli options"
+  },
+
   // WordPress Plugin
   "/wordpress/01-getting-started-install-and-configure": {
     title: "Showpass WordPress Plugin - Installation & Configuration",

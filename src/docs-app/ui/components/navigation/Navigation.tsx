@@ -28,6 +28,9 @@ const getOpenSections = (currentPath: string): string[] => {
   if (currentPath.startsWith("/sdk/") || currentPath.startsWith("/widgets")) {
     return ["sdk"];
   }
+  if (currentPath.startsWith("/cli/")) {
+    return ["cli"];
+  }
   if (currentPath.startsWith("/wordpress/")) {
     return ["showpass-wordpress-plugin"];
   }
@@ -269,6 +272,34 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     onClick={handleLinkClick}
                   >
                     Widget playground
+                  </NavLink>
+                </li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="cli">
+            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+              CLI
+            </AccordionTrigger>
+            <AccordionContent className="pb-2">
+              <ul className="px-4 space-y-1">
+                <li>
+                  <NavLink
+                    to="/cli/01-overview"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Overview
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/cli/02-commands"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Commands Reference
                   </NavLink>
                 </li>
               </ul>

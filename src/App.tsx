@@ -58,6 +58,10 @@ const App = () => (
                 element={<DynamicDocPage section="sdk" />}
               />
               <Route
+                path="/cli/:slug"
+                element={<DynamicDocPage section="cli" />}
+              />
+              <Route
                 path="/webhooks/:slug"
                 element={<DynamicDocPage section="webhooks" />}
               />

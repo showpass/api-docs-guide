@@ -13,6 +13,7 @@ interface DynamicDocPageProps {
   section:
     | "api"
     | "sdk"
+    | "cli"
     | "advanced"
     | "wordpress"
     | "webhooks"
