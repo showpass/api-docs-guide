@@ -83,9 +83,9 @@
     --prose-body: 0 0% 98%;
     --prose-headings: 0 0% 98%;
     --prose-links: 186 55% 35%;
-    --prose-code-fg: 210 15% 85%;
-    --prose-code-bg: 215 30% 20%;
-    --prose-pre-bg: 200 28% 10%;
+    --prose-code-fg: 190 25% 88%;
+    --prose-code-bg: 210 70% 11%;
+    --prose-pre-bg: 210 65% 8%;
   }
 
   .forest {

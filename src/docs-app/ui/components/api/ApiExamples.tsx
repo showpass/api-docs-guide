@@ -57,7 +57,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
       </div>
 
       <div>
-        <Tabs defaultValue="python" className="w-full border border-border/40 rounded-md overflow-hidden">
+        <Tabs defaultValue="python" className="w-full border-x border-b border-border/40 !rounded-t-none rounded-b-md">
           <TabsList className="w-full grid grid-cols-3 h-7 bg-[hsl(var(--prose-pre-bg))] rounded-none p-0">
             <TabsTrigger 
               value="python" 
@@ -116,7 +116,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))]"
+                      className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))] !rounded-none !my-0"
                       style={{ margin: 0 }}
                     >
                       <code className={className}>
@@ -162,7 +162,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))]"
+                      className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))] !rounded-none !my-0"
                       style={{ margin: 0 }}
                     >
                       <code className={className}>
@@ -208,7 +208,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 }) => (
                   <div className="relative">
                     <pre
-                      className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto max-w-full bg-[hsl(var(--prose-pre-bg))]"
+                      className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto max-w-full bg-[hsl(var(--prose-pre-bg))] !rounded-none !my-0"
                       style={{ margin: 0 }}
                     >
                       <code className={className}>
@@ -260,7 +260,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             {({ className, style, tokens, getLineProps, getTokenProps }) => (
               <div className="relative">
                 <pre
-                  className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))]"
+                  className="px-2.5 py-2 font-mono text-xs whitespace-pre overflow-x-auto bg-[hsl(var(--prose-pre-bg))] !rounded-none !my-0"
                   style={{ margin: 0 }}
                 >
                   <code className={className}>
