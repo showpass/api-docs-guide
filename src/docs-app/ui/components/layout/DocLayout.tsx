@@ -125,7 +125,11 @@ const DocLayout = () => {
           <div
             className={cn(
               "px-5 py-8 pt-3 lg:px-10 xl:px-12 prose dark:prose-invert prose-slate prose-pre:overflow-x-auto prose-table:overflow-x-auto",
-              hideRightSidebar ? "max-w-none" : "max-w-[1200px] mx-auto xl:mx-0"
+              hideRightSidebar 
+                ? "max-w-none" 
+                : apiExamplesData
+                  ? "max-w-[1200px] mx-auto xl:mx-0"
+                  : "max-w-5xl"
             )}
           >
             <BreadcrumbNavigation />
