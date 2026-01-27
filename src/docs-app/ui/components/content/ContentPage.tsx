@@ -1,5 +1,6 @@
 import React, { useEffect } from "react";
 import MarkdownContent from "@/docs-app/ui/components/content/MarkdownContent.tsx";
+import EditPageLinks from "@/docs-app/ui/components/content/EditPageLinks.tsx";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import { useContent } from "@/docs-app/ui/hooks/useContent.ts";
 import { toast } from "@/shared/components/use-toast.ts";
@@ -97,7 +98,10 @@ const ContentPage: React.FC<ContentPageProps> = ({
           </p>
         </div>
       ) : (
-        <MarkdownContent content={content} />
+        <>
+          <MarkdownContent content={content} />
+          <EditPageLinks contentPath={contentPath} />
+        </>
       )}
     </div>
   );
