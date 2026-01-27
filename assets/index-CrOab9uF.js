@@ -1019,7 +1019,7 @@ If you haven't already created a Facebook Pixel, follow these steps:
 
 1. Log in to your Showpass dashboard
 2. Navigate to **Organization Settings**
-3. Select the **Integrations** tab
+3. Select the **Analytics** tab
 
 ### Find Facebook Pixel Section
 
