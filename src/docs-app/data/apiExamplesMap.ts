@@ -1332,6 +1332,271 @@ axios.get(baseUrl, {
     }
   },
 
+  // ---- Tracking Links (CRUD + custom actions) ----
+  "/api/20-private-api-tracking-links": {
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/analytics/tracking/links/",
+    method: "GET",
+    description: "List, create, update, and delete tracking links for your venue.",
+    examples: {
+      curl: `# List all tracking links for a venue
+curl -X GET "https://www.showpass.com/api/venue/1234/analytics/tracking/links/" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# List with filters (employee links for a specific event)
+curl -X GET "https://www.showpass.com/api/venue/1234/analytics/tracking/links/?via=1&event=98765" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# Search by description or referrer username
+curl -X GET "https://www.showpass.com/api/venue/1234/analytics/tracking/links/?search=john" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# Create an employee tracking link
+curl -X POST "https://www.showpass.com/api/venue/1234/analytics/tracking/links/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "event": 98765,
+  "referred_by": 42,
+  "description": "John - Summer Festival promo",
+  "via": 1
+}'
+
+# Create a quick purchase tracking link
+curl -X POST "https://www.showpass.com/api/venue/1234/analytics/tracking/links/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "event": 98765,
+  "description": "VIP 2-pack quick checkout",
+  "via": 4,
+  "ticket_types": [3002],
+  "extra": [
+    {"ticket_type": 3002, "quantity": 2}
+  ]
+}'
+
+# Update a quick purchase link
+curl -X PUT "https://www.showpass.com/api/venue/1234/analytics/tracking/links/5678/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "event": 98765,
+  "description": "VIP 4-pack quick checkout (updated)",
+  "via": 4,
+  "ticket_types": [3002],
+  "extra": [
+    {"ticket_type": 3002, "quantity": 4}
+  ]
+}'
+
+# Delete a tracking link (only if no completed purchases)
+curl -X DELETE "https://www.showpass.com/api/venue/1234/analytics/tracking/links/5678/" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# Get my tracking links (current user only)
+curl -X GET "https://www.showpass.com/api/venue/1234/analytics/tracking/links/me/" \\
+-H "Authorization: Token YOUR_API_TOKEN"`,
+      python: `import requests
+
+venue_id = 1234
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/analytics/tracking/links/"
+
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json"
+}
+
+# --- List tracking links ---
+response = requests.get(base_url, headers=headers)
+print("List - Status:", response.status_code)
+print("List - Data:", response.json())
+
+# --- List with filters ---
+params = {"via": 1, "event": 98765}
+response = requests.get(base_url, headers=headers, params=params)
+print("Filtered - Status:", response.status_code)
+
+# --- Create an employee tracking link ---
+payload = {
+    "event": 98765,
+    "referred_by": 42,
+    "description": "John - Summer Festival promo",
+    "via": 1
+}
+response = requests.post(base_url, headers=headers, json=payload)
+print("Create - Status:", response.status_code)
+print("Create - Data:", response.json())
+
+# --- Create a quick purchase link ---
+quick_purchase_payload = {
+    "event": 98765,
+    "description": "VIP 2-pack quick checkout",
+    "via": 4,
+    "ticket_types": [3002],
+    "extra": [
+        {"ticket_type": 3002, "quantity": 2}
+    ]
+}
+response = requests.post(base_url, headers=headers, json=quick_purchase_payload)
+print("Quick Purchase - Status:", response.status_code)
+print("Quick Purchase - Data:", response.json())
+
+# --- Get my tracking links ---
+response = requests.get(f"{base_url}me/", headers=headers)
+print("My Links - Status:", response.status_code)`,
+      node: `const axios = require('axios');
+
+const venueId = 1234;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/analytics/tracking/links/\`;
+
+const headers = {
+  'Authorization': 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+// --- List tracking links ---
+axios.get(baseUrl, { headers })
+  .then(response => {
+    console.log('List - Status:', response.status);
+    console.log('List - Data:', response.data);
+  })
+  .catch(error => console.error('List Error:', error));
+
+// --- List with filters ---
+axios.get(baseUrl, {
+  headers,
+  params: { via: 1, event: 98765 }
+})
+  .then(response => {
+    console.log('Filtered - Status:', response.status);
+    console.log('Filtered - Data:', response.data);
+  })
+  .catch(error => console.error('Filter Error:', error));
+
+// --- Create an employee tracking link ---
+const employeePayload = {
+  event: 98765,
+  referred_by: 42,
+  description: 'John - Summer Festival promo',
+  via: 1
+};
+
+axios.post(baseUrl, employeePayload, { headers })
+  .then(response => {
+    console.log('Create - Status:', response.status);
+    console.log('Create - Data:', response.data);
+  })
+  .catch(error => console.error('Create Error:', error));
+
+// --- Create a quick purchase link ---
+const quickPurchasePayload = {
+  event: 98765,
+  description: 'VIP 2-pack quick checkout',
+  via: 4,
+  ticket_types: [3002],
+  extra: [
+    { ticket_type: 3002, quantity: 2 }
+  ]
+};
+
+axios.post(baseUrl, quickPurchasePayload, { headers })
+  .then(response => {
+    console.log('Quick Purchase - Status:', response.status);
+    console.log('Quick Purchase - Data:', response.data);
+  })
+  .catch(error => console.error('Quick Purchase Error:', error));
+
+// --- Get my tracking links ---
+axios.get(\`\${baseUrl}me/\`, { headers })
+  .then(response => {
+    console.log('My Links - Status:', response.status);
+    console.log('My Links - Data:', response.data);
+  })
+  .catch(error => console.error('My Links Error:', error));`
+    },
+    response: {
+      status: 200,
+      body: {
+        count: 3,
+        next: null,
+        previous: null,
+        results: [
+          {
+            id: 5001,
+            owner_venue: 1234,
+            venue: 1234,
+            referred_by: 42,
+            description: "John - Summer Festival promo",
+            long_url: "https://www.showpass.com/summer-music-festival-2025/?referral=abc12345",
+            short_url: "https://showpass.com/l/abc12345",
+            tiny_url: "https://spss.co/abc12345",
+            event: 98765,
+            views: 147,
+            visitors: 89,
+            stats: {
+              total_baskets: 12,
+              total_revenue: "420.00",
+              total_tickets: 18,
+              conversion_rate: "13.48"
+            },
+            via: 1,
+            ticket_types: null,
+            hide_public_ticket_types: null,
+            extra: null
+          },
+          {
+            id: 5002,
+            owner_venue: 1234,
+            venue: 1234,
+            referred_by: null,
+            description: "VIP 2-pack quick checkout",
+            long_url: "https://www.showpass.com/summer-music-festival-2025/?referral=def67890",
+            short_url: "https://showpass.com/l/def67890",
+            tiny_url: "https://spss.co/def67890",
+            event: 98765,
+            views: 53,
+            visitors: 41,
+            stats: {
+              total_baskets: 8,
+              total_revenue: "680.00",
+              total_tickets: 16,
+              conversion_rate: "19.51"
+            },
+            via: 4,
+            ticket_types: [3002],
+            hide_public_ticket_types: true,
+            extra: [
+              { ticket_type: 3002, quantity: 2 }
+            ]
+          },
+          {
+            id: 5003,
+            owner_venue: 1234,
+            venue: 1234,
+            referred_by: 57,
+            description: "Partner promo - Music Blog",
+            long_url: "https://www.showpass.com/summer-music-festival-2025/?referral=ghi24680",
+            short_url: "https://showpass.com/l/ghi24680",
+            tiny_url: "https://spss.co/ghi24680",
+            event: 98765,
+            views: 312,
+            visitors: 198,
+            stats: {
+              total_baskets: 24,
+              total_revenue: "840.00",
+              total_tickets: 30,
+              conversion_rate: "12.12"
+            },
+            via: 3,
+            ticket_types: null,
+            hide_public_ticket_types: null,
+            extra: null
+          }
+        ]
+      }
+    }
+  },
+
   // ---- Scan stats timeline (per-day) ----
   "/api/13-private-api-scan-stats-timeline": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id={event_id}",

@@ -29,6 +29,12 @@ export const seoDataMap: Record<string, SEOData> = {
     keywords: "showpass event details, specific event api, event information, event metadata api, ticket pricing api"
   },
 
+  "/api/20-private-api-tracking-links": {
+    title: "Tracking Links API - Showpass Private Organizer API",
+    description: "Create, manage, and analyze tracking links for your Showpass events. Attribute ticket sales to employees, affiliates, and partners with unique short URLs and conversion analytics.",
+    keywords: "tracking links api, affiliate tracking, referral links, sales attribution, conversion tracking, showpass analytics, quick purchase links, employee referrals"
+  },
+
   // JavaScript SDK
   "/sdk/01-sdk-getting-started": {
     title: "Showpass JavaScript SDK - Getting Started Guide",
