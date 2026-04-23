@@ -1,5 +1,6 @@
 import * as React from "react";
 import { useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { Input } from "@/shared/components/input.tsx";
 import { Button } from "@/shared/components/button.tsx";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
@@ -17,20 +18,48 @@ import ShowpassMountedEventWidget from "@/docs-app/ui/components/widgets/Showpas
 import ShowpassMountedMembershipWidget from "@/docs-app/ui/components/widgets/ShowpassMountedMembershipWidget.tsx";
 import ShowpassMountedProductWidget from "@/docs-app/ui/components/widgets/ShowpassMountedProductWidget.tsx";
 
+type PlaygroundTab = "popup" | "mounted";
+type PlaygroundWidget = "calendar" | "event" | "membership" | "product";
+
+const isPlaygroundTab = (value: string | null): value is PlaygroundTab =>
+  value === "popup" || value === "mounted";
+
+const isPlaygroundWidget = (value: string | null): value is PlaygroundWidget =>
+  value === "calendar" || value === "event" || value === "membership" || value === "product";
+
 const WidgetPlayground: React.FC = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/widget-playground"];
 
+  // Read initial values from query params so external tools (e.g. Datadog
+  // synthetic tests) can deep-link into a preconfigured playground state.
+  // Supported params: eventId, venueId, productId, memberId (alias:
+  // membershipId), theme, tab (popup|mounted), widget (calendar|event|
+  // membership|product).
+  const [searchParams] = useSearchParams();
+  const initialEventId = searchParams.get("eventId") ?? "";
+  const initialVenueId = searchParams.get("venueId") ?? "";
+  const initialProductId = searchParams.get("productId") ?? "";
+  const initialMemberId =
+    searchParams.get("memberId") ?? searchParams.get("membershipId") ?? "";
+  const initialTheme = searchParams.get("theme") ?? "#24727b";
+  const tabParam = searchParams.get("tab");
+  const widgetParam = searchParams.get("widget");
+
   // State for widget configuration
-  const [eventId, setEventId] = React.useState<string>("");
-  const [membershipId, setMembershipId] = React.useState<string>("");
-  const [productId, setProductId] = React.useState<string>("");
-  const [venueId, setVenueId] = React.useState<string>("");
-  const [themeColor, setThemeColor] = React.useState<string>("#24727b");
-  
+  const [eventId, setEventId] = React.useState<string>(initialEventId);
+  const [membershipId, setMembershipId] = React.useState<string>(initialMemberId);
+  const [productId, setProductId] = React.useState<string>(initialProductId);
+  const [venueId, setVenueId] = React.useState<string>(initialVenueId);
+  const [themeColor, setThemeColor] = React.useState<string>(initialTheme);
+
   // State for navigation
-  const [activeTab, setActiveTab] = React.useState<"popup" | "mounted">("popup");
-  const [activeWidget, setActiveWidget] = React.useState<"calendar" | "event" | "membership" | "product">("calendar");
+  const [activeTab, setActiveTab] = React.useState<PlaygroundTab>(
+    isPlaygroundTab(tabParam) ? tabParam : "popup",
+  );
+  const [activeWidget, setActiveWidget] = React.useState<PlaygroundWidget>(
+    isPlaygroundWidget(widgetParam) ? widgetParam : "calendar",
+  );
 
   // Memoize options for modal widgets
   const modalWidgetOptions = React.useMemo(() => ({ 
@@ -70,11 +99,14 @@ const WidgetPlayground: React.FC = () => {
       
       <ShowpassIntegration />
 
-      <h1 className="text-3xl font-bold mb-6">Widget Playground</h1>
+      <h1 className="text-3xl font-bold mb-6" data-testid="playground-title">Widget Playground</h1>
       <Separator className="mb-6 opacity-30" />
 
       {/* Compact Sticky Control Center */}
-      <div className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-lg mb-6 shadow-lg">
+      <div
+        className="sticky top-0 z-50 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border rounded-lg mb-6 shadow-lg"
+        data-testid="playground-controls"
+      >
         <div className="p-4">
           {/* Configuration Row */}
           <div className="flex items-start gap-3 mb-3">
@@ -102,6 +134,8 @@ const WidgetPlayground: React.FC = () => {
             
             <div className="flex flex-col gap-1">
               <Input
+                id="playground-input-eventId"
+                data-testid="playground-input-eventId"
                 value={eventId}
                 onChange={(e) => setEventId(e.target.value)}
                 placeholder="Event ID"
@@ -114,6 +148,8 @@ const WidgetPlayground: React.FC = () => {
             
             <div className="flex flex-col gap-1">
               <Input
+                id="playground-input-venueId"
+                data-testid="playground-input-venueId"
                 value={venueId}
                 onChange={(e) => setVenueId(e.target.value)}
                 placeholder="Venue ID"
@@ -126,6 +162,8 @@ const WidgetPlayground: React.FC = () => {
             
             <div className="flex flex-col gap-1">
               <Input
+                id="playground-input-productId"
+                data-testid="playground-input-productId"
                 value={productId}
                 onChange={(e) => setProductId(e.target.value)}
                 placeholder="Product ID"
@@ -138,6 +176,8 @@ const WidgetPlayground: React.FC = () => {
             
             <div className="flex flex-col gap-1">
               <Input
+                id="playground-input-memberId"
+                data-testid="playground-input-memberId"
                 value={membershipId}
                 onChange={(e) => setMembershipId(e.target.value)}
                 placeholder="Member ID"
@@ -150,6 +190,8 @@ const WidgetPlayground: React.FC = () => {
             
             <div className="flex flex-col gap-1">
               <Button
+                id="playground-demo-data"
+                data-testid="playground-demo-data"
                 variant="outline"
                 size="sm"
                 onClick={() => {
@@ -171,6 +213,7 @@ const WidgetPlayground: React.FC = () => {
           <div className="flex items-center gap-2">
             <div className="grid grid-cols-2 h-8 bg-muted/50 rounded-md p-1">
               <Button
+                data-testid="playground-tab-popup"
                 variant="ghost"
                 size="sm"
                 onClick={() => setActiveTab("popup")}
@@ -183,6 +226,7 @@ const WidgetPlayground: React.FC = () => {
                 Modal
               </Button>
               <Button
+                data-testid="playground-tab-mounted"
                 variant="ghost"
                 size="sm"
                 onClick={() => setActiveTab("mounted")}
@@ -202,6 +246,7 @@ const WidgetPlayground: React.FC = () => {
                 {(["calendar", "event", "membership", "product"] as const).map((widget) => (
                   <Button
                     key={widget}
+                    data-testid={`playground-widget-${widget}`}
                     variant="ghost"
                     size="sm"
                     onClick={() => setActiveWidget(widget)}
@@ -247,10 +292,12 @@ const WidgetPlayground: React.FC = () => {
                     <span className="text-muted-foreground">Venue:</span> {venueId || "Your Venue Name"}
                   </div>
                   {venueId ? (
-                    <ShowpassCalendarWidget
-                      venueId={venueId}
-                      options={modalWidgetOptions}
-                    />
+                    <div data-testid="playground-modal-calendar">
+                      <ShowpassCalendarWidget
+                        venueId={venueId}
+                        options={modalWidgetOptions}
+                      />
+                    </div>
                   ) : (
                     <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
@@ -272,6 +319,7 @@ const WidgetPlayground: React.FC = () => {
                   </div>
                   {eventId ? (
                     <Button
+                      data-testid="playground-modal-event"
                       onClick={() => {
                         try {
                           if (typeof window !== 'undefined' && window.showpass?.tickets) {
@@ -306,10 +354,12 @@ const WidgetPlayground: React.FC = () => {
                     <span className="text-muted-foreground">Program:</span> {membershipId ? `Membership #${membershipId}` : "Your Membership Program"}
                   </div>
                   {membershipId ? (
-                    <ShowpassMembershipWidget
-                      id={membershipId}
-                      options={modalWidgetOptions}
-                    />
+                    <div data-testid="playground-modal-membership">
+                      <ShowpassMembershipWidget
+                        id={membershipId}
+                        options={modalWidgetOptions}
+                      />
+                    </div>
                   ) : (
                     <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
@@ -330,10 +380,12 @@ const WidgetPlayground: React.FC = () => {
                     <span className="text-muted-foreground">Product:</span> {productId ? `Product #${productId}` : "Your Product"}
                   </div>
                   {productId ? (
-                    <ShowpassProductWidget
-                      id={productId}
-                      options={modalWidgetOptions}
-                    />
+                    <div data-testid="playground-modal-product">
+                      <ShowpassProductWidget
+                        id={productId}
+                        options={modalWidgetOptions}
+                      />
+                    </div>
                   ) : (
                     <div className="warning-box p-4 rounded-md border">
                       <p className="font-medium mb-1">⚠️ Setup Required</p>
@@ -376,7 +428,10 @@ const WidgetPlayground: React.FC = () => {
               {/* Calendar Widget */}
               {activeWidget === "calendar" && (
                 venueId ? (
-                  <div className="bg-background rounded-md border min-h-[600px] p-4">
+                  <div
+                    data-testid="playground-mounted-calendar"
+                    className="bg-background rounded-md border min-h-[600px] p-4"
+                  >
                     <ShowpassMountedCalendarWidget venueId={venueId} themeColor={themeColor} />
                   </div>
                 ) : (
@@ -390,7 +445,10 @@ const WidgetPlayground: React.FC = () => {
               {/* Event Widget */}
               {activeWidget === "event" && (
                 eventId ? (
-                  <div className="bg-background rounded-md border min-h-[500px] p-4">
+                  <div
+                    data-testid="playground-mounted-event"
+                    className="bg-background rounded-md border min-h-[500px] p-4"
+                  >
                     <ShowpassMountedEventWidget id={eventId} themeColor={themeColor} />
                   </div>
                 ) : (
@@ -404,7 +462,10 @@ const WidgetPlayground: React.FC = () => {
               {/* Membership Widget */}
               {activeWidget === "membership" && (
                 membershipId ? (
-                  <div className="bg-background rounded-md border min-h-[500px] p-4">
+                  <div
+                    data-testid="playground-mounted-membership"
+                    className="bg-background rounded-md border min-h-[500px] p-4"
+                  >
                     <ShowpassMountedMembershipWidget id={membershipId} themeColor={themeColor} />
                   </div>
                 ) : (
@@ -418,7 +479,10 @@ const WidgetPlayground: React.FC = () => {
               {/* Product Widget */}
               {activeWidget === "product" && (
                 productId ? (
-                  <div className="bg-background rounded-md border min-h-[500px] p-4">
+                  <div
+                    data-testid="playground-mounted-product"
+                    className="bg-background rounded-md border min-h-[500px] p-4"
+                  >
                     <ShowpassMountedProductWidget id={productId} themeColor={themeColor} />
                   </div>
                 ) : (
