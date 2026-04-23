@@ -23,7 +23,7 @@ The script downloads in parallel with HTML parsing and executes immediately when
 ```html
 <script
   type="text/javascript"
-  src="https://showpass.com/static/dist/sdk.js"
+  src="https://www.showpass.com/static/dist/sdk.js"
   async
 ></script>
 ```
@@ -35,7 +35,7 @@ The script downloads in parallel with HTML parsing but only executes after the H
 ```html
 <script
   type="text/javascript"
-  src="https://showpass.com/static/dist/sdk.js"
+  src="https://www.showpass.com/static/dist/sdk.js"
   defer
 ></script>
 ```
@@ -139,7 +139,7 @@ script.onload = function () {
     /* params */
   });
 };
-script.src = "https://showpass.com/static/dist/sdk.js";
+script.src = "https://www.showpass.com/static/dist/sdk.js";
 document.head.appendChild(script);
 ```
 

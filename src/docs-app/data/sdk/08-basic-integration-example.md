@@ -25,7 +25,7 @@ Here's a complete, minimal page that demonstrates the integration:
     <title>My Events</title>
     
     <!-- Include Showpass SDK -->
-    <script src="https://showpass.com/static/dist/sdk.js" defer></script>
+    <script src="https://www.showpass.com/static/dist/sdk.js" defer></script>
   </head>
   <body>
     <h1>Upcoming Events</h1>
@@ -193,7 +193,7 @@ Here's an improved version with better structure and styling:
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Events - My Venue</title>
-    <script src="https://showpass.com/static/dist/sdk.js" defer></script>
+    <script src="https://www.showpass.com/static/dist/sdk.js" defer></script>
     <style>
       body {
         font-family: Arial, sans-serif;

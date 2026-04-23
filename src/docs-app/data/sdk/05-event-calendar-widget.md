@@ -90,7 +90,7 @@ showpass.tickets.calendarWidget(myVenueId, params);
 
 <script
   type="text/javascript"
-  src="https://showpass.com/static/dist/sdk.js"
+  src="https://www.showpass.com/static/dist/sdk.js"
 ></script>
 <script>
   // Embed the calendar widget

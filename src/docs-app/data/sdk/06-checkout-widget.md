@@ -185,7 +185,7 @@ script.onload = function () {
   };
   window.showpass.tickets.checkoutWidget(params);
 };
-script.src = "https://showpass.com/static/dist/sdk.js";
+script.src = "https://www.showpass.com/static/dist/sdk.js";
 document.head.appendChild(script);
 ```
 

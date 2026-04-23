@@ -177,7 +177,7 @@ script.onload = function () {
   
   window.showpass.tickets.addCartCountListener(handleCartUpdate);
 };
-script.src = "https://showpass.com/static/dist/sdk.js";
+script.src = "https://www.showpass.com/static/dist/sdk.js";
 document.head.appendChild(script);
 ```
 

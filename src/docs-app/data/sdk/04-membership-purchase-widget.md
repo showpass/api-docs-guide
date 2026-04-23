@@ -207,7 +207,7 @@ script.onload = function () {
   };
   window.showpass.tickets.membershipPurchaseWidget(456, params);
 };
-script.src = "https://showpass.com/static/dist/sdk.js";
+script.src = "https://www.showpass.com/static/dist/sdk.js";
 document.head.appendChild(script);
 ```
 
