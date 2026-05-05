@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Showpass CLI - Command Line Tool for Event Websites</title>
+    <meta name="description" content="Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Showpass CLI - Command Line Tool for Event Websites" />
+    <meta property="og:description" content="Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Showpass CLI - Command Line Tool for Event Websites" />
+    <meta name="twitter:description" content="Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,43 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass CLI</h1>
+<p>Build and manage event websites that connect directly to your Showpass venue.</p>
+<h2>Install</h2>
+<pre><code class="language-bash">curl -fsSL &quot;https://www.showpass.com/install.sh&quot; | bash
+</code></pre>
+<h2>Quick Start</h2>
+<pre><code class="language-bash">showpass init my-event-site
+</code></pre>
+<p>This launches an interactive wizard that:</p>
+<ul>
+<li>Signs you in to your Showpass account</li>
+<li>Connects to your venue</li>
+<li>Generates a React + TypeScript site with Showpass SDK pre-configured</li>
+<li>Installs dependencies and starts the dev server</li>
+</ul>
+<p>Your site will be running at <code>http://localhost:8080</code>.</p>
+<h2>Requirements</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>OS</strong></td>
+<td>macOS, Linux</td>
+</tr>
+<tr>
+<td><strong>Account</strong></td>
+<td>Showpass account with venue access</td>
+</tr>
+</tbody></table>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

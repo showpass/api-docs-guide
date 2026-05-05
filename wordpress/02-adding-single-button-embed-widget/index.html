@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Add Single Button or Widget - Showpass WordPress Plugin</title>
+    <meta name="description" content="Learn how to add individual Showpass buttons and widgets to your WordPress posts and pages using shortcodes and blocks." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Add Single Button or Widget - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Learn how to add individual Showpass buttons and widgets to your WordPress posts and pages using shortcodes and blocks." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Add Single Button or Widget - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Learn how to add individual Showpass buttons and widgets to your WordPress posts and pages using shortcodes and blocks." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,295 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Adding a single button or embeddable widget</h1>
+<p>The Showpass WordPress plugin lets you add <strong>&quot;Buy Now&quot;</strong> buttons or embed the full <strong>purchase widget</strong> directly on your pages using the <code>[showpass_widget]</code> shortcode. Perfect for linking to specific events, products, or memberships.</p>
+<h2>What is a shortcode?</h2>
+<p>A shortcode is a small piece of text wrapped in square brackets <code>[]</code> that WordPress replaces with dynamic content. WordPress transforms <code>[showpass_widget]</code> into a button or embedded purchase interface.</p>
+<hr>
+<h2>How to add the widget shortcode</h2>
+<h3>Step 1: Open the page editor</h3>
+<ol>
+<li>Go to the WordPress page or post where you want the button</li>
+<li>Click <strong>Edit</strong> to open the block editor</li>
+</ol>
+<h3>Step 2: Add a Shortcode block</h3>
+<ol>
+<li>In the editor, click the <strong>+</strong> icon to add a new block</li>
+<li>Search for and add the <strong>Shortcode</strong> block</li>
+</ol>
+<p><img src="/images/wordpress/shortcode.png" alt="Shortcode"></p>
+<ol start="3">
+<li>Type your <code>[showpass_widget]</code> shortcode with parameters</li>
+<li>Click <strong>Update</strong> or <strong>Publish</strong></li>
+</ol>
+<p><img src="/images/wordpress/showpass-events.png" alt="Shortcode add"></p>
+<blockquote>
+<p><strong>Tip:</strong> You can also paste the shortcode directly into a Paragraph block in most themes.</p>
+</blockquote>
+<hr>
+<h2>Basic button usage</h2>
+<p>Create a simple button that opens the Showpass purchase widget in a pop-up:</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;your-event-slug&quot;]
+</code></pre>
+<p><strong>Example:</strong> For <code>https://showpass.com/my-awesome-concert</code>, use:</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;my-awesome-concert&quot;]
+</code></pre>
+<p>This creates a button with the default label <strong>&quot;Get Tickets&quot;</strong>. When clicked, the widget opens for ticket purchases.</p>
+<hr>
+<h2>Embedding the widget directly</h2>
+<p>Display the purchase widget directly on the page (no button, no pop-up):</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;your-event-slug&quot; embedded=&quot;true&quot;]
+</code></pre>
+<p><strong>Use case:</strong> Dedicated ticketing pages where customers can purchase immediately without clicking a button.</p>
+<hr>
+<h2>Widget types</h2>
+<p>The <code>[showpass_widget]</code> shortcode supports three types via the <code>type</code> parameter.</p>
+<h3>Events (default)</h3>
+<p><strong>Parameter:</strong> <code>type=&quot;event&quot;</code></p>
+<p>For selling event tickets.</p>
+<p><strong>Required:</strong> <code>slug</code></p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-text">[showpass_widget type=&quot;event&quot; slug=&quot;annual-gala&quot;]
+[showpass_widget type=&quot;event&quot; slug=&quot;annual-gala&quot; embedded=&quot;true&quot;]
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> If <code>type</code> is omitted, <code>event</code> is assumed.</p>
+</blockquote>
+<hr>
+<h3>Products</h3>
+<p><strong>Parameter:</strong> <code>type=&quot;product&quot;</code></p>
+<p>For selling merchandise or other products.</p>
+<p><strong>Required:</strong> <code>id</code> (numeric product ID from Showpass)</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-text">[showpass_widget type=&quot;product&quot; id=&quot;12345&quot;]
+[showpass_widget type=&quot;product&quot; id=&quot;12345&quot; embedded=&quot;true&quot;]
+</code></pre>
+<hr>
+<h3>Memberships</h3>
+<p><strong>Parameter:</strong> <code>type=&quot;membership&quot;</code></p>
+<p>For selling memberships.</p>
+<p><strong>Required:</strong> <code>id</code> (numeric membership group ID from Showpass)</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-text">[showpass_widget type=&quot;membership&quot; id=&quot;67890&quot;]
+[showpass_widget type=&quot;membership&quot; id=&quot;67890&quot; embedded=&quot;true&quot;]
+</code></pre>
+<hr>
+<h2>Customization parameters</h2>
+<p>Control what the widget loads and how it behaves using these parameters.</p>
+<h3>Event slug</h3>
+<p><strong>Parameter:</strong> <code>slug=&quot;your-event-slug&quot;</code></p>
+<p><strong>Use case:</strong> Link to a specific event (required for <code>type=&quot;event&quot;</code>)</p>
+<p><strong>Value:</strong> The unique part of your Showpass event URL</p>
+<p><strong>Example:</strong> For <code>showpass.com/halloween-party</code>, the slug is <code>halloween-party</code></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;halloween-party&quot;]
+</code></pre>
+<hr>
+<h3>Product or membership ID</h3>
+<p><strong>Parameter:</strong> <code>id=&quot;12345&quot;</code></p>
+<p><strong>Use case:</strong> Link to a product or membership</p>
+<p><strong>Value:</strong> Numeric ID from your Showpass dashboard</p>
+<p><strong>Finding the ID:</strong></p>
+<ol>
+<li>Log in to Showpass dashboard</li>
+<li>Go to Products or Memberships</li>
+<li>Note the numeric ID next to the item name</li>
+</ol>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-text">[showpass_widget type=&quot;product&quot; id=&quot;5021&quot;]
+[showpass_widget type=&quot;membership&quot; id=&quot;9847&quot;]
+</code></pre>
+<hr>
+<h3>Button text</h3>
+<p><strong>Parameter:</strong> <code>label=&quot;Your Custom Text&quot;</code></p>
+<p><strong>Use case:</strong> Change the button label</p>
+<p><strong>Default:</strong> &quot;Get Tickets&quot;</p>
+<p><strong>Examples:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;summer-fest&quot; label=&quot;Buy Tickets&quot;]
+[showpass_widget slug=&quot;workshop&quot; label=&quot;Register Now&quot;]
+[showpass_widget type=&quot;product&quot; id=&quot;123&quot; label=&quot;Shop Now&quot;]
+</code></pre>
+<hr>
+<h3>Embedded mode</h3>
+<p><strong>Parameter:</strong> <code>embedded=&quot;true&quot;</code></p>
+<p><strong>Use case:</strong> Display the widget directly on the page (no button)</p>
+<p><strong>Default:</strong> <code>false</code> (shows a button)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;concert&quot; embedded=&quot;true&quot;]
+</code></pre>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>Dedicated ticketing pages</li>
+<li>Checkout pages</li>
+<li>Landing pages with single purchase focus</li>
+</ul>
+<hr>
+<h3>Tracking ID</h3>
+<p><strong>Parameter:</strong> <code>tracking_id=&quot;your-tracking-token&quot;</code></p>
+<p><strong>Use case:</strong> Directly set an affiliate tracking ID for this widget (alternative to URL-based <code>aff</code> parameter)</p>
+<p><strong>Value:</strong> Your Showpass tracking token</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;concert&quot; tracking_id=&quot;8ee54af5&quot;]
+</code></pre>
+<p><strong>Note:</strong> This is a shortcode parameter alternative to using <code>?aff=token</code> in the URL. See <a href="./10-widgets-and-affiliate-tracking-links">Widgets and affiliate tracking links</a> for more details.</p>
+<hr>
+<h3>Show specific tickets</h3>
+<p><strong>Parameter:</strong> <code>show_specific_tickets=&quot;ticket-id-1,ticket-id-2&quot;</code></p>
+<p><strong>Use case:</strong> Show only specific ticket types in the widget</p>
+<p><strong>Value:</strong> Comma-separated list of ticket type IDs</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;event&quot; show_specific_tickets=&quot;123,456&quot;]
+</code></pre>
+<hr>
+<h3>Custom CSS class</h3>
+<p><strong>Parameter:</strong> <code>class=&quot;your-css-class&quot;</code></p>
+<p><strong>Use case:</strong> Apply custom CSS classes to the button for styling</p>
+<p><strong>Default:</strong> <code>&quot;showpass-button&quot;</code> (with default icon)</p>
+<p><strong>Important:</strong> When you provide a custom <code>class</code>, the default ticket icon is <strong>not included</strong>. If you want the icon, use the default class or add your own icon via CSS.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;event&quot; class=&quot;btn btn-primary my-custom-button&quot;]
+</code></pre>
+<p><strong>Note:</strong> If you&#39;ve set a default button class in admin settings (<code>option_showpass_default_button_class</code>), that will be used instead of <code>showpass-button</code> when <code>class</code> is not specified.</p>
+<hr>
+<h3>Keep shopping button text</h3>
+<p><strong>Parameter:</strong> <code>keep_shopping=&quot;true|false&quot;</code></p>
+<p><strong>Use case:</strong> Override the global &quot;Keep Shopping&quot; button setting for this widget</p>
+<p><strong>Default:</strong> Uses global admin setting (<code>option_keep_shopping</code>)</p>
+<p><strong>Values:</strong> </p>
+<ul>
+<li><code>&quot;true&quot;</code> - Show &quot;Keep Shopping&quot; button</li>
+<li><code>&quot;false&quot;</code> - Show &quot;Close&quot; button instead</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;event&quot; keep_shopping=&quot;false&quot;]
+</code></pre>
+<p><strong>Note:</strong> This per-widget setting overrides the global admin setting.</p>
+<hr>
+<h3>Widget description visibility</h3>
+<p><strong>Parameter:</strong> <code>show_widget_description=&quot;true|false&quot;</code></p>
+<p><strong>Use case:</strong> Override the global widget description setting for this widget</p>
+<p><strong>Default:</strong> Uses global admin setting (<code>option_show_widget_description</code>)</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;event&quot; show_widget_description=&quot;true&quot;]
+</code></pre>
+<hr>
+<h2>Complete examples</h2>
+<h3>Basic event button</h3>
+<pre><code class="language-text">[showpass_widget slug=&quot;summer-concert&quot;]
+</code></pre>
+<hr>
+<h3>Custom button with text</h3>
+<pre><code class="language-text">[showpass_widget slug=&quot;summer-concert&quot; label=&quot;Get Your Tickets&quot;]
+</code></pre>
+<hr>
+<h3>Embedded event widget</h3>
+<pre><code class="language-text">[showpass_widget slug=&quot;summer-concert&quot; embedded=&quot;true&quot;]
+</code></pre>
+<hr>
+<h3>Product purchase button</h3>
+<pre><code class="language-text">[showpass_widget type=&quot;product&quot; id=&quot;12345&quot; label=&quot;Buy Merchandise&quot;]
+</code></pre>
+<hr>
+<h3>Membership signup (embedded)</h3>
+<pre><code class="language-text">[showpass_widget type=&quot;membership&quot; id=&quot;67890&quot; embedded=&quot;true&quot;]
+</code></pre>
+<hr>
+<h3>Widget with tracking and custom styling</h3>
+<pre><code class="language-text">[showpass_widget slug=&quot;annual-gala&quot; label=&quot;Buy Tickets&quot; tracking_id=&quot;campaign-123&quot; class=&quot;custom-btn&quot;]
+</code></pre>
+<hr>
+<h2>Styling the button</h2>
+<p>Customize the button appearance with CSS in your theme:</p>
+<pre><code class="language-css">/* Target the Showpass widget button */
+.showpass-widget-button {
+    background-color: #9e2a2b !important;
+    color: white !important;
+    padding: 15px 30px !important;
+    border-radius: 8px !important;
+    font-size: 18px !important;
+    font-weight: 600 !important;
+}
+
+.showpass-widget-button:hover {
+    background-color: #7d2122 !important;
+}
+</code></pre>
+<p><strong>Where to add:</strong></p>
+<ul>
+<li><strong>Appearance → Customize → Additional CSS</strong></li>
+<li>Or in your child theme&#39;s <code>style.css</code></li>
+</ul>
+<hr>
+<h2>Common use cases</h2>
+<h3>Event landing page</h3>
+<p>Create a dedicated page for each event with embedded widget:</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;spring-gala&quot; embedded=&quot;true&quot;]
+</code></pre>
+<hr>
+<h3>Multiple events on one page</h3>
+<p>Add multiple buttons for different events:</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;concert-a&quot; label=&quot;Concert A Tickets&quot;]
+[showpass_widget slug=&quot;concert-b&quot; label=&quot;Concert B Tickets&quot;]
+[showpass_widget slug=&quot;concert-c&quot; label=&quot;Concert C Tickets&quot;]
+</code></pre>
+<hr>
+<h3>Sidebar widget</h3>
+<p>Add a button in your sidebar (using a Shortcode widget or block):</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;next-show&quot; label=&quot;Buy Tickets&quot;]
+</code></pre>
+<hr>
+<h3>Product showcase</h3>
+<p>Embed product purchase widgets on product pages:</p>
+<pre><code class="language-text">[showpass_widget type=&quot;product&quot; id=&quot;501&quot; embedded=&quot;true&quot;]
+</code></pre>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Button doesn&#39;t appear</h3>
+<ul>
+<li><strong>Check plugin is active:</strong> Plugins → Installed Plugins</li>
+<li><strong>Verify shortcode syntax:</strong> Ensure straight quotes, not curly quotes</li>
+<li><strong>Clear cache:</strong> Browser and WordPress caching plugins</li>
+</ul>
+<hr>
+<h3>Widget shows wrong event/product</h3>
+<ul>
+<li><strong>Verify slug or ID:</strong> Check the exact value from Showpass</li>
+<li><strong>Test directly on Showpass:</strong> Confirm the event/product exists</li>
+<li><strong>Check for typos:</strong> Slugs and IDs are case-sensitive</li>
+</ul>
+<hr>
+<h3>&quot;Connection blocked&quot; error</h3>
+<ul>
+<li><strong>Whitelist your domain</strong> in Showpass dashboard</li>
+<li><strong>Check HTTPS:</strong> Ensure consistent protocol usage</li>
+<li><strong>Review browser console:</strong> Look for specific error messages</li>
+</ul>
+<hr>
+<h3>Embedded widget styling issues</h3>
+<ul>
+<li><strong>Use custom CSS:</strong> Target the embedded widget container with CSS</li>
+<li><strong>Check container width:</strong> Ensure parent container has adequate width</li>
+<li><strong>Theme conflicts:</strong> Check for CSS conflicts with your theme</li>
+</ul>
+<hr>
+<h2>Next steps</h2>
+<p>Now that you know how to add purchase buttons and widgets, explore:</p>
+<ul>
+<li><strong><a href="./03-adding-event-list">Display event lists</a></strong> – Show multiple events in grid/list format</li>
+<li><strong><a href="./04-adding-event-detail-page">Create event detail pages</a></strong> – Build dedicated pages for each event</li>
+<li><strong><a href="./05-adding-calendar-widget">Add a calendar widget</a></strong> – Display interactive event calendar</li>
+<li><strong><a href="./11-creating-custom-templates">Customize with templates</a></strong> – Build custom layouts with raw data</li>
+</ul>
+<hr>
+<h2>Additional resources</h2>
+<ul>
+<li><strong>Showpass Help Center:</strong> <a href="https://help.showpass.com/hc/en-us">help.showpass.com</a></li>
+<li><strong>WordPress Shortcode documentation:</strong> <a href="https://codex.wordpress.org/Shortcode">codex.wordpress.org/Shortcode</a></li>
+<li><strong>CSS customization guide:</strong> <a href="https://wordpress.org/support/article/css/">wordpress.org/support/article/css</a></li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

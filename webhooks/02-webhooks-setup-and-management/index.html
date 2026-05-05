@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Webhook Setup &amp; Management - Showpass Developer Guide</title>
+    <meta name="description" content="Set up and manage Showpass webhooks. Configure endpoints, manage subscriptions, and handle webhook lifecycle management." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Webhook Setup &amp; Management - Showpass Developer Guide" />
+    <meta property="og:description" content="Set up and manage Showpass webhooks. Configure endpoints, manage subscriptions, and handle webhook lifecycle management." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Webhook Setup &amp; Management - Showpass Developer Guide" />
+    <meta name="twitter:description" content="Set up and manage Showpass webhooks. Configure endpoints, manage subscriptions, and handle webhook lifecycle management." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,104 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Webhooks: Setup and management</h1>
+<p>This section details how to configure, edit, and manage your webhook endpoints within the Showpass dashboard.</p>
+<h2>Setting up a new webhook endpoint</h2>
+<p>To start receiving webhook notifications from Showpass, you need to add and configure an endpoint in your Showpass organization settings, <a href="https://www.showpass.com/dashboard/webhooks/">here</a>.</p>
+<ol>
+<li><p><strong>Navigate to Webhooks:</strong></p>
+<ul>
+<li>Log in to your Showpass Dashboard.</li>
+<li>Go to your <strong>Organization Settings</strong>. You can find this by clicking the hamburger menu in the top-left corner.</li>
+<li>Look for a <strong>Webhooks</strong> tab or section.</li>
+</ul>
+</li>
+<li><p><strong>Add New Endpoint:</strong></p>
+<ul>
+<li>Click on the &quot;Add Endpoint&quot; button.</li>
+</ul>
+</li>
+<li><p><strong>Configure the Endpoint:</strong></p>
+<ul>
+<li><strong>Endpoint URL:</strong> Enter the publicly accessible URL on your server or third-party service where Showpass should send the webhook POST requests. This URL must be active and capable of receiving HTTP POST requests.<ul>
+<li><em>Example for testing: You can use a service like <a href="https://webhook.site/">Webhook.site</a> to get a temporary URL to inspect payloads.</em></li>
+</ul>
+</li>
+<li><strong>Endpoint Name:</strong> Add a title to help you identify the purpose of this webhook endpoint later (e.g., &quot;CRM Integration for Purchases,&quot; &quot;Slack Notifications for Refunds&quot;).</li>
+<li><strong>Events:</strong> Select the specific Showpass events for which you want this endpoint to receive notifications. You can typically choose from a list such as:<ul>
+<li><code>invoice.purchase</code></li>
+<li><code>invoice.refund</code></li>
+<li><code>invoice.void</code></li>
+<li><code>invoice.transfer</code></li>
+<li><code>invoice.transferred</code>
+You can usually select all or multiple events for a single endpoint.</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Save the Endpoint:</strong></p>
+<ul>
+<li>Click &quot;Add endpoint&quot;</li>
+</ul>
+</li>
+<li><p><strong>Retrieve Your Secret Key:</strong></p>
+<ul>
+<li>Once the endpoint is created, Showpass will generate a <strong>Secret Key</strong>. You can find and copy it from the Edit Webhook Endpoint.</li>
+<li>You will need it to verify the authenticity of webhook requests received by your endpoint (see section &quot;3. Security&quot;).</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Status:</strong> Your webhooks are active by default, but you can set them to ‘Paused’ to temporarily disable them.</p>
+</blockquote>
+<h2>Managing existing webhook endpoints</h2>
+<p>From the Webhooks section in your Showpass dashboard, you can typically manage your existing endpoints:</p>
+<ul>
+<li><p><strong>View Endpoints:</strong> A list of all your configured webhook endpoints will be displayed, showing their URL, description and status.</p>
+</li>
+<li><p><strong>Edit an Endpoint:</strong></p>
+<ul>
+<li>You can usually click an edit icon next to an endpoint to modify its settings:<ul>
+<li>Change the Endpoint URL.</li>
+<li>Update the Description.</li>
+<li>Add or remove subscribed Events.</li>
+<li>Change the Status (Active/Paused).</li>
+<li>Copy or Regenerate the Secret Key</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>Pause/Activate an Endpoint:</strong></p>
+<ul>
+<li>You can temporarily stop Showpass from sending webhooks to an endpoint by changing its status to &quot;Paused.&quot;</li>
+<li>To resume sending, change the status back to &quot;Active.&quot;</li>
+</ul>
+</li>
+<li><p><strong>Send a Test Event:</strong></p>
+<ul>
+<li>Most webhook management interfaces provide an option to send a test event to a selected endpoint.</li>
+<li>This is extremely useful for verifying that your endpoint URL is correctly configured, reachable, and that your receiving application can process the request format.</li>
+<li>You can send an event to this webhook by clicking &quot;Send Test&quot;. </li>
+<li>The payload for a test event will typically contain a sample structure, allowing you to confirm your parsing logic.</li>
+</ul>
+</li>
+<li><p><strong>Regenerate Secret Key:</strong></p>
+<ul>
+<li>If your Secret Key is compromised or you need to rotate it for security reasons, there should be an option to regenerate it.</li>
+<li><strong>Caution:</strong> Regenerating a Secret Key will invalidate the old one. You will need to update your webhook verification logic on your server with the new key immediately.</li>
+</ul>
+</li>
+<li><p><strong>Delete an Endpoint:</strong></p>
+<ul>
+<li>If an endpoint is no longer needed, you can delete it. This will stop Showpass from sending any further webhooks to that URL.</li>
+</ul>
+</li>
+</ul>
+<p>By following these steps, you can effectively set up and manage your webhook integrations with Showpass, enabling real-time data flow to your external systems. Always ensure your endpoint URLs are secure (<code>https://</code>) and robust enough to handle incoming requests.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

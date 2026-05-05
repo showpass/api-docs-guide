@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Creating Custom Templates - Showpass WordPress Plugin</title>
+    <meta name="description" content="Create custom templates for Showpass events and widgets in WordPress. Customize the appearance to match your theme." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Creating Custom Templates - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Create custom templates for Showpass events and widgets in WordPress. Customize the appearance to match your theme." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Creating Custom Templates - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Create custom templates for Showpass events and widgets in WordPress. Customize the appearance to match your theme." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,305 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Creating custom WordPress templates with Showpass data</h1>
+<p>Build custom layouts that match your theme by accessing raw Showpass data through the <code>template=&quot;data&quot;</code> parameter. This advanced technique gives you full control over how events, products, and memberships are displayed.</p>
+<blockquote>
+<p><strong>Advanced topic:</strong> Requires familiarity with PHP, HTML, and WordPress theme development.</p>
+</blockquote>
+<hr>
+<h2>The <code>template=&quot;data&quot;</code> parameter</h2>
+<p><strong>Parameter:</strong> <code>template=&quot;data&quot;</code></p>
+<p>The key to custom templates is using this parameter with Showpass shortcodes:</p>
+<pre><code class="language-text">[showpass_events template=&quot;data&quot;]
+[showpass_products template=&quot;data&quot;]
+[showpass_memberships template=&quot;data&quot;]
+</code></pre>
+<p><strong>What it does:</strong></p>
+<ul>
+<li>Returns raw JSON data instead of HTML</li>
+<li>Allows processing with PHP&#39;s <code>do_shortcode()</code> and <code>json_decode()</code></li>
+<li>Enables complete customization of markup and styling</li>
+</ul>
+<hr>
+<h2>Workflow for custom templates</h2>
+<h3>Step 1: Inspect the data structure</h3>
+<p>Examine what data is available:</p>
+<ol>
+<li>Create a test WordPress page</li>
+<li>Add a shortcode with <code>template=&quot;data&quot;</code>:<pre><code class="language-text">[showpass_events type=&quot;list&quot; template=&quot;data&quot;]
+</code></pre>
+</li>
+<li>View page source or use <code>var_dump()</code> in a template to inspect JSON</li>
+</ol>
+<p><strong>Key fields for events:</strong></p>
+<ul>
+<li><strong><code>slug</code></strong> – Event slug (used in <code>[showpass_widget slug=&quot;...&quot;]</code>)</li>
+<li><strong><code>name</code></strong> – Event name</li>
+<li><strong><code>starts_on</code></strong> – Event start datetime (UTC, e.g., <code>&quot;2024-12-25T19:00:00Z&quot;</code>)</li>
+<li><strong><code>ends_on</code></strong> – Event end datetime (UTC)</li>
+<li><strong><code>timezone</code></strong> – Timezone (e.g., <code>&quot;America/Denver&quot;</code>)</li>
+<li><strong><code>description</code></strong> – HTML description (use <code>wp_kses_post()</code> when rendering)</li>
+<li><strong><code>description_without_html</code></strong> – Plain text description (use <code>esc_html()</code>)</li>
+<li><strong><code>frontend_details_url</code></strong> – Direct URL to event on Showpass.com</li>
+<li><strong><code>image</code></strong> – Square image URL (thumbnail)</li>
+<li><strong><code>image_banner</code></strong> – Banner image URL</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Products and memberships have different structures. Inspect the JSON to see available fields.</p>
+</blockquote>
+<hr>
+<h3>Step 2: Create a WordPress page template</h3>
+<p>Create a PHP template file in your (child) theme directory:</p>
+<pre><code class="language-text">wp-content/themes/your-child-theme/page-custom-showpass-events.php
+</code></pre>
+<p>Add a template header at the top:</p>
+<pre><code class="language-php">&lt;?php
+/*
+Template Name: Custom Showpass Event Display
+*/
+</code></pre>
+<p><strong>Learn more:</strong> <a href="https://developer.wordpress.org/themes/template-files-section/page-template-files/">WordPress Page Template Files</a></p>
+<hr>
+<h3>Step 3: Fetch and decode data</h3>
+<p>Use <code>do_shortcode()</code> to execute the Showpass shortcode and retrieve JSON:</p>
+<pre><code class="language-php">// Fetch raw JSON from Showpass
+$json_data = do_shortcode(&#39;[showpass_events type=&quot;list&quot; template=&quot;data&quot;]&#39;);
+
+// Decode into PHP object
+$data = json_decode($json_data);
+
+// Access results
+if (!empty($data-&gt;results)) {
+    foreach ($data-&gt;results as $event) {
+        echo esc_html($event-&gt;name);
+    }
+}
+</code></pre>
+<hr>
+<h3>Step 4: Add custom styles</h3>
+<p>Create CSS in your theme&#39;s stylesheet:</p>
+<pre><code class="language-css">.custom-events-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.custom-event-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+}
+</code></pre>
+<hr>
+<h3>Step 5: Assign the template to a page</h3>
+<ol>
+<li>In WordPress admin, go to <strong>Pages → Add New</strong> (or edit existing)</li>
+<li>Under <strong>Page Attributes</strong> or <strong>Template</strong>, select your custom template</li>
+<li>Publish or update the page</li>
+</ol>
+<blockquote>
+<p><strong>Important:</strong> Do NOT place <code>[showpass_events template=&quot;data&quot;]</code> in the page content. Your PHP template file handles the shortcode execution.</p>
+</blockquote>
+<hr>
+<h2>Complete example template</h2>
+<p>Full working example of a custom page template:</p>
+<pre><code class="language-php">&lt;?php
+/*
+Template Name: Custom Showpass Event Display
+*/
+
+get_header();
+?&gt;
+
+&lt;style&gt;
+.custom-events-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+.custom-events-list {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 2rem;
+}
+
+.custom-event-item {
+    border: 1px solid #e0e0e0;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.custom-event-item:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+}
+
+.custom-event-image {
+    width: 100%;
+    height: 240px;
+    object-fit: cover;
+}
+
+.custom-event-content {
+    padding: 1.5rem;
+}
+
+.custom-event-name {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 0.5rem 0;
+}
+
+.custom-event-date {
+    font-size: 1rem;
+    color: #666;
+    margin-bottom: 1rem;
+}
+
+.custom-event-description {
+    font-size: 0.95rem;
+    line-height: 1.6;
+    color: #555;
+    margin-bottom: 1.5rem;
+}
+&lt;/style&gt;
+
+&lt;div class=&quot;custom-events-container&quot;&gt;
+    &lt;h1&gt;Upcoming Events&lt;/h1&gt;
+    
+    &lt;?php
+    $json_data = do_shortcode(&#39;[showpass_events type=&quot;list&quot; template=&quot;data&quot;]&#39;);
+    $data = json_decode($json_data);
+    
+    if (!empty($data-&gt;results) &amp;&amp; is_array($data-&gt;results)) :
+    ?&gt;
+        &lt;div class=&quot;custom-events-list&quot;&gt;
+            &lt;?php foreach ($data-&gt;results as $event) : 
+                $event_date = &#39;&#39;;
+                if (!empty($event-&gt;starts_on)) {
+                    $datetime = new DateTime($event-&gt;starts_on, new DateTimeZone(&#39;UTC&#39;));
+                    if (!empty($event-&gt;timezone)) {
+                        $datetime-&gt;setTimezone(new DateTimeZone($event-&gt;timezone));
+                    }
+                    $event_date = $datetime-&gt;format(&#39;F j, Y \a\t g:i A&#39;);
+                }
+            ?&gt;
+                &lt;div class=&quot;custom-event-item&quot;&gt;
+                    &lt;?php if (!empty($event-&gt;image_banner)) : ?&gt;
+                        &lt;img 
+                            src=&quot;&lt;?php echo esc_url($event-&gt;image_banner); ?&gt;&quot; 
+                            alt=&quot;&lt;?php echo esc_attr($event-&gt;name); ?&gt;&quot;
+                            class=&quot;custom-event-image&quot;
+                        /&gt;
+                    &lt;?php endif; ?&gt;
+                    
+                    &lt;div class=&quot;custom-event-content&quot;&gt;
+                        &lt;h2 class=&quot;custom-event-name&quot;&gt;
+                            &lt;?php echo esc_html($event-&gt;name); ?&gt;
+                        &lt;/h2&gt;
+                        
+                        &lt;?php if ($event_date) : ?&gt;
+                            &lt;div class=&quot;custom-event-date&quot;&gt;
+                                📅 &lt;?php echo esc_html($event_date); ?&gt;
+                            &lt;/div&gt;
+                        &lt;?php endif; ?&gt;
+                        
+                        &lt;?php if (!empty($event-&gt;description_without_html)) : ?&gt;
+                            &lt;div class=&quot;custom-event-description&quot;&gt;
+                                &lt;?php 
+                                $description = esc_html($event-&gt;description_without_html);
+                                if (strlen($description) &gt; 150) {
+                                    $description = substr($description, 0, 150) . &#39;...&#39;;
+                                }
+                                echo $description;
+                                ?&gt;
+                            &lt;/div&gt;
+                        &lt;?php endif; ?&gt;
+                        
+                        &lt;?php if (!empty($event-&gt;slug)) : ?&gt;
+                            &lt;?php
+                            $widget_shortcode = &#39;[showpass_widget slug=&quot;&#39; . esc_attr($event-&gt;slug) . &#39;&quot;]&#39;;
+                            echo do_shortcode($widget_shortcode);
+                            ?&gt;
+                        &lt;?php endif; ?&gt;
+                    &lt;/div&gt;
+                &lt;/div&gt;
+            &lt;?php endforeach; ?&gt;
+        &lt;/div&gt;
+    &lt;?php else : ?&gt;
+        &lt;p&gt;No events found.&lt;/p&gt;
+    &lt;?php endif; ?&gt;
+&lt;/div&gt;
+
+&lt;?php get_footer(); ?&gt;
+</code></pre>
+<hr>
+<h2>Advanced customizations</h2>
+<h3>Filter events by tag</h3>
+<pre><code class="language-php">$json_data = do_shortcode(&#39;[showpass_events type=&quot;list&quot; template=&quot;data&quot; tags=&quot;concert&quot;]&#39;);
+</code></pre>
+<h3>Limit number of events</h3>
+<pre><code class="language-php">$json_data = do_shortcode(&#39;[showpass_events type=&quot;list&quot; template=&quot;data&quot; page_size=&quot;6&quot;]&#39;);
+</code></pre>
+<h3>Sort events</h3>
+<pre><code class="language-php">$json_data = do_shortcode(&#39;[showpass_events type=&quot;list&quot; template=&quot;data&quot; ordering=&quot;starts_on&quot;]&#39;);
+</code></pre>
+<h3>Add pagination</h3>
+<pre><code class="language-php">$current_page = isset($_GET[&#39;event_page&#39;]) ? intval($_GET[&#39;event_page&#39;]) : 1;
+$json_data = do_shortcode(&#39;[showpass_events type=&quot;list&quot; template=&quot;data&quot; page=&quot;&#39; . $current_page . &#39;&quot;]&#39;);
+$data = json_decode($json_data);
+
+if (!empty($data-&gt;next)) {
+    echo &#39;&lt;a href=&quot;?event_page=&#39; . ($current_page + 1) . &#39;&quot;&gt;Next Page&lt;/a&gt;&#39;;
+}
+</code></pre>
+<hr>
+<h2>Best practices</h2>
+<h3>Security</h3>
+<ul>
+<li><strong>Always escape output:</strong> Use <code>esc_html()</code>, <code>esc_attr()</code>, <code>esc_url()</code></li>
+<li><strong>Sanitize HTML content:</strong> Use <code>wp_kses_post()</code> for descriptions</li>
+<li><strong>Validate integers:</strong> Use <code>intval()</code> for page numbers and IDs</li>
+</ul>
+<h3>Performance</h3>
+<ul>
+<li><strong>Cache API responses</strong> if displaying same data across multiple pages</li>
+<li><strong>Optimize images</strong> using WordPress image functions</li>
+<li><strong>Limit page size</strong> to reasonable numbers (10-20 events per page)</li>
+</ul>
+<h3>Maintainability</h3>
+<ul>
+<li><strong>Create helper functions</strong> for repeated formatting logic</li>
+<li><strong>Use child themes</strong> to prevent loss of customizations during updates</li>
+<li><strong>Document your code</strong> for future reference</li>
+<li><strong>Test thoroughly</strong> after Showpass plugin updates</li>
+</ul>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Empty results</h3>
+<ul>
+<li><strong>Check Organization ID</strong> in Showpass API settings</li>
+<li><strong>Verify JSON structure</strong> by viewing page source</li>
+<li><strong>Test shortcode separately</strong> on a regular page first</li>
+</ul>
+<h3>PHP errors</h3>
+<p>Enable WordPress debugging in <code>wp-config.php</code>:</p>
+<pre><code class="language-php">define(&#39;WP_DEBUG&#39;, true);
+define(&#39;WP_DEBUG_LOG&#39;, true);
+</code></pre>
+<p>Check error log in <code>wp-content/debug.log</code>.</p>
+<h3>Styling issues</h3>
+<ul>
+<li><strong>Inspect element</strong> in browser DevTools to identify CSS conflicts</li>
+<li><strong>Increase specificity</strong> of your CSS selectors</li>
+<li><strong>Use <code>!important</code></strong> sparingly and only when necessary</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

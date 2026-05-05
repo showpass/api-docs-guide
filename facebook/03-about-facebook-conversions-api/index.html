@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>About Facebook Conversions API - Enhanced Tracking Guide</title>
+    <meta name="description" content="Understand Facebook Conversions API benefits for Showpass events. Improve data quality, enhance attribution, and future-proof your tracking." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="About Facebook Conversions API - Enhanced Tracking Guide" />
+    <meta property="og:description" content="Understand Facebook Conversions API benefits for Showpass events. Improve data quality, enhance attribution, and future-proof your tracking." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="About Facebook Conversions API - Enhanced Tracking Guide" />
+    <meta name="twitter:description" content="Understand Facebook Conversions API benefits for Showpass events. Improve data quality, enhance attribution, and future-proof your tracking." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,199 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>About Facebook Conversions API</h1>
+<p>Facebook Conversions API (formerly Server-Side API) is a tool that allows you to share web and offline events directly from your server to Facebook. It works alongside Facebook Pixel to improve ad performance measurement and help you reach more people.</p>
+<h2>What is Facebook Conversions API?</h2>
+<p>Facebook Conversions API creates a direct connection between your marketing data (from Showpass) and Facebook&#39;s systems. Unlike the Facebook Pixel, which operates through the browser, Conversions API sends data server-to-server, providing more reliable data delivery and better attribution.</p>
+<hr>
+<h2>Why Use Conversions API with Facebook Pixel?</h2>
+<h3>Enhanced Data Quality</h3>
+<ul>
+<li><strong>Reduced Data Loss:</strong> Server-side data isn&#39;t affected by browser restrictions, ad blockers, or connection issues</li>
+<li><strong>More Complete Attribution:</strong> Capture events that pixel tracking might miss</li>
+<li><strong>Better Signal Quality:</strong> Combine browser and server data for more accurate measurement</li>
+</ul>
+<h3>Improved Ad Performance</h3>
+<ul>
+<li><strong>Better Optimization:</strong> More complete data helps Facebook&#39;s algorithm optimize your ad delivery</li>
+<li><strong>Enhanced Audience Building:</strong> Create more accurate custom and lookalike audiences</li>
+<li><strong>Improved Attribution:</strong> Better understanding of which ads drive ticket sales</li>
+</ul>
+<h3>Future-Proofing</h3>
+<ul>
+<li><strong>Privacy Compliance:</strong> Works within evolving privacy frameworks (iOS 14.5+, browser changes)</li>
+<li><strong>Reduced Dependence on Cookies:</strong> Server-side tracking is less affected by cookie restrictions</li>
+<li><strong>Platform Reliability:</strong> Direct server connection provides consistent data delivery</li>
+</ul>
+<hr>
+<h2>How Conversions API Works with Showpass</h2>
+<p>When someone interacts with your Showpass events, data flows through two paths:</p>
+<h3>1. Browser Path (Facebook Pixel)</h3>
+<ul>
+<li>User visits your event page</li>
+<li>Pixel fires in their browser</li>
+<li>Data sent directly to Facebook from user&#39;s device</li>
+</ul>
+<h3>2. Server Path (Conversions API)</h3>
+<ul>
+<li>User completes an action (e.g., purchases tickets)</li>
+<li>Showpass server sends event data to Facebook</li>
+<li>Data includes customer information and purchase details</li>
+</ul>
+<h3>Event Deduplication</h3>
+<p>Facebook automatically deduplicates events received from both sources using:</p>
+<ul>
+<li>Event ID matching</li>
+<li>User identification parameters</li>
+<li>Timestamp correlation</li>
+</ul>
+<hr>
+<h2>Events Tracked via Conversions API</h2>
+<p>Showpass can send these events through Conversions API:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Description</th>
+<th>Data Included</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>Purchase</code></td>
+<td>Ticket purchase completed</td>
+<td>Order value, currency, items purchased</td>
+</tr>
+<tr>
+<td><code>InitiateCheckout</code></td>
+<td>Checkout process started</td>
+<td>Items in cart, total value</td>
+</tr>
+<tr>
+<td><code>AddToCart</code></td>
+<td>Tickets added to cart</td>
+<td>Item details, quantity, value</td>
+</tr>
+<tr>
+<td><code>ViewContent</code></td>
+<td>Event page viewed</td>
+<td>Event details, category</td>
+</tr>
+<tr>
+<td><code>Lead</code></td>
+<td>Contact form submitted</td>
+<td>Lead information (if applicable)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Data Sent to Facebook</h2>
+<p>Conversions API can send rich data about your customers and their actions:</p>
+<h3>Customer Information</h3>
+<ul>
+<li>Email address (hashed)</li>
+<li>Phone number (hashed)</li>
+<li>Name (hashed)</li>
+<li>Location data (city, state, country)</li>
+</ul>
+<h3>Event Data</h3>
+<ul>
+<li>Purchase amount and currency</li>
+<li>Product/ticket details</li>
+<li>Event timestamp</li>
+<li>Custom event parameters</li>
+</ul>
+<h3>Technical Data</h3>
+<ul>
+<li>User agent string</li>
+<li>IP address</li>
+<li>Click ID (if available)</li>
+</ul>
+<hr>
+<h2>Privacy and Data Protection</h2>
+<h3>Data Hashing</h3>
+<ul>
+<li>Personal information is automatically hashed before transmission</li>
+<li>Facebook cannot reverse-engineer personal data from hashed values</li>
+<li>Maintains privacy while enabling effective ad targeting</li>
+</ul>
+<h3>Compliance Features</h3>
+<ul>
+<li>Supports GDPR and CCPA compliance</li>
+<li>Respects user consent preferences</li>
+<li>Allows data processing restrictions</li>
+</ul>
+<h3>Data Processing Agreement</h3>
+<ul>
+<li>Facebook processes data according to their data processing terms</li>
+<li>Data is used only for advertising optimization and measurement</li>
+<li>Retention policies align with Facebook&#39;s standard practices</li>
+</ul>
+<hr>
+<h2>Benefits for Event Organizers</h2>
+<h3>Improved ROI Measurement</h3>
+<ul>
+<li>More accurate attribution of ticket sales to Facebook ads</li>
+<li>Better understanding of customer lifetime value</li>
+<li>Enhanced cross-device tracking capabilities</li>
+</ul>
+<h3>Better Audience Targeting</h3>
+<ul>
+<li>Create better-performing lookalike audiences</li>
+<li>Improve retargeting accuracy</li>
+</ul>
+<h3>Campaign Optimization</h3>
+<ul>
+<li>Better automated bidding optimization</li>
+<li>More effective ad delivery optimization</li>
+<li>Improved budget allocation across campaigns</li>
+</ul>
+<hr>
+<h2>Prerequisites</h2>
+<p>Before setting up Facebook Conversions API with Showpass:</p>
+<ul>
+<li><strong>Facebook Business Manager account</strong> with admin access</li>
+<li><strong>Facebook Pixel already installed</strong> and working</li>
+<li><strong>Admin access to your Showpass organization</strong></li>
+<li><strong>Domain verification</strong> in Facebook Business Manager</li>
+<li><strong>Facebook Conversions API access token</strong></li>
+</ul>
+<hr>
+<h2>Limitations and Considerations</h2>
+<h3>Data Processing Delays</h3>
+<ul>
+<li>Server-side events may take longer to appear in Facebook reporting</li>
+<li>Real-time optimization may be less immediate than pixel-only setups</li>
+</ul>
+<h3>Technical Requirements</h3>
+<ul>
+<li>Requires server-side integration capabilities</li>
+<li>May need additional setup time compared to pixel-only implementation</li>
+</ul>
+<h3>Cost Considerations</h3>
+<ul>
+<li>Facebook Conversions API usage may count against API rate limits</li>
+<li>Enterprise-level usage may require business agreements with Facebook</li>
+</ul>
+<hr>
+<h2>Next Steps</h2>
+<p>Ready to enhance your Facebook tracking with Conversions API?</p>
+<ol>
+<li><strong>Verify Prerequisites:</strong> Ensure you have all required accounts and access</li>
+<li><strong>Install Conversions API:</strong> Follow our <a href="/facebook/04-installing-facebook-conversions-api">installation guide</a></li>
+<li><strong>Test Your Setup:</strong> Verify events are being received correctly</li>
+<li><strong>Monitor Performance:</strong> Track improvements in ad performance and attribution</li>
+</ol>
+<hr>
+<h2>Support and Resources</h2>
+<ul>
+<li><strong>Showpass Support:</strong> Contact through your dashboard for integration help</li>
+<li><strong>Facebook Business Help:</strong> <a href="https://www.facebook.com/business/help/">Meta Business Help Center</a></li>
+<li><strong>API Documentation:</strong> <a href="https://developers.facebook.com/docs/marketing-api/conversions-api">Facebook Conversions API Documentation</a></li>
+</ul>
+<p>Understanding Facebook Conversions API is the first step toward more effective advertising measurement. When combined with Facebook Pixel, it provides the most comprehensive tracking solution for your Showpass events.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

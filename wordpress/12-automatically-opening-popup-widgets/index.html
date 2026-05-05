@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Auto-Opening Popup Widgets - Showpass WordPress Plugin</title>
+    <meta name="description" content="Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Auto-Opening Popup Widgets - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Auto-Opening Popup Widgets - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,217 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Automatically opening pop-up widgets on page load</h1>
+<p>Make the Showpass ticket widget open automatically when visitors land on specific pages. Perfect for dedicated landing pages and ad campaigns where the primary goal is immediate ticket purchases.</p>
+<h2>How it works</h2>
+<p><strong>Parameter:</strong> <code>auto=your-event-slug</code></p>
+<p>Add this query parameter to any WordPress page URL that loads Showpass widget scripts:</p>
+<pre><code class="language-text">https://yourwebsite.com/featured-event/?auto=my-big-concert
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ol>
+<li>Plugin detects the <code>auto</code> parameter</li>
+<li>Extracts the event slug value (<code>my-big-concert</code>)</li>
+<li>Automatically opens the Showpass ticket widget for that event in a pop-up</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> The event slug is the part after <code>showpass.com/</code> in your event URL. For example: <code>https://www.showpass.com/my-big-concert/</code> → slug is <code>my-big-concert</code></p>
+</blockquote>
+<hr>
+<h2>Example URLs</h2>
+<h3>Basic auto-open</h3>
+<pre><code class="language-text">https://yourwebsite.com/events/?auto=summer-festival-2024
+</code></pre>
+<h3>Combined with other parameters</h3>
+<pre><code class="language-text">https://yourwebsite.com/landing-page/?auto=concert-series&amp;utm_source=facebook
+</code></pre>
+<h3>Multiple landing pages</h3>
+<pre><code class="language-text">Event A: https://yourwebsite.com/promo/?auto=event-a-slug
+Event B: https://yourwebsite.com/promo/?auto=event-b-slug
+Event C: https://yourwebsite.com/promo/?auto=event-c-slug
+</code></pre>
+<hr>
+<h2>Common use cases</h2>
+<h3>Ad campaigns</h3>
+<p>Link paid ads directly to pages with auto-open widgets:</p>
+<pre><code class="language-text">Facebook Ad: https://yourwebsite.com/summer-sale/?auto=festival-2024
+Google Ad: https://yourwebsite.com/limited-offer/?auto=concert-series
+Instagram Ad: https://yourwebsite.com/exclusive/?auto=vip-event
+</code></pre>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Reduces friction by eliminating extra clicks</li>
+<li>Streamlines the purchase flow</li>
+<li>Improves conversion rates for time-sensitive campaigns</li>
+</ul>
+<hr>
+<h3>Dedicated event landing pages</h3>
+<p>For pages that exist solely to sell tickets for one event:</p>
+<pre><code class="language-text">https://yourwebsite.com/annual-gala/?auto=annual-gala-2024
+</code></pre>
+<p>Auto-opening removes barriers between the visitor and purchase completion.</p>
+<hr>
+<h3>Email marketing</h3>
+<p>Include direct purchase links in newsletters and promotional emails:</p>
+<pre><code class="language-text">https://yourwebsite.com/newsletter-special/?auto=exclusive-show&amp;utm_campaign=march_newsletter
+</code></pre>
+<p>Recipients see the widget immediately upon clicking, maximizing conversion potential.</p>
+<hr>
+<h3>QR codes</h3>
+<p>Generate QR codes for print materials:</p>
+<pre><code class="language-text">Poster: https://yourwebsite.com/scan/?auto=outdoor-concert
+Flyer: https://yourwebsite.com/info/?auto=charity-event
+</code></pre>
+<hr>
+<h2>Requirements</h2>
+<h3>Page must include Showpass shortcode</h3>
+<p>The target page must include at least one Showpass shortcode to load the required scripts:</p>
+<p><strong>Valid shortcodes:</strong></p>
+<ul>
+<li><code>[showpass_widget]</code></li>
+<li><code>[showpass_events]</code></li>
+<li><code>[showpass_products]</code></li>
+<li><code>[showpass_memberships]</code></li>
+<li><code>[showpass_cart_button]</code></li>
+</ul>
+<p>The <code>auto</code> parameter relies on these scripts being present on the page.</p>
+<h3>Event slug must be valid</h3>
+<p>The slug in the <code>auto</code> parameter must match an existing Showpass event:</p>
+<p><strong>Finding your event slug:</strong></p>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Go to your event details</li>
+<li>Check the public event URL</li>
+<li>Extract the slug (the part after <code>showpass.com/</code>)</li>
+</ol>
+<p><strong>Example:</strong></p>
+<ul>
+<li>Event URL: <code>https://www.showpass.com/winter-wonderland-2024/</code></li>
+<li>Slug: <code>winter-wonderland-2024</code></li>
+</ul>
+<hr>
+<h2>Best practices</h2>
+<h3>User experience considerations</h3>
+<p><strong>When to use auto-open:</strong></p>
+<ul>
+<li>Dedicated promotional landing pages</li>
+<li>Campaign-specific URLs from ads</li>
+<li>Email links to specific events</li>
+<li>Time-limited offers</li>
+</ul>
+<p><strong>When NOT to use auto-open:</strong></p>
+<ul>
+<li>Homepage or general browse pages</li>
+<li>Multi-event listing pages</li>
+<li>Informational content pages</li>
+<li>Blog posts</li>
+</ul>
+<blockquote>
+<p><strong>Important:</strong> Auto-opening widgets can feel intrusive on general content pages. Reserve this feature for pages where visitors explicitly expect to make a purchase.</p>
+</blockquote>
+<hr>
+<h3>Provide fallback content</h3>
+<p>Even with auto-open, the underlying WordPress page should include:</p>
+<ul>
+<li><strong>Event name and description</strong></li>
+<li><strong>Hero image or banner</strong></li>
+<li><strong>Date, time, and location details</strong></li>
+<li><strong>Why attend information</strong></li>
+</ul>
+<p><strong>Reasons:</strong></p>
+<ol>
+<li>Users might close the widget to read more details</li>
+<li>There may be a delay while the widget loads</li>
+<li>Some users prefer to read before purchasing</li>
+<li>SEO benefits from rich content</li>
+</ol>
+<hr>
+<h3>Handle pop-up blockers</h3>
+<p>The Showpass widget typically appears as an <strong>in-page modal</strong> (not a browser pop-up window), so most pop-up blockers should not interfere.</p>
+<p><strong>However:</strong></p>
+<ul>
+<li>Behavior can vary by browser and extensions</li>
+<li>Test in multiple browsers (Chrome, Firefox, Safari, Edge)</li>
+<li>Test with common ad blockers enabled</li>
+<li>Consider adding a manual &quot;Buy Tickets&quot; button as backup</li>
+</ul>
+<hr>
+<h3>Track performance</h3>
+<p>Use UTM parameters alongside <code>auto</code> to measure campaign effectiveness:</p>
+<pre><code class="language-text">https://yourwebsite.com/event/?auto=concert&amp;utm_source=facebook&amp;utm_medium=cpc&amp;utm_campaign=summer2024
+</code></pre>
+<p>Track in Google Analytics:</p>
+<ul>
+<li>Click-through rates</li>
+<li>Conversion rates</li>
+<li>Time to purchase</li>
+<li>Bounce rates</li>
+</ul>
+<hr>
+<h2>Testing your setup</h2>
+<h3>Step 1: Verify the page has Showpass scripts</h3>
+<ol>
+<li>Open your target page (without <code>?auto=</code> parameter)</li>
+<li>Open browser DevTools → Console</li>
+<li>Type <code>showpass</code> and press Enter</li>
+<li>You should see an object (not &quot;undefined&quot;)</li>
+</ol>
+<h3>Step 2: Test the auto parameter</h3>
+<ol>
+<li>Add <code>?auto=your-event-slug</code> to the URL</li>
+<li>Reload the page</li>
+<li>The widget should open automatically</li>
+</ol>
+<h3>Step 3: Verify correct event loads</h3>
+<ol>
+<li>Check that the widget shows the correct event details</li>
+<li>Test the purchase flow</li>
+<li>Complete a test transaction (if possible)</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Widget doesn&#39;t open automatically</h3>
+<p><strong>Check these items:</strong></p>
+<ol>
+<li><strong>Page includes Showpass shortcode</strong> – View page source and search for &quot;showpass&quot;</li>
+<li><strong>Event slug is correct</strong> – Match exactly with Showpass event URL</li>
+<li><strong>Plugin is active</strong> – Go to Plugins → Installed Plugins</li>
+<li><strong>JavaScript errors</strong> – Check browser console for errors</li>
+<li><strong>Ad blocker interference</strong> – Test in incognito mode</li>
+</ol>
+<h3>Wrong event appears</h3>
+<ul>
+<li><strong>Verify the slug</strong> in the <code>auto</code> parameter matches your intended event</li>
+<li><strong>Check for typos</strong> – slugs are case-sensitive</li>
+<li><strong>Test the event URL directly</strong> on Showpass.com first</li>
+</ul>
+<h3>Widget opens but shows error</h3>
+<ul>
+<li><strong>Event may be inactive</strong> – Check event status in Showpass dashboard</li>
+<li><strong>Sales may be paused</strong> – Verify ticket sales are active</li>
+<li><strong>Event may have ended</strong> – Check event date/time</li>
+</ul>
+<hr>
+<h2>Advanced: Combining with affiliate tracking</h2>
+<p>You can combine <code>auto</code> with affiliate tracking (<code>aff</code>) parameters:</p>
+<pre><code class="language-text">https://yourwebsite.com/special-offer/?auto=concert-2024&amp;aff=partner_xyz
+</code></pre>
+<p>This will:</p>
+<ol>
+<li>Auto-open the widget for <code>concert-2024</code></li>
+<li>Attribute the sale to affiliate <code>partner_xyz</code></li>
+</ol>
+<p><strong>Learn more:</strong> See <a href="./10-widgets-and-affiliate-tracking-links">Widgets and affiliate tracking links</a></p>
+<hr>
+<h2>Alternative: Manual widget trigger</h2>
+<p>If auto-open isn&#39;t appropriate for your use case, consider using a prominent &quot;Buy Tickets&quot; button instead:</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;your-event-slug&quot; button_text=&quot;Buy Tickets Now&quot;]
+</code></pre>
+<p>This gives users control over when they open the purchase widget while still providing a clear call-to-action.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

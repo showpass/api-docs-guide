@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Google Ads Conversion Tracking Setup - Showpass GTM Example</title>
+    <meta name="description" content="Step-by-step example of setting up Google Ads conversion tracking for Showpass events using Google Tag Manager." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Google Ads Conversion Tracking Setup - Showpass GTM Example" />
+    <meta property="og:description" content="Step-by-step example of setting up Google Ads conversion tracking for Showpass events using Google Tag Manager." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Google Ads Conversion Tracking Setup - Showpass GTM Example" />
+    <meta name="twitter:description" content="Step-by-step example of setting up Google Ads conversion tracking for Showpass events using Google Tag Manager." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,161 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>10. Example: Google Ads Conversion Tracking Setup with GTM</h1>
+<p>This section provides a step-by-step example of how to set up Google Ads conversion tracking and remarketing using Google Tag Manager (GTM) for Showpass events. This assumes you have already configured GTM to receive ecommerce data from Showpass (as outlined in previous sections, especially Section 3 and Section 6).</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>A Google Ads account</li>
+<li>Conversion actions set up in your Google Ads account (you&#39;ll need Conversion ID and Conversion Label)</li>
+<li>Your GTM container is correctly receiving ecommerce data from Showpass (e.g., <code>purchase</code> events with <code>value</code>, <code>transaction_id</code>, <code>currency</code>, <code>items</code>)</li>
+</ul>
+<hr>
+<h2>Step 1: Create Necessary Data Layer Variables (If Not Already Done)</h2>
+<p>Ensure you have GTM variables to capture the required data for Google Ads conversion tracking. Refer to <strong>Section 6, Step 1</strong> for detailed instructions on creating Data Layer Variables. You will typically need:</p>
+<ul>
+<li><strong>DLV - ecommerce.value</strong><ul>
+<li>Data Layer Variable Name: <code>ecommerce.value</code></li>
+</ul>
+</li>
+<li><strong>DLV - ecommerce.transaction_id</strong><ul>
+<li>Data Layer Variable Name: <code>ecommerce.transaction_id</code></li>
+</ul>
+</li>
+<li><strong>DLV - ecommerce.currency</strong><ul>
+<li>Data Layer Variable Name: <code>ecommerce.currency</code></li>
+</ul>
+</li>
+<li><strong>DLV - ecommerce.items</strong><ul>
+<li>Data Layer Variable Name: <code>ecommerce.items</code> (for product-level sales data)</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Step 2: Add the Conversion Linker Tag</h2>
+<p>The Conversion Linker tag is essential for ensuring accurate conversion measurement by setting first-party cookies.</p>
+<ol>
+<li>In your GTM container, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name the tag:</strong> <code>Google Ads - Conversion Linker</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Click <strong>Choose a tag type to begin setup...</strong></li>
+<li>Select <strong>Conversion Linker</strong></li>
+<li><strong>Linking across domains:</strong><ul>
+<li>Check the box for <strong>Enable linking across domains</strong></li>
+<li>In the &quot;Domains to Link&quot; field, add your website domain and <code>showpass.com</code>. For example: <code>yourdomain.com, showpass.com</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select the <strong>Initialization - All Pages</strong> trigger (or a standard &quot;All Pages&quot; trigger)</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 3: Add the Google Ads Remarketing Tag (Optional but Recommended)</h2>
+<p>This tag builds remarketing lists by tagging users who visit your site or interact with Showpass events.</p>
+<ol>
+<li>In GTM, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name the tag:</strong> <code>Google Ads - Remarketing - All Pages</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Click <strong>Choose a tag type to begin setup...</strong></li>
+<li>Select <strong>Google Ads Remarketing</strong></li>
+<li><strong>Conversion ID:</strong> Enter your Google Ads Conversion ID (this is the <code>AW-XXXXXXXXX</code> part, sometimes referred to as AW Tag ID)</li>
+<li>Leave other fields like Conversion Label, Value, etc., blank for a basic remarketing tag that fires on all pages</li>
+</ul>
+</li>
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select the <strong>Initialization - All Pages</strong> trigger (or a standard &quot;All Pages&quot; trigger)</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 4: Add the Google Ads Conversion Tracking Tag (For Purchases)</h2>
+<p>This tag tracks actual purchases as conversions in Google Ads.</p>
+<ol>
+<li>In GTM, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name the tag:</strong> <code>Google Ads - Conversion Tracking - Purchase</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Click <strong>Choose a tag type to begin setup...</strong></li>
+<li>Select <strong>Google Ads Conversion Tracking</strong></li>
+<li><strong>Conversion ID:</strong> Enter your Google Ads Conversion ID (e.g., <code>AW-XXXXXXXXX</code>)</li>
+<li><strong>Conversion Label:</strong> Enter the specific Conversion Label for your purchase conversion action from Google Ads</li>
+<li><strong>Conversion Value:</strong> Click the variable icon <code>+</code> and select your GTM variable for the transaction value (e.g., <code>{{DLV - ecommerce.value}}</code>)</li>
+<li><strong>Transaction ID:</strong> Click <code>+</code> and select your GTM variable for the transaction ID (e.g., <code>{{DLV - ecommerce.transaction_id}}</code>)</li>
+<li><strong>Currency Code:</strong> Click <code>+</code> and select your GTM variable for the currency (e.g., <code>{{DLV - ecommerce.currency}}</code>)</li>
+<li><strong>Provide product-level sales data:</strong><ul>
+<li>Check this box if you want to send item details with the conversion</li>
+<li>Click <code>+</code> next to the <strong>Items</strong> field and select <code>{{DLV - ecommerce.items}}</code></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Create or select a <strong>Custom Event</strong> trigger for the <code>purchase</code> event:<ul>
+<li><strong>Trigger Type:</strong> Custom Event</li>
+<li><strong>Event name:</strong> <code>purchase</code></li>
+<li><strong>This trigger fires on:</strong> All Custom Events</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 5: Publish Your GTM Container</h2>
+<ol>
+<li>In GTM, click <strong>Submit</strong></li>
+<li>Enter a <strong>Version Name</strong> (e.g., &quot;Added Google Ads Conversion Tracking&quot;)</li>
+<li>Click <strong>Publish</strong></li>
+</ol>
+<hr>
+<h2>Step 6: Test Your Setup</h2>
+<ol>
+<li><strong>Enable GTM Preview Mode</strong> in your GTM container</li>
+<li>Navigate to a page where you can complete a test purchase through Showpass</li>
+<li>Complete a test transaction</li>
+<li><strong>Verify in Tag Assistant:</strong><ul>
+<li>Look for the <code>purchase</code> event in the timeline</li>
+<li>Confirm that your <strong>Google Ads - Conversion Tracking - Purchase</strong> tag fired</li>
+<li>Check that the correct values (conversion value, transaction ID, currency) were passed</li>
+</ul>
+</li>
+<li><strong>Verify in Google Ads:</strong><ul>
+<li>Log in to your Google Ads account</li>
+<li>Navigate to <strong>Tools &amp; Settings &gt; Measurement &gt; Conversions</strong></li>
+<li>Find your conversion action</li>
+<li>It may take a few hours for test conversions to appear, but you should see them under &quot;Recent conversions&quot;</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Additional Tracking: Add to Cart or Other Events</h2>
+<p>You can set up additional conversion actions in Google Ads for other events like <code>add_to_cart</code> or <code>begin_checkout</code> using the same process:</p>
+<ol>
+<li>Create a new conversion action in Google Ads for the specific event</li>
+<li>Note the Conversion ID and Label</li>
+<li>In GTM, create a new <strong>Google Ads Conversion Tracking</strong> tag</li>
+<li>Configure it similar to the purchase tag, but with the appropriate Conversion Label</li>
+<li>Set the trigger to fire on the specific event (e.g., <code>add_to_cart</code>)</li>
+</ol>
+<hr>
+<h2>Summary</h2>
+<ul>
+<li><strong>Conversion Linker Tag:</strong> Essential for accurate conversion tracking across domains</li>
+<li><strong>Remarketing Tag:</strong> Builds audience lists for retargeting campaigns</li>
+<li><strong>Conversion Tracking Tag:</strong> Tracks specific conversion actions (e.g., purchases) with dynamic values from the Data Layer</li>
+<li>Always map GTM variables to the conversion tag fields for dynamic data</li>
+<li>Test thoroughly using GTM Preview mode and verify conversions in your Google Ads account</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

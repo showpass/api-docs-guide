@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Standard Ecommerce Tracking - Showpass GA4 via GTM</title>
+    <meta name="description" content="Implement standard ecommerce tracking for Showpass events using Google Analytics 4 through Google Tag Manager." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Standard Ecommerce Tracking - Showpass GA4 via GTM" />
+    <meta property="og:description" content="Implement standard ecommerce tracking for Showpass events using Google Analytics 4 through Google Tag Manager." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Standard Ecommerce Tracking - Showpass GA4 via GTM" />
+    <meta name="twitter:description" content="Implement standard ecommerce tracking for Showpass events using Google Analytics 4 through Google Tag Manager." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,105 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>3. Standard Ecommerce Tracking with GA4 via GTM</h1>
+<p>After setting up the basic GA4 Configuration Tag, the next step is to configure Google Tag Manager (GTM) to capture and send detailed ecommerce events from Showpass to your Google Analytics 4 (GA4) property.</p>
+<h2>Purpose</h2>
+<p>This setup allows you to track user interactions with your products and events, such as viewing items, adding to cart, initiating checkout, and completing purchases. This data is crucial for understanding your sales funnel and customer behavior.</p>
+<p>Showpass sends ecommerce data to the Data Layer. This GTM configuration will listen for these Data Layer events and forward them to GA4.</p>
+<hr>
+<h2>Step 1: Create an Ecommerce Events Trigger</h2>
+<p>This trigger will fire your GA4 ecommerce tag whenever one of the specified Showpass ecommerce events occurs.</p>
+<ol>
+<li>In your GTM container, go to <strong>Triggers</strong> and click <strong>New</strong></li>
+<li><strong>Name your trigger:</strong> A descriptive name like <code>Custom - Showpass Ecommerce Events</code> or <code>Ecommerce Triggers | All Events</code></li>
+<li><strong>Trigger Configuration:</strong><ul>
+<li>Click <strong>Choose a trigger type to begin setup...</strong></li>
+<li>Select <strong>Custom Event</strong></li>
+<li><strong>Event name:</strong> Enter the following, using a pipe <code>|</code> to separate event names:<pre><code class="language-text">view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> <code>ecommerce_clear</code> is a custom event that clears the ecommerce cache in the data layer</p>
+</blockquote>
+</li>
+<li>Check the box for <strong>Use regex matching</strong>. This allows the trigger to fire on any of the listed events</li>
+<li><strong>This trigger fires on:</strong> Select <strong>All Custom Events</strong></li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 2: Create the GA4 Ecommerce Event Tag</h2>
+<p>This tag will send the ecommerce data to GA4.</p>
+<ol>
+<li>In your GTM container, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name your tag:</strong> A descriptive name like <code>GA4 - Ecommerce Event Tracking</code> or <code>Ecommerce Tracking</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Click <strong>Choose a tag type to begin setup...</strong></li>
+<li>Select <strong>Google Analytics: GA4 Event</strong></li>
+<li><strong>Measurement ID:</strong> Enter your <strong>GA4 Measurement ID</strong> (e.g., <code>G-XXXXXXXXXX</code>). This should be the same ID used in your GA4 Configuration Tag<blockquote>
+<p><strong>Tip:</strong> You can create a Constant Variable in GTM for your Measurement ID to reuse it easily and avoid typos. For example, create a variable named <code>{{GA4 Measurement ID}}</code> and use that here.</p>
+</blockquote>
+</li>
+<li><strong>Event Name:</strong> Click the variable icon (the lego block with a plus) next to the field and select &quot;Event&quot;. You&#39;ll see it automatically put <strong><code>{{Event}}</code></strong> in the field. This is a built-in GTM variable that automatically captures the name of the event from the Data Layer (e.g., <code>view_item</code>, <code>add_to_cart</code>)</li>
+<li>Click on <strong>More Settings</strong></li>
+<li>Under the <strong>Ecommerce</strong> section:<ul>
+<li>Check the box <strong>Send Ecommerce data</strong></li>
+<li><strong>Data source:</strong> Ensure it is set to <strong>Data Layer</strong></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select the trigger you created in Step 1 (e.g., <code>Custom - Showpass Ecommerce Events</code>)</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 3: Publish Your GTM Container</h2>
+<ol>
+<li>In GTM, click the <strong>Submit</strong> button in the top right corner</li>
+<li>Enter a <strong>Version Name</strong> (e.g., &quot;Added GA4 Ecommerce Tracking&quot;) and an optional <strong>Version Description</strong></li>
+<li>Click <strong>Publish</strong></li>
+</ol>
+<hr>
+<h2>Step 4: Test Your Ecommerce Tracking</h2>
+<p>It&#39;s crucial to test your setup to ensure data is flowing correctly.</p>
+<ol>
+<li><strong>Enable GTM Preview Mode:</strong> In your GTM container, click <strong>Preview</strong> in the top right<ul>
+<li>Enter the URL of a page where Showpass events occur (e.g., an event page on Showpass.com if your GTM is live there, or a page on your website with an embedded Showpass widget)</li>
+<li>Click <strong>Connect</strong>. A new browser window or tab will open with your page, and the Tag Assistant debug panel will connect at the bottom or in a separate window. Don&#39;t close the window during the test</li>
+</ul>
+</li>
+<li><strong>Perform Ecommerce Actions:</strong> On your website or Showpass page:<ul>
+<li>View an event/product (<code>view_item</code>)</li>
+<li>Add an item to the cart (<code>add_to_cart</code>)</li>
+<li>Initiate checkout (<code>begin_checkout</code>)</li>
+<li>Complete a test purchase (<code>purchase</code>)</li>
+</ul>
+</li>
+<li><strong>Observe Tag Assistant:</strong><ul>
+<li>In the Tag Assistant debug panel, look for your custom event names (e.g., <code>add_to_cart</code>) appearing in the event timeline on the left</li>
+<li>Click on each event. In the right panel, verify that your GA4 Ecommerce Event tag fired</li>
+<li>Check the &quot;Variables&quot; tab to see the ecommerce Data Layer variables populated correctly</li>
+</ul>
+</li>
+<li><strong>Verify in GA4:</strong><ul>
+<li>Go to your GA4 property in Google Analytics</li>
+<li>Navigate to <strong>Reports &gt; Realtime</strong></li>
+<li>Look for your ecommerce events appearing in the realtime report</li>
+</ul>
+</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> If you encounter issues, ensure your trigger is configured correctly, the ecommerce data is being pushed to the Data Layer by Showpass, and there are no errors in the Tag Assistant console.</p>
+</blockquote>
+<p>Your standard ecommerce tracking is now set up. Next, you can implement cross-domain tracking or custom conversion tracking as needed.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

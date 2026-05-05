@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Widgets &amp; Affiliate Tracking - Showpass WordPress Plugin</title>
+    <meta name="description" content="Implement affiliate tracking and advanced widget features with the Showpass WordPress plugin. Track referrals and commissions." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Widgets &amp; Affiliate Tracking - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Implement affiliate tracking and advanced widget features with the Showpass WordPress plugin. Track referrals and commissions." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Widgets &amp; Affiliate Tracking - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Implement affiliate tracking and advanced widget features with the Showpass WordPress plugin. Track referrals and commissions." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,184 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Widgets and affiliate tracking links</h1>
+<p>Showpass allows you to use affiliate tracking links to monitor sales performance across different marketing channels or partners. When customers arrive through special tracking links, the Showpass WordPress plugin automatically associates purchases made through <code>[showpass_widget]</code> with that tracking campaign.</p>
+<h2>How affiliate tracking works</h2>
+<p>There are two ways to set tracking IDs for Showpass widgets:</p>
+<ol>
+<li><strong>URL-based tracking</strong> (using <code>?aff=</code> parameter) - Cookie-based, persists across page views</li>
+<li><strong>Direct tracking</strong> (using <code>tracking_id</code> parameter) - Set directly in the shortcode</li>
+</ol>
+<h3>Method 1: URL-based tracking with <code>aff</code> parameter</h3>
+<h4>Step 1: Create an affiliate tracking link in Showpass</h4>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Navigate to your event settings</li>
+<li>Generate an affiliate tracking link for your event or campaign</li>
+<li>Showpass will provide a unique token (e.g., <code>8ee54af5</code>)</li>
+</ol>
+<blockquote>
+<p><strong>Need help?</strong> Visit the <a href="https://help.showpass.com/hc/en-us">Showpass Help Center</a> for assistance with tracking link setup.</p>
+</blockquote>
+<h4>Step 2: Customer clicks the tracking link</h4>
+<p>Share your full tracking link in campaigns or with affiliates:</p>
+<pre><code class="language-text">https://www.showpass.com/your-event/?tracking-id=8ee54af5
+</code></pre>
+<p>When customers click this link, they&#39;re taken to Showpass and the tracking token is recorded.</p>
+<h4>Step 3: Use the <code>aff</code> parameter on your website</h4>
+<p>To integrate tracking with your WordPress site where <code>[showpass_widget]</code> is used:</p>
+<p><strong>Parameter:</strong> <code>aff=your_tracking_token</code></p>
+<p>Add this query parameter to your WordPress page URL where the Showpass widget button is located:</p>
+<pre><code class="language-text">https://yourwebsite.com/event-page/?aff=8ee54af5
+</code></pre>
+<p><strong>What happens:</strong></p>
+<ul>
+<li>When users visit this URL, the plugin creates a browser cookie storing the <code>aff</code> token</li>
+<li>The cookie persists across page views during the user&#39;s session</li>
+</ul>
+<h4>Step 4: Automatic tracking ID injection</h4>
+<p>The <code>[showpass_widget]</code> shortcode (specifically <code>type=&quot;event&quot;</code>) automatically:</p>
+<ol>
+<li>Looks for the <code>aff</code> cookie</li>
+<li>If found, injects the <code>tracking-id</code> into the Showpass purchase widget</li>
+<li>Attributes the sale to the correct affiliate/campaign in Showpass reports</li>
+</ol>
+<h3>Method 2: Direct tracking with <code>tracking_id</code> parameter</h3>
+<p><strong>Parameter:</strong> <code>tracking_id=&quot;your-tracking-token&quot;</code></p>
+<p>You can also set tracking directly in the shortcode without using URL parameters:</p>
+<pre><code class="language-text">[showpass_widget slug=&quot;my-event&quot; tracking_id=&quot;8ee54af5&quot;]
+</code></pre>
+<p><strong>Advantages:</strong></p>
+<ul>
+<li>No cookie dependency</li>
+<li>Works immediately without URL parameters</li>
+<li>Can be different for each widget on the same page</li>
+</ul>
+<p><strong>When to use:</strong></p>
+<ul>
+<li>When you want tracking set directly in the shortcode</li>
+<li>When you don&#39;t want to rely on cookies</li>
+<li>When different widgets on the same page need different tracking IDs</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_widget slug=&quot;event-a&quot; tracking_id=&quot;campaign-a&quot;]
+[showpass_widget slug=&quot;event-b&quot; tracking_id=&quot;campaign-b&quot;]
+</code></pre>
+<hr>
+<h2>Example URLs</h2>
+<h3>Basic event page</h3>
+<pre><code class="language-text">https://yourwebsite.com/upcoming-events/?aff=your_tracking_token
+</code></pre>
+<h3>Combined with event slug parameter</h3>
+<pre><code class="language-text">https://yourwebsite.com/event-detail/?slug=my-cool-event&amp;aff=your_tracking_token
+</code></pre>
+<h3>Multiple tracking campaigns</h3>
+<pre><code class="language-text">Campaign A: https://yourwebsite.com/events/?aff=facebook_campaign
+Campaign B: https://yourwebsite.com/events/?aff=email_newsletter
+Campaign C: https://yourwebsite.com/events/?aff=partner_xyz
+</code></pre>
+<hr>
+<h2>Common use cases</h2>
+<h3>Email marketing campaigns</h3>
+<p>Include tracking URLs in newsletters:</p>
+<pre><code class="language-text">https://yourwebsite.com/featured-event/?aff=newsletter_march2024
+</code></pre>
+<p>Track performance of different email campaigns by using unique tokens per campaign.</p>
+<h3>Social media advertising</h3>
+<p>Use different tracking tokens for each platform:</p>
+<pre><code class="language-text">Facebook: ?aff=fb_campaign_spring
+Instagram: ?aff=ig_story_march
+Twitter: ?aff=twitter_promo_q1
+</code></pre>
+<h3>Affiliate partnerships</h3>
+<p>Provide partners with unique tracking URLs:</p>
+<pre><code class="language-text">Partner 1: ?aff=partner_cityguide
+Partner 2: ?aff=partner_eventblog
+Partner 3: ?aff=partner_radiopromo
+</code></pre>
+<h3>QR codes</h3>
+<p>Generate QR codes pointing to tracking URLs:</p>
+<pre><code class="language-text">Print materials: ?aff=qr_poster_downtown
+Event flyers: ?aff=qr_flyer_march
+Business cards: ?aff=qr_businesscard
+</code></pre>
+<hr>
+<h2>Important considerations</h2>
+<h3>Current support scope</h3>
+<blockquote>
+<p><strong>Note:</strong> Affiliate tracking via URL <code>aff</code> parameter is currently supported for <code>[showpass_widget type=&quot;event&quot;]</code>. The <code>tracking_id</code> shortcode parameter works for events, products, and memberships. Check with Showpass support or test if you need tracking for products or memberships via URL parameters.</p>
+</blockquote>
+<h3>Cookie-based system</h3>
+<p>This method relies on browser cookies:</p>
+<ul>
+<li><strong>Cookie duration:</strong> Typically 7 days (check Showpass documentation for current settings)</li>
+<li><strong>If cookies are disabled:</strong> Tracking may not work</li>
+<li><strong>If cookies are cleared:</strong> Attribution is lost</li>
+<li><strong>Cross-device:</strong> Not supported (user must complete purchase on the same device/browser)</li>
+</ul>
+<h3>Widget interaction required</h3>
+<p>The tracking ID is applied when:</p>
+<ol>
+<li>User visits your site with <code>?aff=token</code></li>
+<li>Cookie is set</li>
+<li>User clicks a <code>[showpass_widget]</code> button to open the purchase widget</li>
+</ol>
+<p><strong>Direct links to Showpass.com with <code>tracking-id</code> parameter work independently of this WordPress plugin feature.</strong></p>
+<hr>
+<h2>Testing your tracking setup</h2>
+<h3>Step 1: Verify cookie is set</h3>
+<ol>
+<li>Visit your page with <code>?aff=test_token</code></li>
+<li>Open browser DevTools → Application/Storage → Cookies</li>
+<li>Look for a cookie containing your tracking token</li>
+</ol>
+<h3>Step 2: Test widget opening</h3>
+<ol>
+<li>Click your <code>[showpass_widget]</code> button</li>
+<li>Open browser DevTools → Network tab</li>
+<li>Look for requests to Showpass with your <code>tracking-id</code> included</li>
+</ol>
+<h3>Step 3: Check Showpass reports</h3>
+<ol>
+<li>Complete a test purchase (or use test mode if available)</li>
+<li>Log in to your Showpass dashboard</li>
+<li>Check affiliate reporting to confirm attribution</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Tracking not appearing in reports</h3>
+<ul>
+<li><strong>Verify the token matches</strong> your Showpass tracking link</li>
+<li><strong>Check cookie expiration</strong> – test shortly after clicking the tracking URL</li>
+<li><strong>Ensure the widget is for events</strong> (products/memberships may not be supported)</li>
+<li><strong>Confirm the plugin is active</strong> and up to date</li>
+</ul>
+<h3>Cookie not being set</h3>
+<ul>
+<li><strong>Check for HTTPS</strong> – cookies may have restrictions on HTTP sites</li>
+<li><strong>Verify URL format</strong> – use <code>?aff=token</code> not <code>?tracking-id=token</code></li>
+<li><strong>Test in incognito mode</strong> to rule out browser extensions blocking cookies</li>
+</ul>
+<h3>Multiple tracking sources</h3>
+<p>If a user visits multiple tracking URLs:</p>
+<ul>
+<li><strong>Latest wins:</strong> The most recent <code>aff</code> parameter overwrites previous values</li>
+<li><strong>Cookie is replaced:</strong> Each new tracking URL updates the cookie</li>
+</ul>
+<hr>
+<h2>Measuring ROI</h2>
+<p>Track the effectiveness of your marketing efforts by:</p>
+<ol>
+<li><strong>Creating unique tokens</strong> for each channel/campaign</li>
+<li><strong>Using consistent naming conventions</strong> (e.g., <code>platform_campaign_date</code>)</li>
+<li><strong>Reviewing Showpass analytics</strong> regularly to compare performance</li>
+<li><strong>Calculating cost per acquisition</strong> for paid campaigns</li>
+<li><strong>Optimizing spend</strong> based on which channels drive the most sales</li>
+</ol>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

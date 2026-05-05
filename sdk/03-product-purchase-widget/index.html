@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Product Purchase Widget - Showpass JavaScript SDK</title>
+    <meta name="description" content="Add product purchase functionality to your site with the Showpass product widget. Sell merchandise, concessions, and event products." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Product Purchase Widget - Showpass JavaScript SDK" />
+    <meta property="og:description" content="Add product purchase functionality to your site with the Showpass product widget. Sell merchandise, concessions, and event products." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Product Purchase Widget - Showpass JavaScript SDK" />
+    <meta name="twitter:description" content="Add product purchase functionality to your site with the Showpass product widget. Sell merchandise, concessions, and event products." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,245 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Product Purchase Widget</h1>
+<h2>Overview</h2>
+<p>The Product Purchase Widget displays a specific marketplace product (identified by its numerical <code>id</code>), allowing users to select options and add the product to their cart. It can be launched as a pop-up dialog or embedded directly into a webpage for seamless integration.</p>
+<hr>
+<h2>SDK Function Signature</h2>
+<pre><code class="language-javascript">// Pop-up mode - displays as a modal dialog
+showpass.tickets.productPurchaseWidget(productId, params);
+
+// Embedded mode - mounts into a container element
+showpass.tickets.productPurchaseWidget(productId, params, containerId);
+</code></pre>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>The Showpass SDK must be included on your page (see &quot;SDK Getting Started&quot; guide)</li>
+<li>Ensure the SDK is loaded before calling its functions</li>
+<li>You need the product&#39;s unique numerical <strong>ID</strong></li>
+</ul>
+<hr>
+<h2>Finding the Product ID</h2>
+<p>To locate your <strong>productId</strong>:</p>
+<ol>
+<li>Log in to your <strong>Showpass Dashboard</strong></li>
+<li>Navigate to <strong>Marketplace &gt; Products</strong></li>
+<li>Click to edit the desired product</li>
+<li>The Product ID appears in the URL: <code>https://www.showpass.com/dashboard/inventory/products/PRODUCT_ID/edit/</code></li>
+</ol>
+<hr>
+<h2>Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>productId</strong></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The unique numerical ID of the product</td>
+</tr>
+<tr>
+<td><strong>params</strong></td>
+<td>Object</td>
+<td>Optional</td>
+<td>Configuration object containing widget customization options</td>
+</tr>
+<tr>
+<td><strong>params[&#39;theme-primary&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Hex code for the main widget color (e.g., <code>&#39;#dd3333&#39;</code>)</td>
+</tr>
+<tr>
+<td><strong>params[&#39;theme-secondary&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Hex code for accent widget color</td>
+</tr>
+<tr>
+<td><strong>params[&#39;theme-dark&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If <code>true</code>, displays the widget in dark theme</td>
+</tr>
+<tr>
+<td><strong>params[&#39;keep-shopping&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If <code>true</code>, displays &quot;Keep Shopping&quot; instead of &quot;Close&quot; button. Default: <code>true</code></td>
+</tr>
+<tr>
+<td><strong>params[&#39;show-description&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Control product description visibility. Default: <code>true</code></td>
+</tr>
+<tr>
+<td><strong>params[&#39;lang&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Language code for widget interface. Use <code>&#39;fr&#39;</code> for French (defaults to English)</td>
+</tr>
+<tr>
+<td><strong>params[&#39;tracking-id&#39;]</strong></td>
+<td>-</td>
+<td>-</td>
+<td><strong>Not supported</strong> for product widgets</td>
+</tr>
+<tr>
+<td><strong>containerId</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td><strong>For Embedded Mode:</strong> The ID of the HTML <code>&lt;div&gt;</code> element where the widget will mount</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Basic Usage Examples</h2>
+<p>These examples assume the Showpass SDK is already loaded. For production-ready code that handles SDK loading, see &quot;Robust Implementation Examples&quot; below.</p>
+<h3>Pop-up Mode (Basic)</h3>
+<pre><code class="language-javascript">// Define widget configuration
+let params = {
+  &quot;theme-primary&quot;: &quot;#5cb85c&quot;, // Green theme
+  &quot;theme-dark&quot;: false,
+};
+
+// Open the product widget as a pop-up
+// Assuming 1234 is your product&#39;s ID
+showpass.tickets.productPurchaseWidget(1234, params);
+</code></pre>
+<hr>
+<h3>Embedded Mode (Basic)</h3>
+<pre><code class="language-html">&lt;!-- Container element for the widget --&gt;
+&lt;div id=&quot;product-widget-here&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  // Configure and embed the widget
+  let embedParams = { &quot;theme-primary&quot;: &quot;#f0ad4e&quot; }; // Orange theme
+  
+  // Assuming 5678 is your product&#39;s ID
+  showpass.tickets.productPurchaseWidget(
+    5678,
+    embedParams,
+    &quot;product-widget-here&quot;
+  );
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> These basic examples assume <code>showpass.tickets</code> is ready. For production environments, always use the robust implementation patterns below.</p>
+</blockquote>
+<hr>
+<h2>Robust Implementation Examples</h2>
+<p>These examples include proper SDK availability checks to ensure reliable execution.</p>
+<h3>Pop-up Mode (Robust)</h3>
+<p>This implementation attaches event listeners to buttons with the class <code>showpass-product-button</code> and reads the product ID from a <code>data-product-id</code> attribute.</p>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;button class=&quot;showpass-product-button&quot; data-product-id=&quot;1234&quot;&gt;
+  Buy Product 1
+&lt;/button&gt;
+&lt;button class=&quot;showpass-product-button&quot; data-product-id=&quot;5678&quot;&gt;
+  Buy Product 2
+&lt;/button&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function initializeProductWidgets() {
+  const buttons = document.querySelectorAll(&quot;.showpass-product-button&quot;);
+
+  buttons.forEach(function (button) {
+    button.addEventListener(&quot;click&quot;, function () {
+      const productId = parseInt(button.getAttribute(&quot;data-product-id&quot;), 10);
+      
+      if (productId &amp;&amp; window.showpass &amp;&amp; window.showpass.tickets) {
+        const params = {
+          &quot;theme-primary&quot;: &quot;#17a2b8&quot;,
+          &quot;keep-shopping&quot;: true,
+        };
+        window.showpass.tickets.productPurchaseWidget(productId, params);
+      } else {
+        console.error(&quot;Showpass SDK not available or product ID is missing.&quot;);
+      }
+    });
+  });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, initializeProductWidgets);
+} else {
+  initializeProductWidgets();
+}
+</code></pre>
+<hr>
+<h3>Embedded Mode (Robust)</h3>
+<p>This implementation ensures the SDK is loaded before embedding the widget.</p>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;div id=&quot;embedded-product-widget-container&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function embedProductWidget() {
+  const containerId = &quot;embedded-product-widget-container&quot;;
+  const productId = 1234; // Your product ID
+
+  if (window.showpass &amp;&amp; window.showpass.tickets) {
+    const params = {
+      &quot;theme-primary&quot;: &quot;#6c757d&quot;,
+      &quot;show-description&quot;: true,
+      &quot;theme-dark&quot;: false,
+    };
+    window.showpass.tickets.productPurchaseWidget(
+      productId,
+      params,
+      containerId
+    );
+  } else {
+    console.error(&quot;Showpass SDK not available.&quot;);
+    // Optionally, retry after a delay
+    setTimeout(embedProductWidget, 500);
+  }
+}
+
+// Execute when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, embedProductWidget);
+} else {
+  embedProductWidget();
+}
+</code></pre>
+<hr>
+<h3>Alternative: Using Script Onload Callback</h3>
+<p>If you&#39;re dynamically loading the SDK, you can use the <code>onload</code> callback:</p>
+<pre><code class="language-javascript">let script = document.createElement(&quot;script&quot;);
+script.onload = function () {
+  // SDK is now loaded - safe to call widget functions
+  const params = {
+    &quot;theme-primary&quot;: &quot;#dc3545&quot;,
+    &quot;theme-dark&quot;: true,
+  };
+  window.showpass.tickets.productPurchaseWidget(9999, params);
+};
+script.src = &quot;https://www.showpass.com/static/dist/sdk.js&quot;;
+document.head.appendChild(script);
+</code></pre>
+<hr>
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Product ID is required:</strong> Always use the correct numerical product ID from your dashboard</li>
+<li><strong>Check SDK availability:</strong> Production code should always verify <code>window.showpass.tickets</code> exists before calling functions</li>
+<li><strong>Pop-up vs Embedded:</strong> Use pop-up mode for quick interactions; use embedded mode for seamless page integration</li>
+<li><strong>Theme customization:</strong> Use <code>theme-primary</code>, <code>theme-secondary</code>, and <code>theme-dark</code> to match your brand</li>
+<li><strong>Handle loading:</strong> Implement retry logic or use <code>DOMContentLoaded</code> to ensure SDK readiness</li>
+<li><strong>No tracking-id:</strong> Unlike event widgets, product widgets do not support the <code>tracking-id</code> parameter</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

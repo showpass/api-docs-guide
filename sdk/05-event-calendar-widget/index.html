@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Event Calendar Widget - Showpass JavaScript SDK</title>
+    <meta name="description" content="Display events in a beautiful calendar format using the Showpass calendar widget. Customize views and handle date navigation." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Event Calendar Widget - Showpass JavaScript SDK" />
+    <meta property="og:description" content="Display events in a beautiful calendar format using the Showpass calendar widget. Customize views and handle date navigation." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Event Calendar Widget - Showpass JavaScript SDK" />
+    <meta name="twitter:description" content="Display events in a beautiful calendar format using the Showpass calendar widget. Customize views and handle date navigation." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,323 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Calendar Widget</h1>
+<h2>Overview</h2>
+<p>The Calendar Widget displays an interactive calendar of events for a specific venue (organization) or provides a specialized view for attractions with recurring time slots. Users can browse events, select dates and quantities, then proceed to checkout. The widget can be displayed as a pop-up dialog or embedded directly into your page.</p>
+<hr>
+<h2>SDK Function Signature</h2>
+<pre><code class="language-javascript">// Pop-up mode - displays as a modal dialog (Standard or Attraction)
+showpass.tickets.calendarWidget(venueId, params);
+
+// Embedded mode - mounts into a container element (Standard or Attraction)
+showpass.tickets.calendarWidget(venueId, params, containerId);
+</code></pre>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>The Showpass SDK must be included on your page (see &quot;SDK Getting Started&quot; guide)</li>
+<li>Ensure the SDK is loaded before calling its functions</li>
+<li>You need your <strong>Organization ID</strong> (venueId)</li>
+<li>For Attraction Calendars, you also need the event <strong>slug</strong></li>
+</ul>
+<hr>
+<h2>Finding the Organization ID</h2>
+<p>To locate your <strong>venueId</strong> (Organization ID):</p>
+<ol>
+<li>Log in to your <strong>Showpass Dashboard</strong></li>
+<li>Navigate to your venue settings page (typically at <code>https://www.showpass.com/dashboard/venues/edit/</code>)</li>
+<li>The Organization ID is displayed in the <strong>top right corner</strong> of this page</li>
+</ol>
+<p>For <strong>Attraction Calendars</strong>, you&#39;ll also need the event <strong>slug</strong> for the main attraction event, which is passed in the <strong>params</strong> object.</p>
+<hr>
+<h2>Common Parameters</h2>
+<p>These parameters apply to both Standard and Attraction Calendar modes:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>venueId</strong></td>
+<td>Integer</td>
+<td>Required</td>
+<td>Your organization/venue ID from the Showpass Dashboard</td>
+</tr>
+<tr>
+<td><strong>params</strong></td>
+<td>Object</td>
+<td>Optional</td>
+<td>Configuration object containing widget customization options</td>
+</tr>
+<tr>
+<td><strong>params[&#39;theme-primary&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Hex code for the main widget color (e.g., <code>&#39;#dd3333&#39;</code>)</td>
+</tr>
+<tr>
+<td><strong>params[&#39;lang&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Language code for widget interface. Use <code>&#39;fr&#39;</code> for French (defaults to English)</td>
+</tr>
+<tr>
+<td><strong>containerId</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td><strong>For Embedded Mode:</strong> The ID of the HTML <code>&lt;div&gt;</code> element where the widget will mount</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Standard Calendar Widget</h2>
+<p>The Standard Calendar displays a general calendar of events for your venue, with optional filtering by tags.</p>
+<h3>Standard Calendar Specific Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>params[&#39;tags&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Comma-separated string of tags to filter events (e.g., <code>&#39;featured,comedy&#39;</code>)</td>
+</tr>
+</tbody></table>
+<h3>Basic Usage Examples (Standard Calendar)</h3>
+<p>These examples assume the Showpass SDK is already loaded. For production-ready code, see &quot;Robust Implementation Examples&quot; below.</p>
+<h4>Pop-up Mode (Basic)</h4>
+<pre><code class="language-javascript">const myVenueId = 123;
+let params = {
+  &quot;theme-primary&quot;: &quot;#FF7F00&quot;,
+  tags: &quot;workshops&quot;,
+};
+
+// Open calendar widget as a pop-up
+showpass.tickets.calendarWidget(myVenueId, params);
+</code></pre>
+<hr>
+<h4>Embedded Mode (Basic)</h4>
+<pre><code class="language-html">&lt;!-- Container element for the calendar widget --&gt;
+&lt;div id=&quot;showpass-embedded-calendar-container&quot;&gt;&lt;/div&gt;
+
+&lt;script
+  type=&quot;text/javascript&quot;
+  src=&quot;https://www.showpass.com/static/dist/sdk.js&quot;
+&gt;&lt;/script&gt;
+&lt;script&gt;
+  // Embed the calendar widget
+  window.showpass.tickets.calendarWidget(
+    123,
+    { &quot;theme-primary&quot;: &quot;#416b24&quot; },
+    &quot;showpass-embedded-calendar-container&quot;
+  );
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> These basic examples assume <code>showpass.tickets</code> is ready. For production environments, always use the robust implementation patterns below.</p>
+</blockquote>
+<hr>
+<h3>Robust Implementation Examples (Standard Calendar)</h3>
+<p>These examples include proper SDK availability checks to ensure reliable execution.</p>
+<h4>Pop-up Mode (Robust)</h4>
+<p>This implementation attaches event listeners to buttons with the class <code>showpass-calendar-button</code>.</p>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;button class=&quot;showpass-calendar-button&quot; data-venue-id=&quot;123&quot;&gt;
+  View Standard Event Calendar
+&lt;/button&gt;
+&lt;button
+  class=&quot;showpass-calendar-button&quot;
+  data-venue-id=&quot;456&quot;
+  data-tags=&quot;concerts,live-music&quot;
+&gt;
+  View Concert Calendar
+&lt;/button&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function initializeCalendarWidgets() {
+  const buttons = document.querySelectorAll(&quot;.showpass-calendar-button&quot;);
+
+  buttons.forEach(function (button) {
+    button.addEventListener(&quot;click&quot;, function () {
+      const venueId = parseInt(button.getAttribute(&quot;data-venue-id&quot;), 10);
+      const tags = button.getAttribute(&quot;data-tags&quot;) || &quot;&quot;;
+      
+      if (venueId &amp;&amp; window.showpass &amp;&amp; window.showpass.tickets) {
+        const params = {
+          &quot;theme-primary&quot;: &quot;#007bff&quot;,
+        };
+        if (tags) {
+          params.tags = tags;
+        }
+        window.showpass.tickets.calendarWidget(venueId, params);
+      } else {
+        console.error(&quot;Showpass SDK not available or venue ID is missing.&quot;);
+      }
+    });
+  });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, initializeCalendarWidgets);
+} else {
+  initializeCalendarWidgets();
+}
+</code></pre>
+<hr>
+<h4>Embedded Mode (Robust)</h4>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;div id=&quot;embedded-calendar-container&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function embedCalendarWidget() {
+  const containerId = &quot;embedded-calendar-container&quot;;
+  const venueId = 123; // Your venue ID
+
+  if (window.showpass &amp;&amp; window.showpass.tickets) {
+    const params = {
+      &quot;theme-primary&quot;: &quot;#28a745&quot;,
+      tags: &quot;featured&quot;,
+    };
+    window.showpass.tickets.calendarWidget(
+      venueId,
+      params,
+      containerId
+    );
+  } else {
+    console.error(&quot;Showpass SDK not available.&quot;);
+    // Optionally, retry after a delay
+    setTimeout(embedCalendarWidget, 500);
+  }
+}
+
+// Execute when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, embedCalendarWidget);
+} else {
+  embedCalendarWidget();
+}
+</code></pre>
+<hr>
+<h2>Attraction Calendar Widget</h2>
+<p>The Attraction Calendar is a specialized widget for recurring attractions with time slots. It requires the <code>is_attraction</code> parameter and an event slug.</p>
+<h3>Attraction Calendar Specific Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>params[&#39;is_attraction&#39;]</strong></td>
+<td>Boolean</td>
+<td>Required</td>
+<td>Must be <code>true</code> to enable Attraction Calendar mode</td>
+</tr>
+<tr>
+<td><strong>params[&#39;event_id&#39;]</strong></td>
+<td>String</td>
+<td>Required</td>
+<td>The event slug of the main attraction event</td>
+</tr>
+<tr>
+<td><strong>params[&#39;ticket-type-selection-required&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If <code>true</code>, users must select a ticket type before choosing a date</td>
+</tr>
+<tr>
+<td><strong>params[&#39;prompt-for-quantity&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If <code>true</code>, prompts users to select quantity before adding to cart</td>
+</tr>
+</tbody></table>
+<h3>Basic Usage Examples (Attraction Calendar)</h3>
+<h4>Embedded Mode (Basic)</h4>
+<pre><code class="language-html">&lt;!-- Container element for the attraction calendar --&gt;
+&lt;div id=&quot;attraction-calendar-container&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  // Embed the attraction calendar widget
+  window.showpass.tickets.calendarWidget(
+    123, // Your venue ID
+    {
+      &quot;theme-primary&quot;: &quot;#dc3545&quot;,
+      is_attraction: true,
+      event_id: &quot;my-attraction-slug&quot;,
+      &quot;ticket-type-selection-required&quot;: true,
+    },
+    &quot;attraction-calendar-container&quot;
+  );
+&lt;/script&gt;
+</code></pre>
+<hr>
+<h3>Robust Implementation Examples (Attraction Calendar)</h3>
+<h4>Embedded Mode (Robust)</h4>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;div id=&quot;embedded-attraction-calendar&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function embedAttractionCalendar() {
+  const containerId = &quot;embedded-attraction-calendar&quot;;
+  const venueId = 123; // Your venue ID
+  const attractionSlug = &quot;my-attraction-slug&quot;; // Your attraction event slug
+
+  if (window.showpass &amp;&amp; window.showpass.tickets) {
+    const params = {
+      &quot;theme-primary&quot;: &quot;#6c757d&quot;,
+      is_attraction: true,
+      event_id: attractionSlug,
+      &quot;ticket-type-selection-required&quot;: true,
+      &quot;prompt-for-quantity&quot;: false,
+    };
+    window.showpass.tickets.calendarWidget(
+      venueId,
+      params,
+      containerId
+    );
+  } else {
+    console.error(&quot;Showpass SDK not available.&quot;);
+    // Optionally, retry after a delay
+    setTimeout(embedAttractionCalendar, 500);
+  }
+}
+
+// Execute when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, embedAttractionCalendar);
+} else {
+  embedAttractionCalendar();
+}
+</code></pre>
+<hr>
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Two calendar modes:</strong> Standard Calendar for general events, Attraction Calendar for recurring time-slot attractions</li>
+<li><strong>Venue ID required:</strong> Both modes require your organization/venue ID</li>
+<li><strong>Attraction requirements:</strong> Attraction mode requires <code>is_attraction: true</code> and <code>event_id</code> (slug)</li>
+<li><strong>Tag filtering:</strong> Standard Calendar supports event filtering by tags</li>
+<li><strong>Check SDK availability:</strong> Production code should always verify <code>window.showpass.tickets</code> exists</li>
+<li><strong>Embedded recommended:</strong> Calendar widgets work best in embedded mode for full calendar display</li>
+<li><strong>Handle loading:</strong> Implement retry logic or use <code>DOMContentLoaded</code> to ensure SDK readiness</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

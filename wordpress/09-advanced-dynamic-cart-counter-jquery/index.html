@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Dynamic Cart Counter with jQuery - Showpass WordPress Plugin</title>
+    <meta name="description" content="Build dynamic cart counters and notifications using jQuery with the Showpass WordPress plugin. Enhance user experience with real-time updates." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Dynamic Cart Counter with jQuery - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Build dynamic cart counters and notifications using jQuery with the Showpass WordPress plugin. Enhance user experience with real-time updates." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Dynamic Cart Counter with jQuery - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Build dynamic cart counters and notifications using jQuery with the Showpass WordPress plugin. Enhance user experience with real-time updates." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,165 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Advanced: Dynamic cart counter with custom JavaScript</h1>
+<p>The standard <code>[showpass_cart_button]</code> shortcode includes a text-based cart counter (e.g., <strong>&quot;Shopping Cart (3)&quot;</strong>). For custom cart displays in your header, navigation, or layout, hook into the Showpass JavaScript SDK to update elements dynamically.</p>
+<blockquote>
+<p><strong>⚠️ Advanced customization:</strong> Requires familiarity with HTML, CSS, JavaScript/jQuery, and adding custom code to your theme or via a code-snippets plugin.</p>
+</blockquote>
+<hr>
+<h2>What this custom cart counter does</h2>
+<p>This approach will:</p>
+<ol>
+<li><strong>Listen for cart updates</strong> – Detects when the cart item count changes via the Showpass SDK</li>
+<li><strong>Update your HTML</strong> – Dynamically updates specified elements (e.g., <code>Cart</code> → <code>Cart (3)</code>)</li>
+<li><strong>Open the Showpass cart</strong> – Makes elements clickable to trigger the checkout widget</li>
+</ol>
+<hr>
+<h2>Prerequisites</h2>
+<p>Before you begin, ensure you have:</p>
+<ul>
+<li><strong>Showpass WordPress plugin activated</strong> (loads the Showpass SDK and <code>showpass</code> global object)</li>
+<li><strong>jQuery</strong> (WordPress loads jQuery by default)</li>
+<li><strong>JS-Cookie library</strong> (the Showpass plugin loads this automatically)</li>
+<li><strong>HTML elements to target:</strong><ul>
+<li>One element for displaying the cart count text</li>
+<li>One element that should open the cart when clicked</li>
+</ul>
+</li>
+</ul>
+<p>If working outside the plugin context, add JS-Cookie manually:</p>
+<pre><code class="language-html">&lt;script src=&quot;https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<hr>
+<h2>Implementation</h2>
+<h3>Custom JavaScript code</h3>
+<blockquote>
+<p><strong>Important:</strong> Update the jQuery selectors (<code>.your-cart-count-display-element</code> and <code>.your-cart-click-trigger-element</code>) to match your theme&#39;s HTML structure.</p>
+</blockquote>
+<pre><code class="language-javascript">(function ($) {
+  $(function () {
+    if (
+      typeof showpass !== &quot;undefined&quot; &amp;&amp;
+      typeof showpass.tickets !== &quot;undefined&quot; &amp;&amp;
+      typeof Cookies !== &quot;undefined&quot;
+    ) {
+      // Listen for cart count changes
+      showpass.tickets.addCartCountListener(function (count) {
+        var cartDisplayText = count &gt; 0 ? &quot;Cart (&quot; + count + &quot;)&quot; : &quot;Cart&quot;;
+        $(&quot;.your-cart-count-display-element&quot;).text(cartDisplayText);
+      });
+
+      // Open checkout widget when clicked
+      $(&quot;.your-cart-click-trigger-element&quot;).on(&quot;click&quot;, function (event) {
+        event.preventDefault();
+        showpass.tickets.checkoutWidget({
+          &quot;theme-primary&quot;: &quot;#9e2a2b&quot;,
+          &quot;keep-shopping&quot;: true
+        });
+      });
+    } else {
+      console.warn(&quot;Showpass SDK or JS-Cookie not detected.&quot;);
+    }
+  });
+})(jQuery);
+</code></pre>
+<hr>
+<h2>Adding the code to WordPress</h2>
+<h3>Option 1: Create a custom JS file</h3>
+<ol>
+<li><p>In your (child) theme, create:</p>
+<pre><code class="language-text">wp-content/themes/your-child-theme/js/my-showpass-cart.js
+</code></pre>
+</li>
+<li><p>Paste the JavaScript code above</p>
+</li>
+<li><p>Update the selectors before deploying</p>
+</li>
+<li><p>Enqueue the script in <code>functions.php</code>:</p>
+</li>
+</ol>
+<pre><code class="language-php">function my_theme_enqueue_showpass_cart() {
+    wp_enqueue_script(
+        &#39;my-showpass-cart&#39;,
+        get_stylesheet_directory_uri() . &#39;/js/my-showpass-cart.js&#39;,
+        array(&#39;jquery&#39;),
+        filemtime( get_stylesheet_directory() . &#39;/js/my-showpass-cart.js&#39; ),
+        true
+    );
+}
+add_action(&#39;wp_enqueue_scripts&#39;, &#39;my_theme_enqueue_showpass_cart&#39;);
+</code></pre>
+<hr>
+<h3>Option 2: Use a code-snippets plugin</h3>
+<ol>
+<li>Install <strong>Code Snippets</strong> or <strong>Simple Custom CSS and JS</strong></li>
+<li>Create a new &quot;Front-end JS&quot; snippet</li>
+<li>Paste the JavaScript code</li>
+<li>Update the selectors</li>
+<li>Save and activate</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Some snippet plugins automatically wrap code in jQuery&#39;s <code>$(document).ready()</code>. If yours does, remove the outer wrapper.</p>
+</blockquote>
+<hr>
+<h2>Customizing the selectors</h2>
+<h3>Step 1: Identify your theme&#39;s cart element</h3>
+<ol>
+<li>Right-click your cart link and select <strong>Inspect</strong></li>
+<li>Note the class or ID (e.g., <code>&lt;a class=&quot;my-theme-cart-link&quot;&gt;Cart&lt;/a&gt;</code>)</li>
+</ol>
+<h3>Step 2: Update the JavaScript selectors</h3>
+<pre><code class="language-javascript">// Replace placeholders with your actual classes:
+$(&quot;.my-theme-cart-link&quot;).text(cartDisplayText);
+$(&quot;.my-theme-cart-link&quot;).on(&quot;click&quot;, function (event) {
+</code></pre>
+<p><strong>Selector tips:</strong></p>
+<ul>
+<li>Use a <strong>specific class</strong> or <strong>ID</strong> to avoid conflicts</li>
+<li>Target the correct element if multiple cart links exist</li>
+<li>Test in browser console: <code>$(&quot;.my-theme-cart-link&quot;).length</code> should return <code>1</code></li>
+</ul>
+<hr>
+<h2>Testing</h2>
+<ol>
+<li>Add an item to your cart using a <code>[showpass_widget]</code> button</li>
+<li>Check if the counter updates to &quot;Cart (1)&quot;</li>
+<li>Click the cart element to verify the widget opens</li>
+<li>Add/remove items to test real-time updates</li>
+</ol>
+<hr>
+<h2>Troubleshooting</h2>
+<h3>Cart counter doesn&#39;t update</h3>
+<ul>
+<li><strong>Verify plugin is active</strong> and shortcodes are on the page</li>
+<li><strong>Check browser console</strong> for JavaScript errors</li>
+<li><strong>Confirm selectors match</strong> your theme&#39;s HTML structure</li>
+<li><strong>Test if SDK is loaded:</strong> Type <code>showpass</code> in browser console – should see an object</li>
+</ul>
+<h3>Cart doesn&#39;t open when clicked</h3>
+<ul>
+<li><strong>Ensure <code>event.preventDefault()</code></strong> is present if element is an <code>&lt;a&gt;</code> tag</li>
+<li><strong>Verify click handler selector</strong> matches your clickable element</li>
+<li><strong>Check for JavaScript conflicts</strong> with other plugins/themes</li>
+</ul>
+<h3>Styles look wrong</h3>
+<p>Add custom CSS to match your theme:</p>
+<pre><code class="language-css">.my-theme-cart-link {
+  font-weight: 600;
+  color: #9e2a2b;
+}
+</code></pre>
+<hr>
+<h2>Additional resources</h2>
+<ul>
+<li><strong>Showpass SDK documentation:</strong> Contact Showpass support for detailed reference</li>
+<li><strong>WordPress JavaScript guide:</strong> <a href="https://developer.wordpress.org/themes/basics/including-css-javascript/">developer.wordpress.org/themes/basics/including-css-javascript</a></li>
+<li><strong>jQuery documentation:</strong> <a href="https://api.jquery.com/">api.jquery.com</a></li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

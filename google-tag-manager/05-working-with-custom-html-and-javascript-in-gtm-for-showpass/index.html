@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Custom HTML &amp; JavaScript in GTM - Showpass Integration</title>
+    <meta name="description" content="Implement custom HTML and JavaScript tags in Google Tag Manager for advanced Showpass tracking and functionality." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Custom HTML &amp; JavaScript in GTM - Showpass Integration" />
+    <meta property="og:description" content="Implement custom HTML and JavaScript tags in Google Tag Manager for advanced Showpass tracking and functionality." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Custom HTML &amp; JavaScript in GTM - Showpass Integration" />
+    <meta name="twitter:description" content="Implement custom HTML and JavaScript tags in Google Tag Manager for advanced Showpass tracking and functionality." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,93 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>5. Working with Custom HTML &amp; JavaScript in GTM for Showpass</h1>
+<p>When using Google Tag Manager (GTM) with Showpass, you might need to implement Custom HTML tags for third-party tracking pixels or other custom JavaScript functionalities. Due to Showpass&#39;s security settings, there are specific configurations required to ensure these custom scripts load and fire correctly.</p>
+<h2>The nonce Requirement for Custom Scripts</h2>
+<p>Showpass employs security measures that can block inline scripts or scripts loaded without proper attributes. To allow your GTM Custom HTML/JavaScript tags to execute:</p>
+<ul>
+<li>You <strong>must</strong> add a <strong>nonce</strong> attribute to all <code>&lt;script&gt;</code> opening tags within your Custom HTML tags in GTM</li>
+<li>This nonce value will be dynamically provided by Showpass through a GTM variable you&#39;ll set up</li>
+</ul>
+<hr>
+<h2>Step 1: Set Up the nonce Variable in GTM</h2>
+<p>This variable will read a dynamic nonce value that Showpass makes available on the page.</p>
+<ol>
+<li>In your GTM container, navigate to <strong>Variables</strong></li>
+<li>Under &quot;User-Defined Variables,&quot; click <strong>New</strong></li>
+<li><strong>Name your variable:</strong> <code>nonce</code> (lowercase is conventional)</li>
+<li><strong>Variable Configuration:</strong><ul>
+<li>Click <strong>Choose a variable type to begin setup...</strong></li>
+<li>Select <strong>DOM Element</strong></li>
+<li><strong>Selection Method:</strong> Choose <strong>CSS Selector</strong></li>
+<li><strong>Element Selector:</strong> Enter <code>meta[name=&#39;csp-nonce&#39;]</code><blockquote>
+<p><strong>Note:</strong> This is a CSS selector that targets the meta tag Showpass uses to provide the nonce value.</p>
+</blockquote>
+</li>
+<li><strong>Attribute Name:</strong> Enter <code>content</code><blockquote>
+<p><strong>Note:</strong> This is the content attribute on the meta tag that will hold the nonce string.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 2: Update Your Custom HTML Tags</h2>
+<p>For every Custom HTML tag in GTM that contains a <code>&lt;script&gt;...&lt;/script&gt;</code> block, you need to modify the opening <code>&lt;script&gt;</code> tag.</p>
+<ol>
+<li>Go to the <strong>Tags</strong> section in GTM and open the Custom HTML tag you want to edit</li>
+<li>Locate the opening <code>&lt;script&gt;</code> tag</li>
+<li>Add the <strong>nonce</strong> attribute, using the GTM variable you just created: <code>nonce=&quot;{{nonce}}&quot;</code></li>
+</ol>
+<h3>Example</h3>
+<p><strong>Before:</strong></p>
+<pre><code class="language-html">&lt;script&gt;
+  // Your custom JavaScript code
+  console.log(&quot;My custom script is running!&quot;);
+&lt;/script&gt;
+</code></pre>
+<p><strong>After:</strong></p>
+<pre><code class="language-html">&lt;script nonce=&quot;{{nonce}}&quot;&gt;
+  // Your custom JavaScript code
+  console.log(&quot;My custom script is running!&quot;);
+&lt;/script&gt;
+</code></pre>
+<ol start="4">
+<li>Click <strong>Save</strong> for the tag</li>
+<li>Repeat this for all Custom HTML tags that include <code>&lt;script&gt;</code> elements</li>
+</ol>
+<hr>
+<h2>Enable document.write (If Required by Your Script)</h2>
+<p>Some older third-party scripts might use <code>document.write</code>. If your Custom HTML tag requires this:</p>
+<ol>
+<li>Edit your Custom HTML tag</li>
+<li>Under the HTML field, check the box for <strong>Support document.write</strong></li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Final Steps</h2>
+<ol>
+<li><strong>Save All Changes:</strong> Ensure all your updated tags and the new <strong>nonce</strong> variable are saved</li>
+<li><strong>Publish Your GTM Container:</strong><ul>
+<li>Click <strong>Submit</strong> in GTM</li>
+<li>Provide a version name and description</li>
+<li>Click <strong>Publish</strong></li>
+</ul>
+</li>
+<li><strong>Test Thoroughly:</strong><ul>
+<li>Load pages where your GTM container is active</li>
+<li>Open your browser&#39;s developer console (usually by pressing F12 and going to the &quot;Console&quot; tab)</li>
+<li>Look for any errors. If scripts are blocked due to security policies, you might see specific error messages</li>
+<li>Ensure your custom scripts are firing as expected</li>
+</ul>
+</li>
+</ol>
+<p>By correctly implementing the <strong>nonce</strong> variable and updating your script tags, your Custom HTML and JavaScript tags in GTM should function correctly within the Showpass environment.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Add Membership List - Showpass WordPress Plugin</title>
+    <meta name="description" content="Offer memberships through your WordPress site with the Showpass membership list feature. Handle recurring payments and member benefits." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Add Membership List - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Offer memberships through your WordPress site with the Showpass membership list feature. Handle recurring payments and member benefits." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Add Membership List - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Offer memberships through your WordPress site with the Showpass membership list feature. Handle recurring payments and member benefits." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,107 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Adding a membership list</h1>
+<p>Showcase memberships on your WordPress site using the <code>[showpass_memberships]</code> shortcode. Visitors can view membership options and sign up directly from your site.</p>
+<h2>Basic usage</h2>
+<p>Add memberships to any page or post:</p>
+<ol>
+<li>Go to the WordPress page or post where you want to display your memberships.</li>
+<li>Add a <strong>Shortcode</strong> block.</li>
+<li>Enter:</li>
+</ol>
+<pre><code class="language-text">[showpass_memberships]
+</code></pre>
+<p>By default, memberships are displayed in a <strong>grid</strong> layout, showing <strong>8 membership groups per page</strong> (with pagination if there are more).</p>
+<hr>
+<h2>Customizing your membership list: parameters</h2>
+<p>You can control the layout and which memberships are shown using these parameters:</p>
+<hr>
+<h3><code>template=&quot;grid|data&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Change how the membership list is rendered, or return raw data.</p>
+</li>
+<li><p><strong>Values:</strong></p>
+<ul>
+<li><code>&quot;grid&quot;</code> (default) – Memberships in a grid layout (standard behavior).</li>
+<li><code>&quot;data&quot;</code> – Returns raw membership data (JSON) for use in a custom PHP template.</li>
+</ul>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_memberships template=&quot;grid&quot;]
+</code></pre>
+</li>
+</ul>
+<p><em>(For fully custom layouts, see “Creating Custom Templates”.)</em></p>
+<hr>
+<h3><code>page_size=&quot;number&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Control how many membership groups are shown per page.</p>
+</li>
+<li><p><strong>Default:</strong> <code>8</code></p>
+</li>
+<li><p><strong>Example (show 10 memberships per page):</strong></p>
+<pre><code class="language-text">[showpass_memberships page_size=&quot;10&quot;]
+</code></pre>
+</li>
+</ul>
+<hr>
+<h3><code>membership_ids=&quot;id1,id2,id3&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Show only specific membership groups instead of all available memberships.</p>
+</li>
+<li><p><strong>What it is:</strong> A comma-separated list of Showpass <strong>Membership Group IDs</strong>, found in your Showpass dashboard.</p>
+</li>
+<li><p><strong>Example (show only memberships 2, 6, and 7):</strong></p>
+<pre><code class="language-text">[showpass_memberships membership_ids=&quot;2,6,7&quot;]
+</code></pre>
+</li>
+</ul>
+<hr>
+<h3><code>show_widget_description=&quot;true|false&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Force the purchase widget’s description panel to show or hide when a membership is opened, overriding the global admin setting.</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_memberships show_widget_description=&quot;true&quot;]
+</code></pre>
+</li>
+</ul>
+<hr>
+<h3><code>lang=&quot;fr&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Set the <strong>widget</strong> interface language when a membership is opened.</p>
+</li>
+<li><p><strong>Behavior:</strong></p>
+<ul>
+<li>If omitted, widgets default to English.</li>
+<li><code>lang=&quot;fr&quot;</code> switches the widget UI to French.</li>
+</ul>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_memberships lang=&quot;fr&quot;]
+</code></pre>
+</li>
+<li><p><strong>Important:</strong>
+<code>lang</code> affects the <strong>purchase widgets only</strong>, not the membership list template. For a fully French page, use <code>template=&quot;data&quot;</code> with your own template and keep <code>lang=&quot;fr&quot;</code> so widgets match the page language.</p>
+</li>
+</ul>
+<hr>
+<h2>Complete example</h2>
+<p>Combine multiple parameters for precise control:</p>
+<pre><code class="language-text">[showpass_memberships page_size=&quot;10&quot; membership_ids=&quot;15,25&quot;]
+</code></pre>
+<p>This configuration will:</p>
+<ul>
+<li>Use the default <strong>grid layout</strong></li>
+<li>Show <strong>10 membership groups per page</strong></li>
+<li>Include only memberships <strong>15</strong> and <strong>25</strong></li>
+</ul>
+<p>When visitors click a membership option, the Showpass purchase widget opens for signup.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

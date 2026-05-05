@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Showpass Webhooks Introduction - Real-time Event Notifications</title>
+    <meta name="description" content="Learn about Showpass webhooks for real-time event notifications. Understand webhook concepts, use cases, and implementation strategies." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Showpass Webhooks Introduction - Real-time Event Notifications" />
+    <meta property="og:description" content="Learn about Showpass webhooks for real-time event notifications. Understand webhook concepts, use cases, and implementation strategies." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Showpass Webhooks Introduction - Real-time Event Notifications" />
+    <meta name="twitter:description" content="Learn about Showpass webhooks for real-time event notifications. Understand webhook concepts, use cases, and implementation strategies." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,54 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Webhooks: Introduction</h1>
+<p>Showpass webhooks enable real-time notifications when events occur in your account, allowing you to automate workflows and integrate with external systems.</p>
+<h2>What are webhooks?</h2>
+<p>Webhooks are HTTP callbacks that Showpass sends to your server when specific events happen. Like a new purchase, refund, or ticket transfer. Your application receives instant notifications and can respond automatically.</p>
+<hr>
+<h2>Key concepts</h2>
+<h3>Endpoint</h3>
+<p>A publicly accessible URL on your server (or on a third-party service such as Zapier) where Showpass can send HTTP POST requests containing event data. You will listen for Showpass events at this endpoint.</p>
+<p><strong>Example:</strong> <code>https://yoursite.com/api/showpass-webhook</code></p>
+<hr>
+<h3>Event</h3>
+<p>Event is an action within Showpass that triggers a webhook notification. You can find the list of events in section 4.</p>
+<hr>
+<h3>Payload</h3>
+<p>JSON data sent from Showpass containing event details. For invoice events, this includes the complete invoice object with customer info, items purchased, and transaction details.</p>
+<hr>
+<h3>Secret key</h3>
+<p>A unique token provided when you create an endpoint. Use this to verify webhook authenticity by validating the <code>X-SHOWPASS-SIGNATURE</code> header.</p>
+<blockquote>
+<p><strong>Security:</strong> Always verify signatures to ensure requests genuinely come from Showpass.</p>
+</blockquote>
+<hr>
+<h3>Logs</h3>
+<p>Showpass maintains delivery logs showing success/failure status for each webhook attempt. Use these for monitoring and troubleshooting.</p>
+<hr>
+<h2>Why use webhooks?</h2>
+<h3>Real-time automation</h3>
+<p>Get immediate notifications as events happen—no polling or manual checks required.</p>
+<h3>Seamless integration</h3>
+<p>Connect Showpass with CRM systems, email platforms, accounting software, analytics tools, and custom applications.</p>
+<h3>Workflow efficiency</h3>
+<p>Automate tasks like:</p>
+<ul>
+<li>Updating customer records in your CRM</li>
+<li>Sending custom receipts or confirmation emails</li>
+<li>Syncing sales data with accounting software</li>
+<li>Managing mailing lists based on purchases</li>
+<li>Triggering inventory updates</li>
+</ul>
+<h3>Reduced overhead</h3>
+<p>Eliminate manual data entry and frequent API polling to check for changes.</p>
+<hr>
+<h2>Getting started</h2>
+<p>Ready to set up webhooks? Continue to the next section on <a href="/webhooks/02-webhooks-setup-and-management">Setup and Management</a> to configure your first endpoint.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

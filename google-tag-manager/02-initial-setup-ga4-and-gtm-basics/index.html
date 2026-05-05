@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>GA4 &amp; GTM Setup Basics - Showpass Integration Guide</title>
+    <meta name="description" content="Set up Google Analytics 4 and Google Tag Manager for Showpass tracking. Learn the fundamentals of GTM configuration." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="GA4 &amp; GTM Setup Basics - Showpass Integration Guide" />
+    <meta property="og:description" content="Set up Google Analytics 4 and Google Tag Manager for Showpass tracking. Learn the fundamentals of GTM configuration." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="GA4 &amp; GTM Setup Basics - Showpass Integration Guide" />
+    <meta name="twitter:description" content="Set up Google Analytics 4 and Google Tag Manager for Showpass tracking. Learn the fundamentals of GTM configuration." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,91 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>2. Initial Setup: GA4 and GTM Basics</h1>
+<p>This section guides you through the foundational steps of setting up a Google Tag Manager (GTM) container and a Google Analytics 4 (GA4) property, then linking them for basic page view tracking. This is the first step before implementing more advanced ecommerce tracking.</p>
+<h2>Prerequisites</h2>
+<ul>
+<li>You have a Google account</li>
+<li>You have access to <a href="https://tagmanager.google.com/">Google Tag Manager</a> and <a href="https://analytics.google.com/">Google Analytics</a></li>
+</ul>
+<hr>
+<h2>Step 1: Create a New GTM Container (If You Don&#39;t Have One)</h2>
+<ol>
+<li>Go to <a href="https://tagmanager.google.com/">Google Tag Manager</a></li>
+<li>Click <strong>Create Account</strong><ul>
+<li><strong>Account Name:</strong> Enter a name for your account (e.g., your company name)</li>
+<li><strong>Country:</strong> Select your country</li>
+</ul>
+</li>
+<li>Under <strong>Container Setup</strong>:<ul>
+<li><strong>Container name:</strong> Enter a descriptive name (e.g., <code>YourWebsite.com - Showpass</code>)</li>
+<li><strong>Target platform:</strong> Select <strong>Web</strong></li>
+</ul>
+</li>
+<li>Click <strong>Create</strong></li>
+<li>Agree to the GTM Terms of Service</li>
+<li>You will be presented with GTM installation code snippets. You won&#39;t need to install these directly on your Showpass pages, as Showpass will use your GTM Container ID. Make a note of your <strong>GTM Container ID</strong> (e.g., <code>GTM-XXXXXXX</code>)</li>
+</ol>
+<hr>
+<h2>Step 2: Create a New GA4 Property (If You Don&#39;t Have One)</h2>
+<ol>
+<li>Go to <a href="https://analytics.google.com/">Google Analytics</a></li>
+<li>If you have an existing account, select it. If not, create a new Google Analytics account</li>
+<li>Navigate to the <strong>Admin</strong> section (usually a gear icon in the bottom left)</li>
+<li>In the &quot;Property&quot; column, click <strong>Create Property</strong></li>
+<li>Enter a <strong>Property name</strong> (e.g., <code>YourWebsite GA4</code>)</li>
+<li>Set your <strong>Reporting time zone</strong> and <strong>Currency</strong></li>
+<li>Click <strong>Next</strong>. Provide your business information (optional)</li>
+<li>Click <strong>Create</strong></li>
+<li>For &quot;Choose a platform,&quot; select <strong>Web</strong></li>
+<li>Set up your <strong>data stream</strong>:<ul>
+<li><strong>Website URL:</strong> Enter your main website URL (even if you&#39;re primarily tracking Showpass)</li>
+<li><strong>Stream name:</strong> Give it a name (e.g., <code>Main Website Stream</code>)</li>
+</ul>
+</li>
+<li>Click <strong>Create stream</strong></li>
+<li>A &quot;Web stream details&quot; page will appear. Make a note of your <strong>MEASUREMENT ID</strong> (e.g., <code>G-XXXXXXXXXX</code>). This is your GA4 Property ID</li>
+</ol>
+<hr>
+<h2>Step 3: Create the GA4 Configuration Tag in GTM</h2>
+<p>This tag will send basic page view data and initialize GA4 on pages where GTM is loaded.</p>
+<ol>
+<li>In your GTM container, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name your tag:</strong> A descriptive name like <code>GA4 - Configuration - All Pages</code> or <code>Initialization</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Click <strong>Choose a tag type to begin setup...</strong></li>
+<li>Select <strong>Google Tag</strong></li>
+<li><strong>Tag ID:</strong> Enter your <strong>GA4 Measurement ID</strong> (e.g., <code>G-XXXXXXXXXX</code>) obtained in Step 2</li>
+<li>No further configuration is needed in &quot;Configuration Settings&quot; or &quot;Shared Event Settings&quot; for basic setup</li>
+</ul>
+</li>
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select the <strong>Initialization - All Pages</strong> trigger. This trigger ensures the Google Tag fires before other tags and on every page</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h2>Step 4: Add Your GTM Container ID to Showpass</h2>
+<ul>
+<li>Go to your <a href="https://www.showpass.com/dashboard/venues/edit/">Organization Info</a> and click on &quot;Analytics&quot; section </li>
+<li>Copy your <strong>GTM Container ID</strong> (e.g., <code>GTM-XXXXXXX</code> from Step 1) to &quot;Google Tag Manager&quot; field</li>
+<li>Click on &quot;Save Changes&quot;. This enables Showpass to load your GTM container on your events landings and widgets</li>
+</ul>
+<hr>
+<h2>Step 5: Publish Your GTM Container</h2>
+<ol>
+<li>In GTM, click the <strong>Submit</strong> button in the top right corner</li>
+<li>Enter a <strong>Version Name</strong> (e.g., &quot;Initial GA4 Setup&quot;) and an optional <strong>Version Description</strong></li>
+<li>Click <strong>Publish</strong></li>
+</ol>
+<p>Once these steps are completed, your GTM container will be linked to your Showpass setup, and the GA4 Configuration tag will start sending page view data to your GA4 property from pages where the GTM container is loaded by Showpass.</p>
+<p>Next, you will set up specific ecommerce tracking.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

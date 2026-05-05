@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Add Event Detail Page - Showpass WordPress Plugin</title>
+    <meta name="description" content="Create detailed event pages in WordPress with the Showpass plugin. Display event information, pricing, and purchase options." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Add Event Detail Page - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Create detailed event pages in WordPress with the Showpass plugin. Display event information, pricing, and purchase options." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Add Event Detail Page - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Create detailed event pages in WordPress with the Showpass plugin. Display event information, pricing, and purchase options." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,141 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Adding an event detail page with <code>[showpass_events]</code></h1>
+<p>An Event Detail page is a dedicated page on your website that shows all the information for a single event: name, description, date, time, location, image, and the Showpass purchase widget.</p>
+<p>Using event detail pages creates a richer experience than sending users straight to Showpass from an event list.</p>
+<hr>
+<h2>How it works</h2>
+<ol>
+<li>You create a generic WordPress page (e.g. <code>yourwebsite.com/event-detail</code>).</li>
+<li>You add the shortcode <code>[showpass_events type=&quot;detail&quot;]</code> to that page.</li>
+<li>Your event list shortcode (<code>[showpass_events type=&quot;list&quot; ...]</code>) is configured with a <code>detail_page</code> parameter that points to this page.</li>
+<li>When a user clicks an event in the list, they’re sent to the detail page with a URL like <code>?slug=…</code> or <code>?id=…</code>.<br>The detail shortcode reads those URL parameters and loads the correct event.</li>
+</ol>
+<hr>
+<h2>Steps to create an event detail page</h2>
+<h3>1. Create a new WordPress page</h3>
+<ol>
+<li>In the WordPress admin, go to <strong>Pages → Add New</strong>.</li>
+<li>Give the page a title, such as <strong>“Event Detail”</strong> or <strong>“Event Information”</strong>.<br>The actual event name will be rendered by the shortcode.</li>
+<li>Check the page <strong>slug/permalink</strong>. For example:<ul>
+<li>Title: <code>Event Detail</code></li>
+<li>Slug: <code>event-detail</code><br>In this example, the page URL would be <code>yourwebsite.com/event-detail</code>.</li>
+</ul>
+</li>
+</ol>
+<h3>2. Add the shortcode</h3>
+<ol>
+<li>On this new page, add a <strong>Shortcode</strong> block.</li>
+<li>In the block, enter:</li>
+</ol>
+<pre><code class="language-text">[showpass_events type=&quot;detail&quot;]
+</code></pre>
+<p>This tells the plugin to render the details for a single event based on the URL parameters.</p>
+<h3>3. Publish the page</h3>
+<p>Click <strong>Publish</strong> to make your event detail page live.</p>
+<h3>4. Update your event list shortcode(s)</h3>
+<ol>
+<li><p>Go to the page(s) where you display your event list using <code>[showpass_events type=&quot;list&quot;]</code>.</p>
+</li>
+<li><p>Add the <code>detail_page</code> parameter to the shortcode, using the slug of the detail page you just created.</p>
+<p><strong>Example:</strong> If your detail page slug is <code>event-detail</code>:</p>
+<pre><code class="language-text">[showpass_events type=&quot;list&quot; detail_page=&quot;event-detail&quot;]
+</code></pre>
+</li>
+<li><p>If you have multiple event lists, update each one so they all point to the correct detail page.</p>
+</li>
+</ol>
+<hr>
+<h2>How the URL works</h2>
+<p>When a user clicks an event in the list (with <code>detail_page=&quot;event-detail&quot;</code>), they’re sent to a URL such as:</p>
+<ul>
+<li><code>https://yourwebsite.com/event-detail/?slug=the-specific-event-slug</code>
+or</li>
+<li><code>https://yourwebsite.com/event-detail/?id=12345</code></li>
+</ul>
+<p>The <code>[showpass_events type=&quot;detail&quot;]</code> shortcode automatically:</p>
+<ol>
+<li>Checks the URL for <code>slug</code> or <code>id</code>.</li>
+<li>Fetches the corresponding event from Showpass.</li>
+<li>Renders the event details on the page.</li>
+</ol>
+<p>You don’t need to create a separate WordPress page for each event — the same detail page works for all events.</p>
+<hr>
+<h2>Customizing your event detail page: parameters</h2>
+<p>The <code>[showpass_events type=&quot;detail&quot;]</code> shortcode doesn’t need many parameters, since it focuses on one event at a time. However, you can customize its behavior with a few options.</p>
+<h3><code>template=&quot;data&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Build a completely custom PHP template for your event detail page.</p>
+</li>
+<li><p><strong>Behavior:</strong></p>
+<ul>
+<li>Default: Uses the plugin’s <code>default-detail.php</code> template.</li>
+<li>With <code>template=&quot;data&quot;</code>: Returns raw event data so you can handle output yourself.</li>
+</ul>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_events type=&quot;detail&quot; template=&quot;data&quot;]
+</code></pre>
+</li>
+</ul>
+<p><em>(See <strong>“Creating Custom Templates”</strong> for more details.)</em></p>
+<h3><code>show_widget_description=&quot;true|false&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Force the purchase widget’s description panel to show or hide, overriding the global admin setting.</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_events type=&quot;detail&quot; show_widget_description=&quot;false&quot;]
+</code></pre>
+</li>
+</ul>
+<h3><code>lang=&quot;fr&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Change the <strong>widget</strong> interface language on the event detail page.</p>
+</li>
+<li><p><strong>Behavior:</strong></p>
+<ul>
+<li>If omitted, the widget uses English.</li>
+<li><code>lang=&quot;fr&quot;</code> switches the widget UI to French.</li>
+</ul>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_events type=&quot;detail&quot; lang=&quot;fr&quot;]
+</code></pre>
+</li>
+<li><p><strong>Important:</strong>
+<code>lang</code> affects the <strong>purchase widget only</strong>, not the HTML of the detail template itself.
+For a fully French detail page, use <code>template=&quot;data&quot;</code> with your own French template and include <code>lang=&quot;fr&quot;</code> so the widget matches.</p>
+</li>
+</ul>
+<h3><code>tracking_id=&quot;your-tracking-token&quot;</code></h3>
+<ul>
+<li><strong>Use case:</strong> Set an affiliate tracking ID for purchases made from this event detail page.</li>
+<li><strong>Value:</strong> Your Showpass tracking token</li>
+<li><strong>Example:</strong><pre><code class="language-text">[showpass_events type=&quot;detail&quot; tracking_id=&quot;campaign-123&quot;]
+</code></pre>
+</li>
+<li><strong>Note:</strong> This applies tracking to purchases made from the widget on this detail page. See <a href="./10-widgets-and-affiliate-tracking-links">Widgets and affiliate tracking links</a> for more details.</li>
+</ul>
+<hr>
+<h2>What an event detail page shows by default</h2>
+<p>With:</p>
+<pre><code class="language-text">[showpass_events type=&quot;detail&quot;]
+</code></pre>
+<p>the default template typically includes:</p>
+<ul>
+<li>Event name</li>
+<li>Event image/banner</li>
+<li>Event date &amp; time</li>
+<li>Event location</li>
+<li>Event description</li>
+<li>Embedded Showpass ticket purchasing widget</li>
+</ul>
+<p>This gives each event a complete, self-contained page on your site, keeping visitors on your domain and providing a more polished experience than linking directly out to Showpass.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

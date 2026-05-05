@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Ticket Purchase Widget - Showpass JavaScript SDK</title>
+    <meta name="description" content="Implement the Showpass ticket purchase widget on your website. Customize appearance, handle events, and manage the checkout flow." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Ticket Purchase Widget - Showpass JavaScript SDK" />
+    <meta property="og:description" content="Implement the Showpass ticket purchase widget on your website. Customize appearance, handle events, and manage the checkout flow." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Ticket Purchase Widget - Showpass JavaScript SDK" />
+    <meta name="twitter:description" content="Implement the Showpass ticket purchase widget on your website. Customize appearance, handle events, and manage the checkout flow." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,225 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Ticket Purchase Widget</h1>
+<h2>Overview</h2>
+<p>The Ticket Purchase Widget allows users to select ticket quantities for a specific event and proceed to checkout. It provides a seamless ticket selection experience and can be displayed as a pop-up dialog or embedded directly into your webpage.</p>
+<hr>
+<h2>SDK Function Signature</h2>
+<pre><code class="language-javascript">// Pop-up mode - displays as a modal dialog
+showpass.tickets.eventPurchaseWidget(slug, params);
+
+// Embedded mode - mounts into a container element
+showpass.tickets.eventPurchaseWidget(slug, params, containerId);
+</code></pre>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>The Showpass SDK must be included on your page (see &quot;SDK Getting Started&quot; guide)</li>
+<li>Ensure the SDK is loaded before calling its functions</li>
+<li>You need the event&#39;s unique <strong>slug</strong> identifier</li>
+</ul>
+<hr>
+<h2>Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>slug</strong></td>
+<td>String</td>
+<td>Required</td>
+<td>The unique slug of the event (e.g., <code>my-event-slug</code> from <code>showpass.com/my-event-slug/</code>)</td>
+</tr>
+<tr>
+<td><strong>params</strong></td>
+<td>Object</td>
+<td>Optional</td>
+<td>Configuration object containing widget customization options</td>
+</tr>
+<tr>
+<td><strong>params[&#39;theme-primary&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Hex code for the main widget color (e.g., <code>&#39;#dd3333&#39;</code>)</td>
+</tr>
+<tr>
+<td><strong>params[&#39;show-specific-tickets&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Comma-separated list of ticket type IDs to display (e.g., <code>&#39;1234,5678&#39;</code>)</td>
+</tr>
+<tr>
+<td><strong>params[&#39;keep-shopping&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If <code>true</code>, displays &quot;Keep Shopping&quot; instead of &quot;Close&quot; button. Default: <code>true</code></td>
+</tr>
+<tr>
+<td><strong>params[&#39;tracking-id&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Tracking link ID for affiliate tracking, password bypass, or hidden ticket access</td>
+</tr>
+<tr>
+<td><strong>params[&#39;show-description&#39;]</strong></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Control event description visibility. Default: <code>true</code></td>
+</tr>
+<tr>
+<td><strong>params[&#39;lang&#39;]</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td>Language code for widget interface. Use <code>&#39;fr&#39;</code> for French (defaults to English)</td>
+</tr>
+<tr>
+<td><strong>containerId</strong></td>
+<td>String</td>
+<td>Optional</td>
+<td><strong>For Embedded Mode:</strong> The ID of the HTML <code>&lt;div&gt;</code> element where the widget will mount</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Basic Usage Examples</h2>
+<p>These examples assume the Showpass SDK is already loaded. For production-ready code that handles SDK loading, see &quot;Robust Implementation Examples&quot; below.</p>
+<h3>Pop-up Mode (Basic)</h3>
+<pre><code class="language-javascript">// Define widget configuration
+let params = {
+  &quot;theme-primary&quot;: &quot;#FF7F00&quot;,
+  &quot;keep-shopping&quot;: true,
+};
+
+// Open the ticket widget as a pop-up
+showpass.tickets.eventPurchaseWidget(&quot;my-event-slug&quot;, params);
+</code></pre>
+<hr>
+<h3>Embedded Mode (Basic)</h3>
+<pre><code class="language-html">&lt;!-- Container element for the widget --&gt;
+&lt;div id=&quot;event-widget-here&quot;&gt;&lt;/div&gt;
+
+&lt;script&gt;
+  // Configure and embed the widget
+  let embedParams = { &quot;theme-primary&quot;: &quot;#337ab7&quot; };
+  showpass.tickets.eventPurchaseWidget(
+    &quot;another-event-slug&quot;,
+    embedParams,
+    &quot;event-widget-here&quot;
+  );
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> These basic examples assume <code>showpass.tickets</code> is ready. For production environments, always use the robust implementation patterns below.</p>
+</blockquote>
+<hr>
+<h2>Robust Implementation Examples</h2>
+<p>These examples include proper SDK availability checks to ensure reliable execution.</p>
+<h3>Pop-up Mode (Robust)</h3>
+<p>This implementation attaches event listeners to buttons with the class <code>showpass-popup-button</code> and reads the event slug from a <code>data-event-slug</code> attribute.</p>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;button class=&quot;showpass-popup-button&quot; data-event-slug=&quot;my-first-event&quot;&gt;
+  Buy Tickets for Event 1
+&lt;/button&gt;
+&lt;button class=&quot;showpass-popup-button&quot; data-event-slug=&quot;another-event&quot;&gt;
+  Buy Tickets for Event 2
+&lt;/button&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function initializeEventWidgets() {
+  const buttons = document.querySelectorAll(&quot;.showpass-popup-button&quot;);
+
+  buttons.forEach(function (button) {
+    button.addEventListener(&quot;click&quot;, function () {
+      const slug = button.getAttribute(&quot;data-event-slug&quot;);
+      
+      if (slug &amp;&amp; window.showpass &amp;&amp; window.showpass.tickets) {
+        const params = {
+          &quot;theme-primary&quot;: &quot;#007bff&quot;,
+          &quot;keep-shopping&quot;: true,
+        };
+        window.showpass.tickets.eventPurchaseWidget(slug, params);
+      } else {
+        console.error(&quot;Showpass SDK not available or slug is missing.&quot;);
+      }
+    });
+  });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, initializeEventWidgets);
+} else {
+  initializeEventWidgets();
+}
+</code></pre>
+<hr>
+<h3>Embedded Mode (Robust)</h3>
+<p>This implementation ensures the SDK is loaded before embedding the widget.</p>
+<p><strong>HTML:</strong></p>
+<pre><code class="language-html">&lt;div id=&quot;embedded-event-widget-container&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p><strong>JavaScript:</strong></p>
+<pre><code class="language-javascript">function embedEventWidget() {
+  const containerId = &quot;embedded-event-widget-container&quot;;
+  const eventSlug = &quot;my-event-slug&quot;;
+
+  if (window.showpass &amp;&amp; window.showpass.tickets) {
+    const params = {
+      &quot;theme-primary&quot;: &quot;#28a745&quot;,
+      &quot;show-description&quot;: true,
+    };
+    window.showpass.tickets.eventPurchaseWidget(
+      eventSlug,
+      params,
+      containerId
+    );
+  } else {
+    console.error(&quot;Showpass SDK not available.&quot;);
+    // Optionally, retry after a delay
+    setTimeout(embedEventWidget, 500);
+  }
+}
+
+// Execute when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, embedEventWidget);
+} else {
+  embedEventWidget();
+}
+</code></pre>
+<hr>
+<h3>Alternative: Using Script Onload Callback</h3>
+<p>If you&#39;re dynamically loading the SDK, you can use the <code>onload</code> callback:</p>
+<pre><code class="language-javascript">let script = document.createElement(&quot;script&quot;);
+script.onload = function () {
+  // SDK is now loaded - safe to call widget functions
+  const params = { &quot;theme-primary&quot;: &quot;#6c757d&quot; };
+  window.showpass.tickets.eventPurchaseWidget(
+    &quot;my-event-slug&quot;,
+    params
+  );
+};
+script.src = &quot;https://www.showpass.com/static/dist/sdk.js&quot;;
+document.head.appendChild(script);
+</code></pre>
+<hr>
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Slug is required:</strong> Always obtain the correct event slug from the Showpass event URL</li>
+<li><strong>Check SDK availability:</strong> Production code should always verify <code>window.showpass.tickets</code> exists before calling functions</li>
+<li><strong>Pop-up vs Embedded:</strong> Use pop-up mode for quick interactions; use embedded mode for seamless page integration</li>
+<li><strong>Customize appearance:</strong> Use <code>theme-primary</code> to match your brand colors</li>
+<li><strong>Handle loading:</strong> Implement retry logic or use <code>DOMContentLoaded</code> to ensure SDK readiness</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

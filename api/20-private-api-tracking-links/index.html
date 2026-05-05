@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Tracking Links API - Showpass Private Organizer API</title>
+    <meta name="description" content="Create, manage, and analyze tracking links for your Showpass events. Attribute ticket sales to employees, affiliates, and partners with unique short URLs and conversion analytics." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Tracking Links API - Showpass Private Organizer API" />
+    <meta property="og:description" content="Create, manage, and analyze tracking links for your Showpass events. Attribute ticket sales to employees, affiliates, and partners with unique short URLs and conversion analytics." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Tracking Links API - Showpass Private Organizer API" />
+    <meta name="twitter:description" content="Create, manage, and analyze tracking links for your Showpass events. Attribute ticket sales to employees, affiliates, and partners with unique short URLs and conversion analytics." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,380 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Tracking Links</h1>
+<p>Tracking links allow organizers to create shareable URLs that attribute ticket sales to specific employees, venues, or affiliates. Each link generates a unique short URL (e.g., <code>https://showpass.com/l/abc12345</code>) that redirects to your event page while recording views, unique visitors, and conversion data.</p>
+<hr>
+<h2>Authentication</h2>
+<p>This endpoint requires authentication using a Showpass token:</p>
+<pre><code>Authorization: Token YOUR_API_TOKEN
+</code></pre>
+<hr>
+<h2>Endpoints</h2>
+<p>The base URL for all tracking link endpoints is:</p>
+<pre><code class="language-text">https://www.showpass.com/api/venue/{venue_id}/analytics/tracking/links/
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GET</code></td>
+<td><code>/links/</code></td>
+<td>List all tracking links</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/links/</code></td>
+<td>Create a new tracking link</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/links/{id}/</code></td>
+<td>Retrieve a single tracking link</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/links/{id}/</code></td>
+<td>Update a tracking link</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/links/{id}/</code></td>
+<td>Delete a tracking link</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/links/me/</code></td>
+<td>List my tracking links</td>
+</tr>
+</tbody></table>
+<h3>Path Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>venue_id</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The ID of your venue</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The tracking link ID (detail, update, or delete)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Tracking Link Types</h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>1</code></td>
+<td>Employee</td>
+<td>Links shared by staff members for sales attribution</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Venue</td>
+<td>Links created at the venue / organization level</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>Affiliate</td>
+<td>Links for external partners and promoters</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>Quick Purchase</td>
+<td>Pre-configured checkout links with items already in the basket</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> The API only returns user-generated link types (Employee, Venue, Affiliate, Quick Purchase). System-generated links such as Abandoned Basket, Held Basket, and Membership Renewal are excluded from results.</p>
+</blockquote>
+<hr>
+<h2>Request Body (Create / Update)</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>venue</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The venue ID (auto-set from session on create)</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The event ID to link to. Null for venue-level links</td>
+</tr>
+<tr>
+<td><code>referred_by</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The user ID of the person sharing this link</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>A human-readable label (max 512 characters)</td>
+</tr>
+<tr>
+<td><code>via</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The tracking link type — see Tracking Link Types above</td>
+</tr>
+<tr>
+<td><code>ticket_types</code></td>
+<td>Array</td>
+<td>Optional</td>
+<td>List of ticket type IDs to restrict the link to. Must belong to the specified venue</td>
+</tr>
+<tr>
+<td><code>hide_public_ticket_types</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If true, hides public ticket types and shows only those in <code>ticket_types</code></td>
+</tr>
+<tr>
+<td><code>extra</code></td>
+<td>Array</td>
+<td>Optional</td>
+<td>Additional configuration. <strong>Required</strong> when <code>via=4</code> (Quick Purchase) — see Quick Purchase Links below</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Response Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Unique identifier</td>
+</tr>
+<tr>
+<td><code>owner_venue</code></td>
+<td>Integer</td>
+<td>The venue that owns the link (set automatically)</td>
+</tr>
+<tr>
+<td><code>venue</code></td>
+<td>Integer</td>
+<td>The venue the link is associated with</td>
+</tr>
+<tr>
+<td><code>referred_by</code></td>
+<td>Integer</td>
+<td>User ID of the referrer (null if unset)</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Human-readable label</td>
+</tr>
+<tr>
+<td><code>long_url</code></td>
+<td>String</td>
+<td>Full destination URL the short link redirects to</td>
+</tr>
+<tr>
+<td><code>short_url</code></td>
+<td>String</td>
+<td>Generated short URL (e.g., <code>https://showpass.com/l/abc12345</code>)</td>
+</tr>
+<tr>
+<td><code>tiny_url</code></td>
+<td>String</td>
+<td>Alternative compact URL format</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td>Integer</td>
+<td>Linked event ID (null for venue-level links)</td>
+</tr>
+<tr>
+<td><code>views</code></td>
+<td>Integer</td>
+<td>Total click count</td>
+</tr>
+<tr>
+<td><code>visitors</code></td>
+<td>Integer</td>
+<td>Unique visitor count</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>Object</td>
+<td>Aggregated conversion statistics (baskets, revenue, etc.)</td>
+</tr>
+<tr>
+<td><code>via</code></td>
+<td>Integer</td>
+<td>Tracking link type identifier</td>
+</tr>
+<tr>
+<td><code>ticket_types</code></td>
+<td>Array</td>
+<td>Restricted ticket type IDs (null if unrestricted)</td>
+</tr>
+<tr>
+<td><code>hide_public_ticket_types</code></td>
+<td>Boolean</td>
+<td>Whether public ticket types are hidden</td>
+</tr>
+<tr>
+<td><code>extra</code></td>
+<td>Array</td>
+<td>Configuration data (used by Quick Purchase links)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Filtering and Search</h2>
+<h3>Search</h3>
+<p>Use the <code>search</code> query parameter to match against <code>description</code>, <code>referred_by__username</code>, or <code>slug</code>:</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/analytics/tracking/links/?search=john
+</code></pre>
+<h3>Filters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>via</code></td>
+<td>Integer</td>
+<td>Link type: <code>1</code> (Employee), <code>2</code> (Venue), <code>3</code> (Affiliate), <code>4</code> (Quick Purchase)</td>
+</tr>
+<tr>
+<td><code>event</code></td>
+<td>Integer</td>
+<td>Exact event ID</td>
+</tr>
+<tr>
+<td><code>event__in</code></td>
+<td>String</td>
+<td>Multiple event IDs, comma-separated</td>
+</tr>
+<tr>
+<td><code>event__ends_on__gte</code></td>
+<td>DateTime</td>
+<td>Events ending on or after this date</td>
+</tr>
+<tr>
+<td><code>event__ends_on__lte</code></td>
+<td>DateTime</td>
+<td>Events ending on or before this date</td>
+</tr>
+</tbody></table>
+<h3>Pagination</h3>
+<p>Results are paginated with a default page size of <strong>20</strong>. The response includes <code>count</code>, <code>next</code>, <code>previous</code>, and <code>results</code>.</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/analytics/tracking/links/?page=2
+</code></pre>
+<hr>
+<h2>Quick Purchase Links</h2>
+<p>Quick Purchase links (<code>via=4</code>) pre-configure a basket with specific items and quantities. When a user clicks the link they go directly to checkout with items already in their cart.</p>
+<p>The <code>extra</code> field is <strong>required</strong> for this type and must be an array of objects:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ticket_type</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Ticket type ID (provide either this or <code>product_attribute</code>)</td>
+</tr>
+<tr>
+<td><code>product_attribute</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Product attribute ID</td>
+</tr>
+<tr>
+<td><code>quantity</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>Number of items to add to the basket</td>
+</tr>
+</tbody></table>
+<p>All items in the <code>extra</code> array must belong to the same venue.</p>
+<hr>
+<h2>My Links</h2>
+<p>Returns only tracking links where <code>referred_by</code> matches the authenticated user:</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/analytics/tracking/links/me/
+</code></pre>
+<p>Returns the same paginated response as the list endpoint, filtered to the current user.</p>
+<hr>
+<h2>Business Rules</h2>
+<ul>
+<li><strong>Updates</strong> — Only Quick Purchase links (<code>via=4</code>) can be updated. All other types return <code>405 Method Not Allowed</code>.</li>
+<li><strong>Deletes</strong> — A link can only be deleted if it has no completed purchases. If any referred basket has been completed, the delete returns <code>405</code>.</li>
+<li><strong>Venue scoping</strong> — Results include links where the current venue is either the <strong>selling venue</strong> (<code>venue</code>) or the <strong>owning venue</strong> (<code>owner_venue</code>), so both organizers and seller organizations can see shared links.</li>
+</ul>
+<hr>
+<h2>Error Responses</h2>
+<h3>405 Method Not Allowed</h3>
+<p>Returned when updating a non-Quick Purchase link or deleting a link with completed purchases:</p>
+<pre><code class="language-javascript">{
+  &quot;detail&quot;: &quot;Method \&quot;PUT\&quot; not allowed.&quot;
+}
+</code></pre>
+<h3>400 Bad Request</h3>
+<p>Returned for validation failures:</p>
+<pre><code class="language-javascript">// Ticket type doesn&#39;t belong to the venue
+{
+  &quot;ticket_types&quot;: &quot;3001 does not exist&quot;
+}
+
+// Quick Purchase link missing basket data
+{
+  &quot;extra&quot;: &quot;Quick purchase tracking links requires basket data defined in the extra field.&quot;
+}
+</code></pre>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Cross-Domain Tracking - Showpass GTM Implementation</title>
+    <meta name="description" content="Handle cross-domain tracking challenges when integrating Showpass with Google Tag Manager. Maintain user sessions across domains." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Cross-Domain Tracking - Showpass GTM Implementation" />
+    <meta property="og:description" content="Handle cross-domain tracking challenges when integrating Showpass with Google Tag Manager. Maintain user sessions across domains." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Cross-Domain Tracking - Showpass GTM Implementation" />
+    <meta name="twitter:description" content="Handle cross-domain tracking challenges when integrating Showpass with Google Tag Manager. Maintain user sessions across domains." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,187 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>4. Cross-Domain Tracking Considerations</h1>
+<p>Cross-domain tracking is essential when a user&#39;s journey spans across multiple domains (e.g., your website <code>yourdomain.com</code> and Showpass <code>showpass.com</code>) and you want to maintain a single, consistent session and user view in Google Analytics.</p>
+<p>There are two primary scenarios where cross-domain tracking is relevant with Showpass:</p>
+<ol>
+<li><strong>Redirecting from your website to showpass.com</strong> (e.g., a &quot;Buy Tickets&quot; button links directly to an event page on Showpass)</li>
+<li><strong>Using the embedded Showpass widget (iFrame) on your website</strong></li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> For both scenarios, make sure you’ve added the GTM snippet to your website, inside the <code>head</code> tag.</p>
+</blockquote>
+<hr>
+<h2>A. Redirecting to showpass.com</h2>
+<p>If your website directly links users to pages on <code>showpass.com</code>, you need to configure your Google Tag (used for GA4) in GTM to handle cross-domain tracking. This involves allowing the GA4 tag to &quot;decorate&quot; links with linker parameters (<code>_gl</code>).</p>
+<h3>Setup Instructions</h3>
+<p>Google provides detailed instructions on how to configure cross-domain tracking for GA4. Please refer to their official help article:</p>
+<ul>
+<li><strong>Google Analytics Help - Set up cross-domain measurement [GA4]:</strong> <a href="https://support.google.com/analytics/answer/10071811">https://support.google.com/analytics/answer/10071811</a></li>
+</ul>
+<p>You only need to configure cross-domain tracking inside GA4.</p>
+<h4>Step 1 — Open Cross-Domain Settings in GA4</h4>
+<ol>
+<li>Go to <strong>Admin → Data Streams</strong></li>
+<li>Click your <strong>Web data stream</strong></li>
+<li>Find the card <strong>Google tag</strong></li>
+<li>Click <strong>Configure tag settings</strong></li>
+<li>Click <strong>Show all</strong></li>
+<li>Click <strong>Configure your domains</strong> under <strong>Cross-domain tracking</strong></li>
+<li>Add your domain(s) + showpass.com and Save:</li>
+</ol>
+<pre><code class="language-bash">yourdomain.com
+showpass.com
+</code></pre>
+<h4>Step 2 — Verify</h4>
+<p>Check any link going between domains. It should add parameters like:</p>
+<pre><code>?_gl=1*abcd1234
+</code></pre>
+<p>If that appears — cross-domain tracking is active.</p>
+<hr>
+<h2>B. Widget Tracking (Embedded iFrame)</h2>
+<p>Tracking user activity accurately within an iFrame (like the Showpass embedded purchase widget) presents challenges, especially with browser privacy features that restrict third-party cookies.</p>
+<h3>Preferred Method: iFrame Tracking with postMessage</h3>
+<blockquote>
+<p><strong>Recommended:</strong> For the most accurate tracking of widget conversions within GTM, Showpass <strong>strongly recommends using the <code>postMessage</code> iFrame tracking method</strong>.</p>
+</blockquote>
+<ul>
+<li>This technique allows the iFrame to communicate data directly to the parent page (your website), bypassing many common cross-domain and third-party cookie issues</li>
+<li><strong>This method is detailed in Section 8: &quot;Advanced &amp; Preferred: iFrame Purchase Tracking via postMessage&quot;</strong></li>
+</ul>
+<h3>Alternative: Basic iFrame Linker Decoration (If Not Using postMessage)</h3>
+<p>If you are not using the <code>postMessage</code> method, and you rely on basic cross-domain linker parameters for the iFrame, some configurations are needed.</p>
+<p><strong>Showpass WordPress Plugin:</strong> If you are using the Showpass WordPress plugin, it automatically includes functionality to help decorate the iFrame for cross-domain linking.</p>
+<p><strong>Custom SDK Implementation (Not using WordPress Plugin):</strong> If you are using the Showpass SDK with a custom JavaScript implementation on your site, you would typically need to add custom code to decorate the iFrame SRC URL with linker parameters.</p>
+<p>Include the following code on your website, in order to decorate Showpass iFrame URLs with the correct query parameters:</p>
+<pre><code class="language-javascript">/**
+ * Utility for decorating Showpass iframes with tracking parameters
+ * Combines cookie-based tracking (GA, Facebook) with query parameter passing
+ * Automatically handles ALL Showpass iframes on the page without requiring explicit setup
+ */
+
+/**
+ * Shared function to decorate iframe - handles both cookie-based tracking and query parameters
+ * @param {HTMLIFrameElement} iFrame - The iframe element to decorate
+ */
+const decorateIframe = (iFrame) =&gt; {
+    if (!iFrame || !iFrame.src) {
+        console.warn(&quot;Invalid iframe provided to decorateIframe&quot;);
+        return;
+    }
+
+    // Prevent multiple decorations
+    if (iFrame.dataset.decorated) {
+        return;
+    }
+
+    let url = new URL(iFrame.src);
+
+    // 1. Handle cookie-based tracking (GA and Facebook)
+    if (typeof document.cookie === &quot;string&quot; &amp;&amp; document.cookie !== &quot;&quot;) {
+        // Parse cookies into an object
+        let cookie = {};
+        document.cookie.split(&quot;;&quot;).forEach(function (el) {
+            const splitCookie = el.split(&quot;=&quot;);
+            const key = splitCookie[0].trim();
+            const value = splitCookie[1];
+            cookie[key] = value;
+        });
+
+        // Google Analytics linker parameter
+        const glCookieNames = Object.keys(cookie).filter((name) =&gt;
+            name.startsWith(&quot;_gl&quot;)
+        );
+        if (glCookieNames.length &gt; 0) {
+            glCookieNames.forEach((cookieName) =&gt; {
+                url.searchParams.set(cookieName, cookie[cookieName]);
+            });
+        }
+
+        // Facebook Click ID (fbclid) parameter
+        if (cookie[&quot;_fbc&quot;]) {
+            url.searchParams.set(&quot;_fbc&quot;, cookie[&quot;_fbc&quot;]);
+        }
+        if (cookie[&quot;_fbp&quot;]) {
+            url.searchParams.set(&quot;_fbp&quot;, cookie[&quot;_fbp&quot;]);
+        }
+    }
+
+    // 2. Preserve existing URL parameters from the parent page
+    const parentParams = new URLSearchParams(window.location.search);
+    const paramsToPreserve = [
+        &quot;fbclid&quot;,
+        &quot;gclid&quot;,
+        &quot;utm_source&quot;,
+        &quot;utm_medium&quot;,
+        &quot;utm_campaign&quot;,
+        &quot;utm_term&quot;,
+        &quot;utm_content&quot;,
+    ];
+
+    paramsToPreserve.forEach((param) =&gt; {
+        if (parentParams.has(param) &amp;&amp; !url.searchParams.has(param)) {
+            url.searchParams.set(param, parentParams.get(param));
+        }
+    });
+
+    // Update iframe src with decorated URL
+    iFrame.src = url.toString();
+    iFrame.dataset.decorated = &quot;true&quot;;
+};
+
+/**
+ * Observer to watch for dynamically added iframes
+ */
+const observeIframes = () =&gt; {
+    const observer = new MutationObserver((mutations) =&gt; {
+        mutations.forEach((mutation) =&gt; {
+            mutation.addedNodes.forEach((node) =&gt; {
+                if (node.tagName === &quot;IFRAME&quot; &amp;&amp; node.src.includes(&quot;showpass.com&quot;)) {
+                    decorateIframe(node);
+                }
+            });
+        });
+    });
+
+    observer.observe(document.body, {
+        childList: true,
+        subtree: true,
+    });
+};
+
+// Initialize when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+    document.addEventListener(&quot;DOMContentLoaded&quot;, () =&gt; {
+        // Decorate existing iframes
+        document
+            .querySelectorAll(&#39;iframe[src*=&quot;showpass.com&quot;]&#39;)
+            .forEach(decorateIframe);
+        // Watch for future iframes
+        observeIframes();
+    });
+} else {
+    // DOM already loaded
+    document
+        .querySelectorAll(&#39;iframe[src*=&quot;showpass.com&quot;]&#39;)
+        .forEach(decorateIframe);
+    observeIframes();
+}
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> This code should be placed on your website&#39;s pages where the Showpass widget appears. It automatically finds and decorates all Showpass iFrames with tracking parameters.</p>
+</blockquote>
+<hr>
+<h2>Summary</h2>
+<ul>
+<li><strong>Direct Links to showpass.com:</strong> Configure cross-domain tracking in your Google Tag settings within GTM</li>
+<li><strong>Embedded Widgets:</strong> Use the <code>postMessage</code> method (Section 8) for most accurate tracking, or implement iFrame decoration code if using basic linker parameters</li>
+<li>Always test your implementation thoroughly using GTM Preview mode and GA4 Realtime reports</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

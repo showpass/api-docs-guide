@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Advanced iFrame Purchase Tracking - Showpass GTM PostMessage</title>
+    <meta name="description" content="Implement advanced purchase tracking for Showpass iFrame widgets using PostMessage API and Google Tag Manager." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Advanced iFrame Purchase Tracking - Showpass GTM PostMessage" />
+    <meta property="og:description" content="Implement advanced purchase tracking for Showpass iFrame widgets using PostMessage API and Google Tag Manager." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Advanced iFrame Purchase Tracking - Showpass GTM PostMessage" />
+    <meta name="twitter:description" content="Implement advanced purchase tracking for Showpass iFrame widgets using PostMessage API and Google Tag Manager." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,278 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>8. Advanced &amp; Preferred: iFrame Purchase Tracking via postMessage</h1>
+<p>Tracking conversions and user activity accurately within an iFrame (like the Showpass embedded purchase widget) is a significant challenge due to browser privacy measures that increasingly block third-party cookies and tracking mechanisms.</p>
+<p>To overcome this, Showpass advocates for a more robust method: <strong>iFrame tracking using the postMessage API</strong>. This technique allows secure communication between the Showpass iFrame (child) and your website (parent page), enabling the iFrame to send event data directly to your GTM container on the parent page.</p>
+<h2>Why Use postMessage for iFrame Tracking?</h2>
+<ul>
+<li><strong>Accuracy:</strong> Bypasses many issues related to third-party cookie restrictions, leading to more reliable data</li>
+<li><strong>Privacy-Focused:</strong> Relies on direct communication rather than cross-domain cookie sharing for event data</li>
+<li><strong>Recommended:</strong> Considered a best practice for iFrame tracking in modern web analytics</li>
+</ul>
+<h3>Further Reading</h3>
+<p>For more context on iFrame tracking challenges and solutions:</p>
+<ul>
+<li>Jellyfish Training - How to Track iFrames with Google Tag Manager: <a href="https://www.jellyfish.com/en-gb/training/blog/how-track-iframes-google-tag-manager">https://www.jellyfish.com/en-gb/training/blog/how-track-iframes-google-tag-manager</a></li>
+<li>MeasureSchool - iFrame Tracking with Google Tag Manager: <a href="https://measureschool.com/iframe-tracking/">https://measureschool.com/iframe-tracking/</a></li>
+</ul>
+<hr>
+<h2>Overview of the postMessage Setup with Showpass</h2>
+<p>This setup involves two Google Tag Manager containers:</p>
+<ol>
+<li><p><strong>Child GTM Container (for the Showpass iFrame):</strong></p>
+<ul>
+<li>Create a new <strong>empty GTM Container ID</strong></li>
+<li>This container is specifically for the Showpass widget environment</li>
+<li>Its role is to capture ecommerce events within the iFrame and <code>postMessage</code> them to the parent window (your website)</li>
+<li>Add this to your Organizer Info &gt; Analytics section in the Showpass Dashboard</li>
+</ul>
+</li>
+<li><p><strong>Parent GTM Container (on your website):</strong></p>
+<ul>
+<li>This is your existing GTM container that manages tracking for your primary website</li>
+<li>Its role is to listen for messages from the Showpass iFrame and then push that data into its own <code>dataLayer</code> to trigger your standard ecommerce tags (e.g., GA4, marketing pixels)</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>A. Child GTM Container Setup (Showpass iFrame GTM)</h2>
+<h3>Step A1: Create the &quot;Post Message to Parent&quot; Tag</h3>
+<p>This tag will send data from the iFrame&#39;s Data Layer to your parent website.</p>
+<h4>Set Up the nonce Variable in GTM</h4>
+<p>This variable will read a dynamic nonce value that Showpass makes available on the page.</p>
+<ol>
+<li>In your GTM container, navigate to <strong>Variables</strong></li>
+<li>Under &quot;User-Defined Variables,&quot; click <strong>New</strong></li>
+<li><strong>Name your variable:</strong> <code>nonce</code> (lowercase is conventional)</li>
+<li><strong>Variable Configuration:</strong><ul>
+<li>Click <strong>Choose a variable type to begin setup...</strong></li>
+<li>Select <strong>DOM Element</strong></li>
+<li><strong>Selection Method:</strong> Choose <strong>CSS Selector</strong></li>
+<li><strong>Element Selector:</strong> Enter <code>meta[name=&#39;csp-nonce&#39;]</code><blockquote>
+<p><strong>Note:</strong> This is a CSS selector that targets the meta tag Showpass uses to provide the nonce value.</p>
+</blockquote>
+</li>
+<li><strong>Attribute Name:</strong> Enter <code>content</code><blockquote>
+<p><strong>Note:</strong> This is the content attribute on the meta tag that will hold the nonce string.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<h4>Set Up the postMessage tag</h4>
+<ol>
+<li>In the <strong>Child GTM container</strong>, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name the tag:</strong> <code>Custom HTML - Post Message Ecommerce Data to Parent</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Choose tag type: <strong>Custom HTML</strong></li>
+<li>Paste the following script into the HTML field:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-html">&lt;script nonce=&quot;{{nonce}}&quot;&gt;
+  // Assuming you&#39;ve set up a &#39;nonce&#39; variable as per Section 5
+  (function () {
+    try {
+      // Check if running in an iFrame and if parent and postMessage are accessible
+      if (typeof parent != &quot;undefined&quot; &amp;&amp; parent != window) {
+        if (typeof parent.postMessage != &quot;undefined&quot;) {
+          // !!! IMPORTANT: Update dataLayer_GTM_CHILD_ID below !!!
+          // Replace &#39;GTM_CHILD_ID&#39; with the actual ID of THIS Child GTM container
+          var message = window.dataLayer_GTM_CHILD_ID;
+
+          // Ensure message is an array and has content before sending
+          if (Array.isArray(message) &amp;&amp; message.length &gt; 0) {
+            // Deep clone the message to avoid issues with object references
+            var clonedMessage = JSON.parse(JSON.stringify(message));
+            parent.postMessage(clonedMessage, &quot;*&quot;); // Send to any parent origin for flexibility
+          }
+        }
+      }
+    } catch (err) {
+      // console.error(&quot;Showpass Child GTM postMessage Error: &quot;, err);
+    }
+  })();
+&lt;/script&gt;
+</code></pre>
+<ul>
+<li><strong>Crucial:</strong><ul>
+<li>Ensure you have enabled the <strong>Support document.write</strong> checkbox, under the HTML field</li>
+<li><strong>Replace <code>GTM_CHILD_ID</code></strong> in the script with your actual Child GTM Container ID (e.g., <code>dataLayer_GTM_XXXXXX</code>). Note the underscore, not dash</li>
+</ul>
+</li>
+</ul>
+<ol start="4">
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select <strong>Custom Event</strong></li>
+<li><strong>Event name:</strong> Use regex matching to fire on all Showpass ecommerce events:<pre><code class="language-text">view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
+</code></pre>
+</li>
+<li>Check <strong>Use regex matching</strong></li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h3>Step A2: Publish the Child GTM Container</h3>
+<ol>
+<li>In the Child GTM container, click <strong>Submit</strong></li>
+<li>Provide a version name (e.g., &quot;Initial postMessage Setup&quot;)</li>
+<li>Click <strong>Publish</strong></li>
+</ol>
+<hr>
+<h3>Step A3: Add Child GTM Container ID to Showpass</h3>
+<ol>
+<li>Log in to your Showpass Dashboard</li>
+<li>Navigate to <strong>Organizer Info &gt; Analytics</strong></li>
+<li>Add your <strong>Child GTM Container ID</strong> (e.g., <code>GTM-XXXXXXX</code>)</li>
+<li>Save changes</li>
+</ol>
+<p>Showpass will now load this Child GTM container within the iFrame, allowing it to capture events and send them to the parent page.</p>
+<hr>
+<h2>B. Parent GTM Container Setup (Your Website)</h2>
+<p>On your parent website&#39;s GTM container, you need to set up a listener that receives the messages from the Showpass iFrame (child GTM) and pushes them to <code>dataLayer</code> of your Parent GTM.</p>
+<h3>Step B1: Create the &quot;postMessage Listener&quot; Custom HTML Tag</h3>
+<p>This tag listens for messages from the Showpass iFrame and processes them.</p>
+<ol>
+<li>In your <strong>Parent GTM container</strong>, go to <strong>Tags</strong> and click <strong>New</strong></li>
+<li><strong>Name the tag:</strong> <code>Custom HTML - Listen for Showpass iFrame postMessage</code></li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Choose tag type: <strong>Custom HTML</strong></li>
+<li>Paste the following script:</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-html">&lt;script nonce=&quot;{{nonce}}&quot;&gt;
+  // Assuming you&#39;ve set up a &#39;nonce&#39; variable as per Section 5
+  (function () {
+    try {
+      var receiveMessage = function (event) {
+        try {
+          // Optional: Add origin check for security if Showpass iFrame origin is fixed and known
+          // if (event.origin !== &quot;https://widgets.showpass.com&quot;) return;
+
+          if (
+            event &amp;&amp;
+            typeof event.data != &quot;undefined&quot; &amp;&amp;
+            Array.isArray(event.data)
+          ) {
+            for (var i = 0; i &lt; event.data.length; i++) {
+              if (event.data[i] &amp;&amp; typeof event.data[i].event != &quot;undefined&quot;) {
+                // Push specific, expected ecommerce events to the parent dataLayer
+                // You can expand this list based on what you want to track from the iFrame
+                if (
+                  event.data[i].event == &quot;view_item&quot; ||
+                  event.data[i].event == &quot;add_to_cart&quot; ||
+                  event.data[i].event == &quot;remove_from_cart&quot; ||
+                  event.data[i].event == &quot;begin_checkout&quot; ||
+                  event.data[i].event == &quot;purchase&quot; ||
+                  event.data[i].event == &quot;ecommerce_clear&quot;
+                ) {
+                  // Create a new object to avoid potential reference issues
+                  var eventToPush = JSON.parse(JSON.stringify(event.data[i]));
+                  dataLayer.push(eventToPush);
+                }
+              }
+            }
+          }
+        } catch (err) {
+          // console.error(&quot;Parent GTM postMessage Listener Error (inner): &quot;, err);
+        }
+      };
+
+      if (typeof window.addEventListener !== &quot;undefined&quot;) {
+        window.addEventListener(&quot;message&quot;, receiveMessage, false);
+      } else if (typeof window.attachEvent !== &quot;undefined&quot;) {
+        // For older IE
+        window.attachEvent(&quot;onmessage&quot;, receiveMessage);
+      }
+    } catch (err) {
+      // console.error(&quot;Parent GTM postMessage Listener Error (outer): &quot;, err);
+    }
+  })();
+&lt;/script&gt;
+</code></pre>
+<blockquote>
+<p><strong>Security Note:</strong> In production, you should verify <code>event.origin</code> to ensure messages are only accepted from trusted sources (e.g., <code>https://showpass.com</code> or your own domain).</p>
+</blockquote>
+<ol start="4">
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select <strong>Window loded</strong> trigger</li>
+<li>This ensures the listener is set up as soon as the page loads</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h3>Step B2: Create a trigger for ecommerce events</h3>
+<ol>
+<li>In the current GTM container, go to <strong>Triggers</strong> and click <strong>New</strong></li>
+<li><strong>Name your trigger:</strong> A descriptive name like <code>Custom - Showpass Ecommerce Events</code> or <code>Ecommerce Triggers | All Events</code></li>
+<li><strong>Trigger Configuration:</strong><ul>
+<li>Click <strong>Choose a trigger type to begin setup...</strong></li>
+<li>Select <strong>Custom Event</strong></li>
+<li><strong>Event name:</strong> Enter the following, using a pipe <code>|</code> to separate event names:<pre><code class="language-text">view_item|add_to_cart|remove_from_cart|begin_checkout|purchase|ecommerce_clear
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> <code>ecommerce_clear</code> is a custom event that clears the ecommerce cache in the data layer</p>
+</blockquote>
+</li>
+<li>Check the box for <strong>Use regex matching</strong>. This allows the trigger to fire on any of the listed events</li>
+<li><strong>This trigger fires on:</strong> Select <strong>All Custom Events</strong></li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+<li>Update your existing tag to use this trigger. Your <code>Custom HTML - Listen for Showpass iFrame postMessage</code> should now trigger both <code>Window Loaded</code> and <code>Custom - Custom - Showpass Ecommerce Events</code></li>
+</ol>
+<p>For tracking specific single events like <code>add_to_cart</code> - please see <a href="https://dev.showpass.com/google-tag-manager/06-tracking-custom-conversions-marketing-pixels">Tracking Custom Conversions</a></p>
+<hr>
+<h3>Step B3: Verify Your Parent GTM Ecommerce Tags</h3>
+<p>Ensure that your parent GTM ecommerce tags (e.g., GA4 Ecommerce Event tag, marketing pixel tags) are configured to fire on the events pushed to the <code>dataLayer</code> by the postMessage listener.</p>
+<ul>
+<li>Your existing triggers for events like <code>purchase</code>, <code>add_to_cart</code>, etc., should automatically catch these events once they&#39;re pushed to the parent&#39;s <code>dataLayer</code></li>
+<li>No additional changes are typically needed if your parent GTM setup is already configured to listen for these standard ecommerce events</li>
+</ul>
+<hr>
+<h3>Step B4: Publish Your Parent GTM Container</h3>
+<ol>
+<li>In your parent GTM container, click <strong>Submit</strong></li>
+<li>Provide a version name (e.g., &quot;Added iFrame postMessage Listener&quot;)</li>
+<li>Click <strong>Publish</strong></li>
+</ol>
+<hr>
+<h2>Testing the postMessage Setup</h2>
+<p>Test your setup using <a href="https://tagassistant.google.com/">https://tagassistant.google.com/</a></p>
+<ol>
+<li><strong>Enable GTM Preview Mode</strong> on both your Parent and Child GTM containers (if possible)</li>
+<li><strong>Navigate to a page</strong> on your website that contains the Showpass embedded widget</li>
+<li><strong>Perform ecommerce actions</strong> within the widget (e.g., add to cart, purchase)</li>
+<li><strong>In the Parent GTM Tag Assistant:</strong><ul>
+<li>Look for your ecommerce events (e.g., <code>add_to_cart</code>, <code>purchase</code>) appearing in the event timeline</li>
+<li>Verify that your GA4 Ecommerce Event tag and other marketing tags fire as expected</li>
+</ul>
+</li>
+<li><strong>Check browser console:</strong><ul>
+<li>Look for any errors related to postMessage</li>
+<li>You can add <code>console.log()</code> statements in your postMessage listener script to debug</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Summary</h2>
+<ul>
+<li><strong>Child GTM Container:</strong> Captures ecommerce events within the Showpass iFrame and sends them via <code>postMessage</code> to the parent page</li>
+<li><strong>Parent GTM Container:</strong> Listens for <code>postMessage</code> events and pushes them to its own <code>dataLayer</code>, triggering standard ecommerce tags</li>
+<li><strong>Benefits:</strong> More accurate tracking, bypasses third-party cookie restrictions, privacy-focused approach</li>
+<li>Always test thoroughly and verify <code>event.origin</code> in production for security</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>PCI Responsibility Matrix - Showpass Security Documentation</title>
+    <meta name="description" content="Understand PCI DSS compliance responsibilities between Showpass and clients. Detailed responsibility matrix for payment security." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="PCI Responsibility Matrix - Showpass Security Documentation" />
+    <meta property="og:description" content="Understand PCI DSS compliance responsibilities between Showpass and clients. Detailed responsibility matrix for payment security." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="PCI Responsibility Matrix - Showpass Security Documentation" />
+    <meta name="twitter:description" content="Understand PCI DSS compliance responsibilities between Showpass and clients. Detailed responsibility matrix for payment security." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,558 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>PCI DSS Responsibilities — Showpass vs. Client</h1>
+<h2>Purpose</h2>
+<p>Clarify PCI DSS responsibilities by integration scenario, highlight conditional client obligations, and list evidence to retain for audit.</p>
+<h2>Audience / Scope</h2>
+<p>For clients, auditors, and implementers using Showpass checkout. Applies to SAQ A scenarios only; Showpass operates all systems that process, transmit, or store CHD.</p>
+<h2>Why any client controls exist (threat model)</h2>
+<p>If a page you control links to or embeds a payment form, an attacker could tamper with that page and skim data before it reaches Showpass. PCI assigns light-weight hygiene to your page (configs, patching, script governance, and—for embedded—tamper detection). Showpass owns all card-data processing, storage, logging, and platform security.</p>
+<h2>Scenarios (least → most client scope)</h2>
+<ol>
+<li><strong>No hosted touchpoint</strong> — Customers arrive on Showpass from email/social/QR/3rd-party listings; you host no purchase page.  </li>
+<li><strong>Hosted link (redirect-only)</strong> — You host a page with a hyperlink to Showpass; no Showpass code runs on your domain.  </li>
+<li><strong>Embedded checkout (iframe/widget/JS)</strong> — You host a page that embeds the Showpass checkout or launches it via JS.</li>
+</ol>
+<p><strong>Select your scenario</strong></p>
+<pre><code>Host any page in the purchase flow?  
+└─ No → Scenario 1  
+└─ Yes → Is it only a hyperlink to Showpass (no checkout code)?  
+    └─ Yes → Scenario 2  
+    └─ No → Scenario 3  
+</code></pre>
+<h2>Legend</h2>
+<ul>
+<li><strong>Applies When</strong> — condition under which a control applies.  </li>
+<li><strong>Client Action</strong> — <strong>(Policy)</strong> write/maintain brief policy/record · <strong>(Configure)</strong> one-time hardening/setup · <strong>(Monitor)</strong> periodic checks (patching cadence, quarterly scans).  </li>
+<li><strong>Effective 2025-03-31</strong> — items move from best practice to required on that date.</li>
+</ul>
+<hr>
+<h2>Scenario 1 — No hosted touchpoint</h2>
+<p><em>You host no page involved in checkout or redirection.</em></p>
+<table>
+<thead>
+<tr>
+<th>PCI Requirement</th>
+<th align="center">Client</th>
+<th align="center">Showpass</th>
+<th>Applies When</th>
+<th>Client Action</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Network security controls</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Perimeter/CDN/firewalls by Showpass.</td>
+</tr>
+<tr>
+<td>Secure configurations (no vendor defaults)</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>—</td>
+<td>—</td>
+<td>No client web server in scope.</td>
+</tr>
+<tr>
+<td>Protect stored CHD</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Tokenization/encryption by Showpass/Stripe.</td>
+</tr>
+<tr>
+<td>Encrypt CHD in transit</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>TLS 1.2+ end-to-end on platform side.</td>
+</tr>
+<tr>
+<td>Anti-virus / EDR</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>In-scope endpoints managed by Showpass.</td>
+</tr>
+<tr>
+<td>Secure systems &amp; software (patching)</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>—</td>
+<td>—</td>
+<td>Showpass patches its CDE.</td>
+</tr>
+<tr>
+<td>Need-to-know access (RBAC)</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Enforced on Showpass platforms.</td>
+</tr>
+<tr>
+<td>Unique IDs &amp; authentication</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Showpass back-office auth is Showpass-managed. <em>(Best practice: no shared accounts when accessing Showpass portals.)</em></td>
+</tr>
+<tr>
+<td>Physical security of CHD (paper)</td>
+<td align="center"><strong>Conditional</strong></td>
+<td align="center">✓</td>
+<td>If you print reports</td>
+<td>(Policy)</td>
+<td>Lock/shred printed reports (even masked PANs). If not printing, N/A.</td>
+</tr>
+<tr>
+<td>Logging &amp; monitoring</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Lives on Showpass infrastructure.</td>
+</tr>
+<tr>
+<td>Security testing</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Platform-level testing by Showpass.</td>
+</tr>
+<tr>
+<td>Vendor oversight (12.8)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy/Monitor)</td>
+<td>Track Showpass as TPSP; keep AOC; annual review.</td>
+</tr>
+<tr>
+<td>Incident response (12.10)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy)</td>
+<td>1-page IR plan (who/when/how).</td>
+</tr>
+</tbody></table>
+<p><strong>Scenario 1 summary (client):</strong> Keep Showpass AOC in your TPSP program, maintain a brief IR plan, and handle paper only if you print.</p>
+<hr>
+<h2>Scenario 2 — Hosted link (redirect-only)</h2>
+<p><em>You host a page with a hyperlink to Showpass; no Showpass code runs on your domain.</em></p>
+<table>
+<thead>
+<tr>
+<th>PCI Requirement</th>
+<th align="center">Client</th>
+<th align="center">Showpass</th>
+<th>Applies When</th>
+<th>Client Action</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Network security controls</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>Showpass-operated.</td>
+</tr>
+<tr>
+<td>Secure configurations (no vendor defaults)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>You host link page</td>
+<td>(Configure)</td>
+<td>Scope limited to the web server rendering the redirect page.</td>
+</tr>
+<tr>
+<td>Protect stored CHD</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Encrypt CHD in transit</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Anti-virus / EDR</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Secure systems &amp; software (patching)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>You host link page</td>
+<td>(Configure/Monitor)</td>
+<td>Patch CMS/OS/plugins; Showpass patches its CDE.</td>
+</tr>
+<tr>
+<td>Need-to-know access (RBAC)</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Unique IDs &amp; authentication</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy)</td>
+<td>Unique staff logins for CMS/Showpass portal (no shared accounts). Showpass enforces MFA/RBAC.</td>
+</tr>
+<tr>
+<td>Physical security of CHD (paper)</td>
+<td align="center"><strong>Conditional</strong></td>
+<td align="center">✓</td>
+<td>If you print reports</td>
+<td>(Policy)</td>
+<td>Lock/shred printed reports.</td>
+</tr>
+<tr>
+<td>Logging &amp; monitoring</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Security testing (ASV scans)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Public-facing link page</td>
+<td>(Monitor)</td>
+<td>Quarterly ASV scans for any Internet-facing redirect host.</td>
+</tr>
+<tr>
+<td>Vendor oversight (12.8)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy/Monitor)</td>
+<td>Retain AOC; annual review.</td>
+</tr>
+<tr>
+<td>Incident response (12.10)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy)</td>
+<td>Brief IR plan.</td>
+</tr>
+</tbody></table>
+<p><strong>Scenario 2 summary (client):</strong> Harden/patch the host serving the purchase link; keep quarterly ASV scans passing; ensure unique staff logins; retain AOC; paper handling only if you print.</p>
+<hr>
+<h2>Scenario 3 — Embedded checkout (iframe/widget/JS)</h2>
+<p><em>You host a page that embeds Showpass checkout or launches it via JS.</em></p>
+<table>
+<thead>
+<tr>
+<th>PCI Requirement</th>
+<th align="center">Client</th>
+<th align="center">Showpass</th>
+<th>Applies When</th>
+<th>Client Action</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Network security controls</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Secure configurations (no vendor defaults)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Embedded page</td>
+<td>(Configure)</td>
+<td>Harden CMS/OS; remove defaults.</td>
+</tr>
+<tr>
+<td>Protect stored CHD</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Encrypt CHD in transit</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Anti-virus / EDR</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Secure systems &amp; software (patching)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Embedded page</td>
+<td>(Configure/Monitor)</td>
+<td>Patch CMS/OS/plugins; Showpass patches its CDE.</td>
+</tr>
+<tr>
+<td><strong>Payment-page scripts (6.4.3)</strong></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Embedded page</td>
+<td>(Configure/Monitor)</td>
+<td>Inventory/authorize each script; ensure integrity. <strong>Effective 2025-03-31.</strong></td>
+</tr>
+<tr>
+<td>Need-to-know access (RBAC)</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Unique IDs &amp; authentication</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy)</td>
+<td>As Scenario 2.</td>
+</tr>
+<tr>
+<td>Physical security of CHD (paper)</td>
+<td align="center"><strong>Conditional</strong></td>
+<td align="center">✓</td>
+<td>If you print reports</td>
+<td>(Policy)</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Logging &amp; monitoring</td>
+<td align="center">—</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>—</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td><strong>Tamper/change detection (11.6.1)</strong></td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Embedded page</td>
+<td>(Configure/Monitor)</td>
+<td>Detect unauthorized changes to headers/page content as received in the browser. <strong>Effective 2025-03-31.</strong></td>
+</tr>
+<tr>
+<td>Vendor oversight (12.8)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy/Monitor)</td>
+<td>As above.</td>
+</tr>
+<tr>
+<td>Incident response (12.10)</td>
+<td align="center">✓</td>
+<td align="center">✓</td>
+<td>Always</td>
+<td>(Policy)</td>
+<td>As above.</td>
+</tr>
+</tbody></table>
+<p><strong>Scenario 3 summary (client):</strong> Scenario 2 items <strong>plus</strong> 6.4.3 (script inventory/authorization/integrity) and 11.6.1 (client-side tamper detection) on embedded pages (required from 2025-03-31).</p>
+<hr>
+<h2>Control Guidance — Do / Evidence / N/A (compact)</h2>
+<p><strong>Req 2 — Secure configurations</strong>  </p>
+<ul>
+<li><strong>Do:</strong> Remove defaults; harden CMS/OS; disable unused services.  </li>
+<li><strong>Evidence:</strong> Hardening checklist; CMS/plugin inventory; config baseline.  </li>
+<li><strong>N/A:</strong> “No merchant web server participates in checkout or redirection (Scenario 1).”</li>
+</ul>
+<p><strong>Req 3 / 9 — Paper handling</strong>  </p>
+<ul>
+<li><strong>Do:</strong> If printing, define retention and secure destruction; lock or shred.  </li>
+<li><strong>Evidence:</strong> Paper policy; destruction log.  </li>
+<li><strong>N/A:</strong> “Client does not print or retain reports containing account data.”</li>
+</ul>
+<p><strong>Req 6 — Patching &amp; script governance</strong>  </p>
+<ul>
+<li><strong>Do:</strong> Patch CMS/OS/plugins; for Scenario 3, maintain script inventory/authorization and integrity checks (6.4.3).  </li>
+<li><strong>Evidence:</strong> Patch logs; script register; approvals; integrity reports.  </li>
+<li><strong>N/A:</strong> “No client-hosted page participates in checkout (Scenario 1).”</li>
+</ul>
+<p><strong>Req 8 — Unique IDs &amp; authentication</strong>  </p>
+<ul>
+<li><strong>Do:</strong> Unique staff logins for CMS/any admin publishing link/embedded page; avoid shared accounts.  </li>
+<li><strong>Evidence:</strong> Access roster; joiner/mover/leaver log; password standard.</li>
+</ul>
+<p><strong>Req 11 — ASV &amp; tamper detection</strong>  </p>
+<ul>
+<li><strong>Do:</strong> Scenario 2/3: quarterly ASV scans on public-facing host; Scenario 3: 11.6.1 tamper/change detection with actionable alerts.  </li>
+<li><strong>Evidence:</strong> ASV attestation &amp; re-scan; tamper alerts/tests.  </li>
+<li><strong>N/A:</strong> “No public-facing merchant host participates (Scenario 1).” / “No embedded checkout used (11.6.1 N/A).”</li>
+</ul>
+<p><strong>Req 12 — Vendor oversight &amp; incident response</strong>  </p>
+<ul>
+<li><strong>Do:</strong> Keep Showpass in TPSP inventory; retain AOC; annual review; maintain brief IR plan (who/when/how).  </li>
+<li><strong>Evidence:</strong> TPSP record; latest AOC; IR plan; review note.</li>
+</ul>
+<hr>
+<h2>Implementation quick wins</h2>
+<p><strong>6.4.3 (scripts) — Good / Better / Best</strong>  </p>
+<ul>
+<li><strong>Good:</strong> Script Register; CSP <code>script-src</code> limited to your domain + Showpass; SRI on static tags.  </li>
+<li><strong>Better:</strong> Nonce-based CSP; build-time SRI; PR approval to add scripts; scheduled URL validation.  </li>
+<li><strong>Best:</strong> Above + commercial client-side integrity monitoring tied to alerting.</li>
+</ul>
+<p><strong>11.6.1 (tamper detection) — Acceptance criteria</strong>  </p>
+<ul>
+<li>Detects unauthorized modification of HTTP headers and page content <strong>as received in the browser</strong>.  </li>
+<li>Sends actionable alerts (timestamp, URL, diff) to on-call.  </li>
+<li>Tested monthly via benign change to confirm detection + alerting.</li>
+</ul>
+<hr>
+<h2>RACI Matrix</h2>
+<p><strong>Legend:</strong> R = Responsible · A = Accountable · C = Consulted · I = Informed</p>
+<table>
+<thead>
+<tr>
+<th>Area / Control</th>
+<th align="center">Client</th>
+<th align="center">Showpass</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Platform security (CDE, storage, encryption, MFA/RBAC)</strong></td>
+<td align="center">I</td>
+<td align="center"><strong>A/R</strong></td>
+</tr>
+<tr>
+<td>Payment processing &amp; tokenization</td>
+<td align="center">I</td>
+<td align="center"><strong>A/R</strong></td>
+</tr>
+<tr>
+<td><strong>Client web server hardening &amp; patching</strong> <em>(Scenarios 2/3)</em></td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Payment-page scripts (Req 6.4.3) on embedded pages <em>(Scenario 3)</em></td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Tamper / change detection (Req 11.6.1) <em>(Scenario 3)</em></td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>ASV scans on client public-facing hosts <em>(Scenarios 2/3)</em></td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Unique IDs &amp; authentication on client CMS / site</td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Authentication, MFA &amp; RBAC within Showpass portals</td>
+<td align="center">I</td>
+<td align="center"><strong>A/R</strong></td>
+</tr>
+<tr>
+<td>Physical security of printed reports (paper)</td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Vendor oversight (Req 12.8) &amp; AOC retention</td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Incident response on client-hosted pages <em>(Scenarios 2/3)</em></td>
+<td align="center"><strong>A/R</strong></td>
+<td align="center">C</td>
+</tr>
+<tr>
+<td>Platform logging, monitoring &amp; penetration testing</td>
+<td align="center">I</td>
+<td align="center"><strong>A/R</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Scenario Checklists (Client)</h2>
+<h3>1 — No hosted touchpoint</h3>
+<ul>
+<li><input disabled="" type="checkbox"> TPSP record lists Showpass; latest AOC on file</li>
+<li><input disabled="" type="checkbox"> Annual TPSP review scheduled</li>
+<li><input disabled="" type="checkbox"> 1-page Incident Response (IR) plan in place (who/when/how)</li>
+<li><input disabled="" type="checkbox"> <em>(If printing)</em> Paper-handling policy and destruction log</li>
+</ul>
+<h3>2 — Hosted link (redirect-only)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Scenario 1 items</li>
+<li><input disabled="" type="checkbox"> CMS/OS hardened; vendor defaults removed</li>
+<li><input disabled="" type="checkbox"> Patch cadence defined; plugin inventory maintained</li>
+<li><input disabled="" type="checkbox"> Quarterly ASV scan passing for any Internet-facing redirect host; remediation &amp; re-scan documented</li>
+<li><input disabled="" type="checkbox"> Unique staff logins (no shared accounts) for CMS and Showpass portal</li>
+</ul>
+<h3>3 — Embedded checkout (iframe/widget/JS)</h3>
+<ul>
+<li><input disabled="" type="checkbox"> Scenario 2 items</li>
+<li><input disabled="" type="checkbox"> Script Register maintained; additions/changes approved (Req 6.4.3) <strong>(Effective 2025-03-31)</strong></li>
+<li><input disabled="" type="checkbox"> CSP + SRI (or nonce-based CSP) live on embedded pages (Req 6.4.3)</li>
+<li><input disabled="" type="checkbox"> Client-side tamper/change detection configured on embedded pages; alerts tested monthly (Req 11.6.1) <strong>(Effective 2025-03-31)</strong></li>
+</ul>
+<h2>Conclusion</h2>
+<p>Scenarios <strong>1 (No hosted touchpoint)</strong> and <strong>2 (Hosted link / redirect-only)</strong> align with industry <strong>security best practices</strong>: Showpass operates the entire card-data environment, while the client’s role is limited to baseline hygiene on their own site and identities (unique logins, basic hardening/patching for Scenario 2, optional paper handling, and standard TPSP oversight with the Showpass AOC). Implemented as described, most organizations meet <strong>SAQ A</strong> expectations without additional tooling or complex processes.</p>
+<p><strong>Scenario 3 (Embedded checkout)</strong> introduces more client scope on the webpage itself. To maintain an equivalent risk posture, add:</p>
+<ul>
+<li><strong>Req 6.4.3</strong> — script inventory/authorization and integrity controls on embedded pages, and  </li>
+<li><strong>Req 11.6.1</strong> — client-side tamper/change detection with actionable alerting.<br>Both become fully required on <strong>2025-03-31</strong>.</li>
+</ul>
+<p>If uncertain which model to adopt, prefer <strong>Scenario 1 or 2</strong> to minimize client scope while preserving user experience, and move to <strong>Scenario 3</strong> only when embedding is a product requirement and the additional controls are in place. For audit traceability, retain the artifacts listed above (TPSP record + AOC, ASV reports where applicable, Script Register, CSP/SRI configuration, tamper-detection test evidence, and a brief IR plan).</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

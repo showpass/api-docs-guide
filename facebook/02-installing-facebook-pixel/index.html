@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Installing Facebook Pixel - Showpass Setup Guide</title>
+    <meta name="description" content="Step-by-step guide to install Facebook Pixel with Showpass. Configure event tracking, verify installation, and optimize for conversions." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Installing Facebook Pixel - Showpass Setup Guide" />
+    <meta property="og:description" content="Step-by-step guide to install Facebook Pixel with Showpass. Configure event tracking, verify installation, and optimize for conversions." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Installing Facebook Pixel - Showpass Setup Guide" />
+    <meta name="twitter:description" content="Step-by-step guide to install Facebook Pixel with Showpass. Configure event tracking, verify installation, and optimize for conversions." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,233 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Installing Facebook Pixel</h1>
+<p>This guide walks you through setting up Facebook Pixel (Meta Pixel) with your Showpass organization to track event performance and optimize your Facebook advertising campaigns.</p>
+<h2>Prerequisites</h2>
+<p>Before you begin, make sure you have:</p>
+<ul>
+<li>Admin access to your Showpass organization</li>
+<li>A Facebook Business Account</li>
+<li>A Facebook Ads Manager account</li>
+<li>A Facebook Pixel created in Facebook Events Manager</li>
+</ul>
+<hr>
+<h2>Step 1: Create Your Facebook Pixel</h2>
+<p>If you haven&#39;t already created a Facebook Pixel, follow these steps:</p>
+<h3>Navigate to Facebook Events Manager</h3>
+<ol>
+<li>Go to <a href="https://business.facebook.com/events_manager">Facebook Events Manager</a></li>
+<li>Select your Business Account from the dropdown found on the top right</li>
+</ol>
+<h3>Create a New Data Source</h3>
+<ol>
+<li>Click <strong>Connect Data</strong> from the top left</li>
+<li>Select <strong>Web</strong> as your platform</li>
+<li>Choose <strong>Meta Pixel</strong> and click <strong>Connect</strong></li>
+</ol>
+<h3>Configure Your Pixel</h3>
+<ol>
+<li>Enter a name for your pixel (e.g., &quot;Your Organization Name - Events&quot;)</li>
+<li>Add your website URL</li>
+<li>Click <strong>Continue</strong></li>
+</ol>
+<h3>Choose Installation Method</h3>
+<ol>
+<li>Select <strong>Install code manually</strong> for Showpass integration</li>
+<li>Copy your Pixel ID (you&#39;ll need this for Showpass setup)</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> The Pixel ID format looks like: <code>123456789012345</code></p>
+</blockquote>
+<hr>
+<h2>Step 2: Configure Facebook Pixel in Showpass</h2>
+<h3>Access Organization Settings</h3>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Navigate to <strong>Organization Settings</strong></li>
+<li>Select the <strong>Analytics</strong> tab</li>
+</ol>
+<h3>Find Facebook Pixel Section</h3>
+<ol>
+<li>Scroll down to find the <strong>Facebook Pixel</strong> integration section</li>
+<li>Click <strong>Configure</strong> or <strong>Enable</strong></li>
+</ol>
+<h3>Enter Your Pixel ID</h3>
+<ol>
+<li>Paste your Facebook Pixel ID (from Step 1) into the <strong>Pixel ID</strong> field</li>
+<li>The Pixel ID format looks like: <code>123456789012345</code></li>
+</ol>
+<h3>Configure Event Tracking</h3>
+<p>Enable the events you want to track:</p>
+<ul>
+<li>✅ <strong>Page Views</strong> (recommended)</li>
+<li>✅ <strong>View Content</strong> (recommended)</li>
+<li>✅ <strong>Add to Cart</strong> (recommended)</li>
+<li>✅ <strong>Initiate Checkout</strong> (recommended)</li>
+<li>✅ <strong>Purchase</strong> (essential for conversion tracking)</li>
+</ul>
+<h3>Save Configuration</h3>
+<ol>
+<li>Click <strong>Save Settings</strong></li>
+<li>Your Facebook Pixel is now active on your Showpass events</li>
+</ol>
+<hr>
+<h2>Step 3: Verify Your Installation</h2>
+<h3>Using Facebook Pixel Helper</h3>
+<ol>
+<li><p><strong>Install the Chrome Extension</strong></p>
+<ul>
+<li>Download the <a href="https://chrome.google.com/webstore/detail/facebook-pixel-helper/fdgfkebogiimcoedlicjlajpkdmockpc">Facebook Pixel Helper</a> Chrome extension</li>
+</ul>
+</li>
+<li><p><strong>Test on Your Event Page</strong></p>
+<ul>
+<li>Visit one of your Showpass event pages</li>
+<li>Click the Pixel Helper extension icon</li>
+<li>You should see your Pixel ID listed with a green checkmark</li>
+</ul>
+</li>
+</ol>
+<h3>Using Facebook Events Manager</h3>
+<ol>
+<li><p><strong>Check Test Events</strong></p>
+<ul>
+<li>Go to Facebook Events Manager</li>
+<li>Select your pixel</li>
+<li>Click on the <strong>Test Events</strong> tab</li>
+<li>Browse your event pages and verify events are being received</li>
+</ul>
+</li>
+<li><p><strong>Monitor Real-Time Activity</strong></p>
+<ul>
+<li>In Events Manager, go to <strong>Overview</strong></li>
+<li>You should see recent activity and events being tracked</li>
+<li>Green indicators show active event tracking</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Step 4: Set Up Conversion Tracking</h2>
+<h3>Configure Purchase Events</h3>
+<ol>
+<li><p><strong>In Facebook Ads Manager</strong></p>
+<ul>
+<li>Go to <strong>Ads Manager</strong> → <strong>Measure &amp; Report</strong> → <strong>Conversions</strong></li>
+<li>Click <strong>Create</strong> to add a new conversion</li>
+</ul>
+</li>
+<li><p><strong>Set Up Conversion Action</strong></p>
+<ul>
+<li>Choose <strong>Website</strong> as the conversion location</li>
+<li>Select <strong>Purchase</strong> as the event type</li>
+<li>Set up conversion attribution windows as needed</li>
+</ul>
+</li>
+</ol>
+<h3>Optimize for Conversions</h3>
+<ul>
+<li>Set your ad campaigns to optimize for <strong>Purchase</strong> events</li>
+<li>Use the conversion data to create lookalike audiences</li>
+<li>Build retargeting campaigns for users who didn&#39;t complete purchases</li>
+</ul>
+<hr>
+<h2>Troubleshooting Common Issues</h2>
+<h3>Pixel Not Firing</h3>
+<p><strong>Symptoms:</strong> Pixel Helper shows no activity</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Double-check your Pixel ID is entered correctly in Showpass</li>
+<li>Ensure you&#39;ve saved the configuration</li>
+<li>Clear your browser cache and try again</li>
+<li>Verify the Pixel is active in Facebook Events Manager</li>
+</ul>
+<h3>Events Not Tracking</h3>
+<p><strong>Symptoms:</strong> Page views work but purchase events don&#39;t fire</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Verify all event types are enabled in Showpass settings</li>
+<li>Complete a test purchase to trigger the purchase event</li>
+<li>Check that you&#39;re testing with the same browser where Pixel Helper is installed</li>
+</ul>
+<h3>Multiple Pixels Detected</h3>
+<p><strong>Symptoms:</strong> Pixel Helper shows multiple pixels or warnings</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Remove any duplicate Facebook pixel code from your website</li>
+<li>Ensure only the Showpass integration is active</li>
+<li>Contact Showpass support if you need help identifying duplicate pixels</li>
+</ul>
+<hr>
+<h2>Advanced Configuration</h2>
+<h3>Custom Conversions</h3>
+<p>Create custom conversions based on specific event behaviors:</p>
+<ol>
+<li><p><strong>In Events Manager</strong></p>
+<ul>
+<li>Go to <strong>Custom Conversions</strong></li>
+<li>Click <strong>Create Custom Conversion</strong></li>
+</ul>
+</li>
+<li><p><strong>Set Conversion Rules</strong></p>
+<ul>
+<li>Choose your data source (your pixel)</li>
+<li>Set rules based on URL patterns or events</li>
+<li>Example: Track conversions for specific event categories</li>
+</ul>
+</li>
+</ol>
+<h3>Audience Building</h3>
+<p>Use your pixel data to build custom audiences:</p>
+<ol>
+<li><p><strong>Create Custom Audiences</strong></p>
+<ul>
+<li>Go to <strong>Ads Manager</strong> → <strong>Audiences</strong></li>
+<li>Select <strong>Custom Audience</strong> → <strong>Website</strong></li>
+</ul>
+</li>
+<li><p><strong>Define Audience Parameters</strong></p>
+<ul>
+<li>People who visited event pages but didn&#39;t purchase</li>
+<li>People who purchased tickets in the last 30 days</li>
+<li>People who viewed specific event categories</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Data and Privacy Considerations</h2>
+<h3>GDPR and CCPA Compliance</h3>
+<ul>
+<li>Facebook Pixel respects user consent preferences</li>
+<li>Data is processed according to Facebook&#39;s privacy policies</li>
+<li>Users can opt out through browser settings or privacy controls</li>
+</ul>
+<h3>Data Retention</h3>
+<ul>
+<li>Facebook retains pixel data according to their data retention policies</li>
+<li>Conversion data is typically available for up to 28 days for attribution</li>
+<li>Historical aggregate data is available for reporting</li>
+</ul>
+<hr>
+<h2>Next Steps</h2>
+<p>With Facebook Pixel successfully installed, consider:</p>
+<ul>
+<li><a href="/facebook/04-installing-facebook-conversions-api">Setting up Facebook Conversions API</a> for enhanced data quality</li>
+<li>Creating retargeting campaigns for event attendees</li>
+<li>Building lookalike audiences based on your best customers</li>
+<li>Experimenting with different ad formats and targeting options</li>
+</ul>
+<hr>
+<h2>Support</h2>
+<p>If you need assistance with Facebook Pixel setup:</p>
+<ul>
+<li>Contact Showpass support through your dashboard</li>
+<li>Refer to <a href="https://www.facebook.com/business/help/">Facebook&#39;s Business Help Center</a></li>
+<li>Check the Facebook Pixel Helper for specific error messages</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

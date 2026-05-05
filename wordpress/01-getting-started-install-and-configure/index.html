@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Showpass WordPress Plugin - Installation &amp; Configuration</title>
+    <meta name="description" content="Install and configure the Showpass WordPress plugin. Connect your WordPress site to Showpass for seamless event integration." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Showpass WordPress Plugin - Installation &amp; Configuration" />
+    <meta property="og:description" content="Install and configure the Showpass WordPress plugin. Connect your WordPress site to Showpass for seamless event integration." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Showpass WordPress Plugin - Installation &amp; Configuration" />
+    <meta name="twitter:description" content="Install and configure the Showpass WordPress plugin. Connect your WordPress site to Showpass for seamless event integration." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,199 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Getting started with the Showpass WordPress plugin</h1>
+<p>Welcome to the Showpass WordPress plugin. This guide will help you install and configure it on your WordPress site to display events, sell tickets, and manage products seamlessly.</p>
+<h2>Prerequisites</h2>
+<p>Before you start, ensure you have:</p>
+<ul>
+<li><strong>WordPress website</strong> with admin access (typically <code>yourwebsite.com/wp-admin</code>)</li>
+<li><strong>Showpass account</strong> with an Organization ID</li>
+<li><strong>Admin permissions</strong> to install and activate plugins</li>
+</ul>
+<blockquote>
+<p><strong>Don&#39;t have a Showpass account?</strong> Register at <a href="https://www.showpass.com/organizations/register/">showpass.com/organizations/register</a></p>
+</blockquote>
+<hr>
+<h2>Installation</h2>
+<h3>Method 1: Automatic installation (recommended)</h3>
+<ol>
+<li>Log in to your WordPress dashboard</li>
+<li>Go to <strong>Plugins → Add New</strong></li>
+<li>In the search bar (top right), type <strong>&quot;Showpass&quot;</strong></li>
+<li>Find <strong>&quot;Showpass WordPress Extension&quot;</strong> in the results</li>
+<li>Click <strong>Install Now</strong></li>
+</ol>
+<p><img src="/images/wordpress/wp-install.png" alt="Showpass WordPress Extension search result"></p>
+<ol start="6">
+<li>When installation finishes, click <strong>Activate</strong></li>
+</ol>
+<hr>
+<h3>Method 2: Manual installation</h3>
+<p>If automatic installation doesn&#39;t work:</p>
+<ol>
+<li>Download the plugin ZIP file from the WordPress plugin repository</li>
+<li>Go to <strong>Plugins → Add New → Upload Plugin</strong></li>
+<li>Click <strong>Choose File</strong> and select the ZIP file</li>
+<li>Click <strong>Install Now</strong></li>
+<li>After installation, click <strong>Activate Plugin</strong></li>
+</ol>
+<hr>
+<h2>Configuration</h2>
+<p>After activating the plugin, connect it to your Showpass account.</p>
+<h3>Access plugin settings</h3>
+<ol>
+<li>In your WordPress admin dashboard, click <strong>Showpass API</strong> in the left-hand sidebar</li>
+<li>You&#39;ll see the plugin configuration page</li>
+</ol>
+<hr>
+<h3>Required settings</h3>
+<h4>Organization ID</h4>
+<p><strong>Parameter:</strong> Organization ID (required)</p>
+<p>This is your venue/organization ID in Showpass. The plugin uses it to load your events and products.</p>
+<p><strong>How to find it:</strong></p>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Go to <code>https://www.showpass.com/dashboard/venues/edit/</code></li>
+<li>Look for <strong>Organization Info</strong> in your organizer dashboard</li>
+<li>Copy the <strong>Organization ID</strong></li>
+<li>Paste it into the WordPress plugin settings</li>
+</ol>
+<p><strong>Example:</strong> If your Organization ID is <code>3823</code>, the plugin will fetch all events for organization <code>3823</code>.</p>
+<hr>
+<h4>Widget Color</h4>
+<p><strong>Parameter:</strong> Widget Color (optional)</p>
+<p>The primary color of the Showpass purchase widget (the pop-up checkout modal).</p>
+<p><strong>Value:</strong> Hex color code (e.g., <code>#ff0000</code> for red)</p>
+<p><strong>Purpose:</strong> Match the widget to your site&#39;s branding</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">#9e2a2b (Showpass red)
+#0066cc (Blue)
+#28a745 (Green)
+</code></pre>
+<hr>
+<h4>Keep Shopping Button</h4>
+<p><strong>Parameter:</strong> Keep Shopping (optional)</p>
+<p>Controls the text on the button that closes the purchase widget.</p>
+<p><strong>Default:</strong> &quot;Keep Shopping&quot;</p>
+<p><strong>Common alternatives:</strong></p>
+<ul>
+<li>&quot;Close&quot;</li>
+<li>&quot;Back to Events&quot;</li>
+<li>&quot;Continue Browsing&quot;</li>
+<li>&quot;Return to Site&quot;</li>
+</ul>
+<hr>
+<h4>Default Button Class</h4>
+<p><strong>Parameter:</strong> Default Button Class (optional)</p>
+<p>If your theme has custom button classes, you can set a default class that will be applied to all Showpass widget buttons.</p>
+<p><strong>Example values:</strong></p>
+<ul>
+<li><code>btn btn-primary</code></li>
+<li><code>button button-large</code></li>
+<li><code>wp-block-button__link</code></li>
+</ul>
+<p><strong>Note:</strong> When a default button class is set, the default ticket icon is not included. You can add your own icon via CSS if needed.</p>
+<hr>
+<h4>Show Widget Description</h4>
+<p><strong>Parameter:</strong> Show Product/Event description tab (optional)</p>
+<p>Controls whether the description panel is shown in the purchase widget by default.</p>
+<p><strong>Default:</strong> Unchecked (description hidden)</p>
+<p><strong>When enabled:</strong> Users will see a description tab in the purchase widget when opening events/products.</p>
+<hr>
+<h4>Disable SSL Verification</h4>
+<p><strong>Parameter:</strong> Disable SSL verification (optional)</p>
+<p><strong>Use case:</strong> Fix SSL certificate issues when connecting to the Showpass API (mainly for local development).</p>
+<p><strong>Warning:</strong> Only use this for local development. Disabling SSL verification in production is a security risk.</p>
+<hr>
+<h3>Save your settings</h3>
+<ol>
+<li>After filling in all fields, click <strong>Save Changes</strong></li>
+<li>You should see a success message</li>
+</ol>
+<p><img src="/images/wordpress/wp-config.png" alt="Showpass plugin config"></p>
+<hr>
+<h2>Important: Website domain whitelisting</h2>
+<p>For the plugin and widgets to work correctly, your website&#39;s domain must be added in the <strong>Integrations</strong> section of your Showpass dashboard.</p>
+<h3>How to whitelist your domain</h3>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Go to <strong>Settings → Website Integration</strong></li>
+<li>Add your WordPress domain to the <strong>Allowed Domains</strong> list:<ul>
+<li>Include both: <code>https://yourwebsite.com</code> and <code>https://www.yourwebsite.com</code></li>
+</ul>
+</li>
+<li>Save changes</li>
+</ol>
+<p><strong>If widgets don&#39;t load or appear blocked, check this setting first.</strong></p>
+<blockquote>
+<p><strong>Why is this required?</strong> This is a security feature that prevents unauthorized sites from embedding your ticketing content.</p>
+</blockquote>
+<hr>
+<h2>Verify installation</h2>
+<p>After configuration, verify everything works:</p>
+<h3>Test 1: Check plugin status</h3>
+<ol>
+<li>Go to <strong>Plugins → Installed Plugins</strong></li>
+<li>Confirm <strong>Showpass WordPress Extension</strong> shows as <strong>Active</strong></li>
+</ol>
+<h3>Test 2: Add a test shortcode</h3>
+<ol>
+<li>Create a new page or post</li>
+<li>Add a Shortcode block</li>
+<li>Enter: <code>[showpass_events type=&quot;list&quot;]</code></li>
+<li>Preview the page</li>
+<li>You should see your events displayed</li>
+</ol>
+<p>If events appear, your installation is successful!</p>
+<hr>
+<h2>Troubleshooting installation issues</h2>
+<h3>Plugin not appearing in search</h3>
+<ul>
+<li><strong>Check WordPress version:</strong> Ensure you&#39;re running a compatible version</li>
+<li><strong>Try manual installation:</strong> Use Method 2 above</li>
+<li><strong>Clear WordPress cache:</strong> If using a caching plugin, clear it</li>
+</ul>
+<h3>&quot;Connection blocked&quot; error</h3>
+<ul>
+<li><strong>Whitelist your domain</strong> in Showpass dashboard (see above)</li>
+<li><strong>Check for HTTPS:</strong> Ensure your site uses HTTPS if required</li>
+<li><strong>Test different pages:</strong> Try the widget on various pages</li>
+</ul>
+<h3>Events not loading</h3>
+<ul>
+<li><strong>Verify Organization ID</strong> is correct</li>
+<li><strong>Check event status</strong> in Showpass dashboard (must be published)</li>
+<li><strong>Clear browser cache</strong> and test again</li>
+</ul>
+<hr>
+<h2>Next steps</h2>
+<p>Your Showpass WordPress plugin is now installed and configured! You&#39;re ready to start adding Showpass content to your site.</p>
+<h3>Explore these guides next</h3>
+<ul>
+<li><strong><a href="./02-adding-single-button-embed-widget">Adding a &quot;Buy Now&quot; button</a></strong> – Create ticket purchase buttons for events, products, or memberships</li>
+<li><strong><a href="./03-adding-event-list">Display event lists</a></strong> – Show your upcoming events in grid or list format</li>
+<li><strong><a href="./04-adding-event-detail-page">Add event detail pages</a></strong> – Create dedicated pages for individual events</li>
+<li><strong><a href="./05-adding-calendar-widget">Embed a calendar widget</a></strong> – Display an interactive event calendar</li>
+</ul>
+<hr>
+<h2>Getting help</h2>
+<p>If you encounter issues:</p>
+<ol>
+<li><strong>Check documentation:</strong> Review all plugin guides thoroughly</li>
+<li><strong>Contact Showpass support:</strong> Visit <a href="https://help.showpass.com/hc/en-us">help.showpass.com</a> for assistance</li>
+<li><strong>Review troubleshooting guide:</strong> See the <a href="/wordpress/13-tips-and-troubleshooting">Tips and Troubleshooting</a> section</li>
+</ol>
+<hr>
+<h2>Additional resources</h2>
+<ul>
+<li><strong>Showpass Help Center:</strong> <a href="https://help.showpass.com/hc/en-us">help.showpass.com</a></li>
+<li><strong>WordPress documentation:</strong> <a href="https://wordpress.org/documentation/">wordpress.org/documentation</a></li>
+<li><strong>Plugin repository:</strong> <a href="https://wordpress.org/plugins/">wordpress.org/plugins</a></li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

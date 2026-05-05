@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Query Specific Event Details - Showpass API</title>
+    <meta name="description" content="Get detailed information about a specific event using the Showpass Public API. Access event metadata, pricing, and availability." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Query Specific Event Details - Showpass API" />
+    <meta property="og:description" content="Get detailed information about a specific event using the Showpass Public API. Access event metadata, pricing, and availability." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Query Specific Event Details - Showpass API" />
+    <meta name="twitter:description" content="Get detailed information about a specific event using the Showpass Public API. Access event metadata, pricing, and availability." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,127 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Query a specific experience by slug</h1>
+<h2>Endpoint</h2>
+<p>To retrieve detailed information for a single public experience using its unique slug:</p>
+<pre><code class="language-text">https://www.showpass.com/api/public/events/{SLUG}/
+</code></pre>
+<p>Replace <code>{SLUG}</code> with the actual slug of the experience or the event <code>{ID}</code>.</p>
+<hr>
+<h2>Overview</h2>
+<p>This endpoint returns comprehensive details about a specific experience, including:</p>
+<ul>
+<li>Full experience information (name, description, dates, location)</li>
+<li>Venue details</li>
+<li>Ticket types and pricing</li>
+<li>Availability and inventory</li>
+<li>Custom fields and requirements</li>
+<li>Related events</li>
+</ul>
+<p>This is the primary endpoint for displaying experience detail pages and initializing the Showpass purchase widget.</p>
+<hr>
+<h2>Finding the Experience Slug</h2>
+<p>The slug is the URL-friendly identifier for an experience. You can find it in several ways:</p>
+<ol>
+<li><strong>From the Showpass URL</strong>: For example; <code>https://www.showpass.com/summer-concert-2025/</code>, the slug is <code>summer-concert-2025</code></li>
+<li><strong>From Discovery API</strong>: The <code>slug</code> field in the Discovery API response</li>
+<li><strong>From the Dashboard</strong>: In your event management dashboard</li>
+</ol>
+<hr>
+<h2>Basic Example</h2>
+<pre><code class="language-text">https://www.showpass.com/api/public/events/summer-concert-2025/
+</code></pre>
+<p>This returns complete details for the experience with slug <code>summer-concert-2025</code>.</p>
+<hr>
+<h2>Parameters</h2>
+<h3>Path Parameter</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>slug</code></td>
+<td>String</td>
+<td>Required</td>
+<td>The unique slug identifying the experience (part of the URL path)</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Use Cases</h2>
+<h3>1. Display Experience Detail Page</h3>
+<p>Fetch full experience details to display on your website:</p>
+<pre><code class="language-text">https://www.showpass.com/api/public/events/my-experience-slug/
+</code></pre>
+<p>Use the response to show:</p>
+<ul>
+<li>Experience name, dates, and description</li>
+<li>Venue information and location</li>
+<li>Available ticket types and prices</li>
+<li>Images and media</li>
+</ul>
+<h3>2. Check Availability</h3>
+<p>Check if an experience is sold out or has limited inventory:</p>
+<pre><code class="language-text">https://www.showpass.com/api/public/events/my-experience-slug/
+</code></pre>
+<p>Check the <code>sold_out</code> field and <code>ticket_types[].inventory_left</code> in the response.</p>
+<hr>
+<h2>Error Responses</h2>
+<h3>404 Not Found</h3>
+<p>Returned when the slug doesn&#39;t exist:</p>
+<pre><code class="language-javascript">{
+  &quot;detail&quot;: &quot;Not found.&quot;
+}
+</code></pre>
+<p><strong>Common causes:</strong></p>
+<ul>
+<li>Incorrect slug</li>
+<li>Experience has been deleted</li>
+<li>Typo in the URL</li>
+</ul>
+<h2>Comparison with Discovery API</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Detail Endpoint (<code>/events/{slug}/</code>)</th>
+<th>Discovery Endpoint (<code>/discovery/</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Purpose</strong></td>
+<td>Get full details for one experience</td>
+<td>Search/list multiple experiences</td>
+</tr>
+<tr>
+<td><strong>Returns</strong></td>
+<td>Single experience object</td>
+<td>Paginated list of experiences</td>
+</tr>
+<tr>
+<td><strong>Data Detail</strong></td>
+<td>Complete details including ticket types</td>
+<td>Summary information only</td>
+</tr>
+<tr>
+<td><strong>Use Case</strong></td>
+<td>Experience detail pages, widget init</td>
+<td>Listings, calendars, search</td>
+</tr>
+<tr>
+<td><strong>Performance</strong></td>
+<td>Fast (single lookup)</td>
+<td>Slower (search/filter)</td>
+</tr>
+</tbody></table>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Add Checkout Cart Button - Showpass WordPress Plugin</title>
+    <meta name="description" content="Implement checkout and cart functionality in WordPress with Showpass. Create seamless shopping experiences for your visitors." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Add Checkout Cart Button - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Implement checkout and cart functionality in WordPress with Showpass. Create seamless shopping experiences for your visitors." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Add Checkout Cart Button - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Implement checkout and cart functionality in WordPress with Showpass. Create seamless shopping experiences for your visitors." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,78 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Adding a checkout / shopping cart button with <code>[showpass_cart_button]</code></h1>
+<p>The <code>[showpass_cart_button]</code> shortcode adds a cart/checkout entry point to your site. It lets customers:</p>
+<ul>
+<li>Open the Showpass shopping cart and checkout widget.</li>
+<li>Review items they’ve selected (tickets, products, memberships).</li>
+<li>Complete their purchase.</li>
+</ul>
+<p>The button is updated by the Showpass script to include the current item count (e.g. <strong>“Shopping Cart (3)”</strong>).</p>
+<hr>
+<h2>Basic cart button</h2>
+<p>To add a standard cart button:</p>
+<ol>
+<li>Go to the WordPress page or post where you want the cart button.</li>
+<li>Add a <strong>Shortcode</strong> block.</li>
+<li>Enter:</li>
+</ol>
+<pre><code class="language-text">[showpass_cart_button]
+</code></pre>
+<p>This displays a button that opens the Showpass cart/checkout widget in a pop-up.</p>
+<hr>
+<h2>Embedding the cart directly on a page</h2>
+<p>You can also embed the full cart and checkout interface directly into a page (e.g. a dedicated <strong>“Checkout”</strong> page):</p>
+<pre><code class="language-text">[showpass_cart_button embedded=&quot;true&quot;]
+</code></pre>
+<p>This renders the cart widget inline on the page instead of showing a button.</p>
+<hr>
+<h2>Parameters for <code>[showpass_cart_button]</code></h2>
+<h3><code>embedded=&quot;true|false&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Choose between a button + pop-up or an embedded cart.</p>
+</li>
+<li><p><strong>Values:</strong></p>
+<ul>
+<li><code>&quot;false&quot;</code> (default) – Show a button that opens the cart in a pop-up.</li>
+<li><code>&quot;true&quot;</code> – Embed the cart/checkout widget directly on the page.</li>
+</ul>
+</li>
+<li><p><strong>Example (embedded checkout page):</strong></p>
+<pre><code class="language-text">[showpass_cart_button embedded=&quot;true&quot;]
+</code></pre>
+</li>
+</ul>
+<h3><code>lang=&quot;fr&quot;</code></h3>
+<ul>
+<li><p><strong>Use case:</strong> Set the cart/checkout widget interface language.</p>
+</li>
+<li><p><strong>Behavior:</strong></p>
+<ul>
+<li>If omitted, the widget uses English.</li>
+<li><code>lang=&quot;fr&quot;</code> switches the widget UI to French.</li>
+</ul>
+</li>
+<li><p><strong>Examples:</strong></p>
+<pre><code class="language-text">[showpass_cart_button lang=&quot;fr&quot;]
+[showpass_cart_button embedded=&quot;true&quot; lang=&quot;fr&quot;]
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2>Where to place the cart button</h2>
+<p>Common placements:</p>
+<ul>
+<li><strong>Site header</strong> – Most visible and convenient.</li>
+<li><strong>Persistent sidebar</strong> – If your theme supports it.</li>
+<li><strong>Dedicated checkout page</strong> – Using <code>embedded=&quot;true&quot;</code> for a full-page checkout experience.</li>
+<li><strong>Footer/menu item</strong> – As an additional entry point.</li>
+</ul>
+<p>A clearly visible cart button makes it easier for customers to find their cart and complete checkout, especially when they’re browsing multiple events or products.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Showpass Google Tag Manager Integration - Introduction</title>
+    <meta name="description" content="Introduction to Showpass Google Tag Manager integration. Learn how to track events, conversions, and user behavior with GTM." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Showpass Google Tag Manager Integration - Introduction" />
+    <meta property="og:description" content="Introduction to Showpass Google Tag Manager integration. Learn how to track events, conversions, and user behavior with GTM." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Showpass Google Tag Manager Integration - Introduction" />
+    <meta name="twitter:description" content="Introduction to Showpass Google Tag Manager integration. Learn how to track events, conversions, and user behavior with GTM." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,40 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>1. Introduction to Showpass Google Tag Manager (GTM) Integration</h1>
+<p>Welcome to the Showpass Google Tag Manager (GTM) integration guide. This documentation will help you understand how to leverage GTM to track user activity, implement Google Analytics 4 (GA4), and integrate other marketing tags for events and purchases managed through Showpass.</p>
+<h2>Purpose of GTM Integration</h2>
+<p>Integrating Showpass with Google Tag Manager allows you to:</p>
+<ul>
+<li>Track detailed ecommerce events (like <code>view_item</code>, <code>add_to_cart</code>, <code>purchase</code>)</li>
+<li>Send this data to Google Analytics 4 (GA4) for comprehensive reporting</li>
+<li>Implement various third-party marketing and analytics tags (e.g., Facebook Pixel, TikTok Pixel, Google Ads) without modifying your website code directly</li>
+<li>Gain deeper insights into customer behavior and conversion funnels</li>
+</ul>
+<h2>Crucial Note on GA4 Data Duplication</h2>
+<blockquote>
+<p><strong>Important:</strong> To avoid sending duplicate data to your Google Analytics 4 property:</p>
+<ul>
+<li><strong>Do NOT</strong> add the same GA4 Property ID (Measurement ID) in both your Showpass organization settings AND within your GTM container setup.</li>
+<li>If you are using GTM to manage your GA4 tracking (recommended approach), ensure that GA4 tracking is configured <strong>only</strong> through GTM. Remove any direct GA4 Measurement ID from your Showpass organization settings if you plan to deploy GA4 via GTM.</li>
+</ul>
+</blockquote>
+<h2>Required Skill Level</h2>
+<p><strong>Advanced Knowledge:</strong> Effective use of Google Tag Manager requires advanced knowledge and practical experience with GTM concepts, tags, triggers, and variables.</p>
+<p><strong>Showpass Disclaimer:</strong> Showpass is not responsible for GTM containers that are incorrectly set up or for any tracking issues that may arise from misconfiguration. Users are responsible for the correct implementation and testing of their GTM setup.</p>
+<h2>Ready to Use JSON</h2>
+<p>If you want to skip the step-by-step documentation and simply download our ready-to-use JSON file to import into your GTM, please go to <a href="/google-tag-manager/12-json-ready-to-use-importable-containers">section 12</a>.</p>
+<h2>Recommended GTM Learning Resources</h2>
+<p>If you are not familiar with Google Tag Manager or wish to refresh your knowledge, we highly recommend these introductory resources from Google:</p>
+<ul>
+<li><strong>Tag Manager Help - Overview:</strong> <a href="https://support.google.com/tagmanager/answer/6102821?hl=en">https://support.google.com/tagmanager/answer/6102821?hl=en</a></li>
+<li><strong>Google Analytics YouTube Channel - Google Tag Manager Basics:</strong> <a href="https://www.youtube.com/watch?v=tQDdv_WqCgg">https://www.youtube.com/watch?v=tQDdv_WqCgg</a></li>
+</ul>
+<p>Proceed with the following sections to set up your GTM integration with Showpass.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

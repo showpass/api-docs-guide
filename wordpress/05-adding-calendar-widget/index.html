@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Add Calendar Widget - Showpass WordPress Plugin</title>
+    <meta name="description" content="Integrate an event calendar into your WordPress site using the Showpass calendar widget. Customize appearance and functionality." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Add Calendar Widget - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Integrate an event calendar into your WordPress site using the Showpass calendar widget. Customize appearance and functionality." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Add Calendar Widget - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Integrate an event calendar into your WordPress site using the Showpass calendar widget. Customize appearance and functionality." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,278 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Adding a calendar widget</h1>
+<p>Showpass offers a modern calendar widget to display your events. This is ideal for venues with many time-slot–based events or when you want to provide a visual calendar view for your users.</p>
+<p>There are two main ways to add the new calendar:</p>
+<ol>
+<li><strong>As a button that opens the calendar in a pop-up.</strong></li>
+<li><strong>As a calendar embedded directly onto your page.</strong></li>
+</ol>
+<blockquote>
+<p><strong>Note</strong><br>The plugin refers to this as <strong>“Calendar Widget V2.0”</strong> in the GitHub readme and recommends it over the older <code>[showpass_calendar]</code> shortcode.</p>
+</blockquote>
+<hr>
+<h2>Prerequisite: Organizer ID</h2>
+<p>All calendar shortcodes require your <strong>Showpass Organizer ID</strong> to be configured:</p>
+<ol>
+<li>In your WordPress dashboard, go to the Showpass plugin settings.</li>
+<li>Set the <strong>Organizer ID</strong> (this is stored as <code>option_organization_id</code>).</li>
+<li>Save your changes.</li>
+</ol>
+<p>If this value is not set, the calendar shortcodes will return:</p>
+<blockquote>
+<p><code>Please add your Showpass Organizer ID to your Wordpress Dashboard.</code></p>
+</blockquote>
+<hr>
+<h2>1. Calendar button (pop-up) with <code>[showpass_calendar_widget]</code></h2>
+<p>This shortcode adds a button to your page. When a user clicks this button, the Showpass event calendar opens in a pop-up.</p>
+<h3>How to add</h3>
+<ol>
+<li>Go to the WordPress page or post where you want the button.</li>
+<li>Add a <strong>Shortcode</strong> block.</li>
+<li>Use:</li>
+</ol>
+<pre><code class="language-text">[showpass_calendar_widget]
+</code></pre>
+<p><strong>Basic usage:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget]
+</code></pre>
+<p>This creates a button with the default label <strong>“Get Tickets”</strong>.</p>
+<h3>Parameters for <code>[showpass_calendar_widget]</code></h3>
+<ul>
+<li><p><strong><code>label=&quot;Your Button Text&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Change the text displayed on the button.</p>
+</li>
+<li><p><strong>Default:</strong> <code>&quot;Get Tickets&quot;</code></p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;View Event Calendar&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>tags=&quot;your-tag&quot;</code></strong> (or <code>tags=&quot;tag1,tag2&quot;</code>)</p>
+<ul>
+<li><p><strong>Use case:</strong> Filter events by specific Showpass tags (categories). If omitted, all events for the organizer are shown.</p>
+</li>
+<li><p><strong>Example – only “comedy” events:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Comedy Shows Calendar&quot; tags=&quot;comedy&quot;]
+</code></pre>
+</li>
+<li><p><strong>Example – show all events:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Full Event Calendar&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>is_attraction=&quot;true&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Enable <strong>attraction mode</strong> (for time-slot attractions, day passes, etc.). This tells the widget to treat the events as an attraction calendar.</p>
+</li>
+<li><p><strong>Important:</strong> The value must be the string <code>&quot;true&quot;</code> (not <code>true</code> or <code>is_attraction: true</code>).</p>
+</li>
+<li><p><strong>Example – attraction calendar button:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Buy Single Day Tickets&quot; tags=&quot;Daily&quot; is_attraction=&quot;true&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>event_id=&quot;123456&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Optionally scope the attraction calendar to a specific parent event ID.</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Buy Tickets&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>class=&quot;your-css-class&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Override the default button class for custom styling.</p>
+</li>
+<li><p><strong>Default:</strong> <code>&quot;showpass-button&quot;</code></p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;View Calendar&quot; class=&quot;my-custom-button&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>lang=&quot;fr&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Set the widget UI language. If not specified, it defaults to English.</p>
+</li>
+<li><p><strong>Currently supported:</strong> <code>&quot;fr&quot;</code> for French.</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Voir le calendrier&quot; lang=&quot;fr&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>2. Embedded calendar with <code>[showpass_embed_calendar]</code></h2>
+<p>This shortcode embeds the full calendar directly into your WordPress page or post.</p>
+<h3>How to add</h3>
+<ol>
+<li>Go to the WordPress page or post where you want the calendar embedded.</li>
+<li>Add a <strong>Shortcode</strong> block.</li>
+<li>Use:</li>
+</ol>
+<pre><code class="language-text">[showpass_embed_calendar]
+</code></pre>
+<p><strong>Basic usage:</strong></p>
+<pre><code class="language-text">[showpass_embed_calendar]
+</code></pre>
+<p>This embeds a calendar showing all events for your organizer.</p>
+<h3>Layout considerations</h3>
+<p>For the embedded calendar to display correctly on desktop, the container or section where you place this shortcode should be <strong>at least ~1200px wide</strong>. If the container is too narrow, the calendar may appear cramped or misaligned.</p>
+<h3>Parameters for <code>[showpass_embed_calendar]</code></h3>
+<ul>
+<li><p><strong><code>tags=&quot;your-tag&quot;</code></strong> (or <code>tags=&quot;tag1,tag2&quot;</code>)</p>
+<ul>
+<li><p><strong>Use case:</strong> Filter events in the embedded calendar by Showpass tags. If omitted, all events are shown.</p>
+</li>
+<li><p><strong>Example – only “workshop” events:</strong></p>
+<pre><code class="language-text">[showpass_embed_calendar tags=&quot;workshop&quot;]
+</code></pre>
+</li>
+<li><p><strong>Example – show all events:</strong></p>
+<pre><code class="language-text">[showpass_embed_calendar]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>is_attraction=&quot;true&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Enable attraction mode for the embedded calendar, similar to the widget button.</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_embed_calendar tags=&quot;Daily&quot; is_attraction=&quot;true&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>event_id=&quot;123456&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Scope the embedded attraction calendar to a specific event ID.</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+<li><p><strong><code>lang=&quot;fr&quot;</code></strong></p>
+<ul>
+<li><p><strong>Use case:</strong> Set the embedded calendar UI language.</p>
+</li>
+<li><p><strong>Default:</strong> English</p>
+</li>
+<li><p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_embed_calendar tags=&quot;workshop&quot; lang=&quot;fr&quot;]
+</code></pre>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2>Which calendar option should I use?</h2>
+<ul>
+<li><p><strong>Button (<code>[showpass_calendar_widget]</code>):</strong></p>
+<ul>
+<li>Best when you want to keep the page layout clean.</li>
+<li>Users only see the calendar when they click the button.</li>
+<li>Works well in headers, sidebars, or call-to-action sections.</li>
+</ul>
+</li>
+<li><p><strong>Embedded (<code>[showpass_embed_calendar]</code>):</strong></p>
+<ul>
+<li>Best when the calendar is the main content of the page (e.g., a “What’s On” or “Events Calendar” page).</li>
+<li>Needs more horizontal space for an optimal layout.</li>
+</ul>
+</li>
+</ul>
+<p>Both options use the same modern Showpass calendar engine.</p>
+<hr>
+<h2>Older calendar shortcode <code>[showpass_calendar]</code> (legacy)</h2>
+<p>The plugin still includes an older calendar shortcode:</p>
+<pre><code class="language-text">[showpass_calendar]
+</code></pre>
+<p>This works, but for <strong>new implementations</strong> you should use:</p>
+<ul>
+<li><code>[showpass_calendar_widget]</code> (button pop-up), or</li>
+<li><code>[showpass_embed_calendar]</code> (embedded calendar).</li>
+</ul>
+<p>If you need to maintain an existing <code>[showpass_calendar]</code> setup, here is a brief reference for the key parameters:</p>
+<ul>
+<li><p><strong><code>starting_date=&quot;D-M-YYYY&quot;</code></strong></p>
+<ul>
+<li><strong>Format:</strong> <code>day-month-year</code> (no leading zeros).</li>
+<li><strong>Example:</strong> <code>starting_date=&quot;1-12-2024&quot;</code> → December 1, 2024.</li>
+<li>Sets the initial month/day the calendar displays.</li>
+</ul>
+</li>
+<li><p><strong><code>tags=&quot;tagname&quot;</code></strong></p>
+<ul>
+<li>Filter events by a specific tag (similar to the newer shortcodes).</li>
+</ul>
+</li>
+<li><p><strong><code>hide_schedule=&quot;true&quot;</code> / <code>&quot;false&quot;</code></strong></p>
+<ul>
+<li>Controls the horizontal daily schedule display under the calendar.</li>
+<li><strong>Default:</strong> <code>hide_schedule=&quot;true&quot;</code> (schedule is hidden).</li>
+<li>Set <code>hide_schedule=&quot;false&quot;</code> to show the schedule.</li>
+</ul>
+</li>
+<li><p><strong>Recurring event controls</strong></p>
+<ul>
+<li><strong><code>hide_children=&quot;true|false&quot;</code></strong></li>
+<li><strong><code>only_parents=&quot;true|false&quot;</code></strong></li>
+<li>Both default to <code>&quot;false&quot;</code>, which shows all instances of recurring events.</li>
+<li>Use these if you want to hide individual child occurrences or show only parent events.</li>
+</ul>
+</li>
+<li><p><strong>View configuration</strong></p>
+<ul>
+<li><strong><code>week=&quot;disabled&quot;</code></strong> – disable week view.</li>
+<li><strong><code>month=&quot;disabled&quot;</code></strong> – disable month view.</li>
+<li>If omitted, both views are available along with day view.</li>
+</ul>
+</li>
+<li><p><strong>Navigation styling</strong></p>
+<ul>
+<li><p><strong><code>arrows=&quot;white-arrows&quot;</code></strong></p>
+<ul>
+<li>Adds a CSS class that can be used to style the previous/next arrows (commonly to white).</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><strong>View selector</strong></p>
+<ul>
+<li><p><strong><code>hide_view_select=&quot;true&quot;</code></strong></p>
+<ul>
+<li>Hides the dropdown that lets users switch between <strong>month</strong>, <strong>week</strong>, and <strong>day</strong> views.</li>
+<li><strong>Default:</strong> <code>&quot;false&quot;</code> (the selector is shown).</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>For any new pages or redesigns, prefer:</p>
+<pre><code class="language-text">[showpass_calendar_widget]
+</code></pre>
+<p>or</p>
+<pre><code class="language-text">[showpass_embed_calendar]
+</code></pre>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

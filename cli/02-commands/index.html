@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>CLI Commands Reference - Showpass Developer Documentation</title>
+    <meta name="description" content="Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="CLI Commands Reference - Showpass Developer Documentation" />
+    <meta property="og:description" content="Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="CLI Commands Reference - Showpass Developer Documentation" />
+    <meta name="twitter:description" content="Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,43 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Commands</h1>
+<h2>init</h2>
+<p>Create a new Showpass project. Opens an interactive wizard.</p>
+<pre><code class="language-bash">showpass init my-event-site
+</code></pre>
+<p>Without a name, one is generated for you:</p>
+<pre><code class="language-bash">showpass init
+</code></pre>
+<h2>dev</h2>
+<p>Start the local development server with hot reload.</p>
+<pre><code class="language-bash">showpass dev
+</code></pre>
+<p>Runs on <code>http://localhost:8080</code> by default.</p>
+<h2>build</h2>
+<p>Create a production-optimized build.</p>
+<pre><code class="language-bash">showpass build
+</code></pre>
+<p>Output is written to <code>dist/</code>.</p>
+<h2>whoami</h2>
+<p>Display current authentication status.</p>
+<pre><code class="language-bash">showpass whoami
+</code></pre>
+<h2>logout</h2>
+<p>Clear saved credentials and venue selection.</p>
+<pre><code class="language-bash">showpass logout
+</code></pre>
+<h2>help</h2>
+<p>Show available commands:</p>
+<pre><code class="language-bash">showpass --help
+</code></pre>
+<p>Get help for a specific command:</p>
+<pre><code class="language-bash">showpass init --help
+</code></pre>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

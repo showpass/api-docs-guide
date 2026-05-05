@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Add Product List - Showpass WordPress Plugin</title>
+    <meta name="description" content="Display and sell products through your WordPress site using the Showpass product list functionality." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Add Product List - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Display and sell products through your WordPress site using the Showpass product list functionality." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Add Product List - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Display and sell products through your WordPress site using the Showpass product list functionality." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,89 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Adding a product list</h1>
+<p>Display merchandise, add-ons, or other non-event items on your WordPress site using the <code>[showpass_products]</code> shortcode. Customers can browse and purchase products directly from your site.</p>
+<h2>Basic usage</h2>
+<p>Add products to any page or post:</p>
+<ol>
+<li>Open the WordPress page editor</li>
+<li>Add a <strong>Shortcode</strong> block</li>
+<li>Enter: <code>[showpass_products]</code></li>
+</ol>
+<p>By default, this displays products in a <strong>grid layout</strong> with <strong>8 products per page</strong> (pagination included).</p>
+<hr>
+<h2>Customizing your product list</h2>
+<p>Control the layout and which products appear using these parameters.</p>
+<h3>Layout template</h3>
+<p><strong>Parameter:</strong> <code>template=&quot;grid|list|data&quot;</code></p>
+<p>Choose how products are displayed:</p>
+<ul>
+<li><strong><code>grid</code></strong> (default) - Products in a grid layout</li>
+<li><strong><code>list</code></strong> - Products in a vertical list</li>
+<li><strong><code>data</code></strong> - Returns raw JSON for custom PHP templates</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_products template=&quot;list&quot;]
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> Any value other than <code>&quot;list&quot;</code> or <code>&quot;data&quot;</code> defaults to grid layout.</p>
+</blockquote>
+<hr>
+<h3>Products per page</h3>
+<p><strong>Parameter:</strong> <code>page_size=&quot;number&quot;</code></p>
+<p>Control pagination density.</p>
+<ul>
+<li><strong>Default:</strong> <code>8</code></li>
+<li><strong>Range:</strong> Any positive integer</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_products page_size=&quot;12&quot;]
+</code></pre>
+<hr>
+<h3>Show specific products</h3>
+<p><strong>Parameter:</strong> <code>product_ids=&quot;id1,id2,id3&quot;</code></p>
+<p>Display only selected products instead of all available ones.</p>
+<p><strong>What you need:</strong> Comma-separated list of Showpass Product IDs (find these in your Showpass dashboard under Products).</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_products product_ids=&quot;2,6,7&quot;]
+</code></pre>
+<hr>
+<h3>Widget description visibility</h3>
+<p><strong>Parameter:</strong> <code>show_widget_description=&quot;true|false&quot;</code></p>
+<p>Override the global admin setting to force show or hide the description panel in the purchase widget.</p>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_products show_widget_description=&quot;true&quot;]
+</code></pre>
+<hr>
+<h3>Language</h3>
+<p><strong>Parameter:</strong> <code>lang=&quot;fr&quot;</code></p>
+<p>Set the widget interface language.</p>
+<ul>
+<li><strong>Default:</strong> English</li>
+<li><strong>Supported:</strong> <code>fr</code> (French)</li>
+</ul>
+<p><strong>Example:</strong></p>
+<pre><code class="language-text">[showpass_products lang=&quot;fr&quot;]
+</code></pre>
+<blockquote>
+<p><strong>Note:</strong> This only affects the purchase widget language, not the product list template.</p>
+</blockquote>
+<hr>
+<h2>Complete example</h2>
+<p>Combine multiple parameters for precise control:</p>
+<pre><code class="language-text">[showpass_products template=&quot;list&quot; page_size=&quot;12&quot; product_ids=&quot;101,105,115&quot;]
+</code></pre>
+<p>This configuration will:</p>
+<ul>
+<li>Display products in a <strong>vertical list</strong></li>
+<li>Show <strong>12 products per page</strong></li>
+<li>Include only products <strong>101</strong>, <strong>105</strong>, and <strong>115</strong></li>
+</ul>
+<p>When customers click a product, the Showpass purchase widget opens for checkout.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Showpass Data Layer Details - GTM Implementation Guide</title>
+    <meta name="description" content="Comprehensive guide to the Showpass data layer structure for Google Tag Manager implementations. Understand data flow and variables." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Showpass Data Layer Details - GTM Implementation Guide" />
+    <meta property="og:description" content="Comprehensive guide to the Showpass data layer structure for Google Tag Manager implementations. Understand data flow and variables." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Showpass Data Layer Details - GTM Implementation Guide" />
+    <meta name="twitter:description" content="Comprehensive guide to the Showpass data layer structure for Google Tag Manager implementations. Understand data flow and variables." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,184 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>7. Showpass Data Layer Details</h1>
+<p>This section provides detailed information about the ecommerce data that Showpass pushes to the Google Tag Manager (GTM) Data Layer. Understanding this structure is crucial for creating accurate variables, triggers, and tags in your GTM container.</p>
+<h2>Data Layer Structure</h2>
+<p>Showpass follows the Google Analytics 4 (GA4) ecommerce Data Layer format. Events are pushed to the <code>dataLayer</code> object with specific parameters.</p>
+<h3>Standard Event Format</h3>
+<pre><code class="language-javascript">dataLayer.push({
+  event: &quot;event_name&quot;,
+  ecommerce: {
+    currency: &quot;USD&quot;,
+    value: 123.45,
+    items: [
+      // Array of item objects
+    ],
+  },
+});
+</code></pre>
+<hr>
+<h2>Ecommerce Events and Parameters</h2>
+<p>Below is a detailed breakdown of each ecommerce event that Showpass sends to the Data Layer.</p>
+<h3>view_item</h3>
+<p><strong>Description:</strong> Fired when a user views an event or product detail page.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>event:</strong> <code>view_item</code></li>
+<li><strong>ecommerce.currency:</strong> String (e.g., <code>&quot;USD&quot;</code>, <code>&quot;CAD&quot;</code>)</li>
+<li><strong>ecommerce.value:</strong> Number (total value of the items being viewed)</li>
+<li><strong>ecommerce.items:</strong> Array of item objects</li>
+</ul>
+<p><strong>Item Object Structure:</strong></p>
+<pre><code class="language-javascript">{
+  item_id: &quot;12345&quot;,           // Showpass event/product ID
+  item_name: &quot;Event Name&quot;,    // Event/product name
+  item_category: &quot;category&quot;,  // Event category (if applicable)
+  price: 50.00,              // Individual item price
+  quantity: 1                 // Quantity
+}
+</code></pre>
+<hr>
+<h3>add_to_cart</h3>
+<p><strong>Description:</strong> Fired when a user adds an item to their cart.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>event:</strong> <code>add_to_cart</code></li>
+<li><strong>ecommerce.currency:</strong> String (e.g., <code>&quot;USD&quot;</code>)</li>
+<li><strong>ecommerce.value:</strong> Number (total value of items added)</li>
+<li><strong>ecommerce.items:</strong> Array of item objects</li>
+</ul>
+<p><strong>Item Object Structure:</strong> Same as <code>view_item</code></p>
+<hr>
+<h3>remove_from_cart</h3>
+<p><strong>Description:</strong> Fired when a user removes an item from their cart.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>event:</strong> <code>remove_from_cart</code></li>
+<li><strong>ecommerce.currency:</strong> String</li>
+<li><strong>ecommerce.value:</strong> Number (value of items removed)</li>
+<li><strong>ecommerce.items:</strong> Array of item objects</li>
+</ul>
+<hr>
+<h3>begin_checkout</h3>
+<p><strong>Description:</strong> Fired when a user initiates the checkout process.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>event:</strong> <code>begin_checkout</code></li>
+<li><strong>ecommerce.currency:</strong> String</li>
+<li><strong>ecommerce.value:</strong> Number (total cart value)</li>
+<li><strong>ecommerce.items:</strong> Array of item objects</li>
+</ul>
+<hr>
+<h3>purchase</h3>
+<p><strong>Description:</strong> Fired when a user completes a purchase.</p>
+<p><strong>Parameters:</strong></p>
+<ul>
+<li><strong>event:</strong> <code>purchase</code></li>
+<li><strong>ecommerce.currency:</strong> String</li>
+<li><strong>ecommerce.value:</strong> Number (total transaction value)</li>
+<li><strong>ecommerce.transaction_id:</strong> String (unique order/transaction ID)</li>
+<li><strong>ecommerce.items:</strong> Array of item objects</li>
+</ul>
+<p><strong>Item Object Structure for Purchase:</strong></p>
+<pre><code class="language-javascript">{
+  item_id: &quot;12345&quot;,
+  item_name: &quot;Event Name&quot;,
+  item_category: &quot;category&quot;,
+  price: 50.00,
+  quantity: 2
+}
+</code></pre>
+<hr>
+<h2>Accessing Data Layer Variables in GTM</h2>
+<p>To access any of these parameters in your GTM tags and triggers, you need to create Data Layer Variables:</p>
+<ol>
+<li>In GTM, go to <strong>Variables</strong></li>
+<li>Under &quot;User-Defined Variables,&quot; click <strong>New</strong></li>
+<li>Choose <strong>Data Layer Variable</strong> as the type</li>
+<li>Enter the exact Data Layer Variable Name (e.g., <code>ecommerce.value</code>, <code>ecommerce.currency</code>, <code>ecommerce.items</code>)</li>
+<li>Save and use the variable in your tags</li>
+</ol>
+<h3>Common Variables to Create</h3>
+<table>
+<thead>
+<tr>
+<th>Variable Name</th>
+<th>Data Layer Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>DLV - ecommerce.currency</strong></td>
+<td><code>ecommerce.currency</code></td>
+<td>Currency code for transactions</td>
+</tr>
+<tr>
+<td><strong>DLV - ecommerce.value</strong></td>
+<td><code>ecommerce.value</code></td>
+<td>Monetary value of the event</td>
+</tr>
+<tr>
+<td><strong>DLV - ecommerce.transaction_id</strong></td>
+<td><code>ecommerce.transaction_id</code></td>
+<td>Unique order ID for purchases</td>
+</tr>
+<tr>
+<td><strong>DLV - ecommerce.items</strong></td>
+<td><code>ecommerce.items</code></td>
+<td>Array of product/event items</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Example: Complete Data Layer Push</h2>
+<p>Here&#39;s an example of what Showpass pushes to the Data Layer for a <code>purchase</code> event:</p>
+<pre><code class="language-javascript">dataLayer.push({
+  event: &quot;purchase&quot;,
+  ecommerce: {
+    currency: &quot;USD&quot;,
+    value: 150.00,
+    transaction_id: &quot;TXN-789456123&quot;,
+    items: [
+      {
+        item_id: &quot;event_12345&quot;,
+        item_name: &quot;Summer Music Festival 2024&quot;,
+        item_category: &quot;Music Events&quot;,
+        price: 75.00,
+        quantity: 2
+      }
+    ]
+  }
+});
+</code></pre>
+<hr>
+<h2>Debugging the Data Layer</h2>
+<p>To verify that Showpass is correctly pushing data to the Data Layer:</p>
+<ol>
+<li><strong>Open browser developer tools</strong> (F12)</li>
+<li>Go to the <strong>Console</strong> tab</li>
+<li>Type <code>dataLayer</code> and press Enter to view the entire Data Layer array</li>
+<li>Look for your ecommerce events in the array</li>
+</ol>
+<p>Alternatively, use <strong>GTM Preview Mode</strong>:</p>
+<ol>
+<li>Enable Preview mode in your GTM container</li>
+<li>Navigate through your Showpass pages and perform actions</li>
+<li>In the Tag Assistant panel, click on events in the timeline</li>
+<li>View the &quot;Data Layer&quot; tab to see what data was pushed for each event</li>
+</ol>
+<hr>
+<h2>Summary</h2>
+<ul>
+<li>Showpass uses GA4-compliant ecommerce Data Layer format</li>
+<li>All ecommerce events include <code>currency</code>, <code>value</code>, and <code>items</code> parameters</li>
+<li>Purchase events additionally include <code>transaction_id</code></li>
+<li>Create Data Layer Variables in GTM to access these values in your tags</li>
+<li>Always test and verify Data Layer pushes using browser console or GTM Preview mode</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Showpass Public API Introduction - Developer Documentation</title>
+    <meta name="description" content="Learn how to use the Showpass Public API to access event data programmatically. Get started with authentication, endpoints, and best practices." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Showpass Public API Introduction - Developer Documentation" />
+    <meta property="og:description" content="Learn how to use the Showpass Public API to access event data programmatically. Get started with authentication, endpoints, and best practices." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Showpass Public API Introduction - Developer Documentation" />
+    <meta name="twitter:description" content="Learn how to use the Showpass Public API to access event data programmatically. Get started with authentication, endpoints, and best practices." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,309 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Discovery API</h1>
+<p>The primary endpoint for discovering experiences is: </p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/
+</code></pre>
+<hr>
+<h2>Overview</h2>
+<p>The Showpass Public Experience API allows you to fetch experience data programmatically. You can use this API to display experience on your website, build custom integrations, or create your own applications that interact with Showpass experiences.</p>
+<hr>
+<h2>Authentication</h2>
+<p>The Discovery API is open and does not generally require authentication tokens for basic discovery queries. However, for your requests to be successful, <strong>your website&#39;s domain must be added to the allowlist</strong> in the Showpass Dashboard. You can do this under your organization&#39;s settings, typically found on the &quot;Integrations&quot; tab of your venue edit page (<code>https://www.showpass.com/dashboard/venues/edit/</code>).</p>
+<hr>
+<h2>Response format</h2>
+<p>All API responses are returned in <strong>JSON</strong> format.</p>
+<hr>
+<h2>Parameters</h2>
+<p>You can refine your experience list query using the following optional parameters:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search_string</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>A search query string. Filters experiences by matching against experience name, venue name, and tags.<br>Example: <code>&amp;search_string=concert</code></td>
+</tr>
+<tr>
+<td><code>name__icontains</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Filter experiences by partial experience name match (case-insensitive).<br>Example: <code>&amp;name__icontains=music</code></td>
+</tr>
+<tr>
+<td><code>point_location</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Filter experiences by geographic location (latitude,longitude format).<br>Example: <code>&amp;point_location=51.0447,-114.0719</code></td>
+</tr>
+<tr>
+<td><code>location__point_location</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Alias for <code>point_location</code>. Filter by geographic coordinates.<br>Example: <code>&amp;location__point_location=51.0447,-114.0719</code></td>
+</tr>
+<tr>
+<td><code>ordered__location__point_location</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Order results by distance from a geographic point (latitude,longitude format).<br>Example: <code>&amp;ordered__location__point_location=51.0447,-114.0719</code></td>
+</tr>
+<tr>
+<td><code>venue__in</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Filter by venue IDs. Comma-separated list of integers.<br>Example: <code>&amp;venue__in=123,456</code></td>
+</tr>
+<tr>
+<td><code>venue</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Filter by a single venue ID.<br>Example: <code>&amp;venue=123</code></td>
+</tr>
+<tr>
+<td><code>categories</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Include experiences with specified categories. Comma-separated array.<br>Example: <code>&amp;categories=music,arts</code></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Include experiences with any of the specified tags. Comma-separated array.<br>Example: <code>&amp;tags=featured,popular</code></td>
+</tr>
+<tr>
+<td><code>voucher_code</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Filter experiences that accept a specific voucher code.<br>Example: <code>&amp;voucher_code=DISCOUNT20</code></td>
+</tr>
+<tr>
+<td><code>is_featured</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Filter experiences by featured status. When set to <code>true</code>, only featured experiences are returned.<br>Example: <code>&amp;is_featured=true</code></td>
+</tr>
+<tr>
+<td><code>is_sponsored</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Filter experiences by sponsored status. When set to <code>true</code>, returns only currently active sponsored experiences.<br>Example: <code>&amp;is_sponsored=true</code></td>
+</tr>
+<tr>
+<td><code>is_protected_by_queue</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Filter experiences that require Showpass queue protection. When set to <code>true</code>, returns only queue-protected experiences.<br>Example: <code>&amp;is_protected_by_queue=true</code></td>
+</tr>
+<tr>
+<td><code>showpass_gift_card</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Filter experiences that accept Showpass gift cards as payment. When set to <code>true</code>, returns only experiences that support gift card payments.<br>Example: <code>&amp;showpass_gift_card=true</code></td>
+</tr>
+<tr>
+<td><code>only_parents</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Controls whether child experiences (recurring instances) are included. Set to <code>false</code> to include both parent and child experiences.<br>Example: <code>&amp;only_parents=false</code></td>
+</tr>
+<tr>
+<td><code>page_size</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Number of results to return per page. <br>Default: <code>20</code>.<br>Example: <code>&amp;page_size=8</code></td>
+</tr>
+<tr>
+<td><code>page</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>The specific page number to return.<br>Example: <code>&amp;page=2</code></td>
+</tr>
+<tr>
+<td><code>id__in</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Return specific experiences by their IDs. Comma-separated list of integers.<br>Example: <code>&amp;id__in=1,2,3</code></td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Return a single experience by its ID.<br>Example: <code>&amp;id=123</code></td>
+</tr>
+<tr>
+<td><code>starts_on__gte</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences starting after or on the specified date/time.<br>Format: <code>YYYY-MM-DDTHH:MM</code> or full ISO 8601.<br>Example: <code>&amp;starts_on__gte=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>starts_on__lte</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences starting before or on the specified date/time.<br>Example: <code>&amp;starts_on__lte=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>starts_on__gt</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences starting after the specified date/time.<br>Example: <code>&amp;starts_on__gt=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>starts_on__lt</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences starting before the specified date/time.<br>Example: <code>&amp;starts_on__lt=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>ends_on__gte</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences ending after or on the specified date/time.<br>Example: <code>&amp;ends_on__gte=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>ends_on__lte</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences ending before or on the specified date/time.<br>Example: <code>&amp;ends_on__lte=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>ends_on__gt</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences ending after the specified date/time.<br>Example: <code>&amp;ends_on__gt=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>ends_on__lt</code></td>
+<td>ISO date</td>
+<td>Optional</td>
+<td>Experiences ending before the specified date/time.<br>Example: <code>&amp;ends_on__lt=2023-06-23T19:30</code></td>
+</tr>
+<tr>
+<td><code>ordering</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Specify the order the experiences are returned. Prefix with <code>-</code> for descending order.<br>Available fields: <code>is_sponsored</code>, <code>ranking_factor</code>, <code>starts_on</code>, <code>ends_on</code>, <code>id</code>, <code>name</code>.<br>Default: <code>-is_sponsored,-ranking_factor,starts_on</code><br>Examples: <code>&amp;ordering=starts_on</code>, <code>&amp;ordering=-name</code>, <code>&amp;ordering=-ranking_factor,starts_on</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Important Fields</h2>
+<p>While the API returns many fields, the following are the most impactful for building real integrations. Focus on these fields for your initial implementation:</p>
+<hr>
+<h3>Essential Response Fields</h3>
+<p>When processing API responses, these fields from the <code>results</code> array are the most commonly needed:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>slug</code></td>
+<td>Unique experience identifier</td>
+<td><strong>Required</strong> to initiate widgets via the SDK</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Experience name</td>
+<td>Display the experience title</td>
+</tr>
+<tr>
+<td><code>starts_on</code></td>
+<td>Experience start time (UTC)</td>
+<td>Show when the experience begins</td>
+</tr>
+<tr>
+<td><code>ends_on</code></td>
+<td>Experience end time (UTC)</td>
+<td>Show when the experience ends</td>
+</tr>
+<tr>
+<td><code>timezone</code></td>
+<td>Experience timezone</td>
+<td>Convert UTC times to local display</td>
+</tr>
+<tr>
+<td><code>description_without_html</code></td>
+<td>Plain text description</td>
+<td>experience details and description text</td>
+</tr>
+<tr>
+<td><code>frontend_details_url</code></td>
+<td>Showpass experience page URL</td>
+<td>Link to full experience details</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>Square experience image</td>
+<td>experience thumbnail/card image</td>
+</tr>
+<tr>
+<td><code>image_banner</code></td>
+<td>Banner experience image</td>
+<td>Hero/header image</td>
+</tr>
+</tbody></table>
+<hr>
+<h3>Key Filtering Parameters</h3>
+<p>These are the most commonly used filtering parameters for practical implementations:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Example</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search_string</code></td>
+<td><code>&amp;search_string=experience%20Name</code></td>
+<td>Filter by experience name, venue, tags</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td><code>&amp;tags=featured</code></td>
+<td>Show only experiences with specific tags</td>
+</tr>
+<tr>
+<td><code>starts_on__gte</code></td>
+<td><code>&amp;starts_on__gte=2025-01-01T00:00</code></td>
+<td>Experiences starting after a date</td>
+</tr>
+<tr>
+<td><code>ends_on__lt</code></td>
+<td><code>&amp;ends_on__lt=2025-02-01T00:00</code></td>
+<td>Experiences ending before a date</td>
+</tr>
+<tr>
+<td><code>is_featured</code></td>
+<td><code>&amp;is_featured=true</code></td>
+<td>Show only featured experiences</td>
+</tr>
+<tr>
+<td><code>venue__in</code></td>
+<td><code>&amp;venue__in=123,456</code></td>
+<td>Filter by specific venue IDs</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> The API contains many additional fields for displaying ticket prices, sold-out status, and other details. However, the fields above provide everything needed for a solid initial integration.</p>
+</blockquote>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

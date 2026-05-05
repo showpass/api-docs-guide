@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Webhook Event Types - Showpass Developer Guide</title>
+    <meta name="description" content="Complete reference of Showpass webhook event types. Understand different events, payloads, and when they" />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Webhook Event Types - Showpass Developer Guide" />
+    <meta property="og:description" content="Complete reference of Showpass webhook event types. Understand different events, payloads, and when they" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Webhook Event Types - Showpass Developer Guide" />
+    <meta name="twitter:description" content="Complete reference of Showpass webhook event types. Understand different events, payloads, and when they" />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,68 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Webhooks: Event types</h1>
+<p>Showpass webhooks notify your application about various events that occur within the platform. When configuring a webhook endpoint in the Showpass dashboard, you will select the specific event(s) for which you want to receive notifications at that endpoint.</p>
+<hr>
+<h2>Available webhook events</h2>
+<p>Below is a list of the events for which Showpass currently provides webhook support. Understanding these events is crucial for building targeted integrations.</p>
+<table>
+<thead>
+<tr>
+<th>Event Name</th>
+<th>Description</th>
+<th>Typically Triggers On</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>invoice.purchase</code></td>
+<td>Triggered when a new order is successfully created and paid for. This is a common event for initiating fulfillment, sending custom receipts, or updating CRM records.</td>
+<td>Successful completion of a new purchase.</td>
+</tr>
+<tr>
+<td><code>invoice.refund</code></td>
+<td>Triggered when a transaction (or part of it) is successfully refunded. Use this to update order statuses, adjust inventory (if applicable), or notify accounting systems.</td>
+<td>Successful processing of a refund.</td>
+</tr>
+<tr>
+<td><code>invoice.void</code></td>
+<td>Triggered when a previously completed transaction is voided. This might occur for various reasons, such as correcting an error or handling a chargeback.</td>
+<td>Successful voiding of a transaction.</td>
+</tr>
+<tr>
+<td><code>invoice.transfer</code></td>
+<td>Triggered when a ticket transfer has been completed, and <strong>new invoices and tickets have been generated for the recipient</strong>. This event typically contains the details of the <em>new</em> items for the recipient.</td>
+<td>Completion of a ticket transfer (recipient&#39;s side).</td>
+</tr>
+<tr>
+<td><code>invoice.transferred</code></td>
+<td>Triggered when a ticket transfer has been completed. This event updates the <strong>original invoice and ticket items</strong>, often marking the original tickets as voided or transferred. Use this to manage the status of the original tickets.</td>
+<td>Completion of a ticket transfer (original purchaser&#39;s side).</td>
+</tr>
+<tr>
+<td><code>webhook.test</code></td>
+<td>A special event that can be triggered manually from the Showpass dashboard to test your webhook endpoint&#39;s connectivity and processing capabilities. It usually sends a sample payload.</td>
+<td>Manually sent from Showpass webhook settings.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Subscribing to events</h2>
+<p>When you set up or edit a webhook endpoint in the Showpass dashboard (as described in &quot;Setup and Management&quot;), you will be able to select one or more of these event types. Your endpoint will then only receive notifications for the events it is subscribed to.</p>
+<hr>
+<h2>Choosing the right events</h2>
+<p>Consider what actions in Showpass are relevant to your integration:</p>
+<ul>
+<li><strong>For sales and order management:</strong> <code>invoice.purchase</code>, <code>invoice.refund</code>, and <code>invoice.void</code> are fundamental</li>
+<li><strong>For tracking ticket lifecycle:</strong> <code>invoice.transfer</code> and <code>invoice.transferred</code> become important if you need to track the full lifecycle of tickets, especially with resale or transfer features</li>
+<li><strong>For testing:</strong> Always subscribe your endpoint to <code>webhook.test</code> during development and for ongoing health checks</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The data payload sent with each event (particularly for invoice-related events) will typically be an &quot;Invoice&quot; object, detailed in the next section. The <code>event_type</code> field within the payload will indicate which specific event triggered the webhook.</p>
+</blockquote>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

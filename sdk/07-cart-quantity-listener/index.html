@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Cart Quantity Listener - Showpass JavaScript SDK</title>
+    <meta name="description" content="Monitor cart changes and quantities with the Showpass cart listener. Build dynamic cart displays and notifications." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Cart Quantity Listener - Showpass JavaScript SDK" />
+    <meta property="og:description" content="Monitor cart changes and quantities with the Showpass cart listener. Build dynamic cart displays and notifications." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Cart Quantity Listener - Showpass JavaScript SDK" />
+    <meta name="twitter:description" content="Monitor cart changes and quantities with the Showpass cart listener. Build dynamic cart displays and notifications." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,232 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Cart Quantity Listener</h1>
+<h2>Overview</h2>
+<p>The <code>addCartCountListener</code> function enables your website to react in real-time to changes in the Showpass shopping cart quantity. It invokes a callback function you provide, passing the current number of items in the cart, making it essential for creating dynamic cart counters and other cart-aware UI elements.</p>
+<hr>
+<h2>SDK Function Signature</h2>
+<pre><code class="language-javascript">showpass.tickets.addCartCountListener(callbackFunction);
+</code></pre>
+<h3>Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>callbackFunction</strong></td>
+<td>Function</td>
+<td>Required</td>
+<td>A function executed whenever the cart count changes. Receives one argument: <strong>count</strong> (Integer) - the current number of items in the cart</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Prerequisites</h2>
+<ul>
+<li>The Showpass SDK must be included on your page (see &quot;SDK Getting Started&quot; guide)</li>
+<li>Ensure the SDK is loaded before calling its functions</li>
+<li>The listener should typically be set up once the page is ready (e.g., <code>DOMContentLoaded</code>)</li>
+</ul>
+<hr>
+<h2>Basic Example</h2>
+<p>This simple example logs the cart count to the console whenever it changes. For production-ready implementations, see the &quot;Advanced Implementation&quot; section below.</p>
+<pre><code class="language-javascript">// Define callback function to handle cart updates
+function handleCartUpdate(count) {
+  console.log(&quot;Showpass Cart Count Changed:&quot;, count);
+  
+  // Update a UI element directly
+  // document.getElementById(&#39;my-cart-display&#39;).innerText = &#39;Cart: &#39; + count;
+}
+
+// Check if SDK is loaded before adding listener
+if (window.showpass &amp;&amp; window.showpass.tickets) {
+  window.showpass.tickets.addCartCountListener(handleCartUpdate);
+  console.log(&quot;Showpass cart count listener added.&quot;);
+} else {
+  console.error(&quot;Showpass SDK not yet loaded&quot;);
+}
+</code></pre>
+<hr>
+<h2>Advanced Implementation: Dynamic Cart Counter</h2>
+<p>This comprehensive example demonstrates how to:</p>
+<ol>
+<li>Use <code>addCartCountListener</code> to update an HTML element with the current cart count</li>
+<li>Optionally use cookies (via <code>js-cookie</code> library) to maintain cart display across page loads</li>
+<li>Make the cart element clickable to open the Showpass Shopping Cart or Checkout widget</li>
+</ol>
+<h3>Step 1: HTML Structure</h3>
+<p>Create an HTML element for your cart display. This could be a link, button, or any suitable element.</p>
+<pre><code class="language-html">&lt;!-- Example: A cart link in a navigation menu --&gt;
+&lt;a href=&quot;#&quot; id=&quot;my-dynamic-cart-link&quot; class=&quot;cart-link&quot;&gt;
+  &lt;span id=&quot;my-cart-text&quot;&gt;Cart&lt;/span&gt;
+&lt;/a&gt;
+</code></pre>
+<hr>
+<h3>Step 2: Optional JavaScript Dependencies</h3>
+<ul>
+<li><strong>jQuery (Optional):</strong> Simplifies DOM manipulation and event handling</li>
+<li><strong>js-cookie (Optional):</strong> Persists cart count visually across page loads (<a href="https://github.com/js-cookie/js-cookie">GitHub: js-cookie</a>)</li>
+</ul>
+<pre><code class="language-html">&lt;!-- Include js-cookie from CDN --&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/npm/js-cookie@3/dist/js.cookie.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<hr>
+<h3>Step 3: JavaScript Implementation</h3>
+<p>Place this script after including the Showpass SDK and any optional libraries.</p>
+<pre><code class="language-javascript">function initializeCartListener() {
+  const cartTextElementId = &quot;my-cart-text&quot;;
+  const cartLinkElementId = &quot;my-dynamic-cart-link&quot;;
+
+  const cartTextElement = document.getElementById(cartTextElementId);
+  const cartLinkElement = document.getElementById(cartLinkElementId);
+
+  if (!cartTextElement || !cartLinkElement) {
+    console.error(&quot;Cart display or link element not found. Please check IDs.&quot;);
+    return;
+  }
+
+  // Update cart display text
+  function updateCartDisplay(count) {
+    let displayText = &quot;Cart&quot;;
+    if (count &gt; 0) {
+      displayText = &quot;Cart (&quot; + count + &quot;)&quot;;
+    }
+    cartTextElement.innerHTML = displayText;
+    
+    // Save to cookie if js-cookie is available
+    if (typeof Cookies !== &quot;undefined&quot;) {
+      Cookies.set(&quot;showpassCartDisplay&quot;, displayText, {
+        expires: 7,
+        path: &quot;/&quot;,
+      });
+    }
+  }
+
+  // Load initial display from cookie
+  if (typeof Cookies !== &quot;undefined&quot;) {
+    const savedDisplay = Cookies.get(&quot;showpassCartDisplay&quot;);
+    if (savedDisplay) {
+      cartTextElement.innerHTML = savedDisplay;
+    }
+  }
+
+  // Add cart count listener
+  if (window.showpass &amp;&amp; window.showpass.tickets) {
+    window.showpass.tickets.addCartCountListener(updateCartDisplay);
+    console.log(&quot;Cart listener successfully added.&quot;);
+  } else {
+    console.error(&quot;Showpass SDK not available.&quot;);
+    // Retry after a short delay
+    setTimeout(initializeCartListener, 500);
+    return;
+  }
+
+  // Make cart element clickable to open checkout
+  cartLinkElement.addEventListener(&quot;click&quot;, function (event) {
+    event.preventDefault();
+    if (window.showpass &amp;&amp; window.showpass.tickets) {
+      // Open checkout widget with your preferred styling
+      window.showpass.tickets.checkoutWidget({
+        &quot;theme-primary&quot;: &quot;#007bff&quot;,
+      });
+    } else {
+      console.error(&quot;Showpass SDK not available for checkout.&quot;);
+    }
+  });
+}
+
+// Initialize when DOM is ready
+if (document.readyState === &quot;loading&quot;) {
+  document.addEventListener(&quot;DOMContentLoaded&quot;, initializeCartListener);
+} else {
+  initializeCartListener();
+}
+</code></pre>
+<hr>
+<h3>Alternative: Using Script Onload Callback</h3>
+<p>If you&#39;re dynamically loading the SDK, use the <code>onload</code> callback:</p>
+<pre><code class="language-javascript">let script = document.createElement(&quot;script&quot;);
+script.onload = function () {
+  // SDK is now loaded - safe to add listener
+  function handleCartUpdate(count) {
+    console.log(&quot;Cart count updated:&quot;, count);
+    document.getElementById(&quot;cart-badge&quot;).innerText = count || &quot;&quot;;
+  }
+  
+  window.showpass.tickets.addCartCountListener(handleCartUpdate);
+};
+script.src = &quot;https://www.showpass.com/static/dist/sdk.js&quot;;
+document.head.appendChild(script);
+</code></pre>
+<hr>
+<h2>Complete Example with jQuery</h2>
+<p>Here&#39;s a complete example using jQuery for simplified DOM manipulation:</p>
+<pre><code class="language-javascript">$(document).ready(function () {
+  function initShowpassCartListener() {
+    const $cartText = $(&quot;#my-cart-text&quot;);
+    const $cartLink = $(&quot;#my-dynamic-cart-link&quot;);
+
+    if ($cartText.length === 0 || $cartLink.length === 0) {
+      console.error(&quot;Cart elements not found.&quot;);
+      return;
+    }
+
+    // Update cart display function
+    function updateCartDisplay(count) {
+      const displayText = count &gt; 0 ? `Cart (${count})` : &quot;Cart&quot;;
+      $cartText.html(displayText);
+      Cookies.set(&quot;showpassCartDisplay&quot;, displayText, {
+        expires: 7,
+        path: &quot;/&quot;,
+      });
+    }
+
+    // Load from cookie
+    const savedDisplay = Cookies.get(&quot;showpassCartDisplay&quot;);
+    if (savedDisplay) {
+      $cartText.html(savedDisplay);
+    }
+
+    // Add listener if SDK is ready
+    if (window.showpass &amp;&amp; window.showpass.tickets) {
+      window.showpass.tickets.addCartCountListener(updateCartDisplay);
+      
+      // Handle cart link click
+      $cartLink.on(&quot;click&quot;, function (e) {
+        e.preventDefault();
+        window.showpass.tickets.checkoutWidget({
+          &quot;theme-primary&quot;: &quot;#28a745&quot;,
+        });
+      });
+    } else {
+      // Retry if SDK not ready
+      setTimeout(initShowpassCartListener, 500);
+    }
+  }
+
+  initShowpassCartListener();
+});
+</code></pre>
+<hr>
+<h2>Key Takeaways</h2>
+<ul>
+<li><strong>Real-time updates:</strong> <code>addCartCountListener</code> provides instant feedback when cart contents change</li>
+<li><strong>Single callback:</strong> The listener accepts one function that receives the cart count as an argument</li>
+<li><strong>Check SDK availability:</strong> Always verify <code>window.showpass.tickets</code> exists before adding the listener</li>
+<li><strong>Cookie persistence:</strong> Use cookies to maintain cart display across page loads</li>
+<li><strong>Clickable cart:</strong> Combine with <code>checkoutWidget()</code> to create an interactive cart button</li>
+<li><strong>Retry logic:</strong> Implement retry mechanism if SDK hasn&#39;t loaded when listener is initialized</li>
+<li><strong>jQuery optional:</strong> jQuery simplifies implementation but isn&#39;t required</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

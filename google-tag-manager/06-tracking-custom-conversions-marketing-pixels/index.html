@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Custom Conversions &amp; Marketing Pixels - Showpass GTM</title>
+    <meta name="description" content="Track custom conversions and implement marketing pixels for Showpass events using Google Tag Manager." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Custom Conversions &amp; Marketing Pixels - Showpass GTM" />
+    <meta property="og:description" content="Track custom conversions and implement marketing pixels for Showpass events using Google Tag Manager." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Custom Conversions &amp; Marketing Pixels - Showpass GTM" />
+    <meta name="twitter:description" content="Track custom conversions and implement marketing pixels for Showpass events using Google Tag Manager." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,182 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>6. Tracking Custom Conversions (Marketing Pixels)</h1>
+<p>Google Tag Manager (GTM) allows you to implement various third-party tracking tags (often called &quot;pixels&quot;) for services like Facebook (Meta), Google Ads, X (Twitter), TikTok, Snapchat, Spotify and others. This section explains the general process of setting up these tags to fire on specific Showpass ecommerce events, using the data Showpass provides to the Data Layer.</p>
+<blockquote>
+<p><strong>Note:</strong> For your convenience, we provide ready to use configurations as an importable JSON file. You can download it and learn how to use it from <a href="/google-tag-manager/12-json-ready-to-use-importable-containers">this</a> page.</p>
+</blockquote>
+<h2>General Workflow</h2>
+<p>The process for setting up most conversion or event tracking pixels involves these main steps in GTM:</p>
+<ol>
+<li><strong>Creating GTM Variables:</strong> To capture dynamic data (like value, currency, item details) sent by Showpass for ecommerce events</li>
+<li><strong>Creating GTM Triggers:</strong> To specify <strong>when</strong> your marketing tag should fire (e.g., on an <code>add_to_cart</code> event or a <code>purchase</code> event)</li>
+<li><strong>Creating GTM Tags:</strong> To configure your specific marketing pixel with the necessary IDs and map the GTM variables to the fields required by the pixel</li>
+</ol>
+<hr>
+<h2>Example: Setting Up add_to_cart Event Tracking</h2>
+<p>Let&#39;s walk through setting up tracking for the <code>add_to_cart</code> event. Showpass sends <code>ecommerce.currency</code>, <code>ecommerce.value</code>, and <code>ecommerce.items</code> parameters for this event (see the Showpass Event List table at the end of this section).</p>
+<h3>Step 1: Creating Data Layer Variables in GTM</h3>
+<p>You need to create GTM variables to read the values that Showpass pushes to the Data Layer for the <code>add_to_cart</code> event.</p>
+<ol>
+<li>In your GTM container, go to the <strong>Variables</strong> tab</li>
+<li>Under &quot;User-Defined Variables,&quot; click <strong>New</strong> for each variable you need</li>
+</ol>
+<p><strong>Variable 1: Currency</strong></p>
+<ul>
+<li><strong>Name:</strong> <code>DLV - ecommerce.currency</code> (or a similar descriptive name)</li>
+<li><strong>Variable Type:</strong> <strong>Data Layer Variable</strong></li>
+<li><strong>Data Layer Variable Name:</strong> <code>ecommerce.currency</code> (This must exactly match the key Showpass uses in the Data Layer)</li>
+<li>Leave &quot;Data Layer Version&quot; as Version 2</li>
+<li>Click <strong>Save</strong></li>
+</ul>
+<p><strong>Variable 2: Value</strong></p>
+<ul>
+<li><strong>Name:</strong> <code>DLV - ecommerce.value</code></li>
+<li><strong>Variable Type:</strong> <strong>Data Layer Variable</strong></li>
+<li><strong>Data Layer Variable Name:</strong> <code>ecommerce.value</code></li>
+<li>Click <strong>Save</strong></li>
+</ul>
+<p><strong>Variable 3: Items</strong></p>
+<ul>
+<li><strong>Name:</strong> <code>DLV - ecommerce.items</code></li>
+<li><strong>Variable Type:</strong> <strong>Data Layer Variable</strong></li>
+<li><strong>Data Layer Variable Name:</strong> <code>ecommerce.items</code></li>
+<li>Click <strong>Save</strong></li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> Repeat this process for any other parameters you need for different events (e.g., <code>ecommerce.transaction_id</code> for purchases).</p>
+</blockquote>
+<hr>
+<h3>Step 2: Creating a Trigger for the add_to_cart Event</h3>
+<p>This trigger will tell GTM to fire your tag when Showpass signals an <code>add_to_cart</code> event.</p>
+<ol>
+<li>In GTM, go to the <strong>Triggers</strong> tab and click <strong>New</strong></li>
+<li><strong>Name your trigger:</strong> <code>Custom Event - add_to_cart</code> (or similar)</li>
+<li><strong>Trigger Configuration:</strong><ul>
+<li>Click <strong>Choose a trigger type to begin setup...</strong></li>
+<li>Select <strong>Custom Event</strong></li>
+<li><strong>Event Name:</strong> <code>add_to_cart</code> (This must exactly match the event name Showpass sends)</li>
+<li><strong>This trigger fires on:</strong> Select <strong>All Custom Events</strong> (or you can specify conditions if needed, but usually &quot;All&quot; is fine for an exact match event name)</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h3>Step 3: Creating the Marketing Tag</h3>
+<p>This is where you configure the actual pixel from your marketing platform (e.g., TikTok, Facebook, etc.). The specifics will vary greatly depending on the platform. Most platforms provide a base code snippet and instructions for tracking standard events.</p>
+<ol>
+<li>In GTM, go to the <strong>Tags</strong> tab and click <strong>New</strong></li>
+<li><strong>Name your tag:</strong> <code>TikTok Pixel - Add to Cart Event</code> (or similar, specific to the platform)</li>
+<li><strong>Tag Configuration:</strong><ul>
+<li>Click <strong>Choose a tag type to begin setup...</strong></li>
+<li><strong>If a built-in GTM template exists</strong> for your platform (e.g., &quot;Facebook Pixel,&quot; &quot;Google Ads Conversion Tracking&quot;), select it</li>
+<li><strong>If not, choose &quot;Custom HTML.&quot;</strong> You&#39;ll paste the code snippet provided by your marketing platform here</li>
+</ul>
+</li>
+<li><strong>Configure the Tag:</strong><ul>
+<li><strong>For built-in templates:</strong> Fill in the required fields (e.g., Pixel ID, Event Type). You will often map the GTM variables you created in Step 1 to the event parameters in the tag configuration. For an &quot;Add to Cart&quot; event, you might map:<ul>
+<li><code>value</code> → <code>{{DLV - ecommerce.value}}</code></li>
+<li><code>currency</code> → <code>{{DLV - ecommerce.currency}}</code></li>
+<li><code>contents</code> or <code>items</code> → <code>{{DLV - ecommerce.items}}</code></li>
+<li><code>transaction_id</code> → <code>{{DLV - ecommerce.transaction_id}}</code></li>
+</ul>
+</li>
+<li><strong>For Custom HTML:</strong> Paste the base pixel code and modify it to include the GTM variables dynamically</li>
+</ul>
+</li>
+</ol>
+<p><strong>Example Custom HTML for a Generic Pixel:</strong></p>
+<pre><code class="language-html">&lt;script nonce=&quot;{{nonce}}&quot;&gt;
+  // Base pixel initialization code (provided by your platform)
+  // ...
+
+  // Fire the add_to_cart event with dynamic data
+  pixelTrack(&quot;AddToCart&quot;, {
+    value: {{DLV - ecommerce.value}},
+    currency: &quot;{{DLV - ecommerce.currency}}&quot;,
+    content_ids: {{DLV - ecommerce.items}}, // Adjust based on pixel requirements
+  });
+&lt;/script&gt;
+</code></pre>
+<ol start="5">
+<li><strong>Triggering:</strong><ul>
+<li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
+<li>Select the trigger you created in Step 2 (e.g., <code>Custom Event - add_to_cart</code>)</li>
+</ul>
+</li>
+<li>Click <strong>Save</strong></li>
+</ol>
+<hr>
+<h3>Step 4: Publish and Test</h3>
+<ol>
+<li><strong>Publish your GTM container:</strong><ul>
+<li>Click <strong>Submit</strong> in GTM</li>
+<li>Provide a version name (e.g., &quot;Added TikTok Add to Cart Pixel&quot;)</li>
+<li>Click <strong>Publish</strong></li>
+</ul>
+</li>
+<li><strong>Test in Preview Mode:</strong><ul>
+<li>Enable GTM Preview mode</li>
+<li>Navigate to a page with Showpass functionality</li>
+<li>Perform an &quot;add to cart&quot; action</li>
+<li>Verify in Tag Assistant that your custom marketing tag fired</li>
+<li>Check the pixel&#39;s platform (e.g., TikTok Events Manager, Facebook Events Manager) to confirm the event was received</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Showpass Event Reference</h2>
+<p>Below is a reference table of common Showpass ecommerce events and the parameters they send to the Data Layer. Use this as a guide for setting up variables and triggers.</p>
+<table>
+<thead>
+<tr>
+<th>Event Name</th>
+<th>Description</th>
+<th>Key Parameters Sent</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>view_item</strong></td>
+<td>User views an event/product detail page</td>
+<td><code>ecommerce.currency</code>, <code>ecommerce.value</code>, <code>ecommerce.items</code></td>
+</tr>
+<tr>
+<td><strong>add_to_cart</strong></td>
+<td>User adds an item to the cart</td>
+<td><code>ecommerce.currency</code>, <code>ecommerce.value</code>, <code>ecommerce.items</code></td>
+</tr>
+<tr>
+<td><strong>remove_from_cart</strong></td>
+<td>User removes an item from the cart</td>
+<td><code>ecommerce.currency</code>, <code>ecommerce.value</code>, <code>ecommerce.items</code></td>
+</tr>
+<tr>
+<td><strong>begin_checkout</strong></td>
+<td>User initiates the checkout process</td>
+<td><code>ecommerce.currency</code>, <code>ecommerce.value</code>, <code>ecommerce.items</code></td>
+</tr>
+<tr>
+<td><strong>purchase</strong></td>
+<td>User completes a purchase</td>
+<td><code>ecommerce.currency</code>, <code>ecommerce.value</code>, <code>ecommerce.transaction_id</code>, <code>ecommerce.items</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> For detailed information about the structure of these parameters, refer to <strong>Section 7: Showpass Data Layer Details</strong>.</p>
+</blockquote>
+<hr>
+<h2>Summary</h2>
+<ul>
+<li>Create Data Layer Variables in GTM to capture Showpass ecommerce data</li>
+<li>Create Custom Event Triggers for specific Showpass events</li>
+<li>Configure marketing pixel tags and map GTM variables to pixel parameters</li>
+<li>Always test thoroughly using GTM Preview mode and the platform&#39;s event verification tools</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

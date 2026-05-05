@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Outgoing IP Addresses - Showpass Security Documentation</title>
+    <meta name="description" content="Showpass outgoing IP addresses for firewall allowlisting. Required for Authorize.net users and third-party integrations with IP restrictions." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Outgoing IP Addresses - Showpass Security Documentation" />
+    <meta property="og:description" content="Showpass outgoing IP addresses for firewall allowlisting. Required for Authorize.net users and third-party integrations with IP restrictions." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Outgoing IP Addresses - Showpass Security Documentation" />
+    <meta name="twitter:description" content="Showpass outgoing IP addresses for firewall allowlisting. Required for Authorize.net users and third-party integrations with IP restrictions." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,76 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Outgoing IP Addresses</h1>
+<p>If your systems require IP allowlisting for incoming connections from Showpass, use the addresses listed below. These IPs are used for all outbound API requests, webhooks, and third-party integrations initiated by our platform.</p>
+<hr>
+<h2>Current IP Addresses</h2>
+<pre><code class="language-text">34.83.8.110
+34.168.12.250
+35.230.81.80
+35.230.119.67
+</code></pre>
+<hr>
+<h2>Who Needs This?</h2>
+<p>You&#39;ll need to allowlist these IPs if you:</p>
+<ul>
+<li>Use <strong>Authorize.net</strong> as your payment gateway</li>
+<li>Have firewall rules restricting incoming API requests</li>
+<li>Integrate with third-party systems that require IP allowlisting</li>
+<li>Need to verify the source of requests from Showpass</li>
+</ul>
+<hr>
+<h2>Authorize.net Users</h2>
+<blockquote>
+<p><strong>Important:</strong> If you use Authorize.net with fraud detection enabled, you <strong>must</strong> add these IPs to avoid transaction issues.</p>
+</blockquote>
+<h3>Configuration Steps</h3>
+<ol>
+<li>Log into your Authorize.net account</li>
+<li>Navigate to <strong>Account</strong> → <strong>Fraud Detection Suite</strong> → <strong>Transaction IP Velocity Filter</strong></li>
+<li>Add all four IPs to the <strong>IP Address Exclusion</strong> section</li>
+<li>Save your changes</li>
+</ol>
+<h3>Why This Matters</h3>
+<p>Without IP allowlisting, legitimate transactions processed through Box Office or high-volume sales may be flagged as suspicious and placed under review, requiring manual approval.</p>
+<hr>
+<h2>Best Practices</h2>
+<p>When configuring your allowlist:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>✅</td>
+<td>Add all four IP addresses to ensure uninterrupted service</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Use CIDR notation if required (e.g., <code>34.83.8.110/32</code>)</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Allow traffic on port <code>443</code> for HTTPS connections</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Test the connection after configuration</td>
+</tr>
+<tr>
+<td>✅</td>
+<td>Document the configuration for your team</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Need Help?</h2>
+<p><strong>Email:</strong> <a href="mailto:support@showpass.com">support@showpass.com</a><br><strong>Response time:</strong> Critical issues within 24 hours</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

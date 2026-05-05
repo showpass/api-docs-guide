@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Get Event List by Organization - Showpass API</title>
+    <meta name="description" content="Retrieve all events for a specific organization using the Showpass Public API. Learn about filtering, pagination, and response formats." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Get Event List by Organization - Showpass API" />
+    <meta property="og:description" content="Retrieve all events for a specific organization using the Showpass Public API. Learn about filtering, pagination, and response formats." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Get Event List by Organization - Showpass API" />
+    <meta name="twitter:description" content="Retrieve all events for a specific organization using the Showpass Public API. Learn about filtering, pagination, and response formats." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,61 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Experience list by organization</h1>
+<h2>Overview</h2>
+<p>To fetch experiences for your organization, use the <a href="/api/01-public-api-introduction">Discovery API</a> with the <code>venue</code> parameter to filter by organization ID.</p>
+<hr>
+<h2>Endpoint</h2>
+<p><strong>Single organization:</strong></p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=ORGANIZATION_ID
+</code></pre>
+<p><strong>Multiple organizations:</strong></p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue__in=ORGANIZATION_ID1,ORGANIZATION_ID2
+</code></pre>
+<p>Replace <code>ORGANIZATION_ID</code> with your numerical organization ID.</p>
+<hr>
+<h2>Finding Your Organization ID</h2>
+<ol>
+<li>Log in to your Showpass account</li>
+<li>Navigate to <a href="https://www.showpass.com/dashboard/venues/edit/">https://www.showpass.com/dashboard/venues/edit/</a></li>
+<li>Your Organization ID is displayed in the top right corner</li>
+</ol>
+<hr>
+<h2>Quick Examples</h2>
+<p><strong>Single organization:</strong></p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=123
+</code></pre>
+<p><strong>Multiple organizations:</strong></p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue__in=123,456,789
+</code></pre>
+<p><strong>Upcoming events only:</strong></p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=123&amp;starts_on__gte=2025-01-01T00:00
+</code></pre>
+<p><strong>Homepage widget (next 5 featured events):</strong></p>
+<pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=123&amp;is_featured=true&amp;starts_on__gte=2025-01-01T00:00&amp;ordering=starts_on&amp;page_size=5
+</code></pre>
+<hr>
+<h2>Available Parameters</h2>
+<p>The <code>venue</code> parameter can be combined with any parameter from the Discovery API, including:</p>
+<ul>
+<li><strong>Date filters</strong>: <code>starts_on__gte</code>, <code>starts_on__lte</code>, <code>ends_on__gte</code>, <code>ends_on__lt</code></li>
+<li><strong>Search</strong>: <code>search_string</code></li>
+<li><strong>Categories &amp; tags</strong>: <code>categories</code>, <code>tags</code></li>
+<li><strong>Filtering</strong>: <code>is_featured</code>, <code>is_sponsored</code>, <code>showpass_gift_card</code></li>
+<li><strong>Pagination</strong>: <code>page_size</code>, <code>page</code></li>
+<li><strong>Ordering</strong>: <code>ordering</code></li>
+</ul>
+<hr>
+<h2>Important Notes</h2>
+<ul>
+<li><strong>Domain whitelisting required</strong>: Add your domain in the &quot;Integrations&quot; tab of your venue edit page</li>
+<li><strong>Parent experiences only by default</strong>: Add <code>only_parents=false</code> to include recurring event instances</li>
+<li><strong>Default pagination</strong>: 20 results per page</li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

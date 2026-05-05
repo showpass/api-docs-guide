@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Tips &amp; Troubleshooting - Showpass WordPress Plugin</title>
+    <meta name="description" content="Common issues, solutions, and best practices for the Showpass WordPress plugin. Troubleshoot problems and optimize performance." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Tips &amp; Troubleshooting - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Common issues, solutions, and best practices for the Showpass WordPress plugin. Troubleshoot problems and optimize performance." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Tips &amp; Troubleshooting - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Common issues, solutions, and best practices for the Showpass WordPress plugin. Troubleshoot problems and optimize performance." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,443 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Tips and troubleshooting</h1>
+<p>Common solutions and best practices to help you get the most out of the Showpass WordPress plugin.</p>
+<h2>Understanding shortcodes</h2>
+<p>Shortcodes are the backbone of this plugin—small snippets of text in square brackets <code>[]</code> that WordPress transforms into dynamic Showpass content.</p>
+<h3>Shortcode anatomy</h3>
+<pre><code class="language-text">[showpass_events parameter=&quot;value&quot; parameter_2=&quot;value&quot;]
+</code></pre>
+<p><strong>Components:</strong></p>
+<ul>
+<li><strong><code>[ ]</code></strong> (square brackets) – Required to define a shortcode</li>
+<li><strong><code>showpass_events</code></strong> (shortcode tag) – Tells WordPress which Showpass feature to load</li>
+<li><strong><code>parameter=&quot;value&quot;</code></strong> – Options that control behavior and display</li>
+<li><strong>Multiple parameters</strong> – Can be combined in one shortcode</li>
+</ul>
+<p><strong>Key points:</strong></p>
+<ul>
+<li>Use <strong>straight quotes</strong> (<code>&quot;</code> or <code>&#39;</code>), not curly quotes (<code>&quot;</code> or <code>&quot;</code>)</li>
+<li>Only one shortcode tag per set of brackets</li>
+<li>Parameters are optional; defaults are used when omitted</li>
+<li>Parameter order doesn&#39;t matter</li>
+</ul>
+<hr>
+<h2>Common issues and solutions</h2>
+<h3>Event list is empty or shows wrong events</h3>
+<p><strong>Likely cause:</strong> Incorrect or missing Organization ID</p>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Go to <strong>WordPress Admin → Showpass API</strong></li>
+<li>Verify <strong>Organization ID</strong> matches your Showpass account</li>
+<li>Find your Organization ID in Showpass dashboard under <strong>Organization/Venue Settings</strong></li>
+<li>Save changes in WordPress</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> If the Organization ID is wrong or blank, no events (or incorrect events) will display.</p>
+</blockquote>
+<hr>
+<h3>Shortcode appears as plain text</h3>
+<h4>Issue A: Curly quotes</h4>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Shortcode shows as text on the page</li>
+<li>Layout is broken or nothing renders</li>
+</ul>
+<p><strong>Solution:</strong> Use straight quotes, not curly &quot;smart&quot; quotes</p>
+<p>✅ <strong>Correct:</strong></p>
+<pre><code class="language-text">[showpass_events type=&quot;list&quot; tags=&quot;concert&quot;]
+[showpass_events type=&#39;list&#39; tags=&#39;concert&#39;]
+</code></pre>
+<p>❌ <strong>Incorrect (curly quotes):</strong></p>
+<pre><code class="language-text">[showpass_events type=&quot;list&quot; tags=&quot;concert&quot;]
+</code></pre>
+<blockquote>
+<p><strong>Tip:</strong> Curly quotes often come from copying from Word, Google Docs, or email. Paste as plain text or use the Shortcode block in WordPress.</p>
+</blockquote>
+<hr>
+<h4>Issue B: Typos in shortcode</h4>
+<p><strong>Common mistakes:</strong></p>
+<ul>
+<li>Incorrect tag: <code>showpas_events</code> instead of <code>showpass_events</code></li>
+<li>Wrong parameter: <code>pagesize</code> instead of <code>page_size</code></li>
+<li>Mixed quotes: <code>type=&quot;list&#39;</code> (mixes double and single quotes)</li>
+</ul>
+<p><strong>Solution:</strong> Double-check spelling and syntax against documentation examples.</p>
+<hr>
+<h4>Issue C: Plugin not active</h4>
+<p><strong>Symptoms:</strong> All shortcodes show as plain text</p>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Go to <strong>Plugins</strong> in WordPress admin</li>
+<li>Find <strong>Showpass WordPress Extension</strong></li>
+<li>Click <strong>Activate</strong> if not already active</li>
+</ol>
+<hr>
+<h3>Widget shows wrong item or error</h3>
+<p><strong>Issue:</strong> Purchase widget opens but displays incorrect event or shows error</p>
+<h4>For events</h4>
+<pre><code class="language-text">[showpass_widget slug=&quot;your-event-slug&quot;]
+</code></pre>
+<p><strong>Finding the correct slug:</strong></p>
+<ol>
+<li>Go to your event page on Showpass.com</li>
+<li>Check the URL: <code>https://www.showpass.com/my-big-show-2024/</code></li>
+<li>The slug is: <code>my-big-show-2024</code></li>
+</ol>
+<p><strong>Do NOT include:</strong></p>
+<ul>
+<li><code>https://www.showpass.com/</code></li>
+<li>Trailing slashes</li>
+<li>Extra spaces</li>
+</ul>
+<hr>
+<h4>For products/memberships</h4>
+<pre><code class="language-text">[showpass_widget type=&quot;product&quot; id=&quot;12345&quot;]
+[showpass_widget type=&quot;membership&quot; id=&quot;67890&quot;]
+</code></pre>
+<p><strong>Finding the ID:</strong></p>
+<ol>
+<li>Log in to Showpass dashboard</li>
+<li>Go to Products or Memberships section</li>
+<li>Note the numeric ID (not the name)</li>
+<li>Ensure <code>type</code> matches (<code>product</code> or <code>membership</code>)</li>
+</ol>
+<hr>
+<h3>&quot;Connection is blocked&quot; or widget not loading</h3>
+<p><strong>Likely cause:</strong> WordPress site domain not whitelisted in Showpass settings</p>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Go to <strong>Settings → Website Integration</strong></li>
+<li>Add your WordPress domain to the <strong>Allowed Domains</strong> list:<ul>
+<li>Include: <code>https://yourwebsite.com</code></li>
+<li>Also add: <code>https://www.yourwebsite.com</code> if applicable</li>
+</ul>
+</li>
+<li>Save changes</li>
+<li>Clear browser cache and test again</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> This is a security feature that prevents unauthorized sites from embedding your content.</p>
+</blockquote>
+<hr>
+<h3>Styles conflict with theme</h3>
+<p><strong>Symptoms:</strong></p>
+<ul>
+<li>Widget button looks wrong</li>
+<li>Event list layout is broken</li>
+<li>Text colors are unreadable</li>
+</ul>
+<p><strong>Solution:</strong> Add custom CSS to override styles</p>
+<h4>Method 1: WordPress Customizer</h4>
+<ol>
+<li>Go to <strong>Appearance → Customize → Additional CSS</strong></li>
+<li>Add your custom styles:</li>
+</ol>
+<pre><code class="language-css">/* Override button styles */
+.showpass-widget-button {
+    background-color: #9e2a2b !important;
+    color: white !important;
+    padding: 12px 24px !important;
+    border-radius: 6px !important;
+}
+
+/* Fix event list spacing */
+.showpass-events-list {
+    gap: 2rem !important;
+}
+</code></pre>
+<ol start="3">
+<li>Click <strong>Publish</strong></li>
+</ol>
+<hr>
+<h4>Method 2: Child theme</h4>
+<p>Add styles to your child theme&#39;s <code>style.css</code>:</p>
+<pre><code class="language-css">/* Showpass custom overrides */
+.showpass-event-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+</code></pre>
+<blockquote>
+<p><strong>Best practice:</strong> Use a child theme to prevent loss of customizations when the parent theme updates.</p>
+</blockquote>
+<hr>
+<h4>Finding conflicting styles</h4>
+<ol>
+<li>Right-click the problematic element</li>
+<li>Select <strong>Inspect</strong> or <strong>Inspect Element</strong></li>
+<li>View the <strong>Styles</strong> panel in DevTools</li>
+<li>Identify which CSS rules are applying</li>
+<li>Override with more specific selectors or <code>!important</code></li>
+</ol>
+<hr>
+<h3>Changes not appearing</h3>
+<p><strong>Issue:</strong> Updated shortcode parameters or plugin settings but nothing changed</p>
+<p><strong>Solutions to try (in order):</strong></p>
+<h4>1. Clear browser cache</h4>
+<p><strong>Chrome/Edge:</strong></p>
+<ul>
+<li>Press <code>Ctrl+Shift+Delete</code> (Windows) or <code>Cmd+Shift+Delete</code> (Mac)</li>
+<li>Select &quot;Cached images and files&quot;</li>
+<li>Click &quot;Clear data&quot;</li>
+</ul>
+<p><strong>Or use incognito/private mode:</strong></p>
+<ul>
+<li>Chrome: <code>Ctrl+Shift+N</code> (Windows) or <code>Cmd+Shift+N</code> (Mac)</li>
+<li>Firefox: <code>Ctrl+Shift+P</code> (Windows) or <code>Cmd+Shift+P</code> (Mac)</li>
+</ul>
+<hr>
+<h4>2. Clear WordPress cache plugin</h4>
+<p>If using a caching plugin (W3 Total Cache, WP Super Cache, WP Rocket):</p>
+<ol>
+<li>Find the cache plugin in WordPress admin</li>
+<li>Look for &quot;Clear Cache&quot; or &quot;Purge Cache&quot;</li>
+<li>Clear all caches</li>
+</ol>
+<hr>
+<h4>3. Clear server-side cache</h4>
+<p>Some hosts have server-level caching:</p>
+<ul>
+<li><strong>Cloudflare:</strong> Dashboard → Caching → Purge Everything</li>
+<li><strong>Host control panel:</strong> Look for &quot;Clear Cache&quot; or &quot;Purge CDN Cache&quot;</li>
+</ul>
+<hr>
+<h4>4. Disable caching temporarily</h4>
+<p>To test if caching is the issue:</p>
+<ol>
+<li>Temporarily deactivate caching plugins</li>
+<li>Test your changes</li>
+<li>Reactivate if that wasn&#39;t the issue</li>
+</ol>
+<hr>
+<h3>Images not displaying</h3>
+<p><strong>Issue:</strong> Event images are broken or missing</p>
+<p><strong>Possible causes:</strong></p>
+<ol>
+<li><strong>Images not uploaded in Showpass:</strong> Check your event in Showpass dashboard</li>
+<li><strong>Incorrect image URLs:</strong> View page source and check image <code>src</code> attributes</li>
+<li><strong>HTTPS/HTTP mismatch:</strong> Ensure images use HTTPS if your site uses HTTPS</li>
+<li><strong>Firewall blocking:</strong> Some firewalls block external images</li>
+</ol>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Verify images exist in Showpass dashboard</li>
+<li>Check browser console for 404 errors</li>
+<li>Test image URLs directly in a new browser tab</li>
+<li>Contact Showpass support if images consistently fail</li>
+</ol>
+<hr>
+<h3>Event list shows events from wrong organization</h3>
+<p><strong>Issue:</strong> Seeing events that don&#39;t belong to you</p>
+<p><strong>Solution:</strong></p>
+<ol>
+<li>Go to <strong>Showpass API</strong> settings</li>
+<li>Verify the <strong>Organization ID</strong> is correct</li>
+<li>Get the correct ID from Showpass dashboard</li>
+<li>Save and clear cache</li>
+</ol>
+<p><strong>For multi-venue organizations:</strong></p>
+<p>Use the <code>venue_ids</code> parameter to filter by specific venues:</p>
+<pre><code class="language-text">[showpass_events type=&quot;list&quot; venue_ids=&quot;123,456&quot;]
+</code></pre>
+<hr>
+<h3>Calendar widget not displaying correctly</h3>
+<p><strong>Issue:</strong> Calendar appears broken or events don&#39;t show</p>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><p><strong>Check calendar slug:</strong></p>
+<pre><code class="language-text">[showpass_calendar slug=&quot;your-calendar-slug&quot;]
+</code></pre>
+</li>
+<li><p><strong>Verify events are published</strong> in Showpass dashboard</p>
+</li>
+<li><p><strong>Clear all caches</strong> (browser, WordPress, server)</p>
+</li>
+<li><p><strong>Check for JavaScript errors:</strong></p>
+<ul>
+<li>Open browser DevTools → Console</li>
+<li>Look for red error messages</li>
+<li>Share errors with Showpass support if needed</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3>Cart button doesn&#39;t update count</h3>
+<p><strong>Issue:</strong> Cart counter shows &quot;0&quot; even after adding items</p>
+<p><strong>Possible causes:</strong></p>
+<ol>
+<li>Using custom cart counter without proper integration</li>
+<li>Multiple Showpass scripts loading</li>
+<li>JavaScript conflicts</li>
+</ol>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li>Use standard <code>[showpass_cart_button]</code> shortcode first to test</li>
+<li>Check browser console for JavaScript errors</li>
+<li>Temporarily disable other plugins to identify conflicts</li>
+<li>See <a href="./09-advanced-dynamic-cart-counter-jquery">Advanced: Dynamic cart counter</a> for custom implementations</li>
+</ol>
+<hr>
+<h3>Pricing table is empty or shows wrong events</h3>
+<p><strong>Issue:</strong> <code>[showpass_pricing_table]</code> shortcode displays no events or incorrect events</p>
+<p><strong>Possible causes:</strong></p>
+<ol>
+<li>Invalid or missing event IDs</li>
+<li>Events not published/visible</li>
+<li>Spaces in the <code>ids</code> parameter</li>
+<li>Organization ID mismatch</li>
+</ol>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Verify Event IDs:</strong> Check that all IDs in the <code>ids</code> parameter exist in your Showpass dashboard</li>
+<li><strong>Remove spaces:</strong> Ensure no spaces in comma-separated IDs: <code>ids=&quot;123,456&quot;</code> not <code>ids=&quot;123, 456&quot;</code></li>
+<li><strong>Check event status:</strong> Events must be published and visible to appear in the table</li>
+<li><strong>Verify Organization ID:</strong> Ensure your Organization ID in plugin settings matches the events&#39; organization</li>
+<li><strong>Test individual events:</strong> Try using <code>[showpass_widget]</code> with each event ID to verify they&#39;re accessible</li>
+</ol>
+<hr>
+<h3>Admin meta box doesn&#39;t appear</h3>
+<p><strong>Issue:</strong> &quot;Showpass URL &amp; Shortcode Generator&quot; meta box is not visible in page/post editor</p>
+<p><strong>Possible causes:</strong></p>
+<ol>
+<li>Access token not configured</li>
+<li>Wrong post type</li>
+<li>User permissions</li>
+<li>Plugin not active</li>
+</ol>
+<p><strong>Solutions:</strong></p>
+<ol>
+<li><strong>Check access token:</strong> Go to <strong>Showpass API</strong> settings and verify <code>option_showpass_access_token</code> is set</li>
+<li><strong>Verify post type:</strong> Meta box only appears on <strong>Pages</strong> and <strong>Posts</strong>, not custom post types</li>
+<li><strong>Check permissions:</strong> Your user account must have <code>edit_posts</code> capability</li>
+<li><strong>Verify plugin:</strong> Ensure Showpass WordPress Extension is activated</li>
+<li><strong>Refresh page:</strong> After adding access token, refresh the editor page</li>
+</ol>
+<p>See <a href="./15-admin-meta-box-shortcode-generator">Admin meta box documentation</a> for complete details.</p>
+<hr>
+<h3>Default behaviors not working as expected</h3>
+<p><strong>Issue:</strong> Events or widgets behave differently than documented</p>
+<p><strong>Common default behaviors to be aware of:</strong></p>
+<ol>
+<li><p><strong><code>only_parents</code> defaults to <code>true</code>:</strong> Event lists show only parent events by default, not individual occurrences</p>
+<ul>
+<li><strong>Solution:</strong> Add <code>only_parents=&quot;false&quot;</code> to show all occurrences</li>
+</ul>
+</li>
+<li><p><strong>Custom <code>class</code> disables icon:</strong> When using <code>class</code> parameter in <code>[showpass_widget]</code>, the default ticket icon is not included</p>
+<ul>
+<li><strong>Solution:</strong> Add your own icon via CSS or use the default <code>showpass-button</code> class</li>
+</ul>
+</li>
+<li><p><strong>Default button label:</strong> Widget buttons default to &quot;Get Tickets&quot; (not &quot;Tickets&quot;)</p>
+<ul>
+<li><strong>Solution:</strong> Use <code>label=&quot;Your Text&quot;</code> to customize</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Best practices</h2>
+<h3>Use shortcode blocks</h3>
+<p>In the WordPress block editor:</p>
+<ol>
+<li>Click <strong>+</strong> to add a new block</li>
+<li>Search for &quot;Shortcode&quot;</li>
+<li>Paste your shortcode into the Shortcode block</li>
+</ol>
+<p><strong>Benefits:</strong></p>
+<ul>
+<li>Prevents WordPress from auto-formatting quotes</li>
+<li>Reduces chance of syntax errors</li>
+<li>Easier to edit later</li>
+</ul>
+<hr>
+<h3>Test before deploying</h3>
+<p>Before launching:</p>
+<ol>
+<li><strong>Test on staging site</strong> if available</li>
+<li><strong>View in multiple browsers</strong> (Chrome, Firefox, Safari, Edge)</li>
+<li><strong>Test on mobile devices</strong> (phone and tablet)</li>
+<li><strong>Complete a test purchase</strong> (use test mode if available)</li>
+<li><strong>Verify tracking</strong> (affiliate links, Google Analytics)</li>
+</ol>
+<hr>
+<h3>Keep plugin updated</h3>
+<p>Regularly check for updates:</p>
+<ol>
+<li>Go to <strong>Dashboard → Updates</strong> in WordPress</li>
+<li>Install Showpass plugin updates when available</li>
+<li>Review release notes for new features and fixes</li>
+</ol>
+<hr>
+<h3>Use child themes</h3>
+<p>Always use a child theme for customizations:</p>
+<p><strong>Why:</strong></p>
+<ul>
+<li>Parent theme updates won&#39;t overwrite your changes</li>
+<li>Easier to troubleshoot issues</li>
+<li>More maintainable long-term</li>
+</ul>
+<p><strong>How to create:</strong> <a href="https://developer.wordpress.org/themes/advanced-topics/child-themes/">WordPress Child Themes Guide</a></p>
+<hr>
+<h3>Document your customizations</h3>
+<p>Keep notes about:</p>
+<ul>
+<li>Custom CSS added</li>
+<li>Shortcode parameters used</li>
+<li>Template modifications</li>
+<li>JavaScript customizations</li>
+</ul>
+<p><strong>Where to document:</strong></p>
+<ul>
+<li>WordPress page/post notes</li>
+<li>Separate documentation file</li>
+<li>Comments in code files</li>
+<li>Team wiki or shared document</li>
+</ul>
+<hr>
+<h2>Getting help</h2>
+<h3>Check the documentation</h3>
+<ol>
+<li>Review all WordPress plugin documentation pages</li>
+<li>Check Showpass support articles</li>
+<li>Search for similar issues in support forums</li>
+</ol>
+<hr>
+<h3>Contact Showpass support</h3>
+<p>When contacting support, provide:</p>
+<ol>
+<li><strong>WordPress version</strong> (Dashboard → Updates)</li>
+<li><strong>Plugin version</strong> (Plugins → Installed Plugins)</li>
+<li><strong>Active theme name</strong></li>
+<li><strong>Description of the issue</strong> with specific examples</li>
+<li><strong>Screenshots</strong> if applicable</li>
+<li><strong>Browser console errors</strong> (copy/paste or screenshot)</li>
+<li><strong>Steps to reproduce</strong> the issue</li>
+</ol>
+<hr>
+<h3>WordPress debugging</h3>
+<p>Enable WordPress debug mode in <code>wp-config.php</code>:</p>
+<pre><code class="language-php">define(&#39;WP_DEBUG&#39;, true);
+define(&#39;WP_DEBUG_LOG&#39;, true);
+define(&#39;WP_DEBUG_DISPLAY&#39;, false);
+</code></pre>
+<p>Check the log file at <code>wp-content/debug.log</code> for errors.</p>
+<blockquote>
+<p><strong>Important:</strong> Disable debug mode on production sites after troubleshooting.</p>
+</blockquote>
+<hr>
+<h2>Additional resources</h2>
+<ul>
+<li><strong>Showpass Help Center:</strong> <a href="https://help.showpass.com/hc/en-us">help.showpass.com</a></li>
+<li><strong>WordPress documentation:</strong> <a href="https://wordpress.org/documentation/">wordpress.org/documentation</a></li>
+<li><strong>WordPress support forums:</strong> <a href="https://wordpress.org/support/">wordpress.org/support</a></li>
+</ul>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

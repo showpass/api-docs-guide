@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Installing Facebook Conversions API - Showpass Integration</title>
+    <meta name="description" content="Complete guide to setting up Facebook Conversions API with Showpass. Configure server-side tracking for improved ad performance and attribution." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Installing Facebook Conversions API - Showpass Integration" />
+    <meta property="og:description" content="Complete guide to setting up Facebook Conversions API with Showpass. Configure server-side tracking for improved ad performance and attribution." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Installing Facebook Conversions API - Showpass Integration" />
+    <meta name="twitter:description" content="Complete guide to setting up Facebook Conversions API with Showpass. Configure server-side tracking for improved ad performance and attribution." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,240 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Installing Facebook Conversions API</h1>
+<p>This guide provides step-by-step instructions for setting up Facebook Conversions API with your Showpass organization. Conversions API works alongside Facebook Pixel to provide enhanced tracking and improved ad performance.</p>
+<h2>Prerequisites</h2>
+<p>Before you begin, ensure you have:</p>
+<ul>
+<li><strong>Facebook Pixel already installed</strong> and working with Showpass</li>
+<li><strong>Facebook Business Manager account</strong> with admin access</li>
+<li><strong>Admin access to your Showpass organization</strong></li>
+<li><strong>Domain verified</strong> in Facebook Business Manager</li>
+<li><strong>Developer access</strong> to your Facebook Business Manager account</li>
+</ul>
+<hr>
+<h2>Step 1: Verify Your Domain</h2>
+<p>Domain verification is required for Conversions API to work properly.</p>
+<h3>Navigate to Business Settings</h3>
+<ol>
+<li>Go to <a href="https://business.facebook.com">Facebook Business Manager</a></li>
+</ol>
+<h3>Access Brand Safety</h3>
+<ol>
+<li>In the left sidebar, click <strong>Brand Safety</strong></li>
+<li>Select <strong>Domains</strong></li>
+</ol>
+<h3>Add and Verify Your Domain</h3>
+<ol>
+<li>If your event domain isn&#39;t listed, click <strong>Add</strong></li>
+<li>Enter your domain (e.g., <code>yourdomain.showpass.com</code>)</li>
+<li>Choose a verification method:<ul>
+<li><strong>DNS Verification</strong> (recommended)</li>
+<li><strong>HTML File Upload</strong></li>
+<li><strong>Meta Tag Verification</strong></li>
+</ul>
+</li>
+</ol>
+<h3>Complete Verification</h3>
+<ol>
+<li>Follow the instructions for your chosen method</li>
+<li>Wait for verification (usually takes a few minutes)</li>
+<li>Confirmed domains show a green checkmark</li>
+</ol>
+<h3>Assign Showpass as a Partner</h3>
+<ol>
+<li>Once the domain is verified, click <strong>Assign Partner</strong></li>
+<li>Enter in <code>1769782139975843</code></li>
+<li>Enable <strong>Link to domain</strong></li>
+<li>Click <strong>Assign</strong></li>
+</ol>
+<h3>Send Showpass your Business ID</h3>
+<ul>
+<li>Send your Facebook Business ID to <code>clients@showpass.com</code> so we can add you as a Partner to our showpass.com Verified Domain</li>
+<li><a href="https://www.facebook.com/business/help/1181250022022158?id=180505742745347">How to find your Facebook Business ID</a></li>
+</ul>
+<hr>
+<h2>Step 2: Generate Conversions API Access Token</h2>
+<h3>Access Facebook Events Manager</h3>
+<ol>
+<li>Go to <a href="https://business.facebook.com/events_manager">Facebook Events Manager</a></li>
+<li>Select your Business Account</li>
+<li>Choose the pixel you want to use with Conversions API</li>
+</ol>
+<h3>Navigate to Settings</h3>
+<ol>
+<li>Click on your pixel name</li>
+<li>Go to the <strong>Settings</strong> tab</li>
+<li>Scroll down to the <strong>Conversions API</strong> section</li>
+</ol>
+<h3>Generate Access Token</h3>
+<ol>
+<li>Click <strong>Generate Access Token</strong></li>
+<li>Copy the generated token immediately</li>
+<li>Store it securely (you won&#39;t be able to see it again)</li>
+</ol>
+<blockquote>
+<p><strong>Important:</strong> Keep your access token secure and never share it publicly. This token provides access to your Facebook advertising data.</p>
+</blockquote>
+<hr>
+<h2>Step 3: Configure Conversions API in Showpass</h2>
+<h3>Access Organization Settings</h3>
+<ol>
+<li>Log in to your Showpass dashboard</li>
+<li>Navigate to <strong>Organization Settings</strong></li>
+<li>Select the <strong>Analytics</strong> tab</li>
+<li>Scroll down to <strong>Facebook Conversions API</strong></li>
+</ol>
+<h3>Enter Configuration Details</h3>
+<ul>
+<li><strong>Access Token:</strong> Paste the token from Step 2</li>
+<li><strong>Pixel ID:</strong> Your Facebook Pixel ID (should already be configured from pixel setup)</li>
+</ul>
+<h3>Configure Event Settings</h3>
+<ul>
+<li><strong>Purchase Events:</strong> ✅ Enable (essential for conversion tracking)</li>
+<li><strong>Checkout Events:</strong> ✅ Enable (recommended)</li>
+<li><strong>Add to Cart Events:</strong> ✅ Enable (recommended)</li>
+<li><strong>View Content Events:</strong> ✅ Enable (optional but useful)</li>
+</ul>
+<h3>Data Sharing Settings</h3>
+<ul>
+<li><strong>Customer Information:</strong> Enable to send hashed customer data</li>
+<li><strong>Purchase Data:</strong> Enable to send transaction details</li>
+<li><strong>Event Deduplication:</strong> ✅ Enable (prevents duplicate events)</li>
+</ul>
+<h3>Save Configuration</h3>
+<ol>
+<li>Click <strong>Save Settings</strong></li>
+<li>Your Conversions API integration is now active</li>
+</ol>
+<hr>
+<h2>Step 4: Test Your Integration</h2>
+<h3>Use Test Events in Facebook</h3>
+<ol>
+<li><p><strong>Trigger Test Events</strong></p>
+<ul>
+<li>Visit your event pages</li>
+<li>Add items to cart</li>
+<li>Complete a test purchase</li>
+</ul>
+</li>
+<li><p><strong>Verify in Facebook</strong></p>
+<ul>
+<li>Check Facebook Events Manager in the <strong>Overview</strong> tab</li>
+<li>You should see events appear within 1-2 minutes</li>
+<li>Check Facebook Events Manager in the <strong>Diagnostics</strong> tab</li>
+<li>Facebook&#39;s diagnostics should not raise any concerns or issues with the configuration</li>
+</ul>
+</li>
+</ol>
+<h3>Check Event Quality</h3>
+<ol>
+<li><p><strong>In Events Manager</strong></p>
+<ul>
+<li>Review the <strong>Event Match Quality</strong> score</li>
+<li>Aim for a score of <strong>Good</strong> or <strong>Great</strong></li>
+<li>Low scores indicate missing customer data parameters</li>
+</ul>
+</li>
+<li><p><strong>Improve Match Quality</strong></p>
+<ul>
+<li>Ensure customer email is being sent (hashed)</li>
+<li>Include phone numbers when available</li>
+<li>Add location data (city, state, country)</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Step 5: Monitor and Optimize</h2>
+<h3>Regular Monitoring</h3>
+<ul>
+<li><strong>Event Coverage:</strong> Ensure all purchase events are being tracked</li>
+<li><strong>Data Quality:</strong> Monitor for any data transmission errors</li>
+<li><strong>Match Quality:</strong> Maintain high event match quality scores</li>
+<li><strong>Deduplication:</strong> Verify events aren&#39;t being counted twice</li>
+</ul>
+<h3>Performance Optimization</h3>
+<ol>
+<li><p><strong>Update Ad Campaigns</strong></p>
+<ul>
+<li>Set campaigns to optimize for Conversions API events</li>
+<li>Use the enhanced data for better audience targeting</li>
+<li>Create lookalike audiences based on server-side purchase data</li>
+</ul>
+</li>
+<li><p><strong>Custom Audience Creation</strong></p>
+<ul>
+<li>Build audiences using server-side event data</li>
+<li>Create retargeting campaigns for incomplete purchases</li>
+<li>Develop VIP audiences based on purchase behavior</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2>Troubleshooting Common Issues</h2>
+<h3>Access Token Issues</h3>
+<p><strong>Symptoms:</strong> Events not being received in Facebook</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Regenerate your access token in Events Manager</li>
+<li>Ensure the token has proper permissions</li>
+<li>Verify the token is correctly entered in Showpass</li>
+</ul>
+<h3>Domain Verification Problems</h3>
+<p><strong>Symptoms:</strong> Setup blocked or events rejected</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Complete domain verification in Business Manager</li>
+<li>Ensure DNS records are properly configured</li>
+<li>Wait up to 24 hours for DNS propagation</li>
+</ul>
+<h3>Low Event Match Quality</h3>
+<p><strong>Symptoms:</strong> Match quality score is &quot;Poor&quot; or &quot;Fair&quot;</p>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Enable customer information sharing in Showpass settings</li>
+<li>Verify customer email addresses are being captured</li>
+<li>Include additional customer parameters (phone, location)</li>
+</ul>
+<hr>
+<h2>Performance Expectations</h2>
+<h3>Initial Setup Period</h3>
+<ul>
+<li>Allow 24-48 hours for full integration activation</li>
+<li>Event data may take 1-2 hours to appear in reporting</li>
+<li>Attribution improvements may take 7-14 days to stabilize</li>
+</ul>
+<h3>Expected Improvements</h3>
+<ul>
+<li><strong>5-15% improvement</strong> in attribution accuracy</li>
+<li><strong>Better ad delivery optimization</strong> within 7 days</li>
+<li><strong>Enhanced audience quality</strong> for retargeting campaigns</li>
+<li><strong>Reduced data loss</strong> from browser restrictions</li>
+</ul>
+<hr>
+<h2>Next Steps</h2>
+<p>With Facebook Conversions API successfully configured:</p>
+<ol>
+<li><strong>Monitor Performance:</strong> Track improvements in ad performance metrics</li>
+<li><strong>Optimize Campaigns:</strong> Use enhanced data for better targeting</li>
+<li><strong>Build Audiences:</strong> Create custom audiences with server-side data</li>
+<li><strong>Scale Advertising:</strong> Expand campaigns with improved attribution confidence</li>
+</ol>
+<hr>
+<h2>Support</h2>
+<p>If you need assistance:</p>
+<ul>
+<li><strong>Showpass Support:</strong> Contact through your dashboard</li>
+<li><strong>Facebook Business Help:</strong> <a href="https://www.facebook.com/business/help/">Meta Business Help Center</a></li>
+<li><strong>Technical Issues:</strong> Check Facebook Events Manager diagnostics</li>
+<li><strong>Integration Problems:</strong> Review configuration settings in both platforms</li>
+</ul>
+<p>Successfully implementing Facebook Conversions API provides more reliable data for your advertising campaigns and helps you better understand your customers&#39; journey from ad click to ticket purchase.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

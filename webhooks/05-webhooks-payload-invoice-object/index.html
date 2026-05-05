@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Webhook Payload Invoice Object - Showpass Documentation</title>
+    <meta name="description" content="Detailed documentation of the invoice object in Showpass webhook payloads. Understand data structure and field definitions." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Webhook Payload Invoice Object - Showpass Documentation" />
+    <meta property="og:description" content="Detailed documentation of the invoice object in Showpass webhook payloads. Understand data structure and field definitions." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Webhook Payload Invoice Object - Showpass Documentation" />
+    <meta name="twitter:description" content="Detailed documentation of the invoice object in Showpass webhook payloads. Understand data structure and field definitions." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,386 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Webhooks: Payload - Invoice object</h1>
+<p>When Showpass sends a webhook for invoice-related events (like <code>invoice.purchase</code>, <code>invoice.refund</code>, etc.), the payload delivered to your endpoint contains detailed information structured as an &quot;Invoice&quot; object. This section describes the format of this object.</p>
+<hr>
+<h2>Sample webhook request (Invoice structure)</h2>
+<p>Here is an example of a request that Showpass sends as a webhook when delivering the invoice structure, typically for an <code>invoice.purchase</code> event.</p>
+<p><strong>HTTP Method:</strong> <code>POST</code></p>
+<p><strong>Target URL:</strong> <code>https://yoursite.com/webhook/</code> (Your configured endpoint URL)</p>
+<p><strong>Header (for security verification):</strong> <code>X-SHOWPASS-SIGNATURE: &quot;HMAC-SHA1_HASH&quot;</code></p>
+<blockquote>
+<p><strong>Note:</strong> See section &quot;3. Security&quot; for details on verifying this signature.</p>
+</blockquote>
+<p><strong>Request Body (JSON Payload):</strong></p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;f1-1068-4af6-be8f-1222417da0f2&quot;,
+  &quot;data&quot;: {
+    &quot;currency&quot;: &quot;CAD&quot;,
+    &quot;discounts&quot;: &quot;0.00&quot;,
+    &quot;net_sales&quot;: &quot;5.84&quot;,
+    &quot;total_tax&quot;: &quot;0.25&quot;,
+    &quot;invoice_type&quot;: &quot;sale&quot;,
+    &quot;payment_type&quot;: &quot;credit&quot;,
+    &quot;service_fees&quot;: &quot;0.59&quot;,
+    &quot;ticket_items&quot;: [
+      {
+        &quot;id&quot;: 41349751,
+        &quot;event_id&quot;: &quot;474708&quot;,
+        &quot;event_name&quot;: &quot;Scanning&quot;,
+        &quot;product_id&quot;: null,
+        &quot;product_name&quot;: null,
+        &quot;event_ends_on&quot;: &quot;2026-12-03T04:00:00Z&quot;,
+        &quot;ticket_status&quot;: &quot;issued&quot;,
+        &quot;barcode_string&quot;: &quot;5GHOEEHUG&quot;,
+        &quot;name_on_ticket&quot;: null,
+        &quot;ticket_type_id&quot;: &quot;1657978&quot;,
+        &quot;email_on_ticket&quot;: null,
+        &quot;event_starts_on&quot;: &quot;2026-12-02T04:00:00Z&quot;,
+        &quot;ticket_item_type&quot;: &quot;ticket&quot;,
+        &quot;ticket_type_name&quot;: &quot;A test ticket&quot;,
+        &quot;ticket_status_code&quot;: &quot;2&quot;,
+        &quot;created_by_transfer&quot;: false,
+        &quot;last_name_on_ticket&quot;: null,
+        &quot;first_name_on_ticket&quot;: null,
+        &quot;product_attribute_id&quot;: null,
+        &quot;phone_number_on_ticket&quot;: null,
+        &quot;product_attribute_name&quot;: null
+      }
+    ],
+    &quot;customer_name&quot;: &quot;No Name&quot;,
+    &quot;gross_revenue&quot;: &quot;5.20&quot;,
+    &quot;invoice_items&quot;: [
+      {
+        &quot;id&quot;: 21110231,
+        &quot;event_id&quot;: &quot;474708&quot;,
+        &quot;quantity&quot;: 1,
+        &quot;discounts&quot;: &quot;0.00&quot;,
+        &quot;net_sales&quot;: &quot;5.84&quot;,
+        &quot;total_tax&quot;: &quot;0.25&quot;,
+        &quot;event_name&quot;: &quot;Scanning&quot;,
+        &quot;product_id&quot;: null,
+        &quot;product_name&quot;: null,
+        &quot;service_fees&quot;: &quot;0.59&quot;,
+        &quot;gross_revenue&quot;: &quot;5.20&quot;,
+        &quot;organizer_fees&quot;: &quot;0.00&quot;,
+        &quot;ticket_type_id&quot;: &quot;1657978&quot;,
+        &quot;ticket_type_name&quot;: &quot;A test ticket&quot;,
+        &quot;event_facebook_id&quot;: null,
+        &quot;invoice_item_type&quot;: &quot;ticket&quot;,
+        &quot;product_attribute_id&quot;: null,
+        &quot;account_credit_applied&quot;: &quot;0.00&quot;,
+        &quot;product_attribute_name&quot;: null,
+        &quot;ticket_type_external_id&quot;: null
+      }
+    ],
+    &quot;customer_email&quot;: &quot;example@showpass.com&quot;,
+    &quot;organizer_fees&quot;: &quot;0.00&quot;,
+    &quot;transaction_id&quot;: &quot;f1-1068-4af6-be8f-1222417da0f2&quot;,
+    &quot;invoice_type_id&quot;: &quot;101&quot;,
+    &quot;other_payment_type&quot;: null,
+    &quot;subscribe_to_venue&quot;: false,
+    &quot;account_credit_type&quot;: null,
+    &quot;customer_phone_number&quot;: null,
+    &quot;account_credit_applied&quot;: &quot;0.00&quot;,
+    &quot;showpass_organization_id&quot;: &quot;5796&quot;
+  },
+  &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;webhook_event_uuid&quot;: &quot;09117c09-e1f8-4913-b2f5-52cc161cf5f7&quot;
+}
+</code></pre>
+<hr>
+<h2>Invoice object fields</h2>
+<p>The following table describes the fields typically found in the webhook payload when an invoice structure is sent. The exact fields present may vary slightly based on the event type and the specifics of the transaction.</p>
+<table>
+<thead>
+<tr>
+<th>Path in JSON</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>The unique identifier for the webhook event itself. This corresponds to the webhook event record in Showpass and is useful for referencing in support or logs.</td>
+</tr>
+<tr>
+<td><code>event_type</code></td>
+<td>The type of event that triggered this webhook. <br>Choices: <code>[&#39;invoice.purchase&#39;, &#39;invoice.refund&#39;, &#39;invoice.void&#39;, &#39;invoice.transfer&#39;, &#39;invoice.transferred&#39;, &#39;webhook.test&#39;]</code></td>
+</tr>
+<tr>
+<td><code>webhook_event_uuid</code></td>
+<td>A unique UUID for this specific webhook event instance. You can use this as an idempotency key to prevent processing the same event multiple times.</td>
+</tr>
+<tr>
+<td><code>data</code></td>
+<td>An object containing the core data for the event.</td>
+</tr>
+<tr>
+<td><code>data.transaction_id</code></td>
+<td>Unique identifier for the transaction.</td>
+</tr>
+<tr>
+<td><code>data.showpass_organization_id</code></td>
+<td>Unique identifier for the Showpass organization associated with this transaction.</td>
+</tr>
+<tr>
+<td><code>data.customer_name</code></td>
+<td>Name of the customer who made the purchase.</td>
+</tr>
+<tr>
+<td><code>data.customer_email</code></td>
+<td>Email address of the customer.</td>
+</tr>
+<tr>
+<td><code>data.customer_phone_number</code></td>
+<td>Phone number of the customer, if available.</td>
+</tr>
+<tr>
+<td><code>data.subscribe_to_venue</code></td>
+<td>Boolean indicating if the customer subscribed to marketing from the venue during checkout.</td>
+</tr>
+<tr>
+<td><code>data.payment_type</code></td>
+<td>Payment method used. <br><strong>Choices:</strong> <code>[&#39;cash&#39;, &#39;credit&#39;, &#39;interac&#39;, &#39;complimentary&#39;, &#39;free&#39;, &#39;bundled&#39;, &#39;transferred&#39;, &#39;direct_deposit&#39;, &#39;other&#39;, &#39;payment_plan&#39;, &#39;user_credit&#39;, &#39;exchange_credit&#39;, &#39;afterpay&#39;]</code></td>
+</tr>
+<tr>
+<td><code>data.other_payment_type</code></td>
+<td>Type of &quot;other&quot; payment used, if applicable.</td>
+</tr>
+<tr>
+<td><code>data.currency</code></td>
+<td>Currency code for the transaction (e.g., <code>CAD</code>, <code>USD</code>).</td>
+</tr>
+<tr>
+<td><code>data.discounts</code></td>
+<td>The total monetary amount of discounts applied to the entire invoice.</td>
+</tr>
+<tr>
+<td><code>data.net_sales</code></td>
+<td>Total amount of the transaction after any discounts, refunds, or account credits.</td>
+</tr>
+<tr>
+<td><code>data.service_fees</code></td>
+<td>Total amount of combined Showpass service fees and payment processing fees charged for the transaction.</td>
+</tr>
+<tr>
+<td><code>data.account_credit_applied</code></td>
+<td>Total amount of account credit applied to the transaction, if applicable.</td>
+</tr>
+<tr>
+<td><code>data.gross_revenue</code></td>
+<td>Total gross revenue on the transaction (typically <code>net_sales</code> - <code>service_fees</code> + <code>organizer_fees</code> + <code>total_tax</code>, but verify specific calculation based on your needs).</td>
+</tr>
+<tr>
+<td><code>data.organizer_fees</code></td>
+<td>Total combined amount of fees charged by the organizer for the transaction.</td>
+</tr>
+<tr>
+<td><code>data.total_tax</code></td>
+<td>Total combined amount of applicable taxes for the transaction.</td>
+</tr>
+<tr>
+<td><code>data.account_credit_type</code></td>
+<td>The type of account credit applied, if any.</td>
+</tr>
+<tr>
+<td><code>data.invoice_type</code></td>
+<td>The type of invoice. <br><strong>Choices:</strong> <code>[&#39;sale&#39;, &#39;refund&#39;]</code></td>
+</tr>
+<tr>
+<td><code>data.invoice_type_id</code></td>
+<td>Unique identifier for the invoice type.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items</code></td>
+<td>An array of objects, each representing a ticket within the transaction. This is where you&#39;ll find details about individual tickets.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].event_id</code></td>
+<td>Unique identifier of the event the ticket is for.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].event_name</code></td>
+<td>Name of the event.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].event_starts_on</code></td>
+<td>ISO 8601 formatted start date and time of the event (UTC).</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].event_ends_on</code></td>
+<td>ISO 8601 formatted end date and time of the event (UTC).</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].first_name_on_ticket</code></td>
+<td>First name of the ticket holder.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].last_name_on_ticket</code></td>
+<td>Last name of the ticket holder.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].phone_number_on_ticket</code></td>
+<td>Phone number of the ticket holder, if provided.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].email_on_ticket</code></td>
+<td>Email address of the ticket holder.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].id</code></td>
+<td>Unique identifier for this specific ticket item within Showpass.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].ticket_status</code></td>
+<td>Human-readable status of the ticket. <br><strong>Choices:</strong> <code>[&#39;pending&#39;, &#39;issued&#39;, &#39;voided&#39;, &#39;transferred&#39;]</code></td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].barcode_string</code></td>
+<td>Barcode or QR code string for the ticket, used for scanning and validation at the event.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].name_on_ticket</code></td>
+<td>Full name on the ticket (combination of first and last name).</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].ticket_type_id</code></td>
+<td>Unique identifier for the ticket type.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].ticket_type_name</code></td>
+<td>Name of the ticket type (e.g., &quot;General Admission&quot;, &quot;VIP&quot;).</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].ticket_item_type</code></td>
+<td>Type of the ticket item. <br><strong>Choices:</strong> <code>[&#39;ticket&#39;, &#39;membership&#39;, &#39;product&#39;]</code></td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].ticket_status_code</code></td>
+<td>Numeric status code for the ticket.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].created_by_transfer</code></td>
+<td>Boolean indicating if this ticket was created as part of a transfer.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].product_name</code></td>
+<td>Name of the product (if the ticket item is a product).</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].product_id</code></td>
+<td>Unique identifier for the product (if applicable).</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].product_attribute_name</code></td>
+<td>Name of the product attribute (e.g., size, color) if applicable.</td>
+</tr>
+<tr>
+<td><code>data.ticket_items[].product_attribute_id</code></td>
+<td>Unique identifier for the product attribute (if applicable).</td>
+</tr>
+<tr>
+<td><code>data.invoice_items</code></td>
+<td>An array of objects, each representing a line item on the invoice. This provides a summary of each type of item purchased (e.g., each ticket type).</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].id</code></td>
+<td>Unique identifier for the invoice item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].invoice_item_type</code></td>
+<td>Type of the invoice item. <br><strong>Choices:</strong> <code>[&#39;ticket&#39;, &#39;membership&#39;, &#39;product&#39;]</code></td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].quantity</code></td>
+<td>Quantity of this item purchased.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].discounts</code></td>
+<td>Discounts applied to this specific line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].net_sales</code></td>
+<td>Net sales for this line item after discounts.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].service_fees</code></td>
+<td>Service fees associated with this line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].account_credit_applied</code></td>
+<td>Account credit applied to this line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].gross_revenue</code></td>
+<td>Gross revenue for this line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].organizer_fees</code></td>
+<td>Organizer fees associated with this line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].total_tax</code></td>
+<td>Tax applied to this line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].event_id</code></td>
+<td>Unique identifier for the event associated with this line item.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].event_name</code></td>
+<td>Name of the event.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].event_facebook_id</code></td>
+<td>Facebook event ID if the event is linked to Facebook.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].ticket_type_id</code></td>
+<td>Unique identifier for the ticket type.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].ticket_type_name</code></td>
+<td>Name of the ticket type.</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].ticket_type_external_id</code></td>
+<td>External identifier for the ticket type (if applicable).</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].product_name</code></td>
+<td>Name of the product (if the line item is a product).</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].product_id</code></td>
+<td>Unique identifier for the product (if applicable).</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].product_attribute_id</code></td>
+<td>Unique identifier for the product attribute (if applicable).</td>
+</tr>
+<tr>
+<td><code>data.invoice_items[].product_attribute_name</code></td>
+<td>Name of the product attribute (if applicable).</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Using the payload</h2>
+<p>This structured payload allows you to:</p>
+<ul>
+<li><strong>Process orders:</strong> Extract customer information, items purchased, and payment details</li>
+<li><strong>Update inventory:</strong> Track ticket sales and product purchases</li>
+<li><strong>Send notifications:</strong> Email confirmations, shipping updates, or custom alerts</li>
+<li><strong>Sync with external systems:</strong> Update CRM records, accounting software, or analytics platforms</li>
+<li><strong>Handle refunds and transfers:</strong> Track the complete lifecycle of tickets and orders</li>
+</ul>
+<blockquote>
+<p><strong>Important:</strong> Always use the <code>webhook_event_uuid</code> as an idempotency key to prevent duplicate processing of the same event.</p>
+</blockquote>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Webhook Logging &amp; Troubleshooting - Showpass Developer Guide</title>
+    <meta name="description" content="Debug and troubleshoot Showpass webhooks. Learn about logging, error handling, and common webhook issues." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Webhook Logging &amp; Troubleshooting - Showpass Developer Guide" />
+    <meta property="og:description" content="Debug and troubleshoot Showpass webhooks. Learn about logging, error handling, and common webhook issues." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Webhook Logging &amp; Troubleshooting - Showpass Developer Guide" />
+    <meta name="twitter:description" content="Debug and troubleshoot Showpass webhooks. Learn about logging, error handling, and common webhook issues." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,114 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Webhooks: Logging and troubleshooting</h1>
+<p>Showpass provides logging features within its dashboard to help you monitor the status of your webhook deliveries and troubleshoot any issues that may arise. Understanding these logs is key to maintaining a healthy webhook integration.</p>
+<hr>
+<h2>Viewing Webhook Events History</h2>
+<p>The Webhook &quot;Events&quot; provide a detailed history of each individual webhook event that Showpass has attempted to send to your configured endpoints.</p>
+<h3>Accessing Event Logs</h3>
+<ol>
+<li>Log in to your Showpass Dashboard</li>
+<li>Navigate to <strong>Organization Settings &gt; Webhooks</strong></li>
+<li>Go to &quot;Events&quot; tab.</li>
+</ol>
+<h3>Information in Events</h3>
+<p>Each event entry contains the following information:</p>
+<ul>
+<li><strong>Event Name:</strong> Title of the event based on event type.</li>
+<li><strong>Date:</strong> The date event was created.</li>
+<li><strong>Event Data:</strong> The actual JSON payload that was created.</li>
+</ul>
+<p>In the &quot;Webhook Attempts&quot; Section you can see attempts to send this event to your webhook endpoints in the past 15 days:</p>
+<ul>
+<li><strong>Status:</strong> The delivery status of the webhook (e.g., &quot;Success,&quot; &quot;Failed,&quot; &quot;Pending&quot;)</li>
+<li><strong>Webhook URL:</strong> The URL to which the event was sent</li>
+<li><strong>Date:</strong> The date and time Showpass attempted to send the event</li>
+<li><strong>Resend Menu:</strong> The trigger for resending the webhook</li>
+</ul>
+<h3>Resending Events</h3>
+<p>If a webhook event failed to deliver (e.g., due to a temporary issue with your server or network), the Showpass dashboard may offer an option to <strong>resend</strong> that specific event.
+This is useful for recovering missed notifications without needing the original action to be performed again in Showpass</p>
+<blockquote>
+<p><strong>Note:</strong> Be mindful of idempotency in your receiving application if you resend events, to avoid duplicate processing</p>
+</blockquote>
+<hr>
+<h2>Viewing General Webhook Logs</h2>
+<p>Separate from individual event logs, there is a more general Webhook &quot;Logs&quot; section or a summary view that provides an overview of the health and delivery status of your webhook endpoints.
+It helps in identifying if a particular endpoint is consistently failing or experiencing issues</p>
+<p>In this section you can see 3 tabs:</p>
+<ul>
+<li><strong>All</strong></li>
+<li><strong>Succeeded</strong></li>
+<li><strong>Failed</strong></li>
+</ul>
+<p>Each webhook log has these details:</p>
+<ul>
+<li><strong>HTTP Status Code:</strong> The HTTP response code received from your endpoint (e.g., <code>200 OK</code>, <code>404 Not Found</code>, <code>500 Internal Server Error</code>)</li>
+<li><strong>ID:</strong> Identifier of the webhook attempt.</li>
+<li><strong>Time:</strong> The time Showpass attempted to send the event</li>
+<li><strong>Event:</strong> The type of event that was triggered (e.g., <code>invoice.purchase</code>, <code>webhook.test</code>)</li>
+<li><strong>Idempotency:</strong> A unique string for each event.</li>
+<li><strong>Response Body:</strong> The response body received from the server (if any) or error messages if the delivery failed</li>
+</ul>
+<blockquote>
+<p><strong>Note:</strong> The <code>webhook_event_uuid</code> in the payload can help with idempotency tracking.</p>
+</blockquote>
+<hr>
+<h2>Common troubleshooting steps</h2>
+<h3>Check Endpoint URL</h3>
+<p>Ensure the URL configured in Showpass is correct, publicly accessible, and uses <code>https://</code>.</p>
+<h3>Verify Server is Running</h3>
+<p>Make sure your server application at the endpoint URL is running and not down.</p>
+<h3>Inspect HTTP Status Codes</h3>
+<p><strong>2xx (Success):</strong></p>
+<ul>
+<li>Examples: <code>200 OK</code>, <code>202 Accepted</code></li>
+<li>Generally indicates your server received the webhook successfully</li>
+<li>Your server should return a <code>2xx</code> status code quickly to acknowledge receipt</li>
+<li>Any processing should be done asynchronously to avoid timeouts</li>
+</ul>
+<p><strong>3xx (Redirects):</strong></p>
+<ul>
+<li>Showpass webhooks typically do not follow redirects</li>
+<li>Ensure your endpoint URL is the direct URL</li>
+</ul>
+<p><strong>4xx (Client Errors):</strong></p>
+<ul>
+<li><code>400 Bad Request</code>: Your server might have found an issue with the request format (unlikely if it&#39;s from Showpass directly, but possible if a proxy is involved)</li>
+<li><code>401 Unauthorized</code> / <code>403 Forbidden</code>: Check if your endpoint has authentication or IP whitelisting that might be blocking Showpass. Signature verification failures on your end should not result in a <code>401/403</code> <em>to Showpass</em>; rather, you should process it as an invalid request internally</li>
+<li><code>404 Not Found</code>: The endpoint URL is incorrect or the path does not exist on your server</li>
+<li><code>405 Method Not Allowed</code>: Ensure your endpoint is configured to accept <code>POST</code> requests</li>
+</ul>
+<p><strong>5xx (Server Errors):</strong></p>
+<ul>
+<li>Indicates an issue on your server-side application code</li>
+<li>Check your server logs for detailed error messages</li>
+</ul>
+<h3>Check Signature Verification</h3>
+<p>If you are implementing signature verification (highly recommended), ensure your calculation logic and secret key are correct. Mismatched signatures will lead you to (correctly) ignore the webhook.</p>
+<h3>Examine the Payload</h3>
+<p>Review the payload in the event logs to ensure it matches the expected format. Check for any unexpected values or missing fields that might cause your application to fail.</p>
+<h3>Firewall and Network Issues</h3>
+<p>Ensure your firewall or network configuration is not blocking requests from Showpass. You may need to whitelist Showpass IP addresses if your server has strict access controls.</p>
+<h3>Timeout Issues</h3>
+<p>Your endpoint should respond quickly (within a few seconds) with a <code>2xx</code> status code to acknowledge receipt. If your processing logic takes too long, Showpass might consider the delivery a timeout/failure. Perform lengthy processing asynchronously after sending the initial <code>2xx</code> response.</p>
+<hr>
+<h2>Best practices</h2>
+<ul>
+<li><strong>Monitor logs regularly:</strong> Check your webhook logs in the Showpass dashboard regularly to catch issues early</li>
+<li><strong>Implement idempotency:</strong> Use the <code>webhook_event_uuid</code> to prevent duplicate processing</li>
+<li><strong>Test thoroughly:</strong> Use the <code>webhook.test</code> event during development and for ongoing health checks</li>
+<li><strong>Respond quickly:</strong> Always return a <code>2xx</code> status code quickly and process data asynchronously</li>
+<li><strong>Log everything:</strong> Maintain your own server-side logs for debugging and auditing purposes</li>
+</ul>
+<blockquote>
+<p><strong>Tip:</strong> By regularly checking your webhook logs in the Showpass dashboard and following these troubleshooting steps, you can ensure a reliable and effective webhook integration.</p>
+</blockquote>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>

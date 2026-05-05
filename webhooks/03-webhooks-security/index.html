@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Webhook Security - Showpass Developer Documentation</title>
+    <meta name="description" content="Secure your Showpass webhook implementations. Learn about signature verification, HTTPS requirements, and security best practices." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Webhook Security - Showpass Developer Documentation" />
+    <meta property="og:description" content="Secure your Showpass webhook implementations. Learn about signature verification, HTTPS requirements, and security best practices." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Webhook Security - Showpass Developer Documentation" />
+    <meta name="twitter:description" content="Secure your Showpass webhook implementations. Learn about signature verification, HTTPS requirements, and security best practices." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,180 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass Webhooks: Security</h1>
+<p>Every webhook request from Showpass includes an <code>X-SHOWPASS-SIGNATURE</code> header that allows you to verify the request&#39;s authenticity. Implementing signature verification is crucial for secure webhook integration.</p>
+<h2>How signature verification works</h2>
+<h3>On Showpass&#39;s side</h3>
+<ol>
+<li><strong>Secret key generation:</strong> When you create a webhook endpoint, Showpass generates a unique Secret Key shared only with you</li>
+<li><strong>Signature creation:</strong> Before sending each webhook, Showpass generates an HMAC-SHA1 hash using:<ul>
+<li>The <code>id</code> field from the payload (typically the <code>transaction_id</code>)</li>
+<li>Your unique Secret Key</li>
+</ul>
+</li>
+<li><strong>Header inclusion:</strong> The signature is sent in the <code>X-SHOWPASS-SIGNATURE</code> header</li>
+</ol>
+<hr>
+<h3>On your server</h3>
+<p>When receiving a webhook request:</p>
+<ol>
+<li><strong>Extract the payload ID</strong> - Get the <code>id</code> field from the JSON body</li>
+<li><strong>Retrieve the signature</strong> - Read the <code>X-SHOWPASS-SIGNATURE</code> header value</li>
+<li><strong>Generate your signature</strong> - Use HMAC-SHA1 with the payload ID and your Secret Key</li>
+<li><strong>Compare signatures</strong> - Match your generated signature with the received one</li>
+<li><strong>Accept or reject</strong> - Process if matched, discard if mismatched</li>
+</ol>
+<hr>
+<h2>Verification example (Node.js)</h2>
+<pre><code class="language-javascript">const crypto = require(&#39;crypto&#39;);
+
+function verifyShowpassSignature(payloadId, receivedSignature, secretKey) {
+  // Generate signature using HMAC-SHA1
+  const hmac = crypto.createHmac(&#39;sha1&#39;, secretKey);
+  hmac.update(payloadId);
+  const computedSignature = hmac.digest(&#39;hex&#39;);
+  
+  // Use constant-time comparison to prevent timing attacks
+  return crypto.timingSafeEqual(
+    Buffer.from(computedSignature),
+    Buffer.from(receivedSignature)
+  );
+}
+
+// In your webhook endpoint handler
+app.post(&#39;/webhook/showpass&#39;, (req, res) =&gt; {
+  const payload = req.body;
+  const receivedSignature = req.headers[&#39;x-showpass-signature&#39;];
+  const secretKey = process.env.SHOWPASS_WEBHOOK_SECRET;
+  
+  if (verifyShowpassSignature(payload.id, receivedSignature, secretKey)) {
+    // Signature valid - process the webhook
+    processWebhook(payload);
+    res.status(200).send(&#39;OK&#39;);
+  } else {
+    // Signature invalid - reject the request
+    console.error(&#39;Invalid webhook signature&#39;);
+    res.status(401).send(&#39;Unauthorized&#39;);
+  }
+});
+</code></pre>
+<hr>
+<h2>Verification example (Python)</h2>
+<pre><code class="language-python">import hmac
+import hashlib
+
+def verify_showpass_signature(payload_id, received_signature, secret_key):
+    &quot;&quot;&quot;Verify the webhook signature using HMAC-SHA1&quot;&quot;&quot;
+    computed_signature = hmac.new(
+        secret_key.encode(&#39;utf-8&#39;),
+        payload_id.encode(&#39;utf-8&#39;),
+        hashlib.sha1
+    ).hexdigest()
+    
+    # Use constant-time comparison
+    return hmac.compare_digest(computed_signature, received_signature)
+
+# In your webhook handler
+@app.route(&#39;/webhook/showpass&#39;, methods=[&#39;POST&#39;])
+def handle_webhook():
+    payload = request.json
+    received_signature = request.headers.get(&#39;X-SHOWPASS-SIGNATURE&#39;)
+    secret_key = os.environ[&#39;SHOWPASS_WEBHOOK_SECRET&#39;]
+    
+    if verify_showpass_signature(payload[&#39;id&#39;], received_signature, secret_key):
+        # Valid signature - process webhook
+        process_webhook(payload)
+        return &#39;OK&#39;, 200
+    else:
+        # Invalid signature - reject
+        app.logger.error(&#39;Invalid webhook signature&#39;)
+        return &#39;Unauthorized&#39;, 401
+</code></pre>
+<hr>
+<h2>Security best practices</h2>
+<h3>Secure key storage</h3>
+<ul>
+<li><strong>Never hardcode</strong> secret keys in your source code</li>
+<li>Use <strong>environment variables</strong> or secure secrets management</li>
+<li>Rotate keys periodically if exposed</li>
+</ul>
+<h3>Constant-time comparison</h3>
+<p>Always use constant-time string comparison functions to prevent timing attacks:</p>
+<ul>
+<li><strong>Node.js:</strong> <code>crypto.timingSafeEqual()</code></li>
+<li><strong>Python:</strong> <code>hmac.compare_digest()</code></li>
+<li><strong>PHP:</strong> <code>hash_equals()</code></li>
+</ul>
+<h3>Timestamp validation (optional but recommended)</h3>
+<p>Although not part of Showpass&#39;s current implementation, consider tracking webhook timestamps to:</p>
+<ul>
+<li>Reject old webhook requests</li>
+<li>Prevent replay attacks</li>
+<li>Ensure requests are recent</li>
+</ul>
+<h3>HTTPS only</h3>
+<ul>
+<li><strong>Always use <code>https://</code></strong> for webhook endpoint URLs</li>
+<li>Ensure SSL/TLS certificates are valid and up-to-date</li>
+<li>This encrypts payload and headers during transit</li>
+</ul>
+<h3>Log verification failures</h3>
+<p>Track and monitor signature verification failures:</p>
+<pre><code class="language-javascript">if (!isValidSignature) {
+  logger.warn(&#39;Webhook signature verification failed&#39;, {
+    ip: req.ip,
+    timestamp: new Date().toISOString(),
+    payloadId: payload.id
+  });
+  return res.status(401).send(&#39;Unauthorized&#39;);
+}
+</code></pre>
+<hr>
+<h2>Key rotation</h2>
+<p>If your Secret Key is compromised:</p>
+<ol>
+<li><strong>Generate a new key</strong> in the Showpass dashboard</li>
+<li><strong>Update your server</strong> with the new key immediately</li>
+<li><strong>Test thoroughly</strong> before removing old key support (You can pause the old key first)</li>
+<li><strong>Monitor logs</strong> for any issues</li>
+</ol>
+<blockquote>
+<p><strong>Warning:</strong> Regenerating a Secret Key invalidates the old one. Update your server configuration before the change takes effect.</p>
+</blockquote>
+<hr>
+<h2>Common issues</h2>
+<h3>Signature mismatch</h3>
+<p><strong>Causes:</strong></p>
+<ul>
+<li>Wrong Secret Key on your server</li>
+<li>Incorrect HMAC algorithm (must be SHA1)</li>
+<li>Using wrong field for hashing (must be payload <code>id</code>)</li>
+<li>Character encoding issues</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Verify Secret Key matches Showpass dashboard</li>
+<li>Confirm HMAC-SHA1 implementation</li>
+<li>Check you&#39;re hashing the <code>id</code> field only</li>
+<li>Ensure UTF-8 encoding</li>
+</ul>
+<h3>Missing signature header</h3>
+<p><strong>Causes:</strong></p>
+<ul>
+<li>Proxy or CDN stripping headers</li>
+<li>Testing with tools that don&#39;t include custom headers</li>
+</ul>
+<p><strong>Solutions:</strong></p>
+<ul>
+<li>Check proxy/CDN configuration</li>
+<li>Use test webhook feature from Showpass dashboard</li>
+<li>Verify headers aren&#39;t being filtered</li>
+</ul>
+<p>By implementing proper signature verification, you ensure that only legitimate Showpass webhooks are processed by your application.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>
