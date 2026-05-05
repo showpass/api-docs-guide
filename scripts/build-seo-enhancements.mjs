@@ -3,98 +3,198 @@
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import { marked } from 'marked';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// Import the complete SEO data from the actual source file
-async function loadSeoDataMap() {
+const DATA_DIR = path.join(__dirname, '../src/docs-app/data');
+const DIST_DIR = path.join(__dirname, '../dist');
+
+// ---------------------------------------------------------------------------
+// Parse seoData.ts as text to extract routes + per-route title/description
+// ---------------------------------------------------------------------------
+function loadSeoDataMap() {
   try {
-    // Read the TypeScript file as text and extract the seoDataMap
-    const seoDataPath = path.join(__dirname, '../src/docs-app/data/seoData.ts');
-    const seoDataContent = fs.readFileSync(seoDataPath, 'utf8');
-    
-    // Extract all routes that start with "/" from the seoDataMap
+    const seoDataPath = path.join(DATA_DIR, 'seoData.ts');
+    const src = fs.readFileSync(seoDataPath, 'utf8');
+
     const routes = [];
-    const routeRegex = /["'](\/.+?)["']\s*:/g;
-    let match;
-    
-    while ((match = routeRegex.exec(seoDataContent)) !== null) {
-      routes.push(match[1]);
+    const seoByRoute = {};
+
+    // Match blocks like:  "/some/route": { title: "...", description: "...", keywords: "..." }
+    const blockRegex = /["'](\/.+?)["']\s*:\s*\{([^}]+)\}/g;
+    let blockMatch;
+
+    while ((blockMatch = blockRegex.exec(src)) !== null) {
+      const route = blockMatch[1];
+      const body = blockMatch[2];
+
+      routes.push(route);
+
+      const titleMatch = body.match(/title\s*:\s*["'`]([^"'`]+)["'`]/);
+      const descMatch = body.match(/description\s*:\s*["'`]([^"'`]+)["'`]/);
+      const kwMatch = body.match(/keywords\s*:\s*["'`]([^"'`]+)["'`]/);
+
+      seoByRoute[route] = {
+        title: titleMatch ? titleMatch[1] : 'Showpass Developer Documentation',
+        description: descMatch ? descMatch[1] : '',
+        keywords: kwMatch ? kwMatch[1] : '',
+      };
     }
-    
+
     console.log(`Found ${routes.length} routes in seoData.ts`);
-    return routes;
+    return { routes, seoByRoute };
   } catch (error) {
     console.error('Error loading SEO data:', error);
-    // Fallback to basic routes if import fails
-    return [
-      "/",
-      "/api/01-public-api-introduction"
-    ];
+    return {
+      routes: ['/', '/api/01-public-api-introduction'],
+      seoByRoute: {},
+    };
   }
 }
 
-// Generate meta tags for each page
-function generateMetaTags(seoData) {
-  return `
-    <meta name="description" content="${seoData.description}">
-    <meta name="keywords" content="${seoData.keywords}">
-    <meta property="og:title" content="${seoData.title}">
-    <meta property="og:description" content="${seoData.description}">
-    <meta property="og:type" content="website">
-    <meta property="og:site_name" content="Showpass Developer Documentation">
-    <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="${seoData.title}">
-    <meta name="twitter:description" content="${seoData.description}">
-    <meta name="twitter:site" content="@showpassevents">
-  `;
+// ---------------------------------------------------------------------------
+// Map a route like "/api/01-public-api-introduction" to its markdown file
+// ---------------------------------------------------------------------------
+function resolveMarkdownPath(route) {
+  // route starts with "/" + section + "/" + slug
+  // markdown lives at DATA_DIR + route + ".md"
+  const mdFile = path.join(DATA_DIR, `${route}.md`);
+  return fs.existsSync(mdFile) ? mdFile : null;
 }
 
-// Create individual HTML files for better SEO (for static hosting)
-async function createStaticPages() {
-  const routes = await loadSeoDataMap();
-  const distDir = path.join(__dirname, '../dist');
-  const indexHtmlPath = path.join(distDir, 'index.html');
-  
+// ---------------------------------------------------------------------------
+// Build a minimal pre-rendered HTML body for the root div
+// This is what crawlers / AI agents will see before React mounts.
+// ---------------------------------------------------------------------------
+function buildPrerenderedContent(markdownContent, seoData) {
+  const html = marked.parse(markdownContent);
+  return `<div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article>${html}</article>
+</div>`;
+}
+
+// ---------------------------------------------------------------------------
+// Patch the SPA shell HTML for a specific route
+// ---------------------------------------------------------------------------
+function buildPageHtml(baseHtml, seoData, prerenderedContent) {
+  let html = baseHtml;
+
+  // Update <title>
+  html = html.replace(
+    /<title>[^<]*<\/title>/,
+    `<title>${escapeHtml(seoData.title)}</title>`
+  );
+
+  // Update canonical <meta name="description">
+  html = html.replace(
+    /<meta name="description" content="[^"]*"/,
+    `<meta name="description" content="${escapeHtml(seoData.description)}"`
+  );
+
+  // Update OG/Twitter title+description
+  html = html.replace(
+    /<meta property="og:title" content="[^"]*"/,
+    `<meta property="og:title" content="${escapeHtml(seoData.title)}"`
+  );
+  html = html.replace(
+    /<meta property="og:description" content="[^"]*"/,
+    `<meta property="og:description" content="${escapeHtml(seoData.description)}"`
+  );
+  html = html.replace(
+    /<meta name="twitter:title" content="[^"]*"/,
+    `<meta name="twitter:title" content="${escapeHtml(seoData.title)}"`
+  );
+  html = html.replace(
+    /<meta name="twitter:description" content="[^"]*"/,
+    `<meta name="twitter:description" content="${escapeHtml(seoData.description)}"`
+  );
+
+  // Inject pre-rendered content into <div id="root">
+  // React will replace this on mount – crawlers see it immediately.
+  html = html.replace(
+    /<div id="root"><\/div>/,
+    `<div id="root">${prerenderedContent}</div>`
+  );
+
+  return html;
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;');
+}
+
+// ---------------------------------------------------------------------------
+// Create individual HTML files for every doc route
+// ---------------------------------------------------------------------------
+async function createStaticPages(routes, seoByRoute) {
+  const indexHtmlPath = path.join(DIST_DIR, 'index.html');
+
   if (!fs.existsSync(indexHtmlPath)) {
-    console.log('index.html not found in dist directory. Run build first.');
+    console.log('index.html not found in dist. Run vite build first.');
     return;
   }
 
-  const indexHtml = fs.readFileSync(indexHtmlPath, 'utf8');
+  const baseHtml = fs.readFileSync(indexHtmlPath, 'utf8');
+  let pagesCreated = 0;
+  let pagesPrerendered = 0;
 
-  // Create individual pages for each route
-  routes.forEach((route) => {
-    if (route === '/') return; // Skip homepage
-    
-    const routePath = route.substring(1); // Remove leading slash
-    const dirPath = path.join(distDir, routePath);
-    
-    // Create directory if it doesn't exist
+  for (const route of routes) {
+    if (route === '/') continue;
+
+    const seoData = seoByRoute[route] ?? {
+      title: 'Showpass Developer Documentation',
+      description: '',
+      keywords: '',
+    };
+
+    // Try to find and render the markdown content
+    const mdPath = resolveMarkdownPath(route);
+    let pageHtml;
+
+    if (mdPath) {
+      const markdownContent = fs.readFileSync(mdPath, 'utf8');
+      const prerendered = buildPrerenderedContent(markdownContent, seoData);
+      pageHtml = buildPageHtml(baseHtml, seoData, prerendered);
+      pagesPrerendered++;
+    } else {
+      // Non-doc routes (e.g. /widget-playground) – just update meta
+      pageHtml = buildPageHtml(baseHtml, seoData, '');
+    }
+
+    const routePath = route.substring(1);
+    const dirPath = path.join(DIST_DIR, routePath);
     fs.mkdirSync(dirPath, { recursive: true });
-    
-    // Write the HTML file (basic version without custom meta tags for now)
-    fs.writeFileSync(path.join(dirPath, 'index.html'), indexHtml);
-  });
+    fs.writeFileSync(path.join(dirPath, 'index.html'), pageHtml);
+    pagesCreated++;
+  }
 
-  console.log(`✅ Static pages created for ${routes.length} routes`);
+  console.log(
+    `✅ Static pages created: ${pagesCreated} total, ${pagesPrerendered} with pre-rendered content`
+  );
 }
 
-// Generate a comprehensive sitemap with lastmod dates
-async function generateEnhancedSitemap() {
-  const routes = await loadSeoDataMap();
+// ---------------------------------------------------------------------------
+// Generate sitemap
+// ---------------------------------------------------------------------------
+async function generateEnhancedSitemap(routes) {
   const sitemapPath = path.join(__dirname, '../public/sitemap.xml');
-  const now = new Date().toISOString().split('T')[0]; // YYYY-MM-DD format
-  
+  const now = new Date().toISOString().split('T')[0];
+
   let sitemap = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">`;
 
-  routes.forEach(route => {
+  for (const route of routes) {
     const url = `https://dev.showpass.com${route}`;
     const priority = route === '/' ? '1.0' : '0.8';
     const changefreq = route === '/' ? 'weekly' : 'monthly';
-    
+
     sitemap += `
   <url>
     <loc>${url}</loc>
@@ -102,9 +202,8 @@ async function generateEnhancedSitemap() {
     <changefreq>${changefreq}</changefreq>
     <priority>${priority}</priority>
   </url>`;
-  });
+  }
 
-  // Add the widget playground page
   sitemap += `
   <url>
     <loc>https://dev.showpass.com/widget-playground</loc>
@@ -113,45 +212,46 @@ async function generateEnhancedSitemap() {
     <priority>0.7</priority>
   </url>`;
 
-  sitemap += `
-</urlset>`;
+  sitemap += `\n</urlset>`;
 
   fs.writeFileSync(sitemapPath, sitemap);
-  console.log(`✅ Enhanced sitemap generated with ${routes.length + 1} URLs`);
+  console.log(`✅ Sitemap generated with ${routes.length + 1} URLs`);
 }
 
-// Create a robots.txt with proper directives
+// ---------------------------------------------------------------------------
+// robots.txt
+// ---------------------------------------------------------------------------
 function generateRobotsTxt() {
   const robotsPath = path.join(__dirname, '../public/robots.txt');
-  const robotsContent = `User-agent: *
+  const content = `User-agent: *
 Allow: /
 
-# Sitemap location
 Sitemap: https://dev.showpass.com/sitemap.xml
 
-# Crawl delay for politeness
 Crawl-delay: 1
 
-# Specific bot instructions
 User-agent: Googlebot
 Allow: /
 
 User-agent: Bingbot
 Allow: /`;
 
-  fs.writeFileSync(robotsPath, robotsContent);
-  console.log('✅ Robots.txt updated');
+  fs.writeFileSync(robotsPath, content);
+  console.log('✅ robots.txt updated');
 }
 
-// Main execution
+// ---------------------------------------------------------------------------
+// Main
+// ---------------------------------------------------------------------------
 console.log('🚀 Building SEO enhancements...');
 
 try {
-  await generateEnhancedSitemap();
+  const { routes, seoByRoute } = loadSeoDataMap();
+  await generateEnhancedSitemap(routes);
   generateRobotsTxt();
-  await createStaticPages();
+  await createStaticPages(routes, seoByRoute);
   console.log('✅ SEO enhancements completed successfully!');
 } catch (error) {
   console.error('❌ Error building SEO enhancements:', error);
   process.exit(1);
-} 
+}
