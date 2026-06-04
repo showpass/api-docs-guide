@@ -1,6 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { ScrollArea } from "@/shared/components/scroll-area.tsx";
 import { Menu, X } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
 import { Button } from "@/shared/components/button.tsx";
@@ -65,6 +64,27 @@ const DocLayout = () => {
   const { tocItems, apiExamplesData, activeSection, hideRightSidebar } =
     useDocLayoutData();
 
+  useEffect(() => {
+    if (!sidebarOpen) {
+      return;
+    }
+
+    const originalBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setSidebarOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.body.style.overflow = originalBodyOverflow;
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [sidebarOpen]);
+
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top Navigation - Consistent across all pages */}
@@ -72,44 +92,57 @@ const DocLayout = () => {
       
       <div className="flex flex-col flex-1 lg:grid lg:grid-cols-[330px_minmax(0,1fr)]">
         {/* Mobile Menu Button - Only visible on mobile */}
-        <div className="flex items-center justify-between border-b bg-background p-4 lg:hidden">
+        <div className="sticky top-16 z-30 flex items-center justify-between border-b bg-background/95 p-4 backdrop-blur lg:hidden">
           <Button
             variant="ghost"
-            size="icon"
+            size="sm"
             onClick={() => setSidebarOpen(true)}
             className="mr-2"
+            aria-expanded={sidebarOpen}
+            aria-controls="docs-navigation"
           >
             <Menu className="h-5 w-5" />
-            <span className="sr-only">Toggle navigation menu</span>
+            <span>Menu</span>
           </Button>
           <div className="flex-1 flex justify-center sm:hidden">
             <DocSearch />
           </div>
         </div>
 
+        {sidebarOpen && (
+          <button
+            type="button"
+            aria-label="Close navigation menu"
+            className="fixed inset-x-0 top-16 bottom-0 z-40 bg-background/60 backdrop-blur-sm lg:hidden"
+            onClick={() => setSidebarOpen(false)}
+          />
+        )}
+
         {/* Left Sidebar (Navigation) */}
         <div
+          id="docs-navigation"
           className={cn(
-            "fixed inset-x-0 top-16 bottom-0 z-40 bg-sidebar lg:static lg:block lg:border-r border-sidebar-border lg:sticky lg:top-16 lg:h-[calc(100vh-4rem)]",
-            sidebarOpen ? "block" : "hidden"
+            "fixed left-0 top-16 bottom-0 z-50 w-[min(22rem,calc(100vw-2rem))] border-r border-sidebar-border bg-sidebar shadow-2xl lg:sticky lg:top-16 lg:z-auto lg:h-[calc(100vh-4rem)] lg:w-auto lg:shadow-none",
+            sidebarOpen ? "block" : "hidden lg:block"
           )}
         >
           <div className="flex h-full flex-col">
             {/* Mobile Sidebar Header */}
-            <div className="flex items-center justify-end border-b lg:hidden">
+            <div className="flex h-14 items-center justify-between border-b px-4 lg:hidden">
+              <p className="m-0 text-sm font-semibold text-sidebar-foreground">
+                Documentation
+              </p>
               <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setSidebarOpen(false)}
-                className="mr-[1rem] h-9 w-9"
+                className="h-9 w-9"
               >
                 <X className="h-4 w-4" />
                 <span className="sr-only">Close sidebar</span>
               </Button>
             </div>
-            <ScrollArea className="flex-1 px-5 pb-12">
-              <Navigation currentPath={currentPath} onNavigate={() => setSidebarOpen(false)} />
-            </ScrollArea>
+            <Navigation currentPath={currentPath} onNavigate={() => setSidebarOpen(false)} />
           </div>
         </div>
 

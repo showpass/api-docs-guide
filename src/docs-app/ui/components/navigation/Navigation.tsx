@@ -77,22 +77,16 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
 
 
   return (
-    <div className="w-full h-screen flex flex-col overflow-hidden">
+    <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
       <div
-        className="flex-1 overflow-y-auto navigation-scroll"
-        style={{
-          scrollbarWidth: 'none',
-          msOverflowStyle: 'none',
-          height: 'calc(100vh - 50px)',
-          paddingBottom: '10px'
-        }}
+        className="navigation-scroll flex-1 min-h-0 overflow-y-auto px-5 pb-4"
+        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
       >
         <Accordion
           type="multiple"
           value={openSections}
           onValueChange={setOpenSections}
-          className="w-full h-full flex flex-col"
-          style={{ maxHeight: "calc(100vh - 100px)" }}
+          className="w-full"
         >
           <AccordionItem value="introduction">
             <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
@@ -718,7 +712,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
         </Accordion>
       </div>
 
-      <div className="fixed bottom-0 left-0 w-full md:w-[329px] border-t border-sidebar-border p-2 flex justify-between items-center bg-sidebar z-10">
+      <div className="border-t border-sidebar-border bg-sidebar p-2">
         <ThemeToggle />
       </div>
     </div>

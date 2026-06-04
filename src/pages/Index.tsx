@@ -65,7 +65,7 @@ const Index = () => {
 
           <div className="w-full h-px bg-border mb-4 mx-auto"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Public API */}
             <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
@@ -82,13 +82,13 @@ const Index = () => {
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">Access event information and perform operations with our REST APIs.</p>
               </div>
-              <div className="flex flex-col gap-2 ml-11 lg:flex-row">
-                <Button asChild size="sm" className="w-full lg:flex-1">
+              <div className="flex flex-col gap-2 ml-11 2xl:flex-row">
+                <Button asChild size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
                   <Link to="/api/01-public-api-introduction" className="flex items-center justify-center">
                     Public API <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="sm" className="w-full lg:flex-1">
+                <Button asChild variant="outline" size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
                   <Link to="/api/10-private-api-overview" className="flex items-center justify-center">
                     Private API <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
@@ -112,13 +112,13 @@ const Index = () => {
               <div className="mb-4 ml-11">
                 <p className="text-muted-foreground text-sm">Embeddable widgets and functions to integrate Showpass directly into your frontend.</p>
               </div>
-              <div className="flex flex-col gap-2 ml-11 lg:flex-row">
-                <Button asChild size="sm" className="w-full lg:flex-1">
+              <div className="flex flex-col gap-2 ml-11 2xl:flex-row">
+                <Button asChild size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
                   <Link to="/sdk/01-sdk-getting-started" className="flex items-center justify-center">
                     Get Started <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="sm" className="w-full lg:flex-1">
+                <Button asChild variant="outline" size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
                   <Link to="/widget-playground">Try Live</Link>
                 </Button>
               </div>
@@ -165,7 +165,7 @@ const Index = () => {
 
           <div className="w-full h-px bg-border mb-4 mx-auto"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Webhooks */}
             <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
               <div className="flex items-center mb-3">
@@ -257,9 +257,9 @@ const Index = () => {
 
           <div className="w-full h-px bg-border mb-4 mx-auto"></div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Security & Compliance */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md md:col-span-2 lg:col-span-3">
+            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md md:col-span-2 xl:col-span-3">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Shield className="h-5 w-5 text-primary" />
