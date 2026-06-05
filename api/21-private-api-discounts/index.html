@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-C8xfBNxp.js"></script>
+    <script type="module" crossorigin src="/assets/index-DXTGddvC.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -88,8 +88,8 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Discounts</h1>
-<p>The Discounts API lets an authenticated organizer create and manage discount records. For most integrations, this means creating a code that customers enter during checkout, optionally scoped to specific events, ticket types, products, or memberships.</p>
-<p>This page documents the single-discount CRUD endpoint. Bulk generation of many unique codes is handled by a separate bulk-order endpoint and is not covered here.</p>
+<p>Discounts allow organizers to create checkout codes that reduce the price of eligible orders or items. A discount can be configured as a percentage or fixed amount, with optional usage limits, active dates, checkout availability, and restrictions for specific events, ticket types, products, or memberships.</p>
+<p>Most integrations use this API to issue customer-entered discount codes for promotions, customer-specific offers, or fixed-amount credits.</p>
 <hr>
 <h2>Authentication</h2>
 <p>This endpoint requires authentication using a Showpass token:</p>
@@ -158,6 +158,30 @@
 </tr>
 </tbody></table>
 <hr>
+<h2>Discount Types</h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Recommended Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>1</code></td>
+<td>Discount Code</td>
+<td>Standard customer-entered discount code. This is the primary documented workflow for this endpoint.</td>
+</tr>
+<tr>
+<td><code>8</code></td>
+<td>Auto Discount</td>
+<td>Automatically applied discount. Requires <code>discount_rules</code> and venue eligibility. Use only when building an auto-discount integration.</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> Most integrations should create <code>type: 1</code> discounts. Other discount type values may appear on existing records returned by the API, but those values represent specialized or system-managed Showpass workflows and are not documented as public create workflows here.</p>
+</blockquote>
+<hr>
 <h2>Request Body (Create / Update)</h2>
 <table>
 <thead>
@@ -184,7 +208,7 @@
 <td><code>type</code></td>
 <td>Integer</td>
 <td>Optional</td>
-<td>Discount type. Use <code>1</code> for a standard code-based discount.</td>
+<td>Discount type. See Discount Types above.</td>
 </tr>
 <tr>
 <td><code>percentage</code></td>
@@ -244,7 +268,7 @@
 <td><code>allowed_checkouts</code></td>
 <td>Array</td>
 <td>Optional</td>
-<td>Checkout surfaces where the code can be used. Defaults to box office and public checkout.</td>
+<td>Checkout surfaces where the code can be used.</td>
 </tr>
 <tr>
 <td><code>apply_method</code></td>
@@ -289,37 +313,9 @@
 <td>Auto-discount rules. Only valid for auto-applied discounts.</td>
 </tr>
 </tbody></table>
-<p>For a typical API-created discount code:</p>
-<ul>
-<li>Set <code>type</code> to <code>1</code>.</li>
-<li>Choose one discount value: <code>percentage</code> or <code>amount</code>.</li>
-<li>Set any redemption limits required by your integration.</li>
-<li>Include item restrictions only when the code should apply to specific inventory.</li>
-</ul>
-<hr>
-<h2>Discount Types</h2>
-<p>For developer integrations that issue discount codes, use <code>type: 1</code>.</p>
-<table>
-<thead>
-<tr>
-<th>Value</th>
-<th>Name</th>
-<th>Recommended Use</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>1</code></td>
-<td>Discount Code</td>
-<td>Standard customer-entered discount code. This is the primary documented workflow for this endpoint.</td>
-</tr>
-<tr>
-<td><code>8</code></td>
-<td>Auto Discount</td>
-<td>Automatically applied discount. Requires <code>discount_rules</code> and venue eligibility. Use only when building an auto-discount integration.</td>
-</tr>
-</tbody></table>
-<p>You may see other discount type values on existing records returned by the API. Those values represent specialized or system-managed Showpass workflows and are not documented as public create workflows here.</p>
-<p>A discount&#39;s <code>type</code> cannot be changed after creation. Update requests that include a different <code>type</code> leave the existing type unchanged.</p>
+<blockquote>
+<p><strong>Recommended create shape:</strong> For a standard checkout code, set <code>type</code> to <code>1</code>, choose one discount value (<code>percentage</code> or <code>amount</code>), add redemption limits only when needed, and include item restrictions only when the code should apply to specific inventory.</p>
+</blockquote>
 <hr>
 <h2>Apply Methods</h2>
 <table>
@@ -359,7 +355,9 @@
 <td>Code can be used in public checkout</td>
 </tr>
 </tbody></table>
-<p>If <code>allowed_checkouts</code> is omitted, the default is both box office and public checkout.</p>
+<blockquote>
+<p><strong>Default:</strong> If <code>allowed_checkouts</code> is omitted, the code can be used in both box office and public checkout.</p>
+</blockquote>
 <hr>
 <h2>Restricting Eligible Items</h2>
 <p>Use <code>permission_type</code> and <code>event_discount_permissions</code> to control which items a discount can apply to.</p>
@@ -454,7 +452,9 @@
 <td>Product attribute ID</td>
 </tr>
 </tbody></table>
-<p>Include explicit restrictions whenever a code should only apply to specific inventory.</p>
+<blockquote>
+<p><strong>Note:</strong> Omit item restrictions when a code should apply broadly. Include nested permissions only when the code should apply to specific inventory.</p>
+</blockquote>
 <hr>
 <h2>Auto Discounts</h2>
 <p>Auto discounts are not customer-entered codes. They are automatically applied when a basket meets configured requirements.</p>
@@ -762,11 +762,11 @@
 </code></pre>
 <hr>
 <h2>Integration Patterns</h2>
+<p>The patterns below use standard customer-entered discounts (<code>type: 1</code>).</p>
 <h3>Event-Specific Promotion</h3>
 <p>Use this when a campaign should apply only to selected events or ticket types.</p>
 <p>Recommended setup:</p>
 <ul>
-<li><code>type: 1</code></li>
 <li><code>percentage</code> or <code>amount</code></li>
 <li>Optional <code>starts_on</code> and <code>ends_on</code></li>
 <li><code>permission_type: &quot;disc_level_ticket_type&quot;</code></li>
@@ -777,7 +777,6 @@
 <p>Use this when an integration needs to issue a unique code to a single customer.</p>
 <p>Recommended setup:</p>
 <ul>
-<li><code>type: 1</code></li>
 <li>Unique <code>code</code></li>
 <li><code>limit: 1</code></li>
 <li><code>per_user_limit: 1</code></li>
@@ -787,7 +786,6 @@
 <p>Use this when a customer should receive a fixed dollar amount off a future purchase.</p>
 <p>Recommended setup:</p>
 <ul>
-<li><code>type: 1</code></li>
 <li><code>amount</code> set to the credit value</li>
 <li><code>percentage: &quot;0.00&quot;</code></li>
 <li>Redemption limits based on how the code should be redeemed</li>
