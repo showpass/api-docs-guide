@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-Unfnj_zk.js"></script>
+    <script type="module" crossorigin src="/assets/index-C8xfBNxp.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -321,117 +321,6 @@
 <p>You may see other discount type values on existing records returned by the API. Those values represent specialized or system-managed Showpass workflows and are not documented as public create workflows here.</p>
 <p>A discount&#39;s <code>type</code> cannot be changed after creation. Update requests that include a different <code>type</code> leave the existing type unchanged.</p>
 <hr>
-<h2>Response Fields</h2>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>id</code></td>
-<td>Integer</td>
-<td>Unique discount ID</td>
-</tr>
-<tr>
-<td><code>code</code></td>
-<td>String</td>
-<td>Discount code</td>
-</tr>
-<tr>
-<td><code>description</code></td>
-<td>String</td>
-<td>Human-readable description</td>
-</tr>
-<tr>
-<td><code>percentage</code></td>
-<td>Decimal</td>
-<td>Percent off</td>
-</tr>
-<tr>
-<td><code>amount</code></td>
-<td>Decimal</td>
-<td>Fixed amount off</td>
-</tr>
-<tr>
-<td><code>limit</code></td>
-<td>Integer/null</td>
-<td>Overall redemption limit</td>
-</tr>
-<tr>
-<td><code>per_user_limit</code></td>
-<td>Integer/null</td>
-<td>Per-customer redemption limit</td>
-</tr>
-<tr>
-<td><code>basket_limit</code></td>
-<td>Integer/null</td>
-<td>Per-basket application limit</td>
-</tr>
-<tr>
-<td><code>per_event_limit</code></td>
-<td>Integer/null</td>
-<td>Per-event redemption limit</td>
-</tr>
-<tr>
-<td><code>is_public</code></td>
-<td>Boolean</td>
-<td>Whether the discount is active for redemption</td>
-</tr>
-<tr>
-<td><code>starts_on</code></td>
-<td>DateTime/null</td>
-<td>Start date/time</td>
-</tr>
-<tr>
-<td><code>ends_on</code></td>
-<td>DateTime/null</td>
-<td>End date/time</td>
-</tr>
-<tr>
-<td><code>type</code></td>
-<td>Integer</td>
-<td>Discount type</td>
-</tr>
-<tr>
-<td><code>allowed_checkouts</code></td>
-<td>Array</td>
-<td>Checkout surfaces where the code can be used</td>
-</tr>
-<tr>
-<td><code>permission_type</code></td>
-<td>String/null</td>
-<td>Item restriction mode</td>
-</tr>
-<tr>
-<td><code>apply_method</code></td>
-<td>Integer</td>
-<td>Discount application method</td>
-</tr>
-<tr>
-<td><code>event_discount_permissions</code></td>
-<td>Array</td>
-<td>Nested event, membership, or product restrictions</td>
-</tr>
-<tr>
-<td><code>created_by</code></td>
-<td>Integer/null</td>
-<td>User who created the discount</td>
-</tr>
-<tr>
-<td><code>discount_rules</code></td>
-<td>Array</td>
-<td>Auto-discount rules</td>
-</tr>
-<tr>
-<td><code>stats</code></td>
-<td>Object</td>
-<td>Usage statistics</td>
-</tr>
-</tbody></table>
-<hr>
 <h2>Apply Methods</h2>
 <table>
 <thead>
@@ -618,6 +507,117 @@
 <li>Each rule must use either <code>amount</code> or <code>percentage</code>, not both.</li>
 <li>The venue must have auto discounts enabled and be on an eligible pricing tier.</li>
 </ul>
+<hr>
+<h2>Response Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Unique discount ID</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>String</td>
+<td>Discount code</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td><code>percentage</code></td>
+<td>Decimal</td>
+<td>Percent off</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Decimal</td>
+<td>Fixed amount off</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>Integer/null</td>
+<td>Overall redemption limit</td>
+</tr>
+<tr>
+<td><code>per_user_limit</code></td>
+<td>Integer/null</td>
+<td>Per-customer redemption limit</td>
+</tr>
+<tr>
+<td><code>basket_limit</code></td>
+<td>Integer/null</td>
+<td>Per-basket application limit</td>
+</tr>
+<tr>
+<td><code>per_event_limit</code></td>
+<td>Integer/null</td>
+<td>Per-event redemption limit</td>
+</tr>
+<tr>
+<td><code>is_public</code></td>
+<td>Boolean</td>
+<td>Whether the discount is active for redemption</td>
+</tr>
+<tr>
+<td><code>starts_on</code></td>
+<td>DateTime/null</td>
+<td>Start date/time</td>
+</tr>
+<tr>
+<td><code>ends_on</code></td>
+<td>DateTime/null</td>
+<td>End date/time</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Integer</td>
+<td>Discount type</td>
+</tr>
+<tr>
+<td><code>allowed_checkouts</code></td>
+<td>Array</td>
+<td>Checkout surfaces where the code can be used</td>
+</tr>
+<tr>
+<td><code>permission_type</code></td>
+<td>String/null</td>
+<td>Item restriction mode</td>
+</tr>
+<tr>
+<td><code>apply_method</code></td>
+<td>Integer</td>
+<td>Discount application method</td>
+</tr>
+<tr>
+<td><code>event_discount_permissions</code></td>
+<td>Array</td>
+<td>Nested event, membership, or product restrictions</td>
+</tr>
+<tr>
+<td><code>created_by</code></td>
+<td>Integer/null</td>
+<td>User who created the discount</td>
+</tr>
+<tr>
+<td><code>discount_rules</code></td>
+<td>Array</td>
+<td>Auto-discount rules</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>Object</td>
+<td>Usage statistics</td>
+</tr>
+</tbody></table>
 <hr>
 <h2>Filtering and Search</h2>
 <h3>Search</h3>
