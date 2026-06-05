@@ -1,6 +1,6 @@
 # Discounts
 
-The Discounts API lets an authenticated organizer create and manage discount records for a venue. For most integrations, this means creating a code that customers enter during checkout, optionally scoped to specific events, ticket types, products, or memberships.
+The Discounts API lets an authenticated organizer create and manage discount records. For most integrations, this means creating a code that customers enter during checkout, optionally scoped to specific events, ticket types, products, or memberships.
 
 This page documents the single-discount CRUD endpoint. Bulk generation of many unique codes is handled by a separate bulk-order endpoint and is not covered here.
 
@@ -13,8 +13,6 @@ This endpoint requires authentication using a Showpass token:
 ```text
 Authorization: Token YOUR_API_TOKEN
 ```
-
-The token must belong to a user that can manage the venue. Create, retrieve, update, and delete operations require venue event-management permission.
 
 ---
 
@@ -68,9 +66,12 @@ https://www.showpass.com/api/venue/{venue_id}/financials/discounts/
 | `reference`                  | String/null   | Optional | External reference value.                                                   |
 | `discount_rules`             | Array         | Optional | Auto-discount rules. Only valid for auto-applied discounts.                 |
 
-The `venue` field is set from `{venue_id}` in the URL. It is returned in responses, but it does not need to be included in create requests.
+For a typical API-created discount code:
 
-For a typical API-created discount code, send `type: 1`, choose either `percentage` or `amount`, set any redemption limits required by your integration, and include item restrictions when the code should only apply to specific inventory.
+- Set `type` to `1`.
+- Choose one discount value: `percentage` or `amount`.
+- Set any redemption limits required by your integration.
+- Include item restrictions only when the code should apply to specific inventory.
 
 ---
 
@@ -94,7 +95,6 @@ A discount's `type` cannot be changed after creation. Update requests that inclu
 | Field                        | Type          | Description                                      |
 | ---------------------------- | ------------- | ------------------------------------------------ |
 | `id`                         | Integer       | Unique discount ID                               |
-| `venue`                      | Integer       | Venue that owns the discount                     |
 | `code`                       | String        | Discount code                                    |
 | `description`                | String        | Human-readable description                       |
 | `percentage`                 | Decimal       | Percent off                                      |
@@ -150,7 +150,13 @@ Use `permission_type` and `event_discount_permissions` to control which items a 
 
 The default permission type is `disc_level_ticket_type`.
 
-The most common restriction is an event with one or more ticket types:
+**Common pattern:** restrict a code to selected ticket types for one event.
+
+Key fields in this shape:
+
+- `permission_type`: set to `disc_level_ticket_type`.
+- `event`: the event ID that the code applies to.
+- `tt_discount_permissions`: the ticket types eligible for the discount.
 
 ```json
 {
@@ -273,7 +279,6 @@ Default ordering is newest first by ID.
 - **Dates** — `ends_on` must be after `starts_on` when both are provided.
 - **Type changes** — `type` cannot be changed after creation.
 - **Used discounts** — After a discount has been used, `code`, `amount`, and `percentage` cannot be changed.
-- **Payment plans** — Payment plan ticket types cannot be discounted.
 - **Delete behavior** — `DELETE` soft-deletes the discount, sets `is_public` to `false`, and removes the discount from normal list and detail responses.
 
 ---
@@ -307,18 +312,47 @@ Returned for validation failures:
 
 ### Event-Specific Promotion
 
-Create a standard discount code with `type: 1`, a `percentage` or `amount`, optional date limits, and `event_discount_permissions` scoped to the intended event or ticket types.
+Use this when a campaign should apply only to selected events or ticket types.
+
+Recommended setup:
+
+- `type: 1`
+- `percentage` or `amount`
+- Optional `starts_on` and `ends_on`
+- `permission_type: "disc_level_ticket_type"`
+- `event_discount_permissions` scoped to the intended event or ticket types
 
 The API examples panel shows a complete request for this pattern.
 
 ### Customer-Specific Code
 
-When a specific customer should receive a unique code, create a standard discount code with `type: 1`, a unique `code`, and limits such as `limit: 1` and `per_user_limit: 1`.
+Use this when an integration needs to issue a unique code to a single customer.
+
+Recommended setup:
+
+- `type: 1`
+- Unique `code`
+- `limit: 1`
+- `per_user_limit: 1`
+- Optional item restrictions if the code should only apply to specific inventory
 
 ### Fixed-Amount Credit or Make-Good
 
-For a fixed dollar amount off a future purchase, create a standard discount code with `amount`, set `percentage` to `"0.00"`, and choose limits and item restrictions based on how the code should be redeemed.
+Use this when a customer should receive a fixed dollar amount off a future purchase.
+
+Recommended setup:
+
+- `type: 1`
+- `amount` set to the credit value
+- `percentage: "0.00"`
+- Redemption limits based on how the code should be redeemed
+- Optional item restrictions if the credit should only apply to specific inventory
 
 ### Retiring a Code
 
-Set `is_public` to `false` with `PUT` if the code should stop being redeemable but remain retrievable by ID. Use `DELETE` when the code should be soft-deleted and removed from normal list and detail responses.
+Use this when a code should no longer be redeemable.
+
+Options:
+
+- Set `is_public` to `false` with `PUT` when the record should remain retrievable by ID.
+- Use `DELETE` when the code should be soft-deleted and removed from normal list and detail responses.
