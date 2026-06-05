@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Discounts API - Showpass Private Organizer API</title>
+    <meta name="description" content="Create, list, update, and deactivate Showpass discount codes through the Private Organizer API. Issue personal codes for event and ticket type specific use cases." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Discounts API - Showpass Private Organizer API" />
+    <meta property="og:description" content="Create, list, update, and deactivate Showpass discount codes through the Private Organizer API. Issue personal codes for event and ticket type specific use cases." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Discounts API - Showpass Private Organizer API" />
+    <meta name="twitter:description" content="Create, list, update, and deactivate Showpass discount codes through the Private Organizer API. Issue personal codes for event and ticket type specific use cases." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-I7V7Cs7m.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Discounts</h1>
+<p>The Discounts API lets an authenticated organizer create and manage discount records for a venue. For most integrations, this means creating a code that customers enter during checkout, optionally scoped to specific events, ticket types, products, or memberships.</p>
+<p>This page documents the single-discount CRUD endpoint. Bulk generation of many unique codes is handled by a separate bulk-order endpoint and is not covered here.</p>
+<hr>
+<h2>Authentication</h2>
+<p>This endpoint requires authentication using a Showpass token:</p>
+<pre><code class="language-text">Authorization: Token YOUR_API_TOKEN
+</code></pre>
+<p>The token must belong to a user that can manage the venue. Create, retrieve, update, and delete operations require venue event-management permission.</p>
+<hr>
+<h2>Endpoints</h2>
+<p>The base URL for all discount endpoints is:</p>
+<pre><code class="language-text">https://www.showpass.com/api/venue/{venue_id}/financials/discounts/
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GET</code></td>
+<td><code>/discounts/</code></td>
+<td>List discounts for the venue</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/discounts/</code></td>
+<td>Create a discount</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/discounts/{id}/</code></td>
+<td>Retrieve a single discount</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/discounts/{id}/</code></td>
+<td>Update a discount</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/discounts/{id}/</code></td>
+<td>Deactivate a discount by soft delete</td>
+</tr>
+</tbody></table>
+<h3>Path Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>venue_id</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The ID of the venue that owns the discount</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The discount ID for retrieve, update, and delete calls</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Request Body (Create / Update)</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>code</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Customer-facing code. If omitted, Showpass generates one. Submitted codes are uppercased.</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>Human-readable description. Defaults to the code when omitted.</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>Discount type. Use <code>1</code> for a standard code-based discount.</td>
+</tr>
+<tr>
+<td><code>percentage</code></td>
+<td>Decimal</td>
+<td>Optional</td>
+<td>Percent off, such as <code>&quot;25.00&quot;</code> for 25 percent off.</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Decimal</td>
+<td>Optional</td>
+<td>Fixed amount off, such as <code>&quot;10.00&quot;</code>.</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Maximum total number of redemptions. <code>null</code> means no overall limit.</td>
+</tr>
+<tr>
+<td><code>per_user_limit</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Maximum number of redemptions per customer. <code>null</code> means no per-user limit.</td>
+</tr>
+<tr>
+<td><code>basket_limit</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Maximum number of times the discount can apply within one basket.</td>
+</tr>
+<tr>
+<td><code>per_event_limit</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Maximum number of redemptions per event.</td>
+</tr>
+<tr>
+<td><code>is_public</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether the discount is active for normal redemption.</td>
+</tr>
+<tr>
+<td><code>starts_on</code></td>
+<td>DateTime/null</td>
+<td>Optional</td>
+<td>Start date/time for the discount.</td>
+</tr>
+<tr>
+<td><code>ends_on</code></td>
+<td>DateTime/null</td>
+<td>Optional</td>
+<td>End date/time for the discount. Must be after <code>starts_on</code>.</td>
+</tr>
+<tr>
+<td><code>allowed_checkouts</code></td>
+<td>Array</td>
+<td>Optional</td>
+<td>Checkout surfaces where the code can be used. Defaults to box office and public checkout.</td>
+</tr>
+<tr>
+<td><code>apply_method</code></td>
+<td>Integer</td>
+<td>Optional</td>
+<td>How the discount is applied. See Apply Methods below.</td>
+</tr>
+<tr>
+<td><code>permission_type</code></td>
+<td>String</td>
+<td>Optional</td>
+<td>How item restrictions are interpreted. See Restricting Eligible Items below.</td>
+</tr>
+<tr>
+<td><code>event_discount_permissions</code></td>
+<td>Array</td>
+<td>Optional</td>
+<td>Event, membership, or product restrictions.</td>
+</tr>
+<tr>
+<td><code>minimum_quantity</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Quantity threshold for quantity-based discount behavior.</td>
+</tr>
+<tr>
+<td><code>maximum_quantity</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Maximum quantity threshold for quantity-based discount behavior.</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>String/null</td>
+<td>Optional</td>
+<td>External reference value.</td>
+</tr>
+<tr>
+<td><code>discount_rules</code></td>
+<td>Array</td>
+<td>Optional</td>
+<td>Auto-discount rules. Only valid for auto-applied discounts.</td>
+</tr>
+</tbody></table>
+<p>The <code>venue</code> field is set from <code>{venue_id}</code> in the URL. It is returned in responses, but it does not need to be included in create requests.</p>
+<p>For a typical API-created discount code, send <code>type: 1</code>, choose either <code>percentage</code> or <code>amount</code>, set any redemption limits required by your integration, and include item restrictions when the code should only apply to specific inventory.</p>
+<hr>
+<h2>Discount Types</h2>
+<p>For developer integrations that issue discount codes, use <code>type: 1</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Recommended Use</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>1</code></td>
+<td>Discount Code</td>
+<td>Standard customer-entered discount code. This is the primary documented workflow for this endpoint.</td>
+</tr>
+<tr>
+<td><code>8</code></td>
+<td>Auto Discount</td>
+<td>Automatically applied discount. Requires <code>discount_rules</code> and venue eligibility. Use only when building an auto-discount integration.</td>
+</tr>
+</tbody></table>
+<p>You may see other discount type values on existing records returned by the API. Those values represent specialized or system-managed Showpass workflows and are not documented as public create workflows here.</p>
+<p>A discount&#39;s <code>type</code> cannot be changed after creation. Update requests that include a different <code>type</code> leave the existing type unchanged.</p>
+<hr>
+<h2>Response Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Unique discount ID</td>
+</tr>
+<tr>
+<td><code>venue</code></td>
+<td>Integer</td>
+<td>Venue that owns the discount</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>String</td>
+<td>Discount code</td>
+</tr>
+<tr>
+<td><code>description</code></td>
+<td>String</td>
+<td>Human-readable description</td>
+</tr>
+<tr>
+<td><code>percentage</code></td>
+<td>Decimal</td>
+<td>Percent off</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Decimal</td>
+<td>Fixed amount off</td>
+</tr>
+<tr>
+<td><code>limit</code></td>
+<td>Integer/null</td>
+<td>Overall redemption limit</td>
+</tr>
+<tr>
+<td><code>per_user_limit</code></td>
+<td>Integer/null</td>
+<td>Per-customer redemption limit</td>
+</tr>
+<tr>
+<td><code>basket_limit</code></td>
+<td>Integer/null</td>
+<td>Per-basket application limit</td>
+</tr>
+<tr>
+<td><code>per_event_limit</code></td>
+<td>Integer/null</td>
+<td>Per-event redemption limit</td>
+</tr>
+<tr>
+<td><code>is_public</code></td>
+<td>Boolean</td>
+<td>Whether the discount is active for redemption</td>
+</tr>
+<tr>
+<td><code>starts_on</code></td>
+<td>DateTime/null</td>
+<td>Start date/time</td>
+</tr>
+<tr>
+<td><code>ends_on</code></td>
+<td>DateTime/null</td>
+<td>End date/time</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>Integer</td>
+<td>Discount type</td>
+</tr>
+<tr>
+<td><code>allowed_checkouts</code></td>
+<td>Array</td>
+<td>Checkout surfaces where the code can be used</td>
+</tr>
+<tr>
+<td><code>permission_type</code></td>
+<td>String/null</td>
+<td>Item restriction mode</td>
+</tr>
+<tr>
+<td><code>apply_method</code></td>
+<td>Integer</td>
+<td>Discount application method</td>
+</tr>
+<tr>
+<td><code>event_discount_permissions</code></td>
+<td>Array</td>
+<td>Nested event, membership, or product restrictions</td>
+</tr>
+<tr>
+<td><code>created_by</code></td>
+<td>Integer/null</td>
+<td>User who created the discount</td>
+</tr>
+<tr>
+<td><code>discount_rules</code></td>
+<td>Array</td>
+<td>Auto-discount rules</td>
+</tr>
+<tr>
+<td><code>stats</code></td>
+<td>Object</td>
+<td>Usage statistics</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Apply Methods</h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Name</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>1</code></td>
+<td>Apply to each item individually</td>
+<td>Applies the discount to each eligible item</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Single application to entire basket</td>
+<td>Applies the discount once to the basket</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Allowed Checkouts</h2>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>disc_allowed_box_office</code></td>
+<td>Code can be used in Box Office</td>
+</tr>
+<tr>
+<td><code>disc_allowed_public</code></td>
+<td>Code can be used in public checkout</td>
+</tr>
+</tbody></table>
+<p>If <code>allowed_checkouts</code> is omitted, the default is both box office and public checkout.</p>
+<hr>
+<h2>Restricting Eligible Items</h2>
+<p>Use <code>permission_type</code> and <code>event_discount_permissions</code> to control which items a discount can apply to.</p>
+<table>
+<thead>
+<tr>
+<th><code>permission_type</code> Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>disc_level_venue</code></td>
+<td>Applies broadly to eligible items for the venue</td>
+</tr>
+<tr>
+<td><code>disc_level_ticket_type</code></td>
+<td>Applies only to the specified items</td>
+</tr>
+<tr>
+<td><code>disc_level_excluded_ticket_type</code></td>
+<td>Applies to eligible items except the specified items</td>
+</tr>
+<tr>
+<td><code>disc_level_all</code></td>
+<td>System-level broad applicability</td>
+</tr>
+</tbody></table>
+<p>The default permission type is <code>disc_level_ticket_type</code>.</p>
+<p>The most common restriction is an event with one or more ticket types:</p>
+<pre><code class="language-json">{
+  &quot;permission_type&quot;: &quot;disc_level_ticket_type&quot;,
+  &quot;event_discount_permissions&quot;: [
+    {
+      &quot;event&quot;: 12345,
+      &quot;tt_discount_permissions&quot;: [
+        {
+          &quot;ticket_type&quot;: 67890
+        },
+        {
+          &quot;ticket_type&quot;: 67891
+        }
+      ]
+    }
+  ]
+}
+</code></pre>
+<p>Each <code>event_discount_permissions</code> entry can target one of:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>event</code></td>
+<td>Event ID</td>
+</tr>
+<tr>
+<td><code>membership_group</code></td>
+<td>Membership group ID</td>
+</tr>
+<tr>
+<td><code>product</code></td>
+<td>Product ID</td>
+</tr>
+</tbody></table>
+<p>Each nested <code>tt_discount_permissions</code> entry can target one of:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>ticket_type</code></td>
+<td>Ticket type ID</td>
+</tr>
+<tr>
+<td><code>membership_level</code></td>
+<td>Membership level ID</td>
+</tr>
+<tr>
+<td><code>product_attribute</code></td>
+<td>Product attribute ID</td>
+</tr>
+</tbody></table>
+<p>Include explicit restrictions whenever a code should only apply to specific inventory.</p>
+<hr>
+<h2>Auto Discounts</h2>
+<p>Auto discounts are not customer-entered codes. They are automatically applied when a basket meets configured requirements.</p>
+<p>Create an auto discount with <code>type: 8</code> and a <code>discount_rules</code> array. Each rule defines a basket or item threshold and the discount that applies when that threshold is met.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>minimum_limit</code></td>
+<td>Decimal/null</td>
+<td>Lower bound for the rule</td>
+</tr>
+<tr>
+<td><code>maximum_limit</code></td>
+<td>Decimal/null</td>
+<td>Upper bound for the rule</td>
+</tr>
+<tr>
+<td><code>limit_type</code></td>
+<td>Integer</td>
+<td>Threshold type: <code>1</code> item quantity, <code>2</code> total basket quantity, or <code>3</code> total purchase amount</td>
+</tr>
+<tr>
+<td><code>amount</code></td>
+<td>Decimal</td>
+<td>Fixed amount off for the rule</td>
+</tr>
+<tr>
+<td><code>percentage</code></td>
+<td>Decimal</td>
+<td>Percent off for the rule</td>
+</tr>
+<tr>
+<td><code>venue</code></td>
+<td>Integer</td>
+<td>Venue ID for the rule</td>
+</tr>
+</tbody></table>
+<p>Rules must follow these constraints:</p>
+<ul>
+<li>Auto discounts require <code>discount_rules</code>.</li>
+<li>Non-auto discounts cannot include <code>discount_rules</code>.</li>
+<li>All rules in one auto discount must use the same <code>limit_type</code>.</li>
+<li>Rule ranges cannot overlap.</li>
+<li>Each rule must use either <code>amount</code> or <code>percentage</code>, not both.</li>
+<li>The venue must have auto discounts enabled and be on an eligible pricing tier.</li>
+</ul>
+<hr>
+<h2>Filtering and Search</h2>
+<h3>Search</h3>
+<p>Use <code>search</code> to match discount <code>code</code> or <code>description</code>:</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/financials/discounts/?search=SKYLINE
+</code></pre>
+<h3>Filters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Exact discount ID</td>
+</tr>
+<tr>
+<td><code>id__in</code></td>
+<td>String</td>
+<td>Comma-separated discount IDs</td>
+</tr>
+<tr>
+<td><code>code</code></td>
+<td>String</td>
+<td>Exact discount code</td>
+</tr>
+<tr>
+<td><code>code__in</code></td>
+<td>String</td>
+<td>Comma-separated discount codes</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>String</td>
+<td>Discount type. Alias for <code>type__in</code>.</td>
+</tr>
+<tr>
+<td><code>type__in</code></td>
+<td>String</td>
+<td>Comma-separated discount type IDs</td>
+</tr>
+<tr>
+<td><code>is_public</code></td>
+<td>Boolean</td>
+<td>Filter active/available discounts</td>
+</tr>
+<tr>
+<td><code>events</code></td>
+<td>String</td>
+<td>Comma-separated event IDs. Alias for <code>event_discount_permissions__event__in</code>.</td>
+</tr>
+<tr>
+<td><code>event_discount_permissions__event</code></td>
+<td>Integer</td>
+<td>Exact event ID</td>
+</tr>
+<tr>
+<td><code>event_discount_permissions__event__in</code></td>
+<td>String</td>
+<td>Comma-separated event IDs</td>
+</tr>
+<tr>
+<td><code>tt_discount_permissions__ticket_type</code></td>
+<td>Integer</td>
+<td>Exact ticket type ID</td>
+</tr>
+<tr>
+<td><code>tt_discount_permissions__ticket_type__in</code></td>
+<td>String</td>
+<td>Comma-separated ticket type IDs</td>
+</tr>
+<tr>
+<td><code>reference</code></td>
+<td>String</td>
+<td>Exact external reference</td>
+</tr>
+<tr>
+<td><code>reference__in</code></td>
+<td>String</td>
+<td>Comma-separated external references</td>
+</tr>
+<tr>
+<td><code>possessor__email</code></td>
+<td>String</td>
+<td>Exact possessor email</td>
+</tr>
+<tr>
+<td><code>invoice__email</code></td>
+<td>String</td>
+<td>Exact invoice email</td>
+</tr>
+<tr>
+<td><code>bulk_order</code></td>
+<td>Integer</td>
+<td>Exact bulk order ID</td>
+</tr>
+<tr>
+<td><code>bulk_order__isnull</code></td>
+<td>Boolean</td>
+<td>Filter discounts with or without a bulk order</td>
+</tr>
+</tbody></table>
+<h3>Pagination</h3>
+<p>Results are paginated with a default page size of <strong>20</strong>. The response includes <code>count</code>, <code>next</code>, <code>previous</code>, and <code>results</code>.</p>
+<h3>Ordering</h3>
+<p>Use <code>ordering</code> with <code>updated</code>, <code>created</code>, <code>id</code>, or <code>is_public</code>. Prefix the field with <code>-</code> for descending order.</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/financials/discounts/?ordering=-created
+</code></pre>
+<p>Default ordering is newest first by ID.</p>
+<hr>
+<h2>Business Rules</h2>
+<ul>
+<li><strong>Code normalization</strong> — Submitted codes are uppercased. Generate URL-safe, checkout-safe code strings before sending them.</li>
+<li><strong>Uniqueness</strong> — Codes are unique per venue, case-insensitively.</li>
+<li><strong>Dates</strong> — <code>ends_on</code> must be after <code>starts_on</code> when both are provided.</li>
+<li><strong>Type changes</strong> — <code>type</code> cannot be changed after creation.</li>
+<li><strong>Used discounts</strong> — After a discount has been used, <code>code</code>, <code>amount</code>, and <code>percentage</code> cannot be changed.</li>
+<li><strong>Payment plans</strong> — Payment plan ticket types cannot be discounted.</li>
+<li><strong>Delete behavior</strong> — <code>DELETE</code> soft-deletes the discount, sets <code>is_public</code> to <code>false</code>, and removes the discount from normal list and detail responses.</li>
+</ul>
+<hr>
+<h2>Error Responses</h2>
+<h3>400 Bad Request</h3>
+<p>Returned for validation failures:</p>
+<pre><code class="language-javascript">// Duplicate code for the venue
+{
+  &quot;detail&quot;: &quot;A discount with this code already exists.&quot;
+}
+
+// Invalid active date range
+{
+  &quot;ends_on&quot;: [&quot;End date must occur after start date&quot;]
+}
+
+// Auto-discount rule sent with a standard discount
+{
+  &quot;detail&quot;: &quot;Discount Rules: Only auto discount can have rules.&quot;
+}
+</code></pre>
+<hr>
+<h2>Integration Patterns</h2>
+<h3>Event-Specific Promotion</h3>
+<p>Create a standard discount code with <code>type: 1</code>, a <code>percentage</code> or <code>amount</code>, optional date limits, and <code>event_discount_permissions</code> scoped to the intended event or ticket types.</p>
+<p>The API examples panel shows a complete request for this pattern.</p>
+<h3>Customer-Specific Code</h3>
+<p>When a specific customer should receive a unique code, create a standard discount code with <code>type: 1</code>, a unique <code>code</code>, and limits such as <code>limit: 1</code> and <code>per_user_limit: 1</code>.</p>
+<h3>Fixed-Amount Credit or Make-Good</h3>
+<p>For a fixed dollar amount off a future purchase, create a standard discount code with <code>amount</code>, set <code>percentage</code> to <code>&quot;0.00&quot;</code>, and choose limits and item restrictions based on how the code should be redeemed.</p>
+<h3>Retiring a Code</h3>
+<p>Set <code>is_public</code> to <code>false</code> with <code>PUT</code> if the code should stop being redeemable but remain retrievable by ID. Use <code>DELETE</code> when the code should be soft-deleted and removed from normal list and detail responses.</p>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>
