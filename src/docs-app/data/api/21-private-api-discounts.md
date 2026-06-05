@@ -1,8 +1,8 @@
 # Discounts
 
-The Discounts API lets an authenticated organizer create and manage discount records. For most integrations, this means creating a code that customers enter during checkout, optionally scoped to specific events, ticket types, products, or memberships.
+Discounts allow organizers to create checkout codes that reduce the price of eligible orders or items. A discount can be configured as a percentage or fixed amount, with optional usage limits, active dates, checkout availability, and restrictions for specific events, ticket types, products, or memberships.
 
-This page documents the single-discount CRUD endpoint. Bulk generation of many unique codes is handled by a separate bulk-order endpoint and is not covered here.
+Most integrations use this API to issue customer-entered discount codes for promotions, customer-specific offers, or fixed-amount credits.
 
 ---
 
@@ -41,13 +41,24 @@ https://www.showpass.com/api/venue/{venue_id}/financials/discounts/
 
 ---
 
+## Discount Types
+
+| Value | Name             | Recommended Use                                                          |
+| ----- | ---------------- | ------------------------------------------------------------------------ |
+| `1`   | Discount Code    | Standard customer-entered discount code. This is the primary documented workflow for this endpoint. |
+| `8`   | Auto Discount    | Automatically applied discount. Requires `discount_rules` and venue eligibility. Use only when building an auto-discount integration. |
+
+> **Note:** Most integrations should create `type: 1` discounts. Other discount type values may appear on existing records returned by the API, but those values represent specialized or system-managed Showpass workflows and are not documented as public create workflows here.
+
+---
+
 ## Request Body (Create / Update)
 
 | Parameter                    | Type          | Status   | Description                                                                 |
 | ---------------------------- | ------------- | -------- | --------------------------------------------------------------------------- |
 | `code`                       | String        | Optional | Customer-facing code. If omitted, Showpass generates one. Submitted codes are uppercased. |
 | `description`                | String        | Optional | Human-readable description. Defaults to the code when omitted.              |
-| `type`                       | Integer       | Optional | Discount type. Use `1` for a standard code-based discount.                  |
+| `type`                       | Integer       | Optional | Discount type. See Discount Types above.                                    |
 | `percentage`                 | Decimal       | Optional | Percent off, such as `"25.00"` for 25 percent off.                          |
 | `amount`                     | Decimal       | Optional | Fixed amount off, such as `"10.00"`.                                        |
 | `limit`                      | Integer/null  | Optional | Maximum total number of redemptions. `null` means no overall limit.         |
@@ -57,7 +68,7 @@ https://www.showpass.com/api/venue/{venue_id}/financials/discounts/
 | `is_public`                  | Boolean       | Optional | Whether the discount is active for normal redemption.                       |
 | `starts_on`                  | DateTime/null | Optional | Start date/time for the discount.                                           |
 | `ends_on`                    | DateTime/null | Optional | End date/time for the discount. Must be after `starts_on`.                  |
-| `allowed_checkouts`          | Array         | Optional | Checkout surfaces where the code can be used. Defaults to box office and public checkout. |
+| `allowed_checkouts`          | Array         | Optional | Checkout surfaces where the code can be used.                               |
 | `apply_method`               | Integer       | Optional | How the discount is applied. See Apply Methods below.                       |
 | `permission_type`            | String        | Optional | How item restrictions are interpreted. See Restricting Eligible Items below. |
 | `event_discount_permissions` | Array         | Optional | Event, membership, or product restrictions.                                 |
@@ -66,27 +77,7 @@ https://www.showpass.com/api/venue/{venue_id}/financials/discounts/
 | `reference`                  | String/null   | Optional | External reference value.                                                   |
 | `discount_rules`             | Array         | Optional | Auto-discount rules. Only valid for auto-applied discounts.                 |
 
-For a typical API-created discount code:
-
-- Set `type` to `1`.
-- Choose one discount value: `percentage` or `amount`.
-- Set any redemption limits required by your integration.
-- Include item restrictions only when the code should apply to specific inventory.
-
----
-
-## Discount Types
-
-For developer integrations that issue discount codes, use `type: 1`.
-
-| Value | Name             | Recommended Use                                                          |
-| ----- | ---------------- | ------------------------------------------------------------------------ |
-| `1`   | Discount Code    | Standard customer-entered discount code. This is the primary documented workflow for this endpoint. |
-| `8`   | Auto Discount    | Automatically applied discount. Requires `discount_rules` and venue eligibility. Use only when building an auto-discount integration. |
-
-You may see other discount type values on existing records returned by the API. Those values represent specialized or system-managed Showpass workflows and are not documented as public create workflows here.
-
-A discount's `type` cannot be changed after creation. Update requests that include a different `type` leave the existing type unchanged.
+> **Recommended create shape:** For a standard checkout code, set `type` to `1`, choose one discount value (`percentage` or `amount`), add redemption limits only when needed, and include item restrictions only when the code should apply to specific inventory.
 
 ---
 
@@ -106,7 +97,7 @@ A discount's `type` cannot be changed after creation. Update requests that inclu
 | `disc_allowed_box_office` | Code can be used in Box Office      |
 | `disc_allowed_public`     | Code can be used in public checkout |
 
-If `allowed_checkouts` is omitted, the default is both box office and public checkout.
+> **Default:** If `allowed_checkouts` is omitted, the code can be used in both box office and public checkout.
 
 ---
 
@@ -166,7 +157,7 @@ Each nested `tt_discount_permissions` entry can target one of:
 | `membership_level`  | Membership level ID  |
 | `product_attribute` | Product attribute ID |
 
-Include explicit restrictions whenever a code should only apply to specific inventory.
+> **Note:** Omit item restrictions when a code should apply broadly. Include nested permissions only when the code should apply to specific inventory.
 
 ---
 
@@ -310,13 +301,14 @@ Returned for validation failures:
 
 ## Integration Patterns
 
+The patterns below use standard customer-entered discounts (`type: 1`).
+
 ### Event-Specific Promotion
 
 Use this when a campaign should apply only to selected events or ticket types.
 
 Recommended setup:
 
-- `type: 1`
 - `percentage` or `amount`
 - Optional `starts_on` and `ends_on`
 - `permission_type: "disc_level_ticket_type"`
@@ -330,7 +322,6 @@ Use this when an integration needs to issue a unique code to a single customer.
 
 Recommended setup:
 
-- `type: 1`
 - Unique `code`
 - `limit: 1`
 - `per_user_limit: 1`
@@ -342,7 +333,6 @@ Use this when a customer should receive a fixed dollar amount off a future purch
 
 Recommended setup:
 
-- `type: 1`
 - `amount` set to the credit value
 - `percentage: "0.00"`
 - Redemption limits based on how the code should be redeemed
