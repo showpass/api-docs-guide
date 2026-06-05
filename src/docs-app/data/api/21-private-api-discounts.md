@@ -90,33 +90,6 @@ A discount's `type` cannot be changed after creation. Update requests that inclu
 
 ---
 
-## Response Fields
-
-| Field                        | Type          | Description                                      |
-| ---------------------------- | ------------- | ------------------------------------------------ |
-| `id`                         | Integer       | Unique discount ID                               |
-| `code`                       | String        | Discount code                                    |
-| `description`                | String        | Human-readable description                       |
-| `percentage`                 | Decimal       | Percent off                                      |
-| `amount`                     | Decimal       | Fixed amount off                                 |
-| `limit`                      | Integer/null  | Overall redemption limit                         |
-| `per_user_limit`             | Integer/null  | Per-customer redemption limit                    |
-| `basket_limit`               | Integer/null  | Per-basket application limit                     |
-| `per_event_limit`            | Integer/null  | Per-event redemption limit                       |
-| `is_public`                  | Boolean       | Whether the discount is active for redemption    |
-| `starts_on`                  | DateTime/null | Start date/time                                  |
-| `ends_on`                    | DateTime/null | End date/time                                    |
-| `type`                       | Integer       | Discount type                                    |
-| `allowed_checkouts`          | Array         | Checkout surfaces where the code can be used     |
-| `permission_type`            | String/null   | Item restriction mode                            |
-| `apply_method`               | Integer       | Discount application method                      |
-| `event_discount_permissions` | Array         | Nested event, membership, or product restrictions |
-| `created_by`                 | Integer/null  | User who created the discount                    |
-| `discount_rules`             | Array         | Auto-discount rules                              |
-| `stats`                      | Object        | Usage statistics                                 |
-
----
-
 ## Apply Methods
 
 | Value | Name                                | Description                                  |
@@ -220,6 +193,33 @@ Rules must follow these constraints:
 - Rule ranges cannot overlap.
 - Each rule must use either `amount` or `percentage`, not both.
 - The venue must have auto discounts enabled and be on an eligible pricing tier.
+
+---
+
+## Response Fields
+
+| Field                        | Type          | Description                                      |
+| ---------------------------- | ------------- | ------------------------------------------------ |
+| `id`                         | Integer       | Unique discount ID                               |
+| `code`                       | String        | Discount code                                    |
+| `description`                | String        | Human-readable description                       |
+| `percentage`                 | Decimal       | Percent off                                      |
+| `amount`                     | Decimal       | Fixed amount off                                 |
+| `limit`                      | Integer/null  | Overall redemption limit                         |
+| `per_user_limit`             | Integer/null  | Per-customer redemption limit                    |
+| `basket_limit`               | Integer/null  | Per-basket application limit                     |
+| `per_event_limit`            | Integer/null  | Per-event redemption limit                       |
+| `is_public`                  | Boolean       | Whether the discount is active for redemption    |
+| `starts_on`                  | DateTime/null | Start date/time                                  |
+| `ends_on`                    | DateTime/null | End date/time                                    |
+| `type`                       | Integer       | Discount type                                    |
+| `allowed_checkouts`          | Array         | Checkout surfaces where the code can be used     |
+| `permission_type`            | String/null   | Item restriction mode                            |
+| `apply_method`               | Integer       | Discount application method                      |
+| `event_discount_permissions` | Array         | Nested event, membership, or product restrictions |
+| `created_by`                 | Integer/null  | User who created the discount                    |
+| `discount_rules`             | Array         | Auto-discount rules                              |
+| `stats`                      | Object        | Usage statistics                                 |
 
 ---
 
