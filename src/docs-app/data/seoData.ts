@@ -34,6 +34,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Create, manage, and analyze tracking links for your Showpass events. Attribute ticket sales to employees, affiliates, and partners with unique short URLs and conversion analytics.",
     keywords: "tracking links api, affiliate tracking, referral links, sales attribution, conversion tracking, showpass analytics, quick purchase links, employee referrals"
   },
+  "/api/21-private-api-discounts": {
+    title: "Discounts API - Showpass Private Organizer API",
+    description: "Create, list, update, and deactivate Showpass discount codes through the Private Organizer API. Issue personal codes for event and ticket type specific use cases.",
+    keywords: "showpass discounts api, discount codes api, private organizer api, promo codes, venue discounts, ticket discount codes"
+  },
 
   // JavaScript SDK
   "/sdk/01-sdk-getting-started": {

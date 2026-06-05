@@ -186,6 +186,15 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     Tracking Links
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/api/21-private-api-discounts"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Discounts
+                  </NavLink>
+                </li>
               </ul>
             </AccordionContent>
           </AccordionItem>

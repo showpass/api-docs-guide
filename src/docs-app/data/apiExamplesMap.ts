@@ -1597,6 +1597,261 @@ axios.get(\`\${baseUrl}me/\`, { headers })
     }
   },
 
+  // ---- Discounts (CRUD) ----
+  "/api/21-private-api-discounts": {
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/financials/discounts/",
+    method: "POST",
+    description: "Create and manage venue discount codes.",
+    examples: {
+      curl: `# Create an event-specific discount code
+curl -X POST "https://www.showpass.com/api/venue/1234/financials/discounts/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "code": "SKYLINE-SPRING-2026",
+  "description": "Spring campaign discount",
+  "type": 1,
+  "percentage": "25.00",
+  "amount": "0.00",
+  "limit": 500,
+  "per_user_limit": 1,
+  "is_public": true,
+  "apply_method": 1,
+  "allowed_checkouts": [
+    "disc_allowed_box_office",
+    "disc_allowed_public"
+  ],
+  "event_discount_permissions": [
+    {
+      "event": 12345,
+      "tt_discount_permissions": [
+        {"ticket_type": 67890}
+      ]
+    }
+  ],
+  "starts_on": "2026-06-01T00:00:00.000Z",
+  "ends_on": "2026-06-30T23:59:59.999Z"
+}'
+
+# Search discount codes
+curl -X GET "https://www.showpass.com/api/venue/1234/financials/discounts/?search=SKYLINE" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# Retrieve a discount
+curl -X GET "https://www.showpass.com/api/venue/1234/financials/discounts/55501/" \\
+-H "Authorization: Token YOUR_API_TOKEN"
+
+# Deactivate a discount without deleting it
+curl -X PUT "https://www.showpass.com/api/venue/1234/financials/discounts/55501/" \\
+-H "Authorization: Token YOUR_API_TOKEN" \\
+-H "Content-Type: application/json" \\
+-d '{
+  "code": "SKYLINE-SPRING-2026",
+  "description": "Spring campaign discount",
+  "type": 1,
+  "percentage": "25.00",
+  "amount": "0.00",
+  "limit": 500,
+  "per_user_limit": 1,
+  "is_public": false,
+  "apply_method": 1,
+  "allowed_checkouts": [
+    "disc_allowed_box_office",
+    "disc_allowed_public"
+  ],
+  "event_discount_permissions": [
+    {
+      "event": 12345,
+      "tt_discount_permissions": [
+        {"ticket_type": 67890}
+      ]
+    }
+  ],
+  "starts_on": "2026-06-01T00:00:00.000Z",
+  "ends_on": "2026-06-30T23:59:59.999Z"
+}'
+
+# Soft delete a discount
+curl -X DELETE "https://www.showpass.com/api/venue/1234/financials/discounts/55501/" \\
+-H "Authorization: Token YOUR_API_TOKEN"`,
+      python: `import requests
+
+venue_id = 1234
+base_url = f"https://www.showpass.com/api/venue/{venue_id}/financials/discounts/"
+
+headers = {
+    "Authorization": "Token YOUR_API_TOKEN",
+    "Content-Type": "application/json",
+}
+
+payload = {
+    "code": "SKYLINE-SPRING-2026",
+    "description": "Spring campaign discount",
+    "type": 1,
+    "percentage": "25.00",
+    "amount": "0.00",
+    "limit": 500,
+    "per_user_limit": 1,
+    "is_public": True,
+    "apply_method": 1,
+    "allowed_checkouts": [
+        "disc_allowed_box_office",
+        "disc_allowed_public",
+    ],
+    "event_discount_permissions": [
+        {
+            "event": 12345,
+            "tt_discount_permissions": [
+                {"ticket_type": 67890},
+            ],
+        },
+    ],
+    "starts_on": "2026-06-01T00:00:00.000Z",
+    "ends_on": "2026-06-30T23:59:59.999Z",
+}
+
+# Create an event-specific discount code
+response = requests.post(base_url, headers=headers, json=payload)
+response.raise_for_status()
+discount = response.json()
+print("Created discount:", discount["id"], discount["code"])
+
+# Search by code or description
+search_response = requests.get(
+    base_url,
+    headers=headers,
+    params={"search": "SKYLINE"},
+)
+print("Matching discounts:", search_response.json()["count"])
+
+# Deactivate without deleting
+updated_payload = {**payload, "is_public": False}
+requests.put(
+    f"{base_url}{discount['id']}/",
+    headers=headers,
+    json=updated_payload,
+).raise_for_status()
+
+# Soft delete
+requests.delete(
+    f"{base_url}{discount['id']}/",
+    headers={"Authorization": "Token YOUR_API_TOKEN"},
+).raise_for_status()`,
+      node: `const axios = require('axios');
+
+const venueId = 1234;
+const baseUrl = \`https://www.showpass.com/api/venue/\${venueId}/financials/discounts/\`;
+
+const headers = {
+  Authorization: 'Token YOUR_API_TOKEN',
+  'Content-Type': 'application/json'
+};
+
+const payload = {
+  code: 'SKYLINE-SPRING-2026',
+  description: 'Spring campaign discount',
+  type: 1,
+  percentage: '25.00',
+  amount: '0.00',
+  limit: 500,
+  per_user_limit: 1,
+  is_public: true,
+  apply_method: 1,
+  allowed_checkouts: [
+    'disc_allowed_box_office',
+    'disc_allowed_public'
+  ],
+  event_discount_permissions: [
+    {
+      event: 12345,
+      tt_discount_permissions: [
+        { ticket_type: 67890 }
+      ]
+    }
+  ],
+  starts_on: '2026-06-01T00:00:00.000Z',
+  ends_on: '2026-06-30T23:59:59.999Z'
+};
+
+async function run() {
+  // Create an event-specific discount code
+  const createResponse = await axios.post(baseUrl, payload, { headers });
+  const discount = createResponse.data;
+  console.log('Created discount:', discount.id, discount.code);
+
+  // Search by code or description
+  const searchResponse = await axios.get(baseUrl, {
+    headers,
+    params: { search: 'SKYLINE' }
+  });
+  console.log('Matching discounts:', searchResponse.data.count);
+
+  // Deactivate without deleting
+  await axios.put(
+    \`\${baseUrl}\${discount.id}/\`,
+    { ...payload, is_public: false },
+    { headers }
+  );
+
+  // Soft delete
+  await axios.delete(\`\${baseUrl}\${discount.id}/\`, {
+    headers: { Authorization: 'Token YOUR_API_TOKEN' }
+  });
+}
+
+run().catch(error => {
+  console.error(error.response?.data || error.message);
+});`
+    },
+    response: {
+      status: 201,
+      body: {
+        id: 55501,
+        venue: 1234,
+        code: "SKYLINE-SPRING-2026",
+        description: "Spring campaign discount",
+        percentage: "25.00",
+        amount: "0.00",
+        limit: 500,
+        per_user_limit: 1,
+        is_public: true,
+        reference: null,
+        event_discount_permissions: [
+          {
+            id: 9001,
+            event: 12345,
+            membership_group: null,
+            product: null,
+            tt_discount_permissions: [
+              {
+                id: 9101,
+                ticket_type: 67890,
+                membership_level: null,
+                product_attribute: null
+              }
+            ]
+          }
+        ],
+        starts_on: "2026-06-01T00:00:00Z",
+        ends_on: "2026-06-30T23:59:59.999000Z",
+        type: 1,
+        minimum_quantity: 0,
+        maximum_quantity: null,
+        allowed_checkouts: [
+          "disc_allowed_box_office",
+          "disc_allowed_public"
+        ],
+        permission_type: "disc_level_ticket_type",
+        apply_method: 1,
+        created_by: 42,
+        basket_limit: null,
+        per_event_limit: null,
+        discount_rules: [],
+        stats: {}
+      }
+    }
+  },
+
   // ---- Scan stats timeline (per-day) ----
   "/api/13-private-api-scan-stats-timeline": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id={event_id}",
