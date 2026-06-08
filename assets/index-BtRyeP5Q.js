@@ -6395,10 +6395,10 @@ Your Showpass WordPress plugin is now installed and configured! You're ready to 
 
 ### Explore these guides next
 
-- **[Adding a "Buy Now" button](./02-adding-single-button-embed-widget)** – Create ticket purchase buttons for events, products, or memberships
-- **[Display event lists](./03-adding-event-list)** – Show your upcoming events in grid or list format
-- **[Add event detail pages](./04-adding-event-detail-page)** – Create dedicated pages for individual events
-- **[Embed a calendar widget](./05-adding-calendar-widget)** – Display an interactive event calendar
+- **[Adding a "Buy Now" button](/wordpress/02-adding-single-button-embed-widget)** – Create ticket purchase buttons for events, products, or memberships
+- **[Display event lists](/wordpress/03-adding-event-list)** – Show your upcoming events in grid or list format
+- **[Add event detail pages](/wordpress/04-adding-event-detail-page)** – Create dedicated pages for individual events
+- **[Embed a calendar widget](/wordpress/05-adding-calendar-widget)** – Display an interactive event calendar
 
 ---
 
