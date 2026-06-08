@@ -228,9 +228,9 @@ The pricing table uses default Showpass styles. To customize:
 
 Now that you know how to create pricing tables, explore:
 
-- **[Adding event lists](./03-adding-event-list)** – Display multiple events in grid/list format
-- **[Adding a single button widget](./02-adding-single-button-embed-widget)** – Create individual purchase buttons
-- **[Creating custom templates](./11-creating-custom-templates)** – Build completely custom layouts
+- **[Adding event lists](/wordpress/03-adding-event-list)** – Display multiple events in grid/list format
+- **[Adding a single button widget](/wordpress/02-adding-single-button-embed-widget)** – Create individual purchase buttons
+- **[Creating custom templates](/wordpress/11-creating-custom-templates)** – Build completely custom layouts
 
 ---
 
@@ -238,4 +238,3 @@ Now that you know how to create pricing tables, explore:
 
 - **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
 - **WordPress Shortcode documentation:** [codex.wordpress.org/Shortcode](https://codex.wordpress.org/Shortcode)
-

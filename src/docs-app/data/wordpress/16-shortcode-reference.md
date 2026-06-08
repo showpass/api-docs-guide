@@ -16,8 +16,8 @@ Display event lists or individual event detail pages.
 - Filter events by tags, dates, or other criteria
 
 **Documentation:**
-- **[Event Lists](./03-adding-event-list)** – Display multiple events in grid or list format
-- **[Event Detail Pages](./04-adding-event-detail-page)** – Create dedicated pages for individual events
+- **[Event Lists](/wordpress/03-adding-event-list)** – Display multiple events in grid or list format
+- **[Event Detail Pages](/wordpress/04-adding-event-detail-page)** – Create dedicated pages for individual events
 
 **Quick examples:**
 ```text
@@ -40,7 +40,7 @@ Add purchase buttons or embed purchase widgets for events, products, or membersh
 - Sell products or memberships
 
 **Documentation:**
-- **[Adding Single Button or Embeddable Widget](./02-adding-single-button-embed-widget)** – Complete guide with all parameters
+- **[Adding Single Button or Embeddable Widget](/wordpress/02-adding-single-button-embed-widget)** – Complete guide with all parameters
 
 **Quick examples:**
 ```text
@@ -63,7 +63,7 @@ Display an interactive calendar view of events (legacy calendar).
 - Month, week, and day views
 
 **Documentation:**
-- **[Adding Calendar Widget](./05-adding-calendar-widget)** – See "Older calendar shortcode" section
+- **[Adding Calendar Widget](/wordpress/05-adding-calendar-widget)** – See "Older calendar shortcode" section
 
 **Quick examples:**
 ```text
@@ -82,7 +82,7 @@ Add a button that opens the modern calendar widget in a pop-up.
 - Quick access to event calendar
 
 **Documentation:**
-- **[Adding Calendar Widget](./05-adding-calendar-widget)** – See "Calendar button (pop-up)" section
+- **[Adding Calendar Widget](/wordpress/05-adding-calendar-widget)** – See "Calendar button (pop-up)" section
 
 **Quick examples:**
 ```text
@@ -102,7 +102,7 @@ Embed the full calendar widget directly on a page.
 - Full-page calendar views
 
 **Documentation:**
-- **[Adding Calendar Widget](./05-adding-calendar-widget)** – See "Embedded calendar" section
+- **[Adding Calendar Widget](/wordpress/05-adding-calendar-widget)** – See "Embedded calendar" section
 
 **Quick examples:**
 ```text
@@ -125,7 +125,7 @@ Display merchandise, add-ons, or other non-event products.
 - Featured products
 
 **Documentation:**
-- **[Adding Product List](./06-adding-product-list)** – Complete guide with all parameters
+- **[Adding Product List](/wordpress/06-adding-product-list)** – Complete guide with all parameters
 
 **Quick examples:**
 ```text
@@ -148,7 +148,7 @@ Display membership options for signup.
 - Featured memberships
 
 **Documentation:**
-- **[Adding Membership List](./07-adding-membership-list)** – Complete guide with all parameters
+- **[Adding Membership List](/wordpress/07-adding-membership-list)** – Complete guide with all parameters
 
 **Quick examples:**
 ```text
@@ -171,7 +171,7 @@ Add a shopping cart/checkout button that opens the Showpass cart widget.
 - Embedded cart on dedicated checkout pages
 
 **Documentation:**
-- **[Adding Checkout Cart Button](./08-adding-checkout-cart-button)** – Complete guide
+- **[Adding Checkout Cart Button](/wordpress/08-adding-checkout-cart-button)** – Complete guide
 
 **Quick examples:**
 ```text
@@ -194,7 +194,7 @@ Display multiple events side-by-side in a pricing comparison table.
 - Seasonal pricing comparisons
 
 **Documentation:**
-- **[Adding Pricing Table](./14-adding-pricing-table)** – Complete guide with all parameters
+- **[Adding Pricing Table](/wordpress/14-adding-pricing-table)** – Complete guide with all parameters
 
 **Quick examples:**
 ```text
@@ -208,15 +208,15 @@ Display multiple events side-by-side in a pricing comparison table.
 
 | Shortcode | Purpose | Primary Documentation |
 |-----------|---------|----------------------|
-| `[showpass_events]` | Display event lists or detail pages | [Event Lists](./03-adding-event-list), [Event Details](./04-adding-event-detail-page) |
-| `[showpass_widget]` | Purchase buttons/widgets for events/products/memberships | [Single Button Widget](./02-adding-single-button-embed-widget) |
-| `[showpass_calendar]` | Legacy calendar view | [Calendar Widget](./05-adding-calendar-widget) |
-| `[showpass_calendar_widget]` | Calendar button (pop-up) | [Calendar Widget](./05-adding-calendar-widget) |
-| `[showpass_embed_calendar]` | Embedded calendar | [Calendar Widget](./05-adding-calendar-widget) |
-| `[showpass_products]` | Display products | [Product List](./06-adding-product-list) |
-| `[showpass_memberships]` | Display memberships | [Membership List](./07-adding-membership-list) |
-| `[showpass_cart_button]` | Shopping cart button | [Cart Button](./08-adding-checkout-cart-button) |
-| `[showpass_pricing_table]` | Pricing comparison table | [Pricing Table](./14-adding-pricing-table) |
+| `[showpass_events]` | Display event lists or detail pages | [Event Lists](/wordpress/03-adding-event-list), [Event Details](/wordpress/04-adding-event-detail-page) |
+| `[showpass_widget]` | Purchase buttons/widgets for events/products/memberships | [Single Button Widget](/wordpress/02-adding-single-button-embed-widget) |
+| `[showpass_calendar]` | Legacy calendar view | [Calendar Widget](/wordpress/05-adding-calendar-widget) |
+| `[showpass_calendar_widget]` | Calendar button (pop-up) | [Calendar Widget](/wordpress/05-adding-calendar-widget) |
+| `[showpass_embed_calendar]` | Embedded calendar | [Calendar Widget](/wordpress/05-adding-calendar-widget) |
+| `[showpass_products]` | Display products | [Product List](/wordpress/06-adding-product-list) |
+| `[showpass_memberships]` | Display memberships | [Membership List](/wordpress/07-adding-membership-list) |
+| `[showpass_cart_button]` | Shopping cart button | [Cart Button](/wordpress/08-adding-checkout-cart-button) |
+| `[showpass_pricing_table]` | Pricing comparison table | [Pricing Table](/wordpress/14-adding-pricing-table) |
 
 ---
 
@@ -262,7 +262,7 @@ Set affiliate tracking ID directly in the shortcode.
 - `[showpass_widget]`
 - `[showpass_events]` (for event lists)
 
-See **[Widgets and Affiliate Tracking Links](./10-widgets-and-affiliate-tracking-links)** for complete tracking documentation.
+See **[Widgets and Affiliate Tracking Links](/wordpress/10-widgets-and-affiliate-tracking-links)** for complete tracking documentation.
 
 ---
 
@@ -278,21 +278,21 @@ Use `template="data"` to get raw JSON data for custom PHP templates.
 - `[showpass_memberships]`
 
 **Documentation:**
-- **[Creating Custom Templates](./11-creating-custom-templates)** – Complete guide
+- **[Creating Custom Templates](/wordpress/11-creating-custom-templates)** – Complete guide
 
 ### Auto-Open Widgets
 
 Use URL parameter `?auto=event-slug` to automatically open widgets on page load.
 
 **Documentation:**
-- **[Automatically Opening Pop-up Widgets](./12-automatically-opening-popup-widgets)** – Complete guide
+- **[Automatically Opening Pop-up Widgets](/wordpress/12-automatically-opening-popup-widgets)** – Complete guide
 
 ### Dynamic Cart Counter
 
 Build custom cart counters using JavaScript.
 
 **Documentation:**
-- **[Advanced: Dynamic Cart Counter](./09-advanced-dynamic-cart-counter-jquery)** – Complete guide
+- **[Advanced: Dynamic Cart Counter](/wordpress/09-advanced-dynamic-cart-counter-jquery)** – Complete guide
 
 ---
 
@@ -301,17 +301,17 @@ Build custom cart counters using JavaScript.
 ### Troubleshooting
 
 For common issues and solutions:
-- **[Tips and Troubleshooting](./13-tips-and-troubleshooting)** – Common problems and fixes
+- **[Tips and Troubleshooting](/wordpress/13-tips-and-troubleshooting)** – Common problems and fixes
 
 ### Installation & Configuration
 
 If you haven't set up the plugin yet:
-- **[Getting Started](./01-getting-started-install-and-configure)** – Installation and configuration guide
+- **[Getting Started](/wordpress/01-getting-started-install-and-configure)** – Installation and configuration guide
 
 ### Admin Tools
 
 For generating shortcodes from URLs:
-- **[Admin Meta Box: URL & Shortcode Generator](./15-admin-meta-box-shortcode-generator)** – Meta box documentation
+- **[Admin Meta Box: URL & Shortcode Generator](/wordpress/15-admin-meta-box-shortcode-generator)** – Meta box documentation
 
 ---
 
@@ -319,4 +319,3 @@ For generating shortcodes from URLs:
 
 - **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
 - **WordPress Shortcode documentation:** [codex.wordpress.org/Shortcode](https://codex.wordpress.org/Shortcode)
-

@@ -129,7 +129,7 @@ The `[showpass_events type="detail"]` shortcode doesn’t need many parameters, 
   ```text
   [showpass_events type="detail" tracking_id="campaign-123"]
   ```
-* **Note:** This applies tracking to purchases made from the widget on this detail page. See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links) for more details.
+* **Note:** This applies tracking to purchases made from the widget on this detail page. See [Widgets and affiliate tracking links](/wordpress/10-widgets-and-affiliate-tracking-links) for more details.
 
 ---
 

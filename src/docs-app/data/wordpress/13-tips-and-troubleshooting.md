@@ -337,7 +337,7 @@ Use the `venue_ids` parameter to filter by specific venues:
 1. Use standard `[showpass_cart_button]` shortcode first to test
 2. Check browser console for JavaScript errors
 3. Temporarily disable other plugins to identify conflicts
-4. See [Advanced: Dynamic cart counter](./09-advanced-dynamic-cart-counter-jquery) for custom implementations
+4. See [Advanced: Dynamic cart counter](/wordpress/09-advanced-dynamic-cart-counter-jquery) for custom implementations
 
 ---
 
@@ -381,7 +381,7 @@ Use the `venue_ids` parameter to filter by specific venues:
 4. **Verify plugin:** Ensure Showpass WordPress Extension is activated
 5. **Refresh page:** After adding access token, refresh the editor page
 
-See [Admin meta box documentation](./15-admin-meta-box-shortcode-generator) for complete details.
+See [Admin meta box documentation](/wordpress/15-admin-meta-box-shortcode-generator) for complete details.
 
 ---
 

@@ -259,7 +259,7 @@ This will:
 1. Auto-open the widget for `concert-2024`
 2. Attribute the sale to affiliate `partner_xyz`
 
-**Learn more:** See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links)
+**Learn more:** See [Widgets and affiliate tracking links](/wordpress/10-widgets-and-affiliate-tracking-links)
 
 ---
 

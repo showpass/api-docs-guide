@@ -215,7 +215,7 @@ Control what the widget loads and how it behaves using these parameters.
 [showpass_widget slug="concert" tracking_id="8ee54af5"]
 ```
 
-**Note:** This is a shortcode parameter alternative to using `?aff=token` in the URL. See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links) for more details.
+**Note:** This is a shortcode parameter alternative to using `?aff=token` in the URL. See [Widgets and affiliate tracking links](/wordpress/10-widgets-and-affiliate-tracking-links) for more details.
 
 ---
 
@@ -451,10 +451,10 @@ Embed product purchase widgets on product pages:
 
 Now that you know how to add purchase buttons and widgets, explore:
 
-- **[Display event lists](./03-adding-event-list)** – Show multiple events in grid/list format
-- **[Create event detail pages](./04-adding-event-detail-page)** – Build dedicated pages for each event
-- **[Add a calendar widget](./05-adding-calendar-widget)** – Display interactive event calendar
-- **[Customize with templates](./11-creating-custom-templates)** – Build custom layouts with raw data
+- **[Display event lists](/wordpress/03-adding-event-list)** – Show multiple events in grid/list format
+- **[Create event detail pages](/wordpress/04-adding-event-detail-page)** – Build dedicated pages for each event
+- **[Add a calendar widget](/wordpress/05-adding-calendar-widget)** – Display interactive event calendar
+- **[Customize with templates](/wordpress/11-creating-custom-templates)** – Build custom layouts with raw data
 
 ---
 
