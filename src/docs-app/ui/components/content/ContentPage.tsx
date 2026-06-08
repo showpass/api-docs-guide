@@ -99,7 +99,7 @@ const ContentPage: React.FC<ContentPageProps> = ({
         </div>
       ) : (
         <>
-          <MarkdownContent content={content} />
+          <MarkdownContent content={content} currentPath={currentPath} />
           <EditPageLinks contentPath={contentPath} />
         </>
       )}

@@ -1,11 +1,12 @@
 import React from "react";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from "rehype-raw";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
 import HeaderWithLink from "@/docs-app/ui/components/content/HeaderWithLink.tsx";
 import type { Components } from "react-markdown";
-import type { Root, Element as MdElement, Text as MdText } from "hast"; // Import HAST types
+import type { Element as MdElement } from "hast";
 import {
   Table,
   TableBody,
@@ -16,10 +17,15 @@ import {
 } from "@/shared/components/table.tsx";
 import { cn } from "@/shared/lib/utils.ts";
 import { Separator } from "@/shared/components/separator.tsx";
+import { resolveMarkdownDocLink } from "@/docs-app/ui/components/content/markdownLinks.ts";
 
 interface MarkdownContentProps {
   content: string;
+  currentPath: string;
 }
+
+const linkClassName =
+  "text-primary underline decoration-primary/30 hover:decoration-primary transition-colors font-medium";
 
 /**
  * Extracts plain text from React children (handles nested elements like code tags)
@@ -52,7 +58,10 @@ const generateHeadingId = (text: string): string => {
     .replace(/^-+|-+$/g, "");
 };
 
-const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
+const MarkdownContent: React.FC<MarkdownContentProps> = ({
+  content,
+  currentPath,
+}) => {
   // Define components mapping for ReactMarkdown
   const components: Components = {
     pre: (props) => {
@@ -147,12 +156,24 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({ content }) => {
           </HeaderWithLink>
         );
     },
-    a: ({ node, ...props }) => (
-      <a 
-        className="text-primary underline decoration-primary/30 hover:decoration-primary transition-colors font-medium" 
-        {...props} 
-      />
-    ),
+    a: ({ node, href, children, className, ...props }) => {
+      const docRoute = resolveMarkdownDocLink(href, currentPath);
+      const mergedClassName = cn(linkClassName, className);
+
+      if (docRoute) {
+        return (
+          <Link to={docRoute} className={mergedClassName} {...props}>
+            {children}
+          </Link>
+        );
+      }
+
+      return (
+        <a href={href} className={mergedClassName} {...props}>
+          {children}
+        </a>
+      );
+    },
     ul: ({ node, ...props }) => (
       <ul className="list-disc pl-6 my-6 space-y-2" {...props} />
     ),
