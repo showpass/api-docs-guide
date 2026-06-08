@@ -6634,7 +6634,7 @@ Control what the widget loads and how it behaves using these parameters.
 [showpass_widget slug="concert" tracking_id="8ee54af5"]
 \`\`\`
 
-**Note:** This is a shortcode parameter alternative to using \`?aff=token\` in the URL. See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links) for more details.
+**Note:** This is a shortcode parameter alternative to using \`?aff=token\` in the URL. See [Widgets and affiliate tracking links](/wordpress/10-widgets-and-affiliate-tracking-links) for more details.
 
 ---
 
@@ -6870,10 +6870,10 @@ Embed product purchase widgets on product pages:
 
 Now that you know how to add purchase buttons and widgets, explore:
 
-- **[Display event lists](./03-adding-event-list)** – Show multiple events in grid/list format
-- **[Create event detail pages](./04-adding-event-detail-page)** – Build dedicated pages for each event
-- **[Add a calendar widget](./05-adding-calendar-widget)** – Display interactive event calendar
-- **[Customize with templates](./11-creating-custom-templates)** – Build custom layouts with raw data
+- **[Display event lists](/wordpress/03-adding-event-list)** – Show multiple events in grid/list format
+- **[Create event detail pages](/wordpress/04-adding-event-detail-page)** – Build dedicated pages for each event
+- **[Add a calendar widget](/wordpress/05-adding-calendar-widget)** – Display interactive event calendar
+- **[Customize with templates](/wordpress/11-creating-custom-templates)** – Build custom layouts with raw data
 
 ---
 
@@ -7306,7 +7306,7 @@ The \`[showpass_events type="detail"]\` shortcode doesn’t need many parameters
   \`\`\`text
   [showpass_events type="detail" tracking_id="campaign-123"]
   \`\`\`
-* **Note:** This applies tracking to purchases made from the widget on this detail page. See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links) for more details.
+* **Note:** This applies tracking to purchases made from the widget on this detail page. See [Widgets and affiliate tracking links](/wordpress/10-widgets-and-affiliate-tracking-links) for more details.
 
 ---
 
@@ -7327,7 +7327,8 @@ the default template typically includes:
 * Event description
 * Embedded Showpass ticket purchasing widget
 
-This gives each event a complete, self-contained page on your site, keeping visitors on your domain and providing a more polished experience than linking directly out to Showpass.`,CG=`# Adding a calendar widget
+This gives each event a complete, self-contained page on your site, keeping visitors on your domain and providing a more polished experience than linking directly out to Showpass.
+`,CG=`# Adding a calendar widget
 
 Showpass offers a modern calendar widget to display your events. This is ideal for venues with many time-slot–based events or when you want to provide a visual calendar view for your users.
 
@@ -8937,7 +8938,7 @@ This will:
 1. Auto-open the widget for \`concert-2024\`
 2. Attribute the sale to affiliate \`partner_xyz\`
 
-**Learn more:** See [Widgets and affiliate tracking links](./10-widgets-and-affiliate-tracking-links)
+**Learn more:** See [Widgets and affiliate tracking links](/wordpress/10-widgets-and-affiliate-tracking-links)
 
 ---
 
@@ -9289,7 +9290,7 @@ Use the \`venue_ids\` parameter to filter by specific venues:
 1. Use standard \`[showpass_cart_button]\` shortcode first to test
 2. Check browser console for JavaScript errors
 3. Temporarily disable other plugins to identify conflicts
-4. See [Advanced: Dynamic cart counter](./09-advanced-dynamic-cart-counter-jquery) for custom implementations
+4. See [Advanced: Dynamic cart counter](/wordpress/09-advanced-dynamic-cart-counter-jquery) for custom implementations
 
 ---
 
@@ -9333,7 +9334,7 @@ Use the \`venue_ids\` parameter to filter by specific venues:
 4. **Verify plugin:** Ensure Showpass WordPress Extension is activated
 5. **Refresh page:** After adding access token, refresh the editor page
 
-See [Admin meta box documentation](./15-admin-meta-box-shortcode-generator) for complete details.
+See [Admin meta box documentation](/wordpress/15-admin-meta-box-shortcode-generator) for complete details.
 
 ---
 
@@ -9699,9 +9700,9 @@ The pricing table uses default Showpass styles. To customize:
 
 Now that you know how to create pricing tables, explore:
 
-- **[Adding event lists](./03-adding-event-list)** – Display multiple events in grid/list format
-- **[Adding a single button widget](./02-adding-single-button-embed-widget)** – Create individual purchase buttons
-- **[Creating custom templates](./11-creating-custom-templates)** – Build completely custom layouts
+- **[Adding event lists](/wordpress/03-adding-event-list)** – Display multiple events in grid/list format
+- **[Adding a single button widget](/wordpress/02-adding-single-button-embed-widget)** – Create individual purchase buttons
+- **[Creating custom templates](/wordpress/11-creating-custom-templates)** – Build completely custom layouts
 
 ---
 
@@ -9709,7 +9710,6 @@ Now that you know how to create pricing tables, explore:
 
 - **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
 - **WordPress Shortcode documentation:** [codex.wordpress.org/Shortcode](https://codex.wordpress.org/Shortcode)
-
 `,FG=`# Admin meta box: URL & Shortcode Generator
 
 The Showpass WordPress plugin includes a helpful meta box in the page and post editor that automatically generates shortcodes from Showpass event URLs. This feature saves time by eliminating the need to manually extract event slugs or IDs.
@@ -9891,7 +9891,7 @@ If the meta box isn't available or you prefer manual entry:
    [showpass_widget slug="my-event"]
    \`\`\`
 
-See **[Adding a single button widget](./02-adding-single-button-embed-widget)** for complete parameter documentation.
+See **[Adding a single button widget](/wordpress/02-adding-single-button-embed-widget)** for complete parameter documentation.
 
 ---
 
@@ -9899,9 +9899,9 @@ See **[Adding a single button widget](./02-adding-single-button-embed-widget)** 
 
 Now that you know how to use the meta box generator:
 
-- **[Adding a single button widget](./02-adding-single-button-embed-widget)** – Learn all widget parameters
-- **[Adding event lists](./03-adding-event-list)** – Display multiple events
-- **[Tips and troubleshooting](./13-tips-and-troubleshooting)** – Common issues and solutions
+- **[Adding a single button widget](/wordpress/02-adding-single-button-embed-widget)** – Learn all widget parameters
+- **[Adding event lists](/wordpress/03-adding-event-list)** – Display multiple events
+- **[Tips and troubleshooting](/wordpress/13-tips-and-troubleshooting)** – Common issues and solutions
 
 ---
 
@@ -9909,7 +9909,6 @@ Now that you know how to use the meta box generator:
 
 - **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
 - **WordPress Meta Boxes:** [developer.wordpress.org/plugins/metadata/custom-meta-boxes](https://developer.wordpress.org/plugins/metadata/custom-meta-boxes/)
-
 `,jG=`# Showpass WordPress Plugin: Complete Shortcode Reference
 
 Quick reference guide for all available Showpass shortcodes. Each shortcode links to its detailed documentation.
@@ -9928,8 +9927,8 @@ Display event lists or individual event detail pages.
 - Filter events by tags, dates, or other criteria
 
 **Documentation:**
-- **[Event Lists](./03-adding-event-list)** – Display multiple events in grid or list format
-- **[Event Detail Pages](./04-adding-event-detail-page)** – Create dedicated pages for individual events
+- **[Event Lists](/wordpress/03-adding-event-list)** – Display multiple events in grid or list format
+- **[Event Detail Pages](/wordpress/04-adding-event-detail-page)** – Create dedicated pages for individual events
 
 **Quick examples:**
 \`\`\`text
@@ -9952,7 +9951,7 @@ Add purchase buttons or embed purchase widgets for events, products, or membersh
 - Sell products or memberships
 
 **Documentation:**
-- **[Adding Single Button or Embeddable Widget](./02-adding-single-button-embed-widget)** – Complete guide with all parameters
+- **[Adding Single Button or Embeddable Widget](/wordpress/02-adding-single-button-embed-widget)** – Complete guide with all parameters
 
 **Quick examples:**
 \`\`\`text
@@ -9975,7 +9974,7 @@ Display an interactive calendar view of events (legacy calendar).
 - Month, week, and day views
 
 **Documentation:**
-- **[Adding Calendar Widget](./05-adding-calendar-widget)** – See "Older calendar shortcode" section
+- **[Adding Calendar Widget](/wordpress/05-adding-calendar-widget)** – See "Older calendar shortcode" section
 
 **Quick examples:**
 \`\`\`text
@@ -9994,7 +9993,7 @@ Add a button that opens the modern calendar widget in a pop-up.
 - Quick access to event calendar
 
 **Documentation:**
-- **[Adding Calendar Widget](./05-adding-calendar-widget)** – See "Calendar button (pop-up)" section
+- **[Adding Calendar Widget](/wordpress/05-adding-calendar-widget)** – See "Calendar button (pop-up)" section
 
 **Quick examples:**
 \`\`\`text
@@ -10014,7 +10013,7 @@ Embed the full calendar widget directly on a page.
 - Full-page calendar views
 
 **Documentation:**
-- **[Adding Calendar Widget](./05-adding-calendar-widget)** – See "Embedded calendar" section
+- **[Adding Calendar Widget](/wordpress/05-adding-calendar-widget)** – See "Embedded calendar" section
 
 **Quick examples:**
 \`\`\`text
@@ -10037,7 +10036,7 @@ Display merchandise, add-ons, or other non-event products.
 - Featured products
 
 **Documentation:**
-- **[Adding Product List](./06-adding-product-list)** – Complete guide with all parameters
+- **[Adding Product List](/wordpress/06-adding-product-list)** – Complete guide with all parameters
 
 **Quick examples:**
 \`\`\`text
@@ -10060,7 +10059,7 @@ Display membership options for signup.
 - Featured memberships
 
 **Documentation:**
-- **[Adding Membership List](./07-adding-membership-list)** – Complete guide with all parameters
+- **[Adding Membership List](/wordpress/07-adding-membership-list)** – Complete guide with all parameters
 
 **Quick examples:**
 \`\`\`text
@@ -10083,7 +10082,7 @@ Add a shopping cart/checkout button that opens the Showpass cart widget.
 - Embedded cart on dedicated checkout pages
 
 **Documentation:**
-- **[Adding Checkout Cart Button](./08-adding-checkout-cart-button)** – Complete guide
+- **[Adding Checkout Cart Button](/wordpress/08-adding-checkout-cart-button)** – Complete guide
 
 **Quick examples:**
 \`\`\`text
@@ -10106,7 +10105,7 @@ Display multiple events side-by-side in a pricing comparison table.
 - Seasonal pricing comparisons
 
 **Documentation:**
-- **[Adding Pricing Table](./14-adding-pricing-table)** – Complete guide with all parameters
+- **[Adding Pricing Table](/wordpress/14-adding-pricing-table)** – Complete guide with all parameters
 
 **Quick examples:**
 \`\`\`text
@@ -10120,15 +10119,15 @@ Display multiple events side-by-side in a pricing comparison table.
 
 | Shortcode | Purpose | Primary Documentation |
 |-----------|---------|----------------------|
-| \`[showpass_events]\` | Display event lists or detail pages | [Event Lists](./03-adding-event-list), [Event Details](./04-adding-event-detail-page) |
-| \`[showpass_widget]\` | Purchase buttons/widgets for events/products/memberships | [Single Button Widget](./02-adding-single-button-embed-widget) |
-| \`[showpass_calendar]\` | Legacy calendar view | [Calendar Widget](./05-adding-calendar-widget) |
-| \`[showpass_calendar_widget]\` | Calendar button (pop-up) | [Calendar Widget](./05-adding-calendar-widget) |
-| \`[showpass_embed_calendar]\` | Embedded calendar | [Calendar Widget](./05-adding-calendar-widget) |
-| \`[showpass_products]\` | Display products | [Product List](./06-adding-product-list) |
-| \`[showpass_memberships]\` | Display memberships | [Membership List](./07-adding-membership-list) |
-| \`[showpass_cart_button]\` | Shopping cart button | [Cart Button](./08-adding-checkout-cart-button) |
-| \`[showpass_pricing_table]\` | Pricing comparison table | [Pricing Table](./14-adding-pricing-table) |
+| \`[showpass_events]\` | Display event lists or detail pages | [Event Lists](/wordpress/03-adding-event-list), [Event Details](/wordpress/04-adding-event-detail-page) |
+| \`[showpass_widget]\` | Purchase buttons/widgets for events/products/memberships | [Single Button Widget](/wordpress/02-adding-single-button-embed-widget) |
+| \`[showpass_calendar]\` | Legacy calendar view | [Calendar Widget](/wordpress/05-adding-calendar-widget) |
+| \`[showpass_calendar_widget]\` | Calendar button (pop-up) | [Calendar Widget](/wordpress/05-adding-calendar-widget) |
+| \`[showpass_embed_calendar]\` | Embedded calendar | [Calendar Widget](/wordpress/05-adding-calendar-widget) |
+| \`[showpass_products]\` | Display products | [Product List](/wordpress/06-adding-product-list) |
+| \`[showpass_memberships]\` | Display memberships | [Membership List](/wordpress/07-adding-membership-list) |
+| \`[showpass_cart_button]\` | Shopping cart button | [Cart Button](/wordpress/08-adding-checkout-cart-button) |
+| \`[showpass_pricing_table]\` | Pricing comparison table | [Pricing Table](/wordpress/14-adding-pricing-table) |
 
 ---
 
@@ -10174,7 +10173,7 @@ Set affiliate tracking ID directly in the shortcode.
 - \`[showpass_widget]\`
 - \`[showpass_events]\` (for event lists)
 
-See **[Widgets and Affiliate Tracking Links](./10-widgets-and-affiliate-tracking-links)** for complete tracking documentation.
+See **[Widgets and Affiliate Tracking Links](/wordpress/10-widgets-and-affiliate-tracking-links)** for complete tracking documentation.
 
 ---
 
@@ -10190,21 +10189,21 @@ Use \`template="data"\` to get raw JSON data for custom PHP templates.
 - \`[showpass_memberships]\`
 
 **Documentation:**
-- **[Creating Custom Templates](./11-creating-custom-templates)** – Complete guide
+- **[Creating Custom Templates](/wordpress/11-creating-custom-templates)** – Complete guide
 
 ### Auto-Open Widgets
 
 Use URL parameter \`?auto=event-slug\` to automatically open widgets on page load.
 
 **Documentation:**
-- **[Automatically Opening Pop-up Widgets](./12-automatically-opening-popup-widgets)** – Complete guide
+- **[Automatically Opening Pop-up Widgets](/wordpress/12-automatically-opening-popup-widgets)** – Complete guide
 
 ### Dynamic Cart Counter
 
 Build custom cart counters using JavaScript.
 
 **Documentation:**
-- **[Advanced: Dynamic Cart Counter](./09-advanced-dynamic-cart-counter-jquery)** – Complete guide
+- **[Advanced: Dynamic Cart Counter](/wordpress/09-advanced-dynamic-cart-counter-jquery)** – Complete guide
 
 ---
 
@@ -10213,17 +10212,17 @@ Build custom cart counters using JavaScript.
 ### Troubleshooting
 
 For common issues and solutions:
-- **[Tips and Troubleshooting](./13-tips-and-troubleshooting)** – Common problems and fixes
+- **[Tips and Troubleshooting](/wordpress/13-tips-and-troubleshooting)** – Common problems and fixes
 
 ### Installation & Configuration
 
 If you haven't set up the plugin yet:
-- **[Getting Started](./01-getting-started-install-and-configure)** – Installation and configuration guide
+- **[Getting Started](/wordpress/01-getting-started-install-and-configure)** – Installation and configuration guide
 
 ### Admin Tools
 
 For generating shortcodes from URLs:
-- **[Admin Meta Box: URL & Shortcode Generator](./15-admin-meta-box-shortcode-generator)** – Meta box documentation
+- **[Admin Meta Box: URL & Shortcode Generator](/wordpress/15-admin-meta-box-shortcode-generator)** – Meta box documentation
 
 ---
 
@@ -10231,7 +10230,6 @@ For generating shortcodes from URLs:
 
 - **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
 - **WordPress Shortcode documentation:** [codex.wordpress.org/Shortcode](https://codex.wordpress.org/Shortcode)
-
 `,xi=class xi{static initializeContentMap(){const t=Object.assign({"../data/api/01-public-api-introduction.md":RW,"../data/api/02-public-api-event-list-by-organization.md":OW,"../data/api/03-public-api-query-specific-event.md":LW,"../data/api/10-private-api-overview.md":MW,"../data/api/11-private-api-scan-ticket-by-code.md":FW,"../data/api/12-private-api-ticket-scan-actions.md":jW,"../data/api/20-private-api-tracking-links.md":BW,"../data/api/21-private-api-discounts.md":UW,"../data/cli/01-overview.md":HW,"../data/cli/02-commands.md":zW,"../data/facebook/01-introduction-to-facebook-pixel.md":$W,"../data/facebook/02-installing-facebook-pixel.md":WW,"../data/facebook/03-about-facebook-conversions-api.md":GW,"../data/facebook/04-installing-facebook-conversions-api.md":qW,"../data/google-tag-manager/01-introduction-to-showpass-gtm-integration.md":VW,"../data/google-tag-manager/02-initial-setup-ga4-and-gtm-basics.md":YW,"../data/google-tag-manager/03-standard-ecommerce-tracking-with-ga4-via-gtm.md":KW,"../data/google-tag-manager/04-cross-domain-tracking-considerations.md":QW,"../data/google-tag-manager/05-working-with-custom-html-and-javascript-in-gtm-for-showpass.md":XW,"../data/google-tag-manager/06-tracking-custom-conversions-marketing-pixels.md":JW,"../data/google-tag-manager/07-showpass-data-layer-details.md":ZW,"../data/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage.md":eG,"../data/google-tag-manager/09-advanced-tracking-widget-and-direct-purchases.md":tG,"../data/google-tag-manager/10-example-google-ads-conversion-tracking-setup.md":nG,"../data/google-tag-manager/11-gtm-faq-troubleshooting-guide.md":rG,"../data/google-tag-manager/12-json-ready-to-use-importable-containers.md":aG,"../data/sdk/01-sdk-getting-started.md":oG,"../data/sdk/02-ticket-purchase-widget.md":sG,"../data/sdk/03-product-purchase-widget.md":iG,"../data/sdk/04-membership-purchase-widget.md":lG,"../data/sdk/05-event-calendar-widget.md":uG,"../data/sdk/06-checkout-widget.md":cG,"../data/sdk/07-cart-quantity-listener.md":dG,"../data/sdk/08-basic-integration-example.md":pG,"../data/security/01-compliance-overview.md":hG,"../data/security/02-certifications.md":fG,"../data/security/03-pci-responsibility-matrix.md":mG,"../data/security/04-outgoing-ip-addresses.md":gG,"../data/webhooks/01-webhooks-introduction.md":yG,"../data/webhooks/02-webhooks-setup-and-management.md":bG,"../data/webhooks/03-webhooks-security.md":vG,"../data/webhooks/04-webhooks-event-types.md":wG,"../data/webhooks/05-webhooks-payload-invoice-object.md":xG,"../data/webhooks/06-webhooks-logging-and-troubleshooting.md":kG,"../data/wordpress/01-getting-started-install-and-configure.md":EG,"../data/wordpress/02-adding-single-button-embed-widget.md":_G,"../data/wordpress/03-adding-event-list.md":TG,"../data/wordpress/04-adding-event-detail-page.md":SG,"../data/wordpress/05-adding-calendar-widget.md":CG,"../data/wordpress/06-adding-product-list.md":AG,"../data/wordpress/07-adding-membership-list.md":IG,"../data/wordpress/08-adding-checkout-cart-button.md":PG,"../data/wordpress/09-advanced-dynamic-cart-counter-jquery.md":NG,"../data/wordpress/10-widgets-and-affiliate-tracking-links.md":DG,"../data/wordpress/11-creating-custom-templates.md":RG,"../data/wordpress/12-automatically-opening-popup-widgets.md":OG,"../data/wordpress/13-tips-and-troubleshooting.md":LG,"../data/wordpress/14-adding-pricing-table.md":MG,"../data/wordpress/15-admin-meta-box-shortcode-generator.md":FG,"../data/wordpress/16-shortcode-reference.md":jG}),n={},r="../data";for(const a in t){let o=a.substring(r.length);o.startsWith("/")||(o="/"+o),n[o]=t[a]}return n}async loadContent(t){try{const n=t.startsWith("/")?t:`/${t}`,r=xi.contentMap[n];return r||(console.error(`Content not found: ${t}`),`# Content Not Found
 
 Sorry, the requested content at \`${t}\` could not be found.
