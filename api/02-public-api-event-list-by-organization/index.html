@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-WhqodQPV.js"></script>
+    <script type="module" crossorigin src="/assets/index-C9zptlZ_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -87,9 +87,9 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Experience list by organization</h1>
+  <article><h1>List experiences by organization</h1>
 <h2>Overview</h2>
-<p>To fetch experiences for your organization, use the <a href="/api/01-public-api-introduction">Discovery API</a> with the <code>venue</code> parameter to filter by organization ID.</p>
+<p>Returns public experiences for one or more Showpass organizations. Supports venue calendars, organizer pages, and partner listings.</p>
 <hr>
 <h2>Endpoint</h2>
 <p><strong>Single organization:</strong></p>
@@ -103,11 +103,11 @@
 <h2>Finding Your Organization ID</h2>
 <ol>
 <li>Log in to your Showpass account</li>
-<li>Navigate to <a href="https://www.showpass.com/dashboard/venues/edit/">https://www.showpass.com/dashboard/venues/edit/</a></li>
+<li>Open your venue settings: <code>https://www.showpass.com/dashboard/venues/edit/</code></li>
 <li>Your Organization ID is displayed in the top right corner</li>
 </ol>
 <hr>
-<h2>Quick Examples</h2>
+<h2>Common Queries</h2>
 <p><strong>Single organization:</strong></p>
 <pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=123
 </code></pre>
@@ -117,12 +117,12 @@
 <p><strong>Upcoming events only:</strong></p>
 <pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=123&amp;starts_on__gte=2025-01-01T00:00:00
 </code></pre>
-<p><strong>Homepage widget (next 5 featured events):</strong></p>
+<p><strong>Featured homepage list (next 5 events):</strong></p>
 <pre><code class="language-text">https://www.showpass.com/api/public/discovery/?venue=123&amp;is_featured=true&amp;starts_on__gte=2025-01-01T00:00:00&amp;ordering=starts_on&amp;page_size=5
 </code></pre>
 <hr>
-<h2>Available Parameters</h2>
-<p>The <code>venue</code> parameter can be combined with any parameter from the Discovery API, including:</p>
+<h2>Combine With Other Filters</h2>
+<p>You can combine <code>venue</code> or <code>venue__in</code> with the same filters used by the Discovery API:</p>
 <ul>
 <li><strong>Date filters</strong>: <code>starts_on__gte</code>, <code>starts_on__lte</code>, <code>ends_on__gte</code>, <code>ends_on__lt</code></li>
 <li><strong>Search</strong>: <code>search_string</code></li>

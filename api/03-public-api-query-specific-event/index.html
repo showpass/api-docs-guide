@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-WhqodQPV.js"></script>
+    <script type="module" crossorigin src="/assets/index-C9zptlZ_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -88,29 +88,27 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Query a specific experience by slug</h1>
-<h2>Endpoint</h2>
-<p>To retrieve detailed information for a single public experience using its unique slug:</p>
-<pre><code class="language-text">https://www.showpass.com/api/public/events/{SLUG}/
-</code></pre>
-<p>Replace <code>{SLUG}</code> with the actual slug of the experience or the event <code>{ID}</code>.</p>
-<hr>
 <h2>Overview</h2>
-<p>This endpoint returns comprehensive details about a specific experience, including:</p>
+<p>Returns full public details for one Showpass experience. The response includes:</p>
 <ul>
-<li>Full experience information (name, description, dates, location)</li>
+<li>Experience name, description, dates, and location</li>
 <li>Venue details</li>
 <li>Ticket types and pricing</li>
 <li>Availability and inventory</li>
 <li>Custom fields and requirements</li>
 <li>Related events</li>
 </ul>
-<p>This is the primary endpoint for displaying experience detail pages and initializing the Showpass purchase widget.</p>
+<hr>
+<h2>Endpoint</h2>
+<pre><code class="language-text">https://www.showpass.com/api/public/events/{SLUG}/
+</code></pre>
+<p>Replace <code>{SLUG}</code> with the experience slug or ID.</p>
 <hr>
 <h2>Finding the Experience Slug</h2>
 <p>The slug is the URL-friendly identifier for an experience. You can find it in several ways:</p>
 <ol>
-<li><strong>From the Showpass URL</strong>: For example; <code>https://www.showpass.com/summer-concert-2025/</code>, the slug is <code>summer-concert-2025</code></li>
-<li><strong>From Discovery API</strong>: The <code>slug</code> field in the Discovery API response</li>
+<li><strong>From the Showpass URL</strong>: For example, in <code>https://www.showpass.com/summer-concert-2025/</code>, the slug is <code>summer-concert-2025</code></li>
+<li><strong>From the Discovery API</strong>: The <code>slug</code> field in the Discovery API response</li>
 <li><strong>From the Dashboard</strong>: In your event management dashboard</li>
 </ol>
 <hr>
@@ -132,9 +130,9 @@
 </thead>
 <tbody><tr>
 <td><code>slug</code></td>
-<td>String</td>
+<td>String or integer</td>
 <td>Required</td>
-<td>The unique slug identifying the experience (part of the URL path)</td>
+<td>The experience slug or ID, passed in the URL path</td>
 </tr>
 </tbody></table>
 <hr>
@@ -169,6 +167,7 @@
 <li>Experience has been deleted</li>
 <li>Typo in the URL</li>
 </ul>
+<hr>
 <h2>Comparison with Discovery API</h2>
 <table>
 <thead>
@@ -195,7 +194,7 @@
 </tr>
 <tr>
 <td><strong>Use Case</strong></td>
-<td>Experience detail pages, widget init</td>
+<td>Detail pages, redirects, purchase flows</td>
 <td>Listings, calendars, search</td>
 </tr>
 <tr>

@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-WhqodQPV.js"></script>
+    <script type="module" crossorigin src="/assets/index-C9zptlZ_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -88,20 +88,127 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Showpass Discovery API</h1>
-<p>The primary endpoint for discovering experiences is: </p>
+<h2>Overview</h2>
+<p>Returns public Showpass experiences for calendars, search pages, featured lists, and event cards. Each result includes a <code>slug</code> for linking to the experience or fetching its details.</p>
+<hr>
+<h2>Endpoint</h2>
 <pre><code class="language-text">https://www.showpass.com/api/public/discovery/
 </code></pre>
 <hr>
-<h2>Overview</h2>
-<p>The Showpass Public Experience API allows you to fetch experience data programmatically. You can use this API to display experience on your website, build custom integrations, or create your own applications that interact with Showpass experiences.</p>
-<hr>
 <h2>Authentication</h2>
-<p>The Discovery API is open and does not generally require authentication tokens for basic discovery queries. However, for your requests to be successful, <strong>your website&#39;s domain must be added to the allowlist</strong> in the Showpass Dashboard. You can do this under your organization&#39;s settings, typically found on the &quot;Integrations&quot; tab of your venue edit page (<code>https://www.showpass.com/dashboard/venues/edit/</code>).</p>
+<p>No API token is required. Browser requests must come from a domain allowlisted in Showpass.</p>
+<p><strong>Dashboard settings URL:</strong></p>
+<pre><code class="language-text">https://www.showpass.com/dashboard/venues/edit/
+</code></pre>
 <hr>
 <h2>Response format</h2>
 <p>All API responses are returned in <strong>JSON</strong> format.</p>
 <hr>
-<h2>Parameters</h2>
+<h2>Key Filtering Parameters</h2>
+<p>Start with these filters for most listings:</p>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Example</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>search_string</code></td>
+<td><code>&amp;search_string=concert</code></td>
+<td>Filter by experience name, venue, tags</td>
+</tr>
+<tr>
+<td><code>point_location</code></td>
+<td><code>&amp;point_location=51.0276233,-114.087835,15</code></td>
+<td>Filter by latitude, longitude, and radius in km</td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td><code>&amp;tags=featured</code></td>
+<td>Show only experiences with specific tags</td>
+</tr>
+<tr>
+<td><code>starts_on__gte</code></td>
+<td><code>&amp;starts_on__gte=2025-01-01T00:00:00</code></td>
+<td>Experiences starting after a date</td>
+</tr>
+<tr>
+<td><code>ends_on__lt</code></td>
+<td><code>&amp;ends_on__lt=2025-02-01T00:00:00</code></td>
+<td>Experiences ending before a date</td>
+</tr>
+<tr>
+<td><code>is_featured</code></td>
+<td><code>&amp;is_featured=true</code></td>
+<td>Show only featured experiences</td>
+</tr>
+<tr>
+<td><code>venue__in</code></td>
+<td><code>&amp;venue__in=123,456</code></td>
+<td>Filter by specific venue IDs</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Response Fields</h2>
+<p>These fields from the <code>results</code> array are the most commonly used:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Description</th>
+<th>Usage</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>slug</code></td>
+<td>Unique experience identifier</td>
+<td>Link to, fetch, or route to the experience</td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>Experience name</td>
+<td>Display the experience title</td>
+</tr>
+<tr>
+<td><code>starts_on</code></td>
+<td>Experience start time (UTC)</td>
+<td>Show when the experience begins</td>
+</tr>
+<tr>
+<td><code>ends_on</code></td>
+<td>Experience end time (UTC)</td>
+<td>Show when the experience ends</td>
+</tr>
+<tr>
+<td><code>timezone</code></td>
+<td>Experience timezone</td>
+<td>Convert UTC times to local display</td>
+</tr>
+<tr>
+<td><code>description_without_html</code></td>
+<td>Plain text description</td>
+<td>Experience details and description text</td>
+</tr>
+<tr>
+<td><code>frontend_details_url</code></td>
+<td>Showpass experience page URL</td>
+<td>Link to full experience details</td>
+</tr>
+<tr>
+<td><code>image</code></td>
+<td>Square experience image</td>
+<td>Experience thumbnail/card image</td>
+</tr>
+<tr>
+<td><code>image_banner</code></td>
+<td>Banner experience image</td>
+<td>Hero/header image</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>All Parameters</h2>
 <p>You can refine your experience list query using the following optional parameters:</p>
 <table>
 <thead>
@@ -269,116 +376,6 @@
 <td>Specify the order the experiences are returned. Prefix with <code>-</code> for descending order.<br>Available fields: <code>is_sponsored</code>, <code>ranking_factor</code>, <code>starts_on</code>, <code>ends_on</code>, <code>id</code>, <code>name</code>.<br>Default: <code>-is_sponsored,-ranking_factor,starts_on</code><br>Examples: <code>&amp;ordering=starts_on</code>, <code>&amp;ordering=-name</code>, <code>&amp;ordering=-ranking_factor,starts_on</code></td>
 </tr>
 </tbody></table>
-<hr>
-<h2>Important Fields</h2>
-<p>While the API returns many fields, the following are the most impactful for building real integrations. Focus on these fields for your initial implementation:</p>
-<hr>
-<h3>Essential Response Fields</h3>
-<p>When processing API responses, these fields from the <code>results</code> array are the most commonly needed:</p>
-<table>
-<thead>
-<tr>
-<th>Field</th>
-<th>Description</th>
-<th>Usage</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>slug</code></td>
-<td>Unique experience identifier</td>
-<td><strong>Required</strong> to initiate widgets via the SDK</td>
-</tr>
-<tr>
-<td><code>name</code></td>
-<td>Experience name</td>
-<td>Display the experience title</td>
-</tr>
-<tr>
-<td><code>starts_on</code></td>
-<td>Experience start time (UTC)</td>
-<td>Show when the experience begins</td>
-</tr>
-<tr>
-<td><code>ends_on</code></td>
-<td>Experience end time (UTC)</td>
-<td>Show when the experience ends</td>
-</tr>
-<tr>
-<td><code>timezone</code></td>
-<td>Experience timezone</td>
-<td>Convert UTC times to local display</td>
-</tr>
-<tr>
-<td><code>description_without_html</code></td>
-<td>Plain text description</td>
-<td>experience details and description text</td>
-</tr>
-<tr>
-<td><code>frontend_details_url</code></td>
-<td>Showpass experience page URL</td>
-<td>Link to full experience details</td>
-</tr>
-<tr>
-<td><code>image</code></td>
-<td>Square experience image</td>
-<td>experience thumbnail/card image</td>
-</tr>
-<tr>
-<td><code>image_banner</code></td>
-<td>Banner experience image</td>
-<td>Hero/header image</td>
-</tr>
-</tbody></table>
-<hr>
-<h3>Key Filtering Parameters</h3>
-<p>These are the most commonly used filtering parameters for practical implementations:</p>
-<table>
-<thead>
-<tr>
-<th>Parameter</th>
-<th>Example</th>
-<th>Purpose</th>
-</tr>
-</thead>
-<tbody><tr>
-<td><code>search_string</code></td>
-<td><code>&amp;search_string=experience%20Name</code></td>
-<td>Filter by experience name, venue, tags</td>
-</tr>
-<tr>
-<td><code>point_location</code></td>
-<td><code>&amp;point_location=51.0276233,-114.087835,15</code></td>
-<td>Filter by latitude, longitude, and radius</td>
-</tr>
-<tr>
-<td><code>tags</code></td>
-<td><code>&amp;tags=featured</code></td>
-<td>Show only experiences with specific tags</td>
-</tr>
-<tr>
-<td><code>starts_on__gte</code></td>
-<td><code>&amp;starts_on__gte=2025-01-01T00:00:00</code></td>
-<td>Experiences starting after a date</td>
-</tr>
-<tr>
-<td><code>ends_on__lt</code></td>
-<td><code>&amp;ends_on__lt=2025-02-01T00:00:00</code></td>
-<td>Experiences ending before a date</td>
-</tr>
-<tr>
-<td><code>is_featured</code></td>
-<td><code>&amp;is_featured=true</code></td>
-<td>Show only featured experiences</td>
-</tr>
-<tr>
-<td><code>venue__in</code></td>
-<td><code>&amp;venue__in=123,456</code></td>
-<td>Filter by specific venue IDs</td>
-</tr>
-</tbody></table>
-<blockquote>
-<p><strong>Note:</strong> The API contains many additional fields for displaying ticket prices, sold-out status, and other details. However, the fields above provide everything needed for a solid initial integration.</p>
-</blockquote>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
