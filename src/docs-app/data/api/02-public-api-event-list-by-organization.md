@@ -1,8 +1,8 @@
-# Experience list by organization
+# List experiences by organization
 
 ## Overview
 
-To fetch experiences for your organization, use the [Discovery API](/api/01-public-api-introduction) with the `venue` parameter to filter by organization ID.
+Returns public experiences for one or more Showpass organizations. Supports venue calendars, organizer pages, and partner listings.
 
 ---
 
@@ -25,12 +25,12 @@ Replace `ORGANIZATION_ID` with your numerical organization ID.
 ## Finding Your Organization ID
 
 1. Log in to your Showpass account
-2. Navigate to [https://www.showpass.com/dashboard/venues/edit/](https://www.showpass.com/dashboard/venues/edit/)
+2. Open your venue settings: `https://www.showpass.com/dashboard/venues/edit/`
 3. Your Organization ID is displayed in the top right corner
 
 ---
 
-## Quick Examples
+## Common Queries
 
 **Single organization:**
 ```text
@@ -47,16 +47,16 @@ https://www.showpass.com/api/public/discovery/?venue__in=123,456,789
 https://www.showpass.com/api/public/discovery/?venue=123&starts_on__gte=2025-01-01T00:00:00
 ```
 
-**Homepage widget (next 5 featured events):**
+**Featured homepage list (next 5 events):**
 ```text
 https://www.showpass.com/api/public/discovery/?venue=123&is_featured=true&starts_on__gte=2025-01-01T00:00:00&ordering=starts_on&page_size=5
 ```
 
 ---
 
-## Available Parameters
+## Combine With Other Filters
 
-The `venue` parameter can be combined with any parameter from the Discovery API, including:
+You can combine `venue` or `venue__in` with the same filters used by the Discovery API:
 
 - **Date filters**: `starts_on__gte`, `starts_on__lte`, `ends_on__gte`, `ends_on__lt`
 - **Search**: `search_string`
@@ -72,4 +72,3 @@ The `venue` parameter can be combined with any parameter from the Discovery API,
 - **Domain whitelisting required**: Add your domain in the "Integrations" tab of your venue edit page
 - **Parent experiences only by default**: Add `only_parents=false` to include recurring event instances
 - **Default pagination**: 20 results per page
-
