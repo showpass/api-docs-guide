@@ -222,12 +222,12 @@ axios.get('https://www.showpass.com/api/public/events/summer-music-festival-2025
     method: "GET",
     description: "List events with optional filters",
     examples: {
-      curl: `curl -X GET "https://www.showpass.com/api/public/discovery/?start_date__gte=2023-12-01&venue__in=123" \\
+      curl: `curl -X GET "https://www.showpass.com/api/public/discovery/?starts_on__gte=2023-12-01T00:00:00&venue__in=123" \\
 -H "Content-Type: application/json"`,
       python: `import requests
 
 params = {
-    "start_date__gte": "2023-12-01",
+    "starts_on__gte": "2023-12-01T00:00:00",
     "venue__in": "123"
 }
 
@@ -244,6 +244,7 @@ print(data)`,
 axios.get('https://www.showpass.com/api/public/discovery/', {
   headers: { 'Content-Type': 'application/json' },
   params: {
+    starts_on__gte: '2023-12-01T00:00:00',
     venue__in: '123'
   }
 })
@@ -576,13 +577,15 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
     method: "GET",
     description: "Search for events using various criteria",
     examples: {
-      curl: `curl -X GET "https://www.showpass.com/api/public/discovery/?search_string=concert&location=Calgary" \\
+      curl: `# Calgary downtown: latitude, longitude, radius_km
+curl -X GET "https://www.showpass.com/api/public/discovery/?search_string=concert&point_location=51.0276233,-114.087835,15" \\
 -H "Content-Type: application/json"`,
       python: `import requests
 
 params = {
     "search_string": "concert",
-    "location": "Calgary"
+    # Calgary downtown: latitude, longitude, radius_km
+    "point_location": "51.0276233,-114.087835,15"
 }
 
 response = requests.get(
@@ -599,7 +602,8 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
   headers: { 'Content-Type': 'application/json' },
   params: {
     search_string: 'concert',
-    location: 'Calgary'
+    // Calgary downtown: latitude, longitude, radius_km
+    point_location: '51.0276233,-114.087835,15'
   }
 })
 .then(response => {
@@ -612,14 +616,14 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
     response: {
       status: 200,
       body: {
-        count: 728,
-        next: "https://www.showpass.com/api/public/discovery/?location=Calgary&page=2&page_size=1&search_string=concert",
+        count: 1,
+        next: null,
         previous: null,
-        next_page_number: 2,
+        next_page_number: null,
         previous_page_number: null,
         page_number: 1,
-        num_pages: 728,
-        next_list: [2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+        num_pages: 1,
+        next_list: [],
         previous_list: [],
         results: [
           {

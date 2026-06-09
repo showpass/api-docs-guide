@@ -44,12 +44,12 @@ https://www.showpass.com/api/public/discovery/?venue__in=123,456,789
 
 **Upcoming events only:**
 ```text
-https://www.showpass.com/api/public/discovery/?venue=123&starts_on__gte=2025-01-01T00:00
+https://www.showpass.com/api/public/discovery/?venue=123&starts_on__gte=2025-01-01T00:00:00
 ```
 
 **Homepage widget (next 5 featured events):**
 ```text
-https://www.showpass.com/api/public/discovery/?venue=123&is_featured=true&starts_on__gte=2025-01-01T00:00&ordering=starts_on&page_size=5
+https://www.showpass.com/api/public/discovery/?venue=123&is_featured=true&starts_on__gte=2025-01-01T00:00:00&ordering=starts_on&page_size=5
 ```
 
 ---
