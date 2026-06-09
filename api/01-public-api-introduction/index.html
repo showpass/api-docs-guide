@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-CCAkJkgC.js"></script>
+    <script type="module" crossorigin src="/assets/index-WhqodQPV.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -128,19 +128,7 @@
 <td><code>point_location</code></td>
 <td>String</td>
 <td>Optional</td>
-<td>Filter experiences by geographic location (latitude,longitude format).<br>Example: <code>&amp;point_location=51.0447,-114.0719</code></td>
-</tr>
-<tr>
-<td><code>location__point_location</code></td>
-<td>String</td>
-<td>Optional</td>
-<td>Alias for <code>point_location</code>. Filter by geographic coordinates.<br>Example: <code>&amp;location__point_location=51.0447,-114.0719</code></td>
-</tr>
-<tr>
-<td><code>ordered__location__point_location</code></td>
-<td>String</td>
-<td>Optional</td>
-<td>Order results by distance from a geographic point (latitude,longitude format).<br>Example: <code>&amp;ordered__location__point_location=51.0447,-114.0719</code></td>
+<td>Filter experiences by geographic location using <code>latitude,longitude,radius_km</code> format.<br>Example: <code>&amp;point_location=51.0276233,-114.087835,15</code></td>
 </tr>
 <tr>
 <td><code>venue__in</code></td>
@@ -230,49 +218,49 @@
 <td><code>starts_on__gte</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences starting after or on the specified date/time.<br>Format: <code>YYYY-MM-DDTHH:MM</code> or full ISO 8601.<br>Example: <code>&amp;starts_on__gte=2023-06-23T19:30</code></td>
+<td>Experiences starting after or on the specified date/time.<br>Format: <code>YYYY-MM-DDTHH:MM:SS</code> or <code>YYYY-MM-DDTHH:MM:SS.sssZ</code>.<br>Example: <code>&amp;starts_on__gte=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>starts_on__lte</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences starting before or on the specified date/time.<br>Example: <code>&amp;starts_on__lte=2023-06-23T19:30</code></td>
+<td>Experiences starting before or on the specified date/time.<br>Example: <code>&amp;starts_on__lte=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>starts_on__gt</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences starting after the specified date/time.<br>Example: <code>&amp;starts_on__gt=2023-06-23T19:30</code></td>
+<td>Experiences starting after the specified date/time.<br>Example: <code>&amp;starts_on__gt=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>starts_on__lt</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences starting before the specified date/time.<br>Example: <code>&amp;starts_on__lt=2023-06-23T19:30</code></td>
+<td>Experiences starting before the specified date/time.<br>Example: <code>&amp;starts_on__lt=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>ends_on__gte</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences ending after or on the specified date/time.<br>Example: <code>&amp;ends_on__gte=2023-06-23T19:30</code></td>
+<td>Experiences ending after or on the specified date/time.<br>Example: <code>&amp;ends_on__gte=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>ends_on__lte</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences ending before or on the specified date/time.<br>Example: <code>&amp;ends_on__lte=2023-06-23T19:30</code></td>
+<td>Experiences ending before or on the specified date/time.<br>Example: <code>&amp;ends_on__lte=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>ends_on__gt</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences ending after the specified date/time.<br>Example: <code>&amp;ends_on__gt=2023-06-23T19:30</code></td>
+<td>Experiences ending after the specified date/time.<br>Example: <code>&amp;ends_on__gt=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>ends_on__lt</code></td>
 <td>ISO date</td>
 <td>Optional</td>
-<td>Experiences ending before the specified date/time.<br>Example: <code>&amp;ends_on__lt=2023-06-23T19:30</code></td>
+<td>Experiences ending before the specified date/time.<br>Example: <code>&amp;ends_on__lt=2023-06-23T19:30:00</code></td>
 </tr>
 <tr>
 <td><code>ordering</code></td>
@@ -358,18 +346,23 @@
 <td>Filter by experience name, venue, tags</td>
 </tr>
 <tr>
+<td><code>point_location</code></td>
+<td><code>&amp;point_location=51.0276233,-114.087835,15</code></td>
+<td>Filter by latitude, longitude, and radius</td>
+</tr>
+<tr>
 <td><code>tags</code></td>
 <td><code>&amp;tags=featured</code></td>
 <td>Show only experiences with specific tags</td>
 </tr>
 <tr>
 <td><code>starts_on__gte</code></td>
-<td><code>&amp;starts_on__gte=2025-01-01T00:00</code></td>
+<td><code>&amp;starts_on__gte=2025-01-01T00:00:00</code></td>
 <td>Experiences starting after a date</td>
 </tr>
 <tr>
 <td><code>ends_on__lt</code></td>
-<td><code>&amp;ends_on__lt=2025-02-01T00:00</code></td>
+<td><code>&amp;ends_on__lt=2025-02-01T00:00:00</code></td>
 <td>Experiences ending before a date</td>
 </tr>
 <tr>
