@@ -47,9 +47,9 @@ https://www.showpass.com/api/public/discovery/?venue__in=123,456,789
 https://www.showpass.com/api/public/discovery/?venue=123&starts_on__gte=2025-01-01T00:00:00
 ```
 
-**Featured homepage list (next 5 events):**
+**Homepage list (next 5 upcoming events):**
 ```text
-https://www.showpass.com/api/public/discovery/?venue=123&is_featured=true&starts_on__gte=2025-01-01T00:00:00&ordering=starts_on&page_size=5
+https://www.showpass.com/api/public/discovery/?venue=123&starts_on__gte=2025-01-01T00:00:00&ordering=starts_on&page_size=5
 ```
 
 ---
@@ -61,7 +61,7 @@ You can combine `venue` or `venue__in` with the same filters used by the Discove
 - **Date filters**: `starts_on__gte`, `starts_on__lte`, `ends_on__gte`, `ends_on__lt`
 - **Search**: `search_string`
 - **Categories & tags**: `categories`, `tags`
-- **Filtering**: `is_featured`, `is_sponsored`, `showpass_gift_card`
+- **Filtering**: `is_sponsored`, `showpass_gift_card`
 - **Pagination**: `page_size`, `page`
 - **Ordering**: `ordering`
 

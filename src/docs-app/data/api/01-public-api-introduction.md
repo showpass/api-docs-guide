@@ -42,7 +42,6 @@ Start with these filters for most listings:
 | `tags`                              | `&tags=featured`                           | Show only experiences with specific tags |
 | `starts_on__gte`                    | `&starts_on__gte=2025-01-01T00:00:00`      | Experiences starting after a date        |
 | `ends_on__lt`                       | `&ends_on__lt=2025-02-01T00:00:00`         | Experiences ending before a date         |
-| `is_featured`                       | `&is_featured=true`                        | Show only featured experiences           |
 | `venue__in`                         | `&venue__in=123,456`                       | Filter by specific venue IDs             |
 
 ---
