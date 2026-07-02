@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Passwords API - Showpass Private Organizer API</title>
+    <meta name="description" content="Create and manage Showpass event and ticket type access passwords for external access-code workflows." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Passwords API - Showpass Private Organizer API" />
+    <meta property="og:description" content="Create and manage Showpass event and ticket type access passwords for external access-code workflows." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Passwords API - Showpass Private Organizer API" />
+    <meta name="twitter:description" content="Create and manage Showpass event and ticket type access passwords for external access-code workflows." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BTPe5z2m.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Passwords</h1>
+<p>Passwords are an access-control layer for event and ticket type inventory. They let your system create unique Showpass codes and send them to the customers who should receive access. Common use cases include controlled presales, approved complimentary access, private allocations, and eligibility-based ticket claims.</p>
+<hr>
+<h2>Authentication</h2>
+<p>This endpoint requires authentication using a Showpass token:</p>
+<pre><code class="language-text">Authorization: Token YOUR_API_TOKEN
+</code></pre>
+<hr>
+<h2>Endpoints</h2>
+<p>The base URL for all password endpoints is:</p>
+<pre><code class="language-text">https://www.showpass.com/api/venue/{venue_id}/passwords/
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Path</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>GET</code></td>
+<td><code>/passwords/</code></td>
+<td>List passwords for the venue</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><code>/passwords/</code></td>
+<td>Create a password</td>
+</tr>
+<tr>
+<td><code>GET</code></td>
+<td><code>/passwords/{id}/</code></td>
+<td>Retrieve a single password</td>
+</tr>
+<tr>
+<td><code>PUT</code></td>
+<td><code>/passwords/{id}/</code></td>
+<td>Update a password</td>
+</tr>
+<tr>
+<td><code>DELETE</code></td>
+<td><code>/passwords/{id}/</code></td>
+<td>Delete or deactivate a password binding</td>
+</tr>
+</tbody></table>
+<h3>Path Parameters</h3>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>venue_id</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The ID of the venue that owns the password</td>
+</tr>
+<tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Required</td>
+<td>The password ID for retrieve, update, and delete calls</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Password Scopes</h2>
+<p>Each password record is created for one of three scopes.</p>
+<table>
+<thead>
+<tr>
+<th>Scope</th>
+<th>Use When</th>
+<th>Key Fields</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Ticket type password</td>
+<td>A code should unlock one configured ticket type without gating the whole event</td>
+<td><code>ticket_type</code></td>
+</tr>
+<tr>
+<td>Event password</td>
+<td>A code should unlock the whole event</td>
+<td><code>event_id</code></td>
+</tr>
+<tr>
+<td>Event password with selected ticket types</td>
+<td>A code should unlock selected ticket types within an event</td>
+<td><code>event_id</code>, <code>ticket_type_ids</code></td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Choosing a scope:</strong> Use <code>ticket_type</code> when the code unlocks one configured ticket type. Use <code>event_id</code> with <code>ticket_type_ids</code> when the code should reveal a selected group of ticket types under the event.</p>
+</blockquote>
+<hr>
+<h2>Request Body (Create / Update)</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Status</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>password</code></td>
+<td>String</td>
+<td>Required</td>
+<td>Recipient-facing access code or regex pattern. Maximum 256 characters.</td>
+</tr>
+<tr>
+<td><code>ticket_type</code></td>
+<td>Integer</td>
+<td>Conditional</td>
+<td>Ticket type ID for a direct ticket type password. Provide either <code>ticket_type</code> or <code>event_id</code>, not both.</td>
+</tr>
+<tr>
+<td><code>event_id</code></td>
+<td>Integer</td>
+<td>Conditional</td>
+<td>Event ID for an event-scoped password. This is accepted on create/update but is not returned in the response.</td>
+</tr>
+<tr>
+<td><code>ticket_type_ids</code></td>
+<td>Array</td>
+<td>Optional</td>
+<td>Event-scoped only. Restricts the event password to selected ticket type IDs.</td>
+</tr>
+<tr>
+<td><code>is_active</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>Whether the password can grant access. Defaults to true when omitted.</td>
+</tr>
+<tr>
+<td><code>start_time</code></td>
+<td>DateTime/null</td>
+<td>Required for active access</td>
+<td>Start date/time for access. Set this to now or a past time when the password should work immediately.</td>
+</tr>
+<tr>
+<td><code>end_time</code></td>
+<td>DateTime/null</td>
+<td>Optional</td>
+<td>End date/time for access. <code>null</code> means no scheduled end time.</td>
+</tr>
+<tr>
+<td><code>is_regex_match</code></td>
+<td>Boolean</td>
+<td>Optional</td>
+<td>If true, <code>password</code> is treated as a case-insensitive regex pattern instead of an exact code. Defaults to false.</td>
+</tr>
+</tbody></table>
+<hr>
+<h2>Create a Ticket Type Password</h2>
+<p>Use this when your integration generates a code for a specific protected ticket type.</p>
+<pre><code class="language-json">{
+  &quot;password&quot;: &quot;APPROVED-ACCESS-2026&quot;,
+  &quot;ticket_type&quot;: 3002,
+  &quot;is_active&quot;: true,
+  &quot;start_time&quot;: &quot;2026-07-02T18:00:00Z&quot;,
+  &quot;end_time&quot;: &quot;2026-07-09T18:00:00Z&quot;,
+  &quot;is_regex_match&quot;: false
+}
+</code></pre>
+<hr>
+<h2>Create an Event Password</h2>
+<p>Use this when a code should unlock the event generally.</p>
+<pre><code class="language-json">{
+  &quot;password&quot;: &quot;PRESALE-2026&quot;,
+  &quot;event_id&quot;: 98765,
+  &quot;is_active&quot;: true,
+  &quot;start_time&quot;: &quot;2026-07-02T18:00:00Z&quot;,
+  &quot;end_time&quot;: null,
+  &quot;is_regex_match&quot;: false
+}
+</code></pre>
+<hr>
+<h2>Create an Event Password for Selected Ticket Types</h2>
+<p>Use this when a code should unlock selected ticket types within an event.</p>
+<pre><code class="language-json">{
+  &quot;password&quot;: &quot;SELECTED-ACCESS-2026&quot;,
+  &quot;event_id&quot;: 98765,
+  &quot;ticket_type_ids&quot;: [3002, 3003],
+  &quot;is_active&quot;: true,
+  &quot;start_time&quot;: &quot;2026-07-02T18:00:00Z&quot;,
+  &quot;end_time&quot;: &quot;2026-07-09T18:00:00Z&quot;
+}
+</code></pre>
+<hr>
+<h2>Response Fields</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>id</code></td>
+<td>Integer</td>
+<td>Unique password ID</td>
+</tr>
+<tr>
+<td><code>password</code></td>
+<td>String</td>
+<td>Stored access code or regex pattern</td>
+</tr>
+<tr>
+<td><code>ticket_type_ids</code></td>
+<td>Array</td>
+<td>Event-scoped ticket type restrictions. Empty when unrestricted or for direct ticket type passwords.</td>
+</tr>
+<tr>
+<td><code>start_time</code></td>
+<td>DateTime/null</td>
+<td>Start date/time for access</td>
+</tr>
+<tr>
+<td><code>end_time</code></td>
+<td>DateTime/null</td>
+<td>End date/time for access</td>
+</tr>
+<tr>
+<td><code>is_active</code></td>
+<td>Boolean</td>
+<td>Whether the password is active</td>
+</tr>
+<tr>
+<td><code>ticket_type</code></td>
+<td>Integer/null</td>
+<td>Direct ticket type ID, when this is a ticket type password</td>
+</tr>
+<tr>
+<td><code>venue</code></td>
+<td>Integer</td>
+<td>Venue ID</td>
+</tr>
+<tr>
+<td><code>password_use_count</code></td>
+<td>Integer</td>
+<td>Number of event bindings using this password record. This is not a remaining-use or redemption counter.</td>
+</tr>
+<tr>
+<td><code>is_regex_match</code></td>
+<td>Boolean</td>
+<td>Whether the password is matched as a regex pattern</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>Note:</strong> <code>event_id</code> links the password to an event during create or update, including recurring child event bindings when applicable. It is not returned by this endpoint. Event-scoped password records return <code>ticket_type: null</code>; selected ticket type restrictions, when used, are returned in <code>ticket_type_ids</code>.</p>
+</blockquote>
+<hr>
+<h2>Listing and Pagination</h2>
+<p>List responses are scoped to the venue in the URL.</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/passwords/
+</code></pre>
+<p>This endpoint uses optional pagination. If <code>page_size</code> is omitted, the response is an array. If <code>page_size</code> is provided, the response includes pagination metadata such as <code>count</code>, <code>next</code>, <code>previous</code>, and <code>results</code>.</p>
+<pre><code class="language-text">GET /api/venue/{venue_id}/passwords/?page_size=20&amp;page=2
+</code></pre>
+<p>There are no documented search or filter parameters for this endpoint.</p>
+<hr>
+<h2>Delete Behavior</h2>
+<p>For a direct ticket type password, delete the password by ID:</p>
+<pre><code class="language-text">DELETE /api/venue/{venue_id}/passwords/{id}/
+</code></pre>
+<p>For an event-scoped password, include the event ID so Showpass removes the correct event binding:</p>
+<pre><code class="language-text">DELETE /api/venue/{venue_id}/passwords/{id}/?event_id=98765
+</code></pre>
+<p>Deleting an event-scoped password removes its event binding and refreshes event password-protection status. Deleting a direct ticket type password deactivates the password relation for that ticket type and refreshes ticket type password-protection status.</p>
+<hr>
+<h2>Business Rules</h2>
+<ul>
+<li><strong>Caller-generated codes</strong> — The API creates password records from values you provide. It does not generate random password strings.</li>
+<li><strong>One scope per password</strong> — Send either <code>ticket_type</code> or <code>event_id</code>, not both.</li>
+<li><strong>Start time controls activation</strong> — Set <code>start_time</code> to now or a past time when the code should work immediately. A missing or future <code>start_time</code> can be saved, but the code will not grant access until the active window has started.</li>
+<li><strong>End time is optional</strong> — Set <code>end_time</code> when the code should expire automatically. Leave it <code>null</code> for no scheduled end time.</li>
+<li><strong>Active flag still applies</strong> — <code>is_active: false</code> prevents access even when the current time is inside the start/end window.</li>
+<li><strong>Matching is case-insensitive</strong> — Exact password matching is case-insensitive. Regex matching is also case-insensitive when <code>is_regex_match</code> is true.</li>
+<li><strong>Invalid regex patterns are skipped</strong> — When <code>is_regex_match</code> is true and the stored pattern is invalid, the password does not match. Other valid password records can still grant access.</li>
+<li><strong>Recurring events propagate bindings</strong> — Event-scoped passwords created on a recurring parent also create password bindings for child events. When <code>ticket_type_ids</code> are provided, child ticket type IDs may be added to the stored password record.</li>
+<li><strong>Single-record CRUD</strong> — This endpoint creates one password record per request.</li>
+</ul>
+<hr>
+<h2>Error Responses</h2>
+<h3>400 Bad Request</h3>
+<p>Returned for validation failures:</p>
+<pre><code class="language-javascript">// A password cannot be both event-scoped and ticket-type-scoped
+{
+  &quot;detail&quot;: &quot;Cannot have event and ticket type on same password&quot;
+}
+</code></pre>
+<h3>403 Forbidden</h3>
+<p>Returned when the authenticated user does not have permission to manage event configuration for the venue.</p>
+<pre><code class="language-javascript">{
+  &quot;detail&quot;: &quot;You do not have permission to perform this action.&quot;
+}
+</code></pre>
+<hr>
+<h2>Integration Patterns</h2>
+<h3>External Access Codes</h3>
+<p>Use this when another system owns the access request and delivery flow.</p>
+<p>Create or identify the protected ticket type that the code should unlock, generate the code in your system, then create one password record with <code>ticket_type</code>. Store the returned password <code>id</code> with the request, and send the code through your normal customer communication flow.</p>
+<h3>Customer-Specific Access Codes</h3>
+<p>Use this when each customer should receive a unique code.</p>
+<p>Generate one unique <code>password</code> value per customer and create one password record per code for the same <code>ticket_type</code> or <code>event_id</code>. For large lists, create records in a controlled loop or coordinate with Showpass for bulk import support.</p>
+<h3>Scheduled Access Window</h3>
+<p>Use this when a code should only work during a defined access window. For multiple access groups or phases, create separate password records with their own <code>start_time</code> and <code>end_time</code>.</p>
+<p>Set <code>start_time</code> to the opening time and <code>end_time</code> to the closing time. Use <code>end_time: null</code> when the code should remain valid until it is manually retired, and set <code>is_active</code> to <code>false</code> with <code>PUT</code> if access should end before the scheduled close.</p>
+<h3>Usage Review</h3>
+<p>Use the <code>Password Used Summary</code> CSV in Showpass Reports to review password entry counts and ticket quantities after codes are used. Use itemized sales exports with the <code>Password Used</code> column when reconciliation needs order-level detail.</p>
+<h3>Regex Access Pattern</h3>
+<p>Use this only when a family of entered values should match one pattern, such as a controlled credential format.</p>
+<p>Set <code>is_regex_match</code> to <code>true</code> and store a tested regex pattern in <code>password</code>. Avoid broad patterns that could unlock access unintentionally.</p>
+<p>Example request body:</p>
+<pre><code class="language-json">{
+  &quot;password&quot;: &quot;.*\\.edu.*&quot;,
+  &quot;event_id&quot;: 98765,
+  &quot;is_active&quot;: true,
+  &quot;start_time&quot;: &quot;2026-07-02T18:00:00Z&quot;,
+  &quot;end_time&quot;: null,
+  &quot;is_regex_match&quot;: true
+}
+</code></pre>
+<p>This pattern matches any entered value that contains <code>.edu</code>, such as <code>student@university.edu</code>. Regex matching is case-insensitive.</p>
+<h3>Retiring a Code</h3>
+<p>Set <code>is_active</code> to <code>false</code> with <code>PUT</code> when the password record should remain available by ID. Use <code>DELETE</code> when the event or ticket type binding should be removed.</p>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>
