@@ -6,7 +6,7 @@ The Showpass Private Organizer API provides authenticated access to various func
 
 This private API allows organizers to perform various operations related to event management. Unlike the public API, this API requires authentication with a Showpass token and provides access to sensitive data and operations that are specific to event organizers.
 
-The API is continuously evolving to provide more capabilities to event organizers, with the current focus being on ticket management, verification, and scanning operations.
+The API is continuously evolving to provide more capabilities to event organizers, including ticket verification, scanning operations, tracking links, discounts, and access passwords.
 
 ## Authentication
 
@@ -20,7 +20,7 @@ You must include this token in the header of all requests to the private API end
 
 ## Available Endpoints
 
-The Private Organizer API provides a growing set of endpoints for event organizers to manage their events and tickets. Currently, the API includes endpoints for ticket verification and scanning operations, with more functionality planned for future releases.
+The Private Organizer API provides a growing set of endpoints for event organizers to manage their events and tickets. Current documented areas include ticket verification, ticket scan actions, tracking links, discounts, and passwords for event or ticket type access control.
 
 The API is designed to be extensible, allowing for new features and capabilities to be added over time to meet the evolving needs of event organizers.
 
@@ -32,6 +32,6 @@ To get started with the Private Organizer API:
 2. Review the available endpoints documentation to understand the capabilities
 3. Implement the API endpoints that meet your specific needs
 
-Currently, the API documentation includes details on ticket verification and scanning operations, with more endpoints to be documented as they become available.
+Currently, the API documentation includes details on ticket verification, scanning operations, tracking links, discounts, and passwords, with more endpoints to be documented as they become available.
 
 The following sections provide detailed documentation for the available endpoints.

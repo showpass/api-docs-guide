@@ -195,6 +195,15 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     Discounts
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/api/22-private-api-passwords"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Passwords
+                  </NavLink>
+                </li>
               </ul>
             </AccordionContent>
           </AccordionItem>
