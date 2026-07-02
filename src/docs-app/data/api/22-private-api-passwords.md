@@ -152,8 +152,6 @@ This endpoint uses optional pagination. If `page_size` is omitted, the response 
 GET /api/venue/{venue_id}/passwords/?page_size=20&page=2
 ```
 
-There are no documented search or filter parameters for this endpoint.
-
 ---
 
 ## Delete Behavior
