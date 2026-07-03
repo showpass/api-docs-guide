@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DxZSMzIh.js"></script>
+    <script type="module" crossorigin src="/assets/index-BLG4X6gp.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -88,7 +88,7 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Passwords</h1>
-<p>Passwords are an access-control layer for event and ticket type inventory. They let your system create unique Showpass codes and send them to the customers who should receive access. Common use cases include controlled presales, approved complimentary access, private allocations, and eligibility-based ticket claims.</p>
+<p>Passwords are an access-control layer for event and ticket type inventory. They let your system create unique Showpass codes and send them to the customers who should receive access. Common use cases include controlled presales, approved complimentary access, private allocations, and eligibility-based ticket claims. Codes can stay reusable or be capped to a fixed ticket quantity for one-ticket or limited-ticket claims.</p>
 <hr>
 <h2>Authentication</h2>
 <p>This endpoint requires authentication using a Showpass token:</p>
@@ -201,7 +201,7 @@
 <td><code>password</code></td>
 <td>String</td>
 <td>Required</td>
-<td>Recipient-facing access code or regex pattern. Maximum 256 characters.</td>
+<td>Recipient-facing access code. When <code>is_regex_match</code> is true, this value is the regex pattern. Maximum 256 characters.</td>
 </tr>
 <tr>
 <td><code>ticket_type</code></td>
@@ -240,6 +240,12 @@
 <td>End date/time for access. <code>null</code> means no scheduled end time.</td>
 </tr>
 <tr>
+<td><code>max_item_purchase_limit</code></td>
+<td>Integer/null</td>
+<td>Optional</td>
+<td>Maximum ticket quantity that can be claimed with this password. Set to <code>1</code> for a one-ticket code. <code>null</code> or omitted means reusable. Valid values are <code>1</code> through <code>10000</code>.</td>
+</tr>
+<tr>
 <td><code>is_regex_match</code></td>
 <td>Boolean</td>
 <td>Optional</td>
@@ -255,6 +261,7 @@
   &quot;is_active&quot;: true,
   &quot;start_time&quot;: &quot;2026-07-02T18:00:00Z&quot;,
   &quot;end_time&quot;: &quot;2026-07-09T18:00:00Z&quot;,
+  &quot;max_item_purchase_limit&quot;: 1,
   &quot;is_regex_match&quot;: false
 }
 </code></pre>
@@ -335,7 +342,12 @@
 <tr>
 <td><code>password_use_count</code></td>
 <td>Integer</td>
-<td>Number of event bindings using this password record. This is not a remaining-use or redemption counter.</td>
+<td>Internal event attachment count. This is not a redemption count or purchase-limit field.</td>
+</tr>
+<tr>
+<td><code>max_item_purchase_limit</code></td>
+<td>Integer/null</td>
+<td>Maximum ticket quantity that can be claimed with this password. <code>null</code> means reusable.</td>
 </tr>
 <tr>
 <td><code>is_regex_match</code></td>
@@ -371,7 +383,9 @@
 <li><strong>Start time controls activation</strong> — Set <code>start_time</code> to now or a past time when the code should work immediately. A missing or future <code>start_time</code> can be saved, but the code will not grant access until the active window has started.</li>
 <li><strong>End time is optional</strong> — Set <code>end_time</code> when the code should expire automatically. Leave it <code>null</code> for no scheduled end time.</li>
 <li><strong>Active flag still applies</strong> — <code>is_active: false</code> prevents access even when the current time is inside the start/end window.</li>
+<li><strong>Limited-use codes</strong> — When <code>max_item_purchase_limit</code> is omitted or <code>null</code>, the password is reusable. Set <code>max_item_purchase_limit: 1</code> for a one-ticket code, or a larger integer for a limited-use code. The limit counts ticket quantity, not password-entry attempts or event-page unlocks.</li>
 <li><strong>Matching is case-insensitive</strong> — Exact password matching is case-insensitive. Regex matching is also case-insensitive when <code>is_regex_match</code> is true.</li>
+<li><strong>Regex patterns match from the start</strong> — Regex passwords use start-of-string matching. Include <code>.*</code> at the beginning when the entered value can contain the pattern later in the string.</li>
 <li><strong>Invalid regex patterns are skipped</strong> — When <code>is_regex_match</code> is true and the stored pattern is invalid, the password does not match. Other valid password records can still grant access.</li>
 <li><strong>Recurring events propagate bindings</strong> — Event-scoped passwords created on a recurring parent also create password bindings for child events. When <code>ticket_type_ids</code> are provided, child ticket type IDs may be added to the stored password record.</li>
 <li><strong>Single-record CRUD</strong> — This endpoint creates one password record per request.</li>
@@ -385,6 +399,7 @@
   &quot;detail&quot;: &quot;Cannot have event and ticket type on same password&quot;
 }
 </code></pre>
+<p>Also returned when <code>max_item_purchase_limit</code> is below <code>1</code> or above <code>10000</code>.</p>
 <h3>403 Forbidden</h3>
 <p>Returned when the authenticated user does not have permission to manage event configuration for the venue.</p>
 <pre><code class="language-javascript">{
@@ -399,6 +414,7 @@
 <h3>Customer-Specific Access Codes</h3>
 <p>Use this when each customer should receive a unique code.</p>
 <p>Generate one unique <code>password</code> value per customer and create one password record per code for the same <code>ticket_type</code> or <code>event_id</code>. For large lists, create records in a controlled loop or coordinate with Showpass for bulk import support.</p>
+<p>Set <code>max_item_purchase_limit</code> when each code should have its own claim limit. Use <code>max_item_purchase_limit: 1</code> when the approved customer should be able to claim one ticket total with that code. Leave it <code>null</code> when the code should remain reusable.</p>
 <h3>Scheduled Access Window</h3>
 <p>Use this when a code should only work during a defined access window. For multiple access groups or phases, create separate password records with their own <code>start_time</code> and <code>end_time</code>.</p>
 <p>Set <code>start_time</code> to the opening time and <code>end_time</code> to the closing time. Use <code>end_time: null</code> when the code should remain valid until it is manually retired, and set <code>is_active</code> to <code>false</code> with <code>PUT</code> if access should end before the scheduled close.</p>
@@ -406,7 +422,7 @@
 <p>Use the <code>Password Used Summary</code> CSV in Showpass Reports to review password entry counts and ticket quantities after codes are used. Use itemized sales exports with the <code>Password Used</code> column when reconciliation needs order-level detail.</p>
 <h3>Regex Access Pattern</h3>
 <p>Use this only when a family of entered values should match one pattern, such as a controlled credential format.</p>
-<p>Set <code>is_regex_match</code> to <code>true</code> and store a tested regex pattern in <code>password</code>. Avoid broad patterns that could unlock access unintentionally.</p>
+<p>Set <code>is_regex_match</code> to <code>true</code> and store the regex pattern in <code>password</code>; there is no separate regex field. Avoid broad patterns that could unlock access unintentionally.</p>
 <p>Example request body:</p>
 <pre><code class="language-json">{
   &quot;password&quot;: &quot;.*\\.edu.*&quot;,
