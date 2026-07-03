@@ -1,6 +1,6 @@
 # Passwords
 
-Passwords are an access-control layer for event and ticket type inventory. They let your system create unique Showpass codes and send them to the customers who should receive access. Common use cases include controlled presales, approved complimentary access, private allocations, and eligibility-based ticket claims.
+Passwords are an access-control layer for event and ticket type inventory. They let your system create unique Showpass codes and send them to the customers who should receive access. Common use cases include controlled presales, approved complimentary access, private allocations, and eligibility-based ticket claims. Codes can stay reusable or be capped to a fixed ticket quantity for one-ticket or limited-ticket claims.
 
 ---
 
@@ -57,13 +57,14 @@ Each password record is created for one of three scopes.
 
 | Parameter         | Type          | Status   | Description |
 | ----------------- | ------------- | -------- | ----------- |
-| `password`        | String        | Required | Recipient-facing access code or regex pattern. Maximum 256 characters. |
+| `password`        | String        | Required | Recipient-facing access code. When `is_regex_match` is true, this value is the regex pattern. Maximum 256 characters. |
 | `ticket_type`     | Integer       | Conditional | Ticket type ID for a direct ticket type password. Provide either `ticket_type` or `event_id`, not both. |
 | `event_id`        | Integer       | Conditional | Event ID for an event-scoped password. This is accepted on create/update but is not returned in the response. |
 | `ticket_type_ids` | Array         | Optional | Event-scoped only. Restricts the event password to selected ticket type IDs. |
 | `is_active`       | Boolean       | Optional | Whether the password can grant access. Defaults to true when omitted. |
 | `start_time`      | DateTime/null | Required for active access | Start date/time for access. Set this to now or a past time when the password should work immediately. |
 | `end_time`        | DateTime/null | Optional | End date/time for access. `null` means no scheduled end time. |
+| `max_item_purchase_limit` | Integer/null | Optional | Maximum ticket quantity that can be claimed with this password. Set to `1` for a one-ticket code. `null` or omitted means reusable. Valid values are `1` through `10000`. |
 | `is_regex_match`  | Boolean       | Optional | If true, `password` is treated as a case-insensitive regex pattern instead of an exact code. Defaults to false. |
 
 ---
@@ -79,6 +80,7 @@ Use this when your integration generates a code for a specific protected ticket 
   "is_active": true,
   "start_time": "2026-07-02T18:00:00Z",
   "end_time": "2026-07-09T18:00:00Z",
+  "max_item_purchase_limit": 1,
   "is_regex_match": false
 }
 ```
@@ -131,7 +133,8 @@ Use this when a code should unlock selected ticket types within an event.
 | `is_active`          | Boolean       | Whether the password is active |
 | `ticket_type`        | Integer/null  | Direct ticket type ID, when this is a ticket type password |
 | `venue`              | Integer       | Venue ID |
-| `password_use_count` | Integer       | Number of event bindings using this password record. This is not a remaining-use or redemption counter. |
+| `password_use_count` | Integer       | Internal event attachment count. This is not a redemption count or purchase-limit field. |
+| `max_item_purchase_limit` | Integer/null | Maximum ticket quantity that can be claimed with this password. `null` means reusable. |
 | `is_regex_match`     | Boolean       | Whether the password is matched as a regex pattern |
 
 > **Note:** `event_id` links the password to an event during create or update, including recurring child event bindings when applicable. It is not returned by this endpoint. Event-scoped password records return `ticket_type: null`; selected ticket type restrictions, when used, are returned in `ticket_type_ids`.
@@ -179,7 +182,9 @@ Deleting an event-scoped password removes its event binding and refreshes event 
 - **Start time controls activation** — Set `start_time` to now or a past time when the code should work immediately. A missing or future `start_time` can be saved, but the code will not grant access until the active window has started.
 - **End time is optional** — Set `end_time` when the code should expire automatically. Leave it `null` for no scheduled end time.
 - **Active flag still applies** — `is_active: false` prevents access even when the current time is inside the start/end window.
+- **Limited-use codes** — When `max_item_purchase_limit` is omitted or `null`, the password is reusable. Set `max_item_purchase_limit: 1` for a one-ticket code, or a larger integer for a limited-use code. The limit counts ticket quantity, not password-entry attempts or event-page unlocks.
 - **Matching is case-insensitive** — Exact password matching is case-insensitive. Regex matching is also case-insensitive when `is_regex_match` is true.
+- **Regex patterns match from the start** — Regex passwords use start-of-string matching. Include `.*` at the beginning when the entered value can contain the pattern later in the string.
 - **Invalid regex patterns are skipped** — When `is_regex_match` is true and the stored pattern is invalid, the password does not match. Other valid password records can still grant access.
 - **Recurring events propagate bindings** — Event-scoped passwords created on a recurring parent also create password bindings for child events. When `ticket_type_ids` are provided, child ticket type IDs may be added to the stored password record.
 - **Single-record CRUD** — This endpoint creates one password record per request.
@@ -198,6 +203,8 @@ Returned for validation failures:
   "detail": "Cannot have event and ticket type on same password"
 }
 ```
+
+Also returned when `max_item_purchase_limit` is below `1` or above `10000`.
 
 ### 403 Forbidden
 
@@ -225,6 +232,8 @@ Use this when each customer should receive a unique code.
 
 Generate one unique `password` value per customer and create one password record per code for the same `ticket_type` or `event_id`. For large lists, create records in a controlled loop or coordinate with Showpass for bulk import support.
 
+Set `max_item_purchase_limit` when each code should have its own claim limit. Use `max_item_purchase_limit: 1` when the approved customer should be able to claim one ticket total with that code. Leave it `null` when the code should remain reusable.
+
 ### Scheduled Access Window
 
 Use this when a code should only work during a defined access window. For multiple access groups or phases, create separate password records with their own `start_time` and `end_time`.
@@ -239,7 +248,7 @@ Use the `Password Used Summary` CSV in Showpass Reports to review password entry
 
 Use this only when a family of entered values should match one pattern, such as a controlled credential format.
 
-Set `is_regex_match` to `true` and store a tested regex pattern in `password`. Avoid broad patterns that could unlock access unintentionally.
+Set `is_regex_match` to `true` and store the regex pattern in `password`; there is no separate regex field. Avoid broad patterns that could unlock access unintentionally.
 
 Example request body:
 
