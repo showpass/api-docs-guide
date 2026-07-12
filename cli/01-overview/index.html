@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BLG4X6gp.js"></script>
+    <script type="module" crossorigin src="/assets/index-D7Kg9NGz.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -92,34 +92,83 @@
 <h2>Install</h2>
 <pre><code class="language-bash">curl -fsSL &quot;https://www.showpass.com/install.sh&quot; | bash
 </code></pre>
+<p>The installer supports macOS and Linux on Intel/AMD and ARM64 systems. Verify
+the installation with:</p>
+<pre><code class="language-bash">showpass --version
+</code></pre>
+<h3>Add to PATH</h3>
+<p>If <code>showpass</code> is not found after installation, add the local binary directory
+to your shell configuration.</p>
+<p>For Bash (<code>~/.bashrc</code>) or Zsh (<code>~/.zshrc</code>):</p>
+<pre><code class="language-bash">export PATH=&quot;$HOME/.local/bin:$PATH&quot;
+</code></pre>
+<p>For Fish (<code>~/.config/fish/config.fish</code>):</p>
+<pre><code class="language-fish">set -gx PATH $HOME/.local/bin $PATH
+</code></pre>
+<p>Restart the terminal or reload your shell configuration after making this
+change.</p>
+<h2>Authentication</h2>
+<p>The CLI does not ask for your Showpass email address or password. Account login
+requires reCAPTCHA, which is intentionally not reproduced in a command-line
+environment. Instead, the CLI authenticates with the Private Organizer API
+token issued for your venue:</p>
+<pre><code class="language-text">Authorization: Token YOUR_API_TOKEN
+</code></pre>
+<p>Contact Showpass support or an authorized Showpass administrator to obtain the
+token for your venue. For more information about the credential, see the
+<a href="/api/10-private-api-overview">Private Organizer API overview</a>.</p>
+<p>Connect the CLI before creating a project, or enter the token when the <code>init</code>
+wizard asks for it:</p>
+<pre><code class="language-bash">showpass login
+showpass whoami
+</code></pre>
+<p>Token input is hidden. The CLI validates the token with Showpass, selects its
+venue automatically, and then stores it in <code>~/.local/share/showpass/config</code>.
+On macOS and Linux, the directory and file are restricted to the current OS
+user.</p>
+<p>Treat the token as a secret. It authenticates as the venue&#39;s Access Token User
+and has the permissions assigned to that employment. Private Organizer API
+tokens do not expire automatically, but Showpass can revoke them.</p>
+<blockquote>
+<p><code>Token</code> is the literal authorization scheme. <code>Bearer</code> and <code>JWT</code> do not
+authenticate this credential.</p>
+</blockquote>
+<h3>Upgrading from account login</h3>
+<p>JWT credentials saved by an earlier CLI release are no longer accepted. Run
+<code>showpass login</code> and enter the Private Organizer API token. A successful login
+or <code>showpass logout</code> removes the obsolete JWT fields.</p>
 <h2>Quick Start</h2>
 <pre><code class="language-bash">showpass init my-event-site
 </code></pre>
-<p>This launches an interactive wizard that:</p>
+<p>The interactive wizard:</p>
 <ul>
-<li>Signs you in to your Showpass account</li>
-<li>Connects to your venue</li>
-<li>Generates a React + TypeScript site with Showpass SDK pre-configured</li>
-<li>Installs dependencies and starts the dev server</li>
+<li>Validates your Private Organizer API token if needed</li>
+<li>Connects the project to the token&#39;s venue</li>
+<li>Generates a React and TypeScript website with the Showpass SDK configured</li>
+<li>Installs dependencies and starts the development server</li>
 </ul>
-<p>Your site will be running at <code>http://localhost:8080</code>.</p>
-<h2>Requirements</h2>
-<table>
-<thead>
-<tr>
-<th></th>
-<th></th>
-</tr>
-</thead>
-<tbody><tr>
-<td><strong>OS</strong></td>
-<td>macOS, Linux</td>
-</tr>
-<tr>
-<td><strong>Account</strong></td>
-<td>Showpass account with venue access</td>
-</tr>
-</tbody></table>
+<p>The generated site runs at <code>http://localhost:8080</code>.</p>
+<h2>What You Get</h2>
+<ul>
+<li>React 18, TypeScript, and Vite</li>
+<li>Tailwind CSS and shadcn/ui components</li>
+<li>Showpass SDK widgets for calendars, tickets, and carts</li>
+<li>A hot-reload development server</li>
+</ul>
+<h2>Hosted Deployment</h2>
+<p>The CLI can create and build sites locally. Showpass-hosted deployment is not
+available yet because its backend deployment endpoint has not been released.</p>
+<h2>Uninstall</h2>
+<pre><code class="language-bash">rm ~/.local/bin/showpass
+rm -rf ~/.local/share/showpass
+</code></pre>
+<p>Removing the data directory also removes the locally stored API token and
+installed project templates.</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="/cli/02-commands">Commands reference</a></li>
+<li><a href="/api/10-private-api-overview">Private Organizer API overview</a></li>
+</ul>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

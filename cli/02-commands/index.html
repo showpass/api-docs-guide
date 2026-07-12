@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BLG4X6gp.js"></script>
+    <script type="module" crossorigin src="/assets/index-D7Kg9NGz.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-DkSlVzel.css">
   </head>
 
@@ -87,39 +87,73 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Commands</h1>
+  <article><h1>Showpass CLI Commands</h1>
+<h2>login</h2>
+<p>Securely prompt for, validate, and save a Private Organizer API token:</p>
+<pre><code class="language-bash">showpass login
+</code></pre>
+<p>Input is hidden. The token is checked against Showpass before it is persisted,
+and the venue is selected automatically from the Access Token User&#39;s
+employment.</p>
+<p>If a token is already stored, use <code>showpass logout</code> before entering a different
+token interactively.</p>
 <h2>init</h2>
-<p>Create a new Showpass project. Opens an interactive wizard.</p>
+<p>Create a Showpass website project with the interactive wizard:</p>
 <pre><code class="language-bash">showpass init my-event-site
 </code></pre>
-<p>Without a name, one is generated for you:</p>
+<p>Without a name, one is generated automatically:</p>
 <pre><code class="language-bash">showpass init
 </code></pre>
+<p>If no valid token is stored, the wizard asks for the venue&#39;s Private Organizer
+API token. It then generates the project, installs dependencies, and starts the
+development server.</p>
 <h2>dev</h2>
-<p>Start the local development server with hot reload.</p>
+<p>Start the local development server with hot reload:</p>
 <pre><code class="language-bash">showpass dev
 </code></pre>
-<p>Runs on <code>http://localhost:8080</code> by default.</p>
+<p>Generated projects run on <code>http://localhost:8080</code> by default.</p>
 <h2>build</h2>
-<p>Create a production-optimized build.</p>
+<p>Create a production-optimized build:</p>
 <pre><code class="language-bash">showpass build
 </code></pre>
-<p>Output is written to <code>dist/</code>.</p>
+<p>Output is written to the project&#39;s <code>dist/</code> directory.</p>
 <h2>whoami</h2>
-<p>Display current authentication status.</p>
+<p>Revalidate the stored token and display its connected venue:</p>
 <pre><code class="language-bash">showpass whoami
 </code></pre>
+<p>If Showpass has revoked the token, or its Access Token User no longer has a
+venue employment, the CLI removes the unusable local authentication state.</p>
 <h2>logout</h2>
-<p>Clear saved credentials and venue selection.</p>
+<p>Remove the locally stored API token and venue selection:</p>
 <pre><code class="language-bash">showpass logout
 </code></pre>
+<p>This does not revoke the token in Showpass. Contact Showpass support if the
+credential itself needs to be rotated or revoked.</p>
+<h2>config</h2>
+<p>Inspect CLI configuration without exposing the full API token:</p>
+<pre><code class="language-bash">showpass config list
+showpass config path
+</code></pre>
+<p>Sensitive values are masked in command output. Avoid setting authentication
+values manually because <code>showpass login</code> performs remote validation first.</p>
+<h2>deploy</h2>
+<pre><code class="language-bash">showpass deploy
+</code></pre>
+<p>Showpass-hosted deployment is not available yet because the required backend
+deployment endpoint has not been released. Use <code>showpass build</code> to produce a
+local production bundle in the meantime.</p>
 <h2>help</h2>
-<p>Show available commands:</p>
+<p>Show all commands:</p>
 <pre><code class="language-bash">showpass --help
 </code></pre>
-<p>Get help for a specific command:</p>
+<p>Show help for one command:</p>
 <pre><code class="language-bash">showpass init --help
 </code></pre>
+<h2>See Also</h2>
+<ul>
+<li><a href="/cli/01-overview">CLI overview and installation</a></li>
+<li><a href="/api/10-private-api-overview">Private Organizer API overview</a></li>
+</ul>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
