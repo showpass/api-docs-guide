@@ -1,0 +1,4 @@
+interface:
+  display_name: "Build Showpass Widgets"
+  short_description: "Build reliable Showpass SDK integrations"
+  default_prompt: "Use $build-showpass-widgets to add a production-ready Showpass widget to this app."
