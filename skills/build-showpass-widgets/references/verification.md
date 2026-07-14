@@ -11,6 +11,8 @@ node "$SKILL_DIR/scripts/audit-widget-integration.mjs" --strict --json <target-p
 
 Then run the target repository's formatter, lint, typecheck, focused tests, and production build. A development server alone does not exercise SSR boundaries or production CSP.
 
+For implementation work, point the auditor at the changed integration directory or files first. Scan the entire repository only for an explicit repository-wide review; generated examples, vendored code, and unrelated fixtures can otherwise create distracting heuristic findings.
+
 The dependency-free auditor is intentionally heuristic. Its method-call checks inspect script and module code, not executable inline HTML or framework template-attribute strings; review those manually. Treat ambiguous warnings as review prompts, then rely on the target's parser, typechecker, tests, and browser checks for final proof.
 
 ## Confirm the live SDK
@@ -52,13 +54,13 @@ Do not hardcode the redirect target reported by `curl`; Showpass may change CDN 
 
 ### Cart and checkout
 
-- Adding/removing an item updates the cart count once.
 - Listener cleanup prevents updates after component teardown.
 - Checkout opens with existing cart contents.
 - UTM attribution survives widget transitions when present.
-- Off-site payment return behavior is tested only in an authorized environment.
+- Adding/removing an item updates the cart count once when authorized test inventory is available.
+- Off-site payment return behavior is tested only with explicit authorization in an appropriate environment.
 
-### Compatibility
+### Browsers and locales
 
 - Test current Chrome and Safari behavior, including mobile viewport and payment iframe restrictions.
 - Test in an incognito/privacy mode if third-party storage restrictions matter to the host site.
@@ -86,8 +88,14 @@ Recheck this after CDN changes rather than baking a transient hostname into appl
 | Event route fails                   | ID/display name used instead of event slug        | Public API response and URL              |
 | Option set to `false` has no effect | Current query serializer omits falsy values       | Generated iframe query string            |
 | Cart badge updates after unmount    | Listener cleanup was ignored                      | Return value from `addCartCountListener` |
-| Old wrapper never becomes ready     | It relies on `window.__shwps` or polling          | Replace with the script load promise     |
 
 ## Safe testing boundary
 
-Opening widgets and navigating up to checkout is normally sufficient for integration verification. Do not submit payment, create purchases, change organizer settings, or place production credentials in fixtures unless the user explicitly authorizes those actions.
+Use this verification ladder and stop at the first level that proves the requested behavior:
+
+1. Open and close the intended event, product, membership, or calendar widget.
+2. Open checkout with the browser's current cart state; an empty-cart state is still useful integration evidence.
+3. Change cart contents only with authorized test inventory in an appropriate environment, then verify one count transition and teardown.
+4. Exercise off-site payment return or submit payment only with explicit authorization.
+
+Do not create purchases, change organizer settings, or place production credentials in fixtures unless the user explicitly authorizes those actions.

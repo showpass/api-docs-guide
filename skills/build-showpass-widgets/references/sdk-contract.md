@@ -24,7 +24,7 @@ window.showpass = {
 };
 ```
 
-The current SDK does not expose the historical `window.__shwps` command queue. Wait for the script `load` event and then check `window.showpass?.tickets`.
+Wait for the script `load` event and then check `window.showpass?.tickets`.
 
 ## Public methods
 
@@ -40,15 +40,6 @@ All widget factory methods below create and show their widget before resolving. 
 | `expressCheckoutWidget`    | `(params, containerId?) => Promise<Widget>`                 | Use only when the product flow explicitly requires it.                                 |
 | `addCartCountListener`     | `(listener) => cleanup`                                     | The callback receives a numeric cart count. Always call the cleanup function.          |
 
-### Deprecated compatibility methods
-
-| Method                            | Replacement                                                                     |
-| --------------------------------- | ------------------------------------------------------------------------------- |
-| `mountCalendarWidget(id, params)` | `calendarWidget(id, params, containerId)`                                       |
-| `basketWidget(params)`            | `checkoutWidget(params)`                                                        |
-| `shoppingCartWidget(params)`      | `checkoutWidget(params)`; this is an alias of `basketWidget`                    |
-| `loginWidget(params)`             | No v2 replacement; authentication is handled inside purchase and checkout flows |
-
 ## Modal and embedded modes
 
 Modal mode:
@@ -63,8 +54,6 @@ Embedded mode:
 - The SDK throws when the element does not exist.
 - The SDK adds `showpass-widget-embedded-wrapper`, creates an iframe with `allow="payment *"`, and passes `isEmbedded=true` to the widget route.
 - Keep one SDK mount per container. The widget handle has lifecycle methods such as `unmount()` and `remount()`, but those are implementation-level APIs rather than a React component contract.
-
-`mountCalendarWidget` is only a compatibility wrapper around the fixed element ID `showpass-calendar-widget`.
 
 ## Query params
 
@@ -154,7 +143,7 @@ await tickets.calendarWidget(venueId, {
 
 Attraction routing requires both `is_attraction: true` and a non-empty `event_id`. Without both, the SDK uses the standard calendar route.
 
-Despite the legacy `event_id` key, the current attraction route consumes an event **slug** (`pages/widget/calendar/attraction/[eventSlug].tsx`). Pass the organizer-provided attraction slug, not a numeric database ID.
+Although the option is named `event_id`, the current attraction route consumes an event **slug** (`pages/widget/calendar/attraction/[eventSlug].tsx`). Pass the organizer-provided attraction slug, not a numeric database ID.
 
 ## Cart listener
 
@@ -184,10 +173,8 @@ Use these paths when `showpass-frontend` is locally available:
 
 Published documentation lives at `https://dev.showpass.com/sdk/01-sdk-getting-started` through `/sdk/08-basic-integration-example`. The live playground is `https://dev.showpass.com/widget-playground`.
 
-## Known documentation drift to check
+## Contract drift to check
 
-- Some older React examples use `window.__shwps`; the current SDK entry point only exposes `window.showpass`.
-- Some examples poll for readiness; prefer the script `load` event and a shared promise.
 - The playground labels its event input as an ID, while the public event method and documentation call for an event slug.
 - Published option tables and TypeScript types do not agree on every uncommon parameter, including `show-specific-tickets`.
 - Examples using explicit `false` do not account for the current falsy-value serializer behavior.

@@ -2,9 +2,9 @@
 
 ## Plain HTML
 
-Use the canonical script once and wait for deferred scripts before binding the trigger.
+Load the canonical script once and wait for deferred scripts before binding the trigger.
 
-```html
+~~~html
 <script src="https://www.showpass.com/static/dist/sdk.js" defer></script>
 
 <button id="buy-tickets" type="button">Buy tickets</button>
@@ -14,14 +14,17 @@ Use the canonical script once and wait for deferred scripts before binding the t
   window.addEventListener("DOMContentLoaded", function () {
     const button = document.getElementById("buy-tickets");
     const status = document.getElementById("showpass-status");
+    let opening = false;
 
     button.addEventListener("click", async function () {
+      if (opening) return;
       if (!window.showpass?.tickets) {
         status.textContent = "Ticket sales are temporarily unavailable.";
         status.hidden = false;
         return;
       }
 
+      opening = true;
       button.disabled = true;
       status.hidden = true;
 
@@ -34,163 +37,51 @@ Use the canonical script once and wait for deferred scripts before binding the t
         status.textContent = "Ticket sales are temporarily unavailable.";
         status.hidden = false;
       } finally {
+        opening = false;
         button.disabled = false;
       }
     });
   });
 </script>
-```
+~~~
 
-For an embedded widget, render the container first:
+For an embedded widget, render the container before calling the SDK:
 
-```html
+~~~html
 <section aria-label="Upcoming events">
   <div id="showpass-calendar"></div>
 </section>
-```
+~~~
 
-Then pass its ID as the final argument:
-
-```js
+~~~js
 await window.showpass.tickets.calendarWidget(
   "venue-id-or-slug",
   { "theme-primary": "#24727b" },
   "showpass-calendar",
 );
-```
+~~~
 
 ## Shared TypeScript loader
 
-Keep one loader at application scope. Adapt the public method types to the methods the application actually uses.
+Copy [../assets/showpass-sdk.ts](../assets/showpass-sdk.ts) into the target application's shared client infrastructure. It provides:
 
-```ts
-const SHOWPASS_SDK_URL = "https://www.showpass.com/static/dist/sdk.js";
-const SDK_LOADER_ATTRIBUTE = "data-showpass-sdk-loader";
-const SDK_LOAD_TIMEOUT_MS = 15_000;
+- the canonical SDK URL;
+- one module-level promise for concurrent callers;
+- reuse of an SDK script already in flight;
+- explicit load, error, and timeout handling;
+- a retry path after a definitive failure;
+- current widget and cart-listener types without modifying the application's global Window declaration.
 
-type WidgetParams = Record<string, string | number | boolean | undefined>;
+Import loadShowpassSdk from that one module instead of putting a loader in every component. If the target already has a correct shared loader, preserve it and reconcile only missing behavior.
 
-interface WidgetHandle {
-  unmount?: () => void;
-}
-
-interface ShowpassTickets {
-  eventPurchaseWidget: (
-    slug: string,
-    params: WidgetParams,
-    containerId?: string,
-  ) => Promise<WidgetHandle>;
-  calendarWidget: (
-    venueIdOrSlug: string,
-    params: WidgetParams,
-    containerId?: string,
-  ) => Promise<WidgetHandle>;
-  addCartCountListener: (listener: (count: number) => void) => () => void;
-}
-
-declare global {
-  interface Window {
-    showpass?: { tickets: ShowpassTickets };
-  }
-}
-
-let sdkPromise: Promise<ShowpassTickets> | undefined;
-
-export function loadShowpassSdk(): Promise<ShowpassTickets> {
-  if (typeof window === "undefined") {
-    return Promise.reject(new Error("Showpass SDK requires a browser"));
-  }
-
-  if (window.showpass?.tickets) {
-    return Promise.resolve(window.showpass.tickets);
-  }
-
-  if (sdkPromise) return sdkPromise;
-
-  sdkPromise = new Promise((resolve, reject) => {
-    const previous = document.querySelector<HTMLScriptElement>(
-      `script[src="${SHOWPASS_SDK_URL}"]`,
-    );
-    const previousState = previous?.getAttribute(SDK_LOADER_ATTRIBUTE);
-    const previousIsStale =
-      previousState === "failed" || previousState === "loaded";
-    const script =
-      previous && !previousIsStale
-        ? previous
-        : document.createElement("script");
-
-    if (previous && previousIsStale) {
-      if (previous.nonce) script.nonce = previous.nonce;
-      previous.remove();
-    }
-
-    let timeoutId: number | undefined;
-
-    const cleanup = () => {
-      script.removeEventListener("load", handleLoad);
-      script.removeEventListener("error", handleError);
-      if (timeoutId !== undefined) window.clearTimeout(timeoutId);
-    };
-
-    const rejectLoad = (message: string) => {
-      cleanup();
-      script.setAttribute(SDK_LOADER_ATTRIBUTE, "failed");
-      sdkPromise = undefined;
-      reject(new Error(message));
-    };
-
-    const handleLoad = () => {
-      if (window.showpass?.tickets) {
-        cleanup();
-        script.setAttribute(SDK_LOADER_ATTRIBUTE, "loaded");
-        resolve(window.showpass.tickets);
-        return;
-      }
-      rejectLoad("Showpass SDK loaded without exposing tickets");
-    };
-
-    const handleError = () => {
-      rejectLoad("Unable to load the Showpass SDK");
-    };
-
-    const handleTimeout = () => {
-      sdkPromise = undefined;
-      reject(new Error("Timed out while loading the Showpass SDK"));
-    };
-
-    script.addEventListener("load", handleLoad, { once: true });
-    script.addEventListener("error", handleError, { once: true });
-    script.setAttribute(SDK_LOADER_ATTRIBUTE, "loading");
-
-    timeoutId = window.setTimeout(() => {
-      if (window.showpass?.tickets) {
-        handleLoad();
-      } else {
-        handleTimeout();
-      }
-    }, SDK_LOAD_TIMEOUT_MS);
-
-    if (!previous || previousIsStale) {
-      script.src = SHOWPASS_SDK_URL;
-      script.async = true;
-      document.head.appendChild(script);
-    }
-  });
-
-  return sdkPromise;
-}
-```
-
-Do not put this loader inside every widget component. Import the shared function instead.
-
-If the host or framework already inserted the canonical script, this loader attaches to that in-flight element instead of replacing it. A timed-out caller rejects, but the still-executable script remains globally in flight and later calls attach to it; only a definitive load/error result can make an element replaceable. Use only one loading strategy per application when possible.
+Keep the loader in client-only code. Calling it during SSR rejects with a clear error.
 
 ## React modal trigger
 
 Load on demand, coalesce clicks while startup is in progress, report failures, and let the SDK own the modal.
 
-```tsx
-import { useState } from "react";
+~~~tsx
+import { useRef, useState } from "react";
 import { loadShowpassSdk } from "./showpass-sdk";
 
 interface BuyTicketsButtonProps {
@@ -202,11 +93,13 @@ export function BuyTicketsButton({
   eventSlug,
   themeColor,
 }: BuyTicketsButtonProps) {
+  const openingRef = useRef(false);
   const [isOpening, setIsOpening] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
 
   const openWidget = async () => {
-    if (isOpening) return;
+    if (openingRef.current) return;
+    openingRef.current = true;
     setIsOpening(true);
     setErrorMessage(undefined);
 
@@ -219,6 +112,7 @@ export function BuyTicketsButton({
       console.error("Unable to open the Showpass widget", error);
       setErrorMessage("Ticket sales are temporarily unavailable.");
     } finally {
+      openingRef.current = false;
       setIsOpening(false);
     }
   };
@@ -232,17 +126,17 @@ export function BuyTicketsButton({
     </>
   );
 }
-```
+~~~
 
-Use the target application's error-reporting and translated strings instead of copying the literal UI text when those systems exist.
+The ref closes the same-render double-click window before React commits the disabled state. Use the target application's error reporting, translated strings, and button component when available.
 
-The factory promise resolves after the first modal is shown, not when the entire purchase flow closes. `isOpening` prevents concurrent startup calls; it is not an end-to-end modal-session flag. The SDK overlay prevents ordinary repeat clicks once visible. If an application has multiple programmatic launch sources, route them through one application-owned entry point instead of treating `await eventPurchaseWidget(...)` as a close signal.
+The factory promise resolves after the first modal is shown, not when the purchase flow closes. Treat the guard as startup protection, not modal-session state. If an application has several programmatic launch sources, route them through one application-owned entry point.
 
 ## React or Next.js embedded calendar
 
 For Next.js App Router, keep this in a client component. Generate a stable DOM-safe ID and mount only after commit.
 
-```tsx
+~~~tsx
 "use client";
 
 import { useEffect, useId, useMemo, useRef, useState } from "react";
@@ -261,7 +155,7 @@ export function EmbeddedCalendar({
   const mountQueue = useRef<Promise<void>>(Promise.resolve());
   const reactId = useId();
   const containerId = useMemo(
-    () => `showpass-calendar-${reactId.replace(/[^a-zA-Z0-9_-]/g, "")}`,
+    () => "showpass-calendar-" + reactId.replace(/[^a-zA-Z0-9_-]/g, ""),
     [reactId],
   );
 
@@ -321,15 +215,15 @@ export function EmbeddedCalendar({
     </>
   );
 }
-```
+~~~
 
-The SDK is imperative, not a React component library. The promise queue makes cleanup finish before a configuration change starts another factory call against the same container. Avoid frequent option changes that repeatedly tear down and recreate embedded iframes. If the application needs dynamic configuration, make the remount intentional and test React Strict Mode.
+The SDK is imperative, not a React component library. The promise queue makes cleanup finish before a configuration change starts another factory call against the same container. Avoid frequent remounts and test React Strict Mode.
 
 ## React cart badge
 
-The listener returns its own cleanup function.
+The cart listener returns its own cleanup function.
 
-```tsx
+~~~tsx
 import { useEffect, useState } from "react";
 import { loadShowpassSdk } from "./showpass-sdk";
 
@@ -363,32 +257,21 @@ export function CartBadge() {
   }, []);
 
   const cartStatus =
-    errorMessage ?? (count === undefined ? null : `${count} items in cart`);
+    errorMessage ?? (count === undefined ? null : count + " items in cart");
 
   if (!cartStatus) return null;
-
   return <span role="status">{cartStatus}</span>;
 }
-```
+~~~
 
 The listener is event-driven and does not prove the cart starts at zero. Keep the badge hidden, unknown, or hydrated from application-owned state until the first update arrives.
 
-## Public API to widget
+## Discovery API event cards
 
-Use the Public API to render event cards, but pass the event `slug`—not its display name—to `eventPurchaseWidget`.
+Read [public-api-to-widget.md](public-api-to-widget.md) before mapping API data into cards. The key boundary is simple:
 
-```ts
-interface PublicEvent {
-  name: string;
-  slug: string;
-  starts_on: string;
-  timezone: string;
-}
+- use Discovery API fields to render organizer-owned event listings;
+- pass an event's slug to eventPurchaseWidget;
+- let the SDK own purchase, cart, checkout, and redirect behavior.
 
-async function openEvent(event: PublicEvent) {
-  const tickets = await loadShowpassSdk();
-  await tickets.eventPurchaseWidget(event.slug, {});
-}
-```
-
-Escape or render API content through the framework. Do not construct event cards with unsanitized `innerHTML`.
+Render plain-text fields through the framework. Do not inject API strings with unsanitized innerHTML.

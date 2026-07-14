@@ -47,34 +47,6 @@ if (targets.length === 0) {
 
 const rules = [
   {
-    id: "obsolete-command-queue",
-    severity: "warning",
-    pattern: /\b__shwps\b/g,
-    message:
-      "The current SDK exposes window.showpass; replace the historical __shwps queue with load-event readiness.",
-  },
-  {
-    id: "deprecated-mount-calendar",
-    severity: "warning",
-    pattern: /\.mountCalendarWidget\s*\(/g,
-    message:
-      "mountCalendarWidget is deprecated; call calendarWidget with a final containerId.",
-  },
-  {
-    id: "deprecated-login-widget",
-    severity: "warning",
-    pattern: /\.loginWidget\s*\(/g,
-    message:
-      "loginWidget is unsupported in SDK v2; let purchase or checkout own authentication.",
-  },
-  {
-    id: "deprecated-cart-widget",
-    severity: "warning",
-    pattern: /\.(?:basketWidget|shoppingCartWidget)\s*\(/g,
-    message:
-      "The basket/shopping-cart widget is deprecated; prefer checkoutWidget.",
-  },
-  {
     id: "falsy-widget-option",
     severity: "warning",
     source: "comments-masked",
@@ -82,13 +54,6 @@ const rules = [
       /["'](?:keep-shopping|show-description|theme-dark|prompt-for-quantity)["']\s*:\s*false/g,
     message:
       "The current query serializer omits false; verify this option instead of assuming false reaches the iframe.",
-  },
-  {
-    id: "cart-listener-cleanup",
-    severity: "info",
-    pattern: /\.addCartCountListener\s*\(/g,
-    message:
-      "Capture the cleanup function returned by addCartCountListener and call it during teardown.",
   },
   {
     id: "hardcoded-widget-route",
@@ -356,9 +321,7 @@ function findPollingReadinessChecks(file, content) {
     const intervalCall = content.slice(openIndex, closeIndex + 1);
     const checksSdkReadiness =
       /\bcheckSdkLoaded\b/.test(intervalCall) ||
-      /\b(?:if|while)\s*\([^)]{0,240}\b(?:showpass|__shwps)\b/i.test(
-        intervalCall,
-      );
+      /\b(?:if|while)\s*\([^)]{0,240}\bshowpass\b/i.test(intervalCall);
 
     if (!checksSdkReadiness) continue;
 
@@ -377,6 +340,611 @@ function findPollingReadinessChecks(file, content) {
 
 function escapeRegex(value) {
   return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+}
+
+function findEnclosingBlocks(content, index) {
+  const blockStack = [];
+
+  for (let cursor = 0; cursor < index; cursor += 1) {
+    if (content[cursor] === "{") blockStack.push(cursor);
+    if (content[cursor] === "}") blockStack.pop();
+  }
+
+  return blockStack;
+}
+
+function findEnclosingBlock(content, index) {
+  return findEnclosingBlocks(content, index).at(-1) ?? -1;
+}
+
+function findMatchingBrace(content, openIndex) {
+  if (openIndex === -1) return content.length;
+
+  let depth = 0;
+  for (let cursor = openIndex; cursor < content.length; cursor += 1) {
+    if (content[cursor] === "{") depth += 1;
+    if (content[cursor] === "}") {
+      depth -= 1;
+      if (depth === 0) return cursor;
+    }
+  }
+
+  return content.length;
+}
+
+function findEnclosingClassBlock(content, index) {
+  const enclosingBlocks = findEnclosingBlocks(content, index);
+
+  for (let cursor = enclosingBlocks.length - 1; cursor >= 0; cursor -= 1) {
+    const blockStart = enclosingBlocks[cursor];
+    if (/\bclass\s+[a-z_$][\w$]*/i.test(findBlockOwnerPrefix(content, blockStart))) {
+      return blockStart;
+    }
+  }
+
+  return -1;
+}
+
+function findVisibleDeclaration(content, identifier, position) {
+  const declarationPattern = new RegExp(
+    `\\b(?:const|let|var)\\s+${escapeRegex(identifier)}\\b`,
+    "g",
+  );
+  let visibleDeclaration;
+
+  for (const match of content.matchAll(declarationPattern)) {
+    const declarationIndex = match.index ?? 0;
+    if (declarationIndex > position) break;
+
+    const scopeStart = findEnclosingBlock(content, declarationIndex);
+    const scopeEnd = findMatchingBrace(content, scopeStart);
+    if (position <= scopeEnd) {
+      visibleDeclaration = {
+        kind: "declaration",
+        index: declarationIndex,
+        scopeStart,
+        scopeEnd,
+      };
+    }
+  }
+
+  return visibleDeclaration;
+}
+
+function findBlockOwnerPrefix(content, blockStart) {
+  const ownerStart = Math.max(
+    content.lastIndexOf(";", blockStart - 1),
+    content.lastIndexOf("{", blockStart - 1),
+    content.lastIndexOf("}", blockStart - 1),
+  );
+  return content.slice(ownerStart + 1, blockStart).trim();
+}
+
+function getFunctionParameters(ownerPrefix) {
+  const owner = ownerPrefix.trim();
+  const isArrow = owner.endsWith("=>");
+  const isFunction = /\bfunction\b/.test(owner);
+  const isCatch = /\bcatch\s*\(/.test(owner);
+  let parameterSource = isArrow ? owner.slice(0, -2).trim() : owner;
+
+  if (isArrow && /[a-z_$][\w$]*$/i.test(parameterSource)) {
+    return parameterSource.match(/([a-z_$][\w$]*)$/i)?.[1];
+  }
+
+  if (!parameterSource.endsWith(")")) return undefined;
+
+  let depth = 0;
+  let openIndex = -1;
+  for (let cursor = parameterSource.length - 1; cursor >= 0; cursor -= 1) {
+    if (parameterSource[cursor] === ")") depth += 1;
+    if (parameterSource[cursor] === "(") {
+      depth -= 1;
+      if (depth === 0) {
+        openIndex = cursor;
+        break;
+      }
+    }
+  }
+
+  if (openIndex === -1) return undefined;
+
+  const beforeParameters = parameterSource.slice(0, openIndex).trim();
+  const methodOwner = beforeParameters.match(
+    /^(?:(?:public|private|protected|static|async|get|set)\s+)*([a-z_$][\w$]*)$/i,
+  );
+  const isMethod =
+    methodOwner &&
+    !["if", "for", "while", "switch", "with"].includes(methodOwner[1]);
+
+  if (!isArrow && !isFunction && !isCatch && !isMethod) return undefined;
+  return parameterSource.slice(openIndex + 1, -1);
+}
+
+function findVisibleParameter(content, identifier, position) {
+  const identifierPattern = new RegExp(`\\b${escapeRegex(identifier)}\\b`);
+  const enclosingBlocks = findEnclosingBlocks(content, position);
+
+  for (let cursor = enclosingBlocks.length - 1; cursor >= 0; cursor -= 1) {
+    const scopeStart = enclosingBlocks[cursor];
+    const parameters = getFunctionParameters(
+      findBlockOwnerPrefix(content, scopeStart),
+    );
+    if (!parameters || !identifierPattern.test(parameters)) continue;
+
+    return {
+      kind: "parameter",
+      index: scopeStart,
+      scopeStart,
+      scopeEnd: findMatchingBrace(content, scopeStart),
+    };
+  }
+
+  return undefined;
+}
+
+function findVisibleBinding(content, identifier, position) {
+  const candidates = [
+    findVisibleDeclaration(content, identifier, position),
+    findVisibleParameter(content, identifier, position),
+  ].filter(Boolean);
+
+  return candidates.sort(
+    (left, right) =>
+      right.scopeStart - left.scopeStart || right.index - left.index,
+  )[0];
+}
+
+function isSameBindingUse(content, identifier, originalBinding, position) {
+  const candidateBinding = findVisibleBinding(content, identifier, position);
+
+  if (originalBinding) {
+    return (
+      candidateBinding?.kind === originalBinding.kind &&
+      candidateBinding.index === originalBinding.index
+    );
+  }
+
+  return candidateBinding === undefined;
+}
+
+function isLifecycleCallback(ownerPrefix) {
+  const lifecycleName =
+    "(?:(?:React\\s*\\.\\s*)?(?:useEffect|useLayoutEffect|useInsertionEffect)|onMount)";
+  const lifecyclePattern = new RegExp(
+    `\\b${lifecycleName}\\s*\\((?:[\\s\\S]*=>\\s*|\\s*function(?:\\s+[a-z_$][\\w$]*)?\\s*\\([^)]*\\)\\s*)$`,
+    "i",
+  );
+  const isAsyncCallback =
+    new RegExp(`\\b${lifecycleName}\\s*\\(\\s*async\\b`, "i").test(
+      ownerPrefix,
+    );
+  return lifecyclePattern.test(ownerPrefix) && !isAsyncCallback;
+}
+
+function isNamedCleanupProducer(ownerPrefix) {
+  const namedFunction = /^(?:export\s+)?(?:default\s+)?(?:async\s+)?function\s+[a-z_$][\w$]*\s*\(/i.test(
+    ownerPrefix,
+  );
+  const assignedFunction =
+    /^(?:export\s+)?(?:const|let|var)\s+[a-z_$][\w$]*\s*=\s*(?:async\s+)?function\b/i.test(
+      ownerPrefix,
+    );
+  const assignedArrow =
+    /^(?:export\s+)?(?:const|let|var)\s+[a-z_$][\w$]*\s*=\s*(?:async\s+)?(?:\([^)]*\)|[a-z_$][\w$]*)\s*=>\s*$/i.test(
+      ownerPrefix,
+    );
+
+  return namedFunction || assignedFunction || assignedArrow;
+}
+
+function isCleanupProducer(ownerPrefix) {
+  return (
+    isLifecycleCallback(ownerPrefix) || isNamedCleanupProducer(ownerPrefix)
+  );
+}
+
+function isLifecycleTeardownMethod(ownerPrefix) {
+  return /^(?:(?:public|private|protected|static|async)\s+)*(?:beforeUnmount|componentWillUnmount|destroy|disconnect|disconnectedCallback|dispose|ngOnDestroy|unmount)\s*\(/i.test(
+    ownerPrefix,
+  );
+}
+
+function findStatementPrefix(content, index) {
+  const statementStart = Math.max(
+    content.lastIndexOf(";", index),
+    content.lastIndexOf("{", index),
+    content.lastIndexOf("}", index),
+  );
+  return content.slice(statementStart + 1, index).trim();
+}
+
+function returnsCleanupToOwner(content, matchIndex, statementPrefix) {
+  if (/=>\s*$/.test(statementPrefix)) {
+    return isCleanupProducer(statementPrefix);
+  }
+
+  if (!/\breturn\s*$/.test(statementPrefix)) return false;
+
+  const blockStart = findEnclosingBlock(content, matchIndex);
+  const ownerPrefix = findBlockOwnerPrefix(content, blockStart);
+  return isCleanupProducer(ownerPrefix);
+}
+
+function cleanupUseHasValidOwner(
+  content,
+  candidateIndex,
+  candidateKind,
+  bindingScopeStart,
+  cleanupTarget,
+) {
+  const blockStart = findEnclosingBlock(content, candidateIndex);
+  const ownerPrefix = findBlockOwnerPrefix(content, blockStart);
+  const enclosingBlocks = findEnclosingBlocks(content, candidateIndex);
+
+  if (candidateKind === "return") {
+    return isCleanupProducer(ownerPrefix);
+  }
+
+  const statementPrefix = findStatementPrefix(content, candidateIndex);
+  if (/\breturn[\s\S]*=>\s*$/.test(statementPrefix)) {
+    return isCleanupProducer(ownerPrefix);
+  }
+
+  if (/(?:^|\n)\s*return\b[\s\S]*(?:=>|\bfunction\b)/.test(ownerPrefix)) {
+    const parentBlock = findEnclosingBlock(content, blockStart);
+    return isCleanupProducer(findBlockOwnerPrefix(content, parentBlock));
+  }
+
+  for (let cursor = enclosingBlocks.length - 1; cursor >= 0; cursor -= 1) {
+    const enclosingBlock = enclosingBlocks[cursor];
+    const enclosingOwner = findBlockOwnerPrefix(content, enclosingBlock);
+
+    if (
+      cleanupTarget.startsWith("this.") &&
+      isLifecycleTeardownMethod(enclosingOwner)
+    ) {
+      return true;
+    }
+
+    if (
+      /(?:^|\n)\s*return\b[\s\S]*(?:=>|\bfunction\b)/.test(
+        enclosingOwner,
+      )
+    ) {
+      const parentBlock = findEnclosingBlock(content, enclosingBlock);
+      if (isCleanupProducer(findBlockOwnerPrefix(content, parentBlock))) {
+        return true;
+      }
+    }
+
+    if (enclosingBlock === bindingScopeStart) break;
+  }
+
+  return (
+    blockStart === bindingScopeStart &&
+    isNamedCleanupProducer(ownerPrefix)
+  );
+}
+
+function isAsyncListenerInstall(content, matchIndex, statementPrefix, scopeStart) {
+  if (/\.(?:then|catch|finally)\s*\([\s\S]*=>\s*$/.test(statementPrefix)) {
+    return true;
+  }
+
+  return findEnclosingBlocks(content, matchIndex).some((blockStart) => {
+    if (blockStart < scopeStart) return false;
+    const ownerPrefix = findBlockOwnerPrefix(content, blockStart);
+    return (
+      /\basync\b/.test(ownerPrefix) ||
+      /\.(?:then|catch|finally)\s*\(/.test(ownerPrefix) ||
+      /\b(?:setTimeout|queueMicrotask|requestAnimationFrame)\s*\(/.test(
+        ownerPrefix,
+      )
+    );
+  });
+}
+
+function findAsyncGuardFloor(content, matchIndex, statementPrefix, scopeStart) {
+  if (/\.(?:then|catch|finally)\s*\([\s\S]*=>\s*$/.test(statementPrefix)) {
+    return matchIndex;
+  }
+
+  let floor = Math.max(0, scopeStart);
+  for (const blockStart of findEnclosingBlocks(content, matchIndex)) {
+    if (blockStart < floor) continue;
+    const ownerPrefix = findBlockOwnerPrefix(content, blockStart);
+    if (
+      /\basync\b/.test(ownerPrefix) ||
+      /\.(?:then|catch|finally)\s*\(/.test(ownerPrefix) ||
+      /\b(?:setTimeout|queueMicrotask|requestAnimationFrame)\s*\(/.test(
+        ownerPrefix,
+      )
+    ) {
+      floor = blockStart;
+    }
+  }
+
+  const suspensionStart = floor;
+  const suspensionSource = content.slice(suspensionStart, matchIndex);
+  for (const suspension of suspensionSource.matchAll(/\bawait\b/g)) {
+    floor = Math.max(
+      floor,
+      suspensionStart + (suspension.index ?? 0) + suspension[0].length,
+    );
+  }
+
+  return floor;
+}
+
+function hasAsyncInstallGuard(
+  content,
+  matchIndex,
+  scopeStart,
+  guardFloor,
+  scopeEnd,
+) {
+  const beforeInstall = content.slice(guardFloor, matchIndex);
+  const declarationSource = content.slice(Math.max(0, scopeStart), matchIndex);
+  const afterInstall = content.slice(matchIndex, scopeEnd);
+  const guardPattern =
+    /\bif\s*\(\s*(!?)\s*([a-z_$][\w$]*)\s*\)\s*(?:return\b|\{\s*return\b)/gi;
+
+  for (const guard of beforeInstall.matchAll(guardPattern)) {
+    const isActiveGuard = guard[1] === "!";
+    const flag = guard[2];
+    const initialValue = isActiveGuard ? "true" : "false";
+    const teardownValue = isActiveGuard ? "false" : "true";
+    const declarationPattern = new RegExp(
+      `\\b(?:let|var)\\s+${escapeRegex(flag)}(?:\\s*:[^=;]+)?\\s*=\\s*${initialValue}\\b`,
+    );
+    const teardownPattern = new RegExp(
+      `\\b${escapeRegex(flag)}\\s*=\\s*${teardownValue}\\b`,
+      "g",
+    );
+    const flagBinding = findVisibleBinding(
+      content,
+      flag,
+      guardFloor + (guard.index ?? 0),
+    );
+    const teardownAssignments = [...afterInstall.matchAll(teardownPattern)];
+    const hasOwnedTeardownAssignment = teardownAssignments.some(
+      (assignment) => {
+        const assignmentIndex = matchIndex + (assignment.index ?? 0);
+        return (
+          isSameBindingUse(content, flag, flagBinding, assignmentIndex) &&
+          cleanupUseHasValidOwner(
+            content,
+            assignmentIndex,
+            "call",
+            flagBinding?.scopeStart ?? scopeStart,
+            flag,
+          )
+        );
+      },
+    );
+
+    if (
+      declarationPattern.test(declarationSource) &&
+      hasOwnedTeardownAssignment
+    ) {
+      return true;
+    }
+  }
+
+  return false;
+}
+
+function isBindingReassigned(
+  content,
+  target,
+  rootIdentifier,
+  originalBinding,
+  start,
+  end,
+) {
+  const targetPattern = escapeRegex(target);
+  const assignmentPattern = new RegExp(
+    `\\b${targetPattern}\\s*(?:\\?\\?=|&&=|\\|\\|=|[+*/%&|^-]=|=(?!=|>))`,
+    "g",
+  );
+  const segment = content.slice(start, end);
+
+  return [...segment.matchAll(assignmentPattern)].some((match) =>
+    isSameBindingUse(
+      content,
+      rootIdentifier,
+      originalBinding,
+      start + (match.index ?? 0),
+    ),
+  );
+}
+
+function asyncHelperReturnsCapturedCleanup(
+  content,
+  candidateIndex,
+  candidateKind,
+  scopeStart,
+) {
+  const scopeOwner = findBlockOwnerPrefix(content, scopeStart);
+  if (!/\basync\b/.test(scopeOwner) || !isNamedCleanupProducer(scopeOwner)) {
+    return false;
+  }
+
+  const enclosingBlocks = findEnclosingBlocks(content, candidateIndex);
+
+  if (candidateKind === "return") {
+    return !enclosingBlocks.some((blockStart) => {
+      if (blockStart <= scopeStart) return false;
+      return getFunctionParameters(findBlockOwnerPrefix(content, blockStart)) !== undefined;
+    });
+  }
+
+  const statementPrefix = findStatementPrefix(content, candidateIndex);
+  if (
+    findEnclosingBlock(content, candidateIndex) === scopeStart &&
+    /\breturn[\s\S]*=>\s*$/.test(statementPrefix)
+  ) {
+    return true;
+  }
+
+  return enclosingBlocks.some((blockStart) => {
+    const ownerPrefix = findBlockOwnerPrefix(content, blockStart);
+    if (!/(?:^|\n)\s*return\b[\s\S]*(?:=>|\bfunction\b)/.test(ownerPrefix)) {
+      return false;
+    }
+    return findEnclosingBlock(content, blockStart) === scopeStart;
+  });
+}
+
+function findCartListenerCleanup(file, content) {
+  const findings = [];
+  const listenerPattern =
+    /(?:\([^;{}\n]*\)|\b(?!(?:await|delete|new|return|throw|typeof|void|yield)\b)[a-z_$][\w$]*(?:\s*(?:\?\.|\.)\s*[a-z_$][\w$]*)*(?:\s*\([^;{}\n]*\))?)\s*(?:\?\.|\.)\s*addCartCountListener\s*\(/gi;
+
+  for (const match of content.matchAll(listenerPattern)) {
+    const matchIndex = match.index ?? 0;
+    const openIndex = content.indexOf("(", matchIndex);
+    const closeIndex = findMatchingParenthesis(content, openIndex);
+    if (closeIndex === -1) continue;
+
+    const prefix = findStatementPrefix(content, matchIndex);
+
+    if (returnsCleanupToOwner(content, matchIndex, prefix)) continue;
+
+    const typedDeclaration = prefix.match(
+      /\b(?:const|let|var)\s+([a-z_$][\w$]*)\s*:[^;\n]+=\s*$/i,
+    );
+    const assignment = prefix.match(
+      /([a-z_$][\w$]*(?:\s*\.\s*[a-z_$][\w$]*)*)\s*=\s*$/i,
+    );
+    const cleanupTarget = (typedDeclaration?.[1] ?? assignment?.[1])?.replace(
+      /\s+/g,
+      "",
+    );
+
+    if (cleanupTarget) {
+      const rootIdentifier = cleanupTarget.split(".")[0];
+      const originalBinding = findVisibleBinding(
+        content,
+        rootIdentifier,
+        matchIndex,
+      );
+      const classScopeStart = cleanupTarget.startsWith("this.")
+        ? findEnclosingClassBlock(content, matchIndex)
+        : -1;
+      const scopeStart =
+        originalBinding?.scopeStart ??
+        (classScopeStart !== -1
+          ? classScopeStart
+          : findEnclosingBlock(content, matchIndex));
+      const scopeEnd = findMatchingBrace(content, scopeStart);
+      const remainingContent = content.slice(closeIndex + 1, scopeEnd);
+      const escapedTarget = escapeRegex(cleanupTarget);
+      const cleanupCallPattern = new RegExp(
+        `\\b${escapedTarget}\\s*(?:\\?\\.)?\\s*\\(`,
+        "g",
+      );
+      const cleanupReturnPattern = new RegExp(
+        `\\breturn\\s+${escapedTarget}\\b`,
+        "g",
+      );
+      const candidates = [
+        ...[...remainingContent.matchAll(cleanupCallPattern)].map((match) => ({
+          kind: "call",
+          match,
+        })),
+        ...[...remainingContent.matchAll(cleanupReturnPattern)].map((match) => ({
+          kind: "return",
+          match,
+        })),
+      ].sort(
+        (left, right) =>
+          (left.match.index ?? 0) - (right.match.index ?? 0),
+      );
+
+      const capturedCleanupUse = candidates.find((candidate) => {
+        const candidateIndex =
+          closeIndex + 1 + (candidate.match.index ?? 0);
+        if (
+          !isSameBindingUse(
+            content,
+            rootIdentifier,
+            originalBinding,
+            candidateIndex,
+          )
+        ) {
+          return false;
+        }
+
+        if (
+          !cleanupUseHasValidOwner(
+            content,
+            candidateIndex,
+            candidate.kind,
+            scopeStart,
+            cleanupTarget,
+          )
+        ) {
+          return false;
+        }
+
+        return !isBindingReassigned(
+          content,
+          cleanupTarget,
+          rootIdentifier,
+          originalBinding,
+          closeIndex + 1,
+          candidateIndex,
+        );
+      });
+      const usesCapturedCleanup = capturedCleanupUse !== undefined;
+      const capturedCleanupReturnedByAsyncHelper =
+        capturedCleanupUse !== undefined &&
+        asyncHelperReturnsCapturedCleanup(
+          content,
+          closeIndex + 1 + (capturedCleanupUse.match.index ?? 0),
+          capturedCleanupUse.kind,
+          scopeStart,
+        );
+
+      const unsafeAsyncInstall =
+        usesCapturedCleanup &&
+        !capturedCleanupReturnedByAsyncHelper &&
+        isAsyncListenerInstall(content, matchIndex, prefix, scopeStart) &&
+        !hasAsyncInstallGuard(
+          content,
+          matchIndex,
+          scopeStart,
+          findAsyncGuardFloor(content, matchIndex, prefix, scopeStart),
+          scopeEnd,
+        );
+
+      if (usesCapturedCleanup && !unsafeAsyncInstall) continue;
+
+      if (unsafeAsyncInstall) {
+        findings.push({
+          rule: "cart-listener-cleanup",
+          severity: "warning",
+          file,
+          line: lineNumberAt(content, matchIndex),
+          message:
+            "Async cart-listener setup needs a teardown flag checked before subscribing, plus cleanup during teardown.",
+        });
+        continue;
+      }
+    }
+
+    findings.push({
+      rule: "cart-listener-cleanup",
+      severity: "warning",
+      file,
+      line: lineNumberAt(content, matchIndex),
+      message:
+        "Return or store the cleanup from addCartCountListener, then invoke it during teardown.",
+    });
+  }
+
+  return findings;
 }
 
 function findTicketsAliases(content) {
@@ -450,6 +1018,7 @@ function scanFile(file, content) {
   const findings = [
     ...findPollingReadinessChecks(file, codeOnlyContent),
     ...findMissingParams(file, codeOnlyContent),
+    ...findCartListenerCleanup(file, codeOnlyContent),
   ];
 
   for (const rule of rules) {
