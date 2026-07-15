@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { ChevronLeft, ChevronRight, Menu } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
 import { Button } from "@/shared/components/button.tsx";
 import {
@@ -17,9 +17,13 @@ import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
 import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation.tsx";
 import { Separator } from "@/shared/components/separator.tsx";
 import TopNavigation from "@/shared/components/TopNavigation.tsx";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/shared/components/tooltip.tsx";
 
-const DESKTOP_NAVIGATION_QUERY = "(min-width: 1280px)";
-const WIDE_DESKTOP_QUERY = "(min-width: 1440px)";
+const PERSISTENT_NAVIGATION_QUERY = "(min-width: 1536px)";
 const DESKTOP_NAVIGATION_STORAGE_KEY = "showpass-docs-navigation";
 const OVERLAY_NAVIGATION_ID = "docs-navigation-overlay";
 const DESKTOP_NAVIGATION_ID = "docs-navigation-desktop";
@@ -112,20 +116,14 @@ const DocLayout = () => {
     useState<DesktopNavigationPreference>(getStoredDesktopNavigationPreference);
   const overlayNavigationTriggerRef = useRef<HTMLElement | null>(null);
   const layoutContentRef = useRef<HTMLDivElement | null>(null);
-  const isDesktop = useMediaQuery(DESKTOP_NAVIGATION_QUERY);
-  const isWideDesktop = useMediaQuery(WIDE_DESKTOP_QUERY);
+  const hasPersistentNavigation = useMediaQuery(PERSISTENT_NAVIGATION_QUERY);
   const location = useLocation();
   const currentPath = location.pathname;
   const desktopNavigationOpen =
-    desktopNavigationPreference === null
-      ? isWideDesktop
-      : desktopNavigationPreference === "expanded";
-  const navigationOpen = isDesktop
-    ? desktopNavigationOpen
-    : overlayNavigationOpen;
-  const navigationControlsId = isDesktop
-    ? DESKTOP_NAVIGATION_ID
-    : OVERLAY_NAVIGATION_ID;
+    hasPersistentNavigation &&
+    (desktopNavigationPreference === null
+      ? true
+      : desktopNavigationPreference === "expanded");
 
   // Consume the context provided by DocLayoutDataProvider in App.tsx
   const { tocItems, apiExamplesData, activeSection, hideRightSidebar } =
@@ -133,10 +131,10 @@ const DocLayout = () => {
 
   useEffect(() => {
     setOverlayNavigationOpen(false);
-  }, [currentPath, isDesktop]);
+  }, [currentPath, hasPersistentNavigation]);
 
   useEffect(() => {
-    if (!overlayNavigationOpen || isDesktop) {
+    if (!overlayNavigationOpen || hasPersistentNavigation) {
       return;
     }
 
@@ -155,7 +153,7 @@ const DocLayout = () => {
       }
       document.body.style.overflow = originalBodyOverflow;
     };
-  }, [overlayNavigationOpen, isDesktop]);
+  }, [overlayNavigationOpen, hasPersistentNavigation]);
 
   const openOverlayNavigation = () => {
     overlayNavigationTriggerRef.current =
@@ -165,16 +163,15 @@ const DocLayout = () => {
     setOverlayNavigationOpen(true);
   };
 
-  const handleNavigationToggle = () => {
-    if (!isDesktop) {
-      if (overlayNavigationOpen) {
-        setOverlayNavigationOpen(false);
-      } else {
-        openOverlayNavigation();
-      }
-      return;
+  const handleOverlayNavigationToggle = () => {
+    if (overlayNavigationOpen) {
+      setOverlayNavigationOpen(false);
+    } else {
+      openOverlayNavigation();
     }
+  };
 
+  const handleDesktopNavigationToggle = () => {
     const nextPreference: DesktopNavigationPreference = desktopNavigationOpen
       ? "collapsed"
       : "expanded";
@@ -194,20 +191,62 @@ const DocLayout = () => {
     <div className="flex flex-col min-h-screen">
       {/* Top Navigation - Consistent across all pages */}
       <TopNavigation
-        navigationOpen={navigationOpen}
-        navigationControlsId={navigationControlsId}
-        onNavigationToggle={handleNavigationToggle}
+        navigationOpen={overlayNavigationOpen}
+        navigationControlsId={OVERLAY_NAVIGATION_ID}
+        onNavigationToggle={handleOverlayNavigationToggle}
+        showNavigationToggle={!hasPersistentNavigation}
       />
+
+      {hasPersistentNavigation && (
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Button
+              type="button"
+              variant="outline"
+              size="icon"
+              onClick={handleDesktopNavigationToggle}
+              className={cn(
+                "fixed top-[calc(50%+2rem)] z-40 hidden h-12 w-8 -translate-y-1/2 border-sidebar-border bg-sidebar/95 p-0 text-muted-foreground shadow-sm backdrop-blur hover:bg-sidebar-accent hover:text-sidebar-accent-foreground xl:inline-flex motion-reduce:transition-none",
+                desktopNavigationOpen
+                  ? "rounded-full"
+                  : "rounded-l-none rounded-r-full border-l-0"
+              )}
+              style={{
+                left: desktopNavigationOpen ? "314px" : "0px",
+                transitionDuration: "180ms",
+              }}
+              aria-label={
+                desktopNavigationOpen
+                  ? "Collapse documentation navigation"
+                  : "Expand documentation navigation"
+              }
+              aria-expanded={desktopNavigationOpen}
+              aria-controls={DESKTOP_NAVIGATION_ID}
+            >
+              {desktopNavigationOpen ? (
+                <ChevronLeft className="h-4 w-4" />
+              ) : (
+                <ChevronRight className="h-4 w-4" />
+              )}
+            </Button>
+          </TooltipTrigger>
+          <TooltipContent side="right">
+            {desktopNavigationOpen
+              ? "Collapse navigation"
+              : "Expand navigation"}
+          </TooltipContent>
+        </Tooltip>
+      )}
 
       <button
         type="button"
         aria-label="Close navigation"
-        aria-hidden={!overlayNavigationOpen || isDesktop}
-        tabIndex={overlayNavigationOpen && !isDesktop ? 0 : -1}
+        aria-hidden={!overlayNavigationOpen || hasPersistentNavigation}
+        tabIndex={overlayNavigationOpen && !hasPersistentNavigation ? 0 : -1}
         onClick={() => setOverlayNavigationOpen(false)}
         className={cn(
           "fixed inset-x-0 bottom-0 top-16 z-40 bg-background/60 backdrop-blur-sm transition-opacity motion-reduce:transition-none",
-          overlayNavigationOpen && !isDesktop
+          overlayNavigationOpen && !hasPersistentNavigation
             ? "opacity-100"
             : "pointer-events-none opacity-0"
         )}
@@ -245,12 +284,14 @@ const DocLayout = () => {
         {/* Overlay navigation for phones and tablets */}
         <Sheet
           modal={false}
-          open={overlayNavigationOpen && !isDesktop}
+          open={overlayNavigationOpen && !hasPersistentNavigation}
           onOpenChange={setOverlayNavigationOpen}
         >
           <SheetContent
             id={OVERLAY_NAVIGATION_ID}
             side="left"
+            showOverlay={false}
+            closeButtonClassName="md:hidden"
             onInteractOutside={(event) => {
               const target = event.target;
               if (

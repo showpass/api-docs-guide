@@ -2,15 +2,14 @@ import React from "react";
 import { useTheme } from "next-themes";
 import {
   Briefcase,
+  Menu,
   Newspaper,
-  PanelLeftClose,
-  PanelLeftOpen,
+  X,
   Zap,
 } from "lucide-react";
 import logoRedSrc from "@/shared/assets/images/showpass-logo-red.svg";
 import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { Button } from "@/shared/components/button.tsx";
-import { Separator } from "@/shared/components/separator.tsx";
 import {
   Tooltip,
   TooltipContent,
@@ -22,12 +21,14 @@ interface TopNavigationProps {
   navigationOpen: boolean;
   navigationControlsId: string;
   onNavigationToggle: () => void;
+  showNavigationToggle: boolean;
 }
 
 const TopNavigation = ({
   navigationOpen,
   navigationControlsId,
   onNavigationToggle,
+  showNavigationToggle,
 }: TopNavigationProps) => {
   const { resolvedTheme } = useTheme();
   const currentLogo =
@@ -35,14 +36,37 @@ const TopNavigation = ({
       ? logoWhiteSrc
       : logoRedSrc;
   const navigationLabel = navigationOpen
-    ? "Hide navigation"
-    : "Show navigation";
+    ? "Close navigation"
+    : "Open navigation";
 
   return (
     <header className="sticky top-0 z-50 border-b border-border/50 bg-sidebar/95">
       <div className="flex h-16 items-center">
-        {/* Logo - Flush left with padding */}
         <div className="flex flex-shrink-0 items-center pl-4 lg:pl-6">
+          {showNavigationToggle && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <Button
+                  type="button"
+                  variant="ghost"
+                  size="icon"
+                  onClick={onNavigationToggle}
+                  className="mr-2 hidden h-9 w-9 text-muted-foreground hover:text-foreground md:inline-flex"
+                  aria-label={navigationLabel}
+                  aria-expanded={navigationOpen}
+                  aria-controls={navigationControlsId}
+                >
+                  {navigationOpen ? (
+                    <X className="h-[18px] w-[18px]" />
+                  ) : (
+                    <Menu className="h-[18px] w-[18px]" />
+                  )}
+                </Button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom">{navigationLabel}</TooltipContent>
+            </Tooltip>
+          )}
+
           <a href="https://dev.showpass.com/" className="flex items-center">
             <img
               src={currentLogo}
@@ -50,32 +74,6 @@ const TopNavigation = ({
               className="h-8 w-auto"
             />
           </a>
-
-          <Separator
-            orientation="vertical"
-            className="mx-3 hidden h-6 bg-border/70 md:block"
-          />
-          <Tooltip>
-            <TooltipTrigger asChild>
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                onClick={onNavigationToggle}
-                className="hidden h-9 w-9 text-muted-foreground hover:text-foreground md:inline-flex"
-                aria-label={navigationLabel}
-                aria-expanded={navigationOpen}
-                aria-controls={navigationControlsId}
-              >
-                {navigationOpen ? (
-                  <PanelLeftClose className="h-[18px] w-[18px]" />
-                ) : (
-                  <PanelLeftOpen className="h-[18px] w-[18px]" />
-                )}
-              </Button>
-            </TooltipTrigger>
-            <TooltipContent side="bottom">{navigationLabel}</TooltipContent>
-          </Tooltip>
         </div>
 
         {/* Spacer */}
