@@ -10,18 +10,15 @@ import {
 import logoRedSrc from "@/shared/assets/images/showpass-logo-red.svg";
 import logoWhiteSrc from "@/shared/assets/images/showpass-logo-white.svg";
 import { Button } from "@/shared/components/button.tsx";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/shared/components/tooltip.tsx";
-import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
+import { DocSearchTrigger } from "@/docs-app/ui/components/search/DocSearch.tsx";
 
 interface TopNavigationProps {
   navigationOpen: boolean;
   navigationControlsId: string;
   onNavigationToggle: () => void;
   showNavigationToggle: boolean;
+  searchOpen: boolean;
+  onSearchOpen: () => void;
 }
 
 const TopNavigation = ({
@@ -29,6 +26,8 @@ const TopNavigation = ({
   navigationControlsId,
   onNavigationToggle,
   showNavigationToggle,
+  searchOpen,
+  onSearchOpen,
 }: TopNavigationProps) => {
   const { resolvedTheme } = useTheme();
   const currentLogo =
@@ -44,27 +43,22 @@ const TopNavigation = ({
       <div className="flex h-16 items-center">
         <div className="flex flex-shrink-0 items-center pl-4 lg:pl-6">
           {showNavigationToggle && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <Button
-                  type="button"
-                  variant="ghost"
-                  size="icon"
-                  onClick={onNavigationToggle}
-                  className="mr-2 hidden h-9 w-9 text-muted-foreground hover:text-foreground md:inline-flex"
-                  aria-label={navigationLabel}
-                  aria-expanded={navigationOpen}
-                  aria-controls={navigationControlsId}
-                >
-                  {navigationOpen ? (
-                    <X className="h-[18px] w-[18px]" />
-                  ) : (
-                    <Menu className="h-[18px] w-[18px]" />
-                  )}
-                </Button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom">{navigationLabel}</TooltipContent>
-            </Tooltip>
+            <Button
+              type="button"
+              variant="ghost"
+              size="icon"
+              onClick={onNavigationToggle}
+              className="mr-2 hidden h-9 w-9 text-muted-foreground hover:text-foreground md:inline-flex"
+              aria-label={navigationLabel}
+              aria-expanded={navigationOpen}
+              aria-controls={navigationControlsId}
+            >
+              {navigationOpen ? (
+                <X className="h-[18px] w-[18px]" />
+              ) : (
+                <Menu className="h-[18px] w-[18px]" />
+              )}
+            </Button>
           )}
 
           <a href="https://dev.showpass.com/" className="flex items-center">
@@ -79,8 +73,8 @@ const TopNavigation = ({
         {/* Spacer */}
         <div className="flex-1"></div>
 
-        <div className="flex items-center gap-2 flex-shrink-0 pr-4 lg:pr-6">
-          <div className="hidden md:flex items-center gap-1">
+        <div className="flex flex-shrink-0 items-center gap-2 pr-4 lg:pr-6">
+          <div className="hidden items-center gap-1 lg:flex">
             <Button
               variant="ghost"
               size="sm"
@@ -129,9 +123,12 @@ const TopNavigation = ({
                 <span>News</span>
               </a>
             </Button>
-            <DocSearch />
           </div>
-          
+
+          <div className="hidden md:block">
+            <DocSearchTrigger open={searchOpen} onOpen={onSearchOpen} />
+          </div>
+
           {/* Mobile dropdown for links */}
           <div className="md:hidden">
             <Button

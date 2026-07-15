@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { ChevronLeft, ChevronRight, Menu } from "lucide-react";
+import { Menu } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
 import { Button } from "@/shared/components/button.tsx";
 import {
@@ -13,22 +13,15 @@ import Navigation from "@/docs-app/ui/components/navigation/Navigation.tsx";
 import TableOfContents from "@/docs-app/ui/components/navigation/TableOfContents.tsx";
 import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
 import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
-import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
+import DocSearch, {
+  DocSearchTrigger,
+} from "@/docs-app/ui/components/search/DocSearch.tsx";
 import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation.tsx";
 import { Separator } from "@/shared/components/separator.tsx";
 import TopNavigation from "@/shared/components/TopNavigation.tsx";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipTrigger,
-} from "@/shared/components/tooltip.tsx";
 
 const PERSISTENT_NAVIGATION_QUERY = "(min-width: 1536px)";
-const DESKTOP_NAVIGATION_STORAGE_KEY = "showpass-docs-navigation";
 const OVERLAY_NAVIGATION_ID = "docs-navigation-overlay";
-const DESKTOP_NAVIGATION_ID = "docs-navigation-desktop";
-
-type DesktopNavigationPreference = "expanded" | "collapsed" | null;
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() =>
@@ -47,24 +40,6 @@ const useMediaQuery = (query: string) => {
   }, [query]);
 
   return matches;
-};
-
-const getStoredDesktopNavigationPreference = (): DesktopNavigationPreference => {
-  if (typeof window === "undefined") {
-    return null;
-  }
-
-  try {
-    const storedPreference = window.localStorage.getItem(
-      DESKTOP_NAVIGATION_STORAGE_KEY
-    );
-
-    return storedPreference === "expanded" || storedPreference === "collapsed"
-      ? storedPreference
-      : null;
-  } catch {
-    return null;
-  }
 };
 
 export interface DocLayoutContextProps {
@@ -112,18 +87,12 @@ export const DocLayoutDataProvider: React.FC<React.PropsWithChildren> = ({
 
 const DocLayout = () => {
   const [overlayNavigationOpen, setOverlayNavigationOpen] = useState(false);
-  const [desktopNavigationPreference, setDesktopNavigationPreference] =
-    useState<DesktopNavigationPreference>(getStoredDesktopNavigationPreference);
+  const [searchOpen, setSearchOpen] = useState(false);
   const overlayNavigationTriggerRef = useRef<HTMLElement | null>(null);
   const layoutContentRef = useRef<HTMLDivElement | null>(null);
   const hasPersistentNavigation = useMediaQuery(PERSISTENT_NAVIGATION_QUERY);
   const location = useLocation();
   const currentPath = location.pathname;
-  const desktopNavigationOpen =
-    hasPersistentNavigation &&
-    (desktopNavigationPreference === null
-      ? true
-      : desktopNavigationPreference === "expanded");
 
   // Consume the context provided by DocLayoutDataProvider in App.tsx
   const { tocItems, apiExamplesData, activeSection, hideRightSidebar } =
@@ -131,6 +100,7 @@ const DocLayout = () => {
 
   useEffect(() => {
     setOverlayNavigationOpen(false);
+    setSearchOpen(false);
   }, [currentPath, hasPersistentNavigation]);
 
   useEffect(() => {
@@ -171,22 +141,6 @@ const DocLayout = () => {
     }
   };
 
-  const handleDesktopNavigationToggle = () => {
-    const nextPreference: DesktopNavigationPreference = desktopNavigationOpen
-      ? "collapsed"
-      : "expanded";
-
-    setDesktopNavigationPreference(nextPreference);
-    try {
-      window.localStorage.setItem(
-        DESKTOP_NAVIGATION_STORAGE_KEY,
-        nextPreference
-      );
-    } catch {
-      // The preference is optional when storage is unavailable.
-    }
-  };
-
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top Navigation - Consistent across all pages */}
@@ -195,54 +149,13 @@ const DocLayout = () => {
         navigationControlsId={OVERLAY_NAVIGATION_ID}
         onNavigationToggle={handleOverlayNavigationToggle}
         showNavigationToggle={!hasPersistentNavigation}
+        searchOpen={searchOpen}
+        onSearchOpen={() => setSearchOpen(true)}
       />
+      <DocSearch open={searchOpen} onOpenChange={setSearchOpen} />
 
-      {hasPersistentNavigation && (
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={handleDesktopNavigationToggle}
-              className={cn(
-                "fixed top-[calc(50%+2rem)] z-40 hidden h-12 w-8 -translate-y-1/2 border-sidebar-border bg-sidebar/95 p-0 text-muted-foreground shadow-sm backdrop-blur hover:bg-sidebar-accent hover:text-sidebar-accent-foreground xl:inline-flex motion-reduce:transition-none",
-                desktopNavigationOpen
-                  ? "rounded-full"
-                  : "rounded-l-none rounded-r-full border-l-0"
-              )}
-              style={{
-                left: desktopNavigationOpen ? "314px" : "0px",
-                transitionDuration: "180ms",
-              }}
-              aria-label={
-                desktopNavigationOpen
-                  ? "Collapse documentation navigation"
-                  : "Expand documentation navigation"
-              }
-              aria-expanded={desktopNavigationOpen}
-              aria-controls={DESKTOP_NAVIGATION_ID}
-            >
-              {desktopNavigationOpen ? (
-                <ChevronLeft className="h-4 w-4" />
-              ) : (
-                <ChevronRight className="h-4 w-4" />
-              )}
-            </Button>
-          </TooltipTrigger>
-          <TooltipContent side="right">
-            {desktopNavigationOpen
-              ? "Collapse navigation"
-              : "Expand navigation"}
-          </TooltipContent>
-        </Tooltip>
-      )}
-
-      <button
-        type="button"
-        aria-label="Close navigation"
-        aria-hidden={!overlayNavigationOpen || hasPersistentNavigation}
-        tabIndex={overlayNavigationOpen && !hasPersistentNavigation ? 0 : -1}
+      <div
+        aria-hidden="true"
         onClick={() => setOverlayNavigationOpen(false)}
         className={cn(
           "fixed inset-x-0 bottom-0 top-16 z-40 bg-background/60 backdrop-blur-sm transition-opacity motion-reduce:transition-none",
@@ -252,32 +165,28 @@ const DocLayout = () => {
         )}
         style={{ transitionDuration: "180ms" }}
       />
-      
+
       <div
         ref={layoutContentRef}
-        className={cn(
-          "flex flex-1 flex-col xl:grid xl:transition-[grid-template-columns] xl:ease-out xl:motion-reduce:transition-none",
-          desktopNavigationOpen
-            ? "xl:grid-cols-[330px_minmax(0,1fr)]"
-            : "xl:grid-cols-[0px_minmax(0,1fr)]"
-        )}
-        style={{ transitionDuration: "180ms" }}
+        className="flex flex-1 flex-col 2xl:grid 2xl:grid-cols-[330px_minmax(0,1fr)]"
       >
         {/* Mobile Menu Button - Only visible on mobile */}
-        <div className="sticky top-16 z-30 flex items-center justify-between border-b bg-background/95 p-4 backdrop-blur md:hidden">
+        <div className="sticky top-16 z-30 flex items-center gap-3 border-b bg-background/95 px-4 py-2.5 backdrop-blur md:hidden">
           <Button
             variant="ghost"
             size="sm"
             onClick={openOverlayNavigation}
-            className="mr-2"
             aria-expanded={overlayNavigationOpen}
             aria-controls={OVERLAY_NAVIGATION_ID}
           >
             <Menu className="h-5 w-5" />
             <span>Menu</span>
           </Button>
-          <div className="flex-1 flex justify-center sm:hidden">
-            <DocSearch />
+          <div className="flex min-w-0 flex-1 justify-end">
+            <DocSearchTrigger
+              open={searchOpen}
+              onOpen={() => setSearchOpen(true)}
+            />
           </div>
         </div>
 
@@ -291,7 +200,7 @@ const DocLayout = () => {
             id={OVERLAY_NAVIGATION_ID}
             side="left"
             showOverlay={false}
-            closeButtonClassName="md:hidden"
+            closeButtonClassName="right-2 top-2 inline-flex h-10 w-10 items-center justify-center rounded-md md:hidden"
             onInteractOutside={(event) => {
               const target = event.target;
               if (
@@ -325,16 +234,8 @@ const DocLayout = () => {
 
         {/* Persistent desktop navigation */}
         <aside
-          id={DESKTOP_NAVIGATION_ID}
           aria-label="Documentation navigation"
-          aria-hidden={!desktopNavigationOpen}
-          className={cn(
-            "sticky top-16 hidden h-[calc(100vh-4rem)] min-w-0 self-start flex-col overflow-hidden bg-sidebar opacity-0 transition-opacity motion-reduce:transition-none xl:flex",
-            desktopNavigationOpen
-              ? "visible border-r border-sidebar-border opacity-100"
-              : "invisible pointer-events-none border-r-0"
-          )}
-          style={{ transitionDuration: "180ms" }}
+          className="sticky top-16 hidden h-[calc(100vh-4rem)] min-w-0 self-start flex-col overflow-hidden border-r border-sidebar-border bg-sidebar 2xl:flex"
         >
           <Navigation currentPath={currentPath} />
         </aside>

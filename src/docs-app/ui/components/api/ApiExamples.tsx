@@ -14,6 +14,12 @@ import { useClipboard } from "@/shared/hooks/use-clipboard.ts";
 
 type ApiExamplesProps = ApiExamplesData;
 
+const exampleTabClass =
+  "relative h-full gap-1 rounded-none border-b border-r border-border/40 bg-transparent px-2 text-[11px] font-medium text-muted-foreground shadow-none transition-colors duration-150 last:border-r-0 hover:bg-foreground/[0.04] hover:text-foreground focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-0 data-[state=active]:border-b-transparent data-[state=active]:bg-[hsl(var(--prose-pre-bg))] data-[state=active]:text-foreground data-[state=active]:shadow-none";
+
+const copyButtonClass =
+  "absolute right-2 top-2 inline-flex h-7 w-7 items-center justify-center rounded-md border border-border/50 bg-background/80 text-muted-foreground opacity-70 transition-all duration-200 hover:bg-background hover:text-foreground hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1";
+
 const ApiExamples: React.FC<ApiExamplesProps> = ({
   endpoint,
   method,
@@ -23,7 +29,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
 }) => {
   const { copy: copyCode, isCopied: isCodeCopied } = useClipboard();
   const { copy: copyResponse, isCopied: isResponseCopied } = useClipboard();
-  
+
   // Use a minimal theme - our CSS will handle all the colors
   const minimalTheme = {
     plain: {},
@@ -36,33 +42,38 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
   const responseText = JSON.stringify(response.body, null, 2);
 
   return (
-    <div className="space-y-6 w-full">
+    <div className="w-full space-y-6">
       <div className="border-b border-border/50 pb-3">
-        <div className="flex items-center gap-2 mb-1.5">
+        <div className="mb-1.5 flex min-w-0 items-center gap-2">
           <span
             className={cn(
-              "text-xs font-mono px-2 py-0.5 rounded-md border font-medium",
+              "shrink-0 rounded-md border px-2 py-0.5 font-mono text-xs font-medium",
               `api-badge-${method}`
             )}
           >
             {method}
           </span>
-          <code className="text-xs font-mono bg-muted/50 px-2 py-0.5 rounded text-muted-foreground">
+          <code
+            className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md bg-muted/50 px-2 py-0.5 font-mono text-xs text-muted-foreground"
+            title={endpoint}
+          >
             {endpoint}
           </code>
         </div>
         {description && (
-          <p className="text-xs text-muted-foreground/80">{description}</p>
+          <p className="text-xs leading-relaxed text-muted-foreground/80">
+            {description}
+          </p>
         )}
       </div>
 
       <div>
-        <Tabs defaultValue="python" className="w-full border-x border-b border-border/40 !rounded-t-none rounded-b-md">
-          <TabsList className="w-full grid grid-cols-3 h-7 bg-[hsl(var(--prose-pre-bg))] rounded-none p-0">
-            <TabsTrigger 
-              value="python" 
-              className="flex items-center justify-center gap-1 text-[11px] font-medium rounded-none bg-foreground/[0.07] text-muted-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground transition-all duration-150 hover:bg-foreground/[0.04] hover:text-foreground/80"
-            >
+        <Tabs
+          defaultValue="python"
+          className="w-full overflow-hidden rounded-lg border border-border/50 bg-[hsl(var(--prose-pre-bg))] shadow-sm"
+        >
+          <TabsList className="grid h-9 w-full grid-cols-3 rounded-none bg-foreground/[0.06] p-0">
+            <TabsTrigger value="python" className={exampleTabClass}>
               <svg className="h-3 w-3" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -75,10 +86,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               Python
             </TabsTrigger>
-            <TabsTrigger 
-              value="node" 
-              className="flex items-center justify-center gap-1 text-[11px] font-medium rounded-none bg-foreground/[0.07] text-muted-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground transition-all duration-150 hover:bg-foreground/[0.04] hover:text-foreground/80"
-            >
+            <TabsTrigger value="node" className={exampleTabClass}>
               <svg className="h-3 w-3" viewBox="0 0 24 24">
                 <path
                   fill="currentColor"
@@ -91,10 +99,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
               </svg>
               Node.js
             </TabsTrigger>
-            <TabsTrigger 
-              value="curl" 
-              className="flex items-center justify-center gap-1 text-[11px] font-medium rounded-none bg-foreground/[0.07] text-muted-foreground data-[state=active]:bg-transparent data-[state=active]:text-foreground transition-all duration-150 hover:bg-foreground/[0.04] hover:text-foreground/80"
-            >
+            <TabsTrigger value="curl" className={exampleTabClass}>
               <Terminal className="h-3 w-3" />
               cURL
             </TabsTrigger>
@@ -131,7 +136,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                     </pre>
                     <button
                       onClick={() => copyCode(examples.python)}
-                      className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
+                      className={copyButtonClass}
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
@@ -177,7 +182,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                     </pre>
                     <button
                       onClick={() => copyCode(examples.node)}
-                      className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
+                      className={copyButtonClass}
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
@@ -223,7 +228,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                     </pre>
                     <button
                       onClick={() => copyCode(examples.curl)}
-                      className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
+                      className={copyButtonClass}
                       aria-label="Copy code"
                     >
                       {isCodeCopied ? (
@@ -251,7 +256,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             {statusCode}
           </div>
         </div>
-        <Card className="relative bg-muted/20 p-0 overflow-hidden rounded border border-border/50">
+        <Card className="relative overflow-hidden rounded-lg border border-border/50 bg-muted/20 p-0">
           <Highlight
             code={responseText}
             language="javascript"
@@ -275,7 +280,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
                 </pre>
                 <button
                   onClick={() => copyResponse(responseText)}
-                  className="absolute top-1.5 right-1.5 p-1 rounded bg-background/80 hover:bg-background border border-border/50 transition-all duration-200 opacity-70 hover:opacity-100"
+                  className={copyButtonClass}
                   aria-label="Copy response"
                 >
                   {isResponseCopied ? (

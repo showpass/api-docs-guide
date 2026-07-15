@@ -49,6 +49,9 @@ const getOpenSections = (currentPath: string): string[] => {
   return [];
 };
 
+const accordionTriggerClass =
+  "rounded-md border-b-0 px-2 py-2.5 text-left text-sm font-medium leading-5 text-muted-foreground transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar";
+
 const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
   const [openSections, setOpenSections] = useState<string[]>(() =>
     getOpenSections(currentPath)
@@ -62,26 +65,20 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
     });
   }, [currentPath]);
 
-  // Elegant navigation link styling - subtle text changes with left indicator
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
-      "block text-sm py-2 px-3 transition-colors text-muted-foreground hover:text-foreground relative",
+      "relative block rounded-md px-3 py-2 text-sm leading-5 text-muted-foreground transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
       "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-0.5 before:h-4 before:rounded-full before:transition-colors",
-      isActive && "text-primary font-medium before:bg-primary"
+      isActive && "font-medium text-primary before:bg-primary"
     );
 
-  // Handle link clicks - close mobile sidebar
   const handleLinkClick = () => {
     onNavigate?.();
   };
 
-
   return (
     <div className="flex h-full min-h-0 w-full flex-col overflow-hidden">
-      <div
-        className="navigation-scroll flex-1 min-h-0 overflow-y-auto px-5 pb-4"
-        style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
-      >
+      <div className="navigation-scroll min-h-0 flex-1 overflow-y-auto px-5 pb-4 pt-1">
         <Accordion
           type="multiple"
           value={openSections}
@@ -89,7 +86,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           className="w-full"
         >
           <AccordionItem value="introduction">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Introduction
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -108,7 +105,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="api-reference">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Public API reference
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -145,7 +142,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="private-api-reference">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Private Organizer API
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -209,8 +206,8 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="sdk">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
-              Javascript SDK
+            <AccordionTrigger className={accordionTriggerClass}>
+              JavaScript SDK
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <ul className="px-4 space-y-1">
@@ -300,7 +297,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="cli">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               CLI
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -320,7 +317,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Commands Reference
+                    Commands reference
                   </NavLink>
                 </li>
               </ul>
@@ -328,8 +325,8 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="showpass-wordpress-plugin">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
-              Showpass Wordpress plugin
+            <AccordionTrigger className={accordionTriggerClass}>
+              Showpass WordPress plugin
             </AccordionTrigger>
             <AccordionContent className="pb-2">
               <ul className="px-4 space-y-1">
@@ -455,7 +452,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="webhooks">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Webhooks
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -519,7 +516,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="google-tag-manager">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Google Tag Manager integration
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -629,7 +626,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    12. Ready To Use Importable Containers
+                    12. Ready-to-use importable containers
                   </NavLink>
                 </li>
               </ul>
@@ -637,7 +634,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="facebook">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Facebook tracking
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -683,7 +680,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
           </AccordionItem>
 
           <AccordionItem value="security">
-            <AccordionTrigger className="px-[0.4rem] py-3 text-sm font-medium text-muted-foreground hover:text-foreground border-b-0 hover:no-underline">
+            <AccordionTrigger className={accordionTriggerClass}>
               Security and compliance
             </AccordionTrigger>
             <AccordionContent className="pb-2">
@@ -730,7 +727,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
         </Accordion>
       </div>
 
-      <div className="border-t border-sidebar-border bg-sidebar p-2">
+      <div className="border-t border-sidebar-border bg-sidebar px-5 py-2">
         <ThemeToggle />
       </div>
     </div>

@@ -32,9 +32,9 @@ export function ThemeToggle() {
       <Button
         variant="ghost"
         disabled
-        className="w-full justify-start px-1 py-0 h-5 text-xs text-muted-foreground bg-transparent"
+        className="h-9 w-full justify-start gap-2 bg-transparent px-2 text-sm text-muted-foreground"
       >
-        <Sun className="h-3 w-3 mr-1" />
+        <Sun className="h-4 w-4" />
         <span>Theme</span>
       </Button>
     );
@@ -48,9 +48,9 @@ export function ThemeToggle() {
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"
-          className="w-full justify-start px-1 py-0 h-5 text-xs text-muted-foreground hover:text-foreground hover:bg-sidebar-accent leading-none bg-transparent"
+          className="h-9 w-full justify-start gap-2 bg-transparent px-2 text-sm text-muted-foreground hover:bg-sidebar-accent hover:text-sidebar-accent-foreground"
         >
-          <CurrentIcon className="h-3 w-3 mr-1" />
+          <CurrentIcon className="h-4 w-4" />
           <span>{currentThemeData.name}</span>
         </Button>
       </DropdownMenuTrigger>
