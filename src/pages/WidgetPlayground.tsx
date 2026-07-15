@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useEffect } from "react";
+import { useLayoutEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { Input } from "@/shared/components/input.tsx";
 import { Button } from "@/shared/components/button.tsx";
@@ -68,25 +68,14 @@ const WidgetPlayground: React.FC = () => {
   }), [themeColor]);
 
   // Configure layout settings
-  useEffect(() => {
-    if (setPageData) {
-      setPageData({
-        hideRightSidebar: true,
-        tocItems: [],
-        apiExamplesData: undefined,
-        activeSection: undefined,
-      });
-    }
-    return () => {
-      if (setPageData) {
-        setPageData({
-          hideRightSidebar: false,
-          tocItems: [],
-          apiExamplesData: undefined,
-          activeSection: undefined,
-        });
-      }
-    };
+  useLayoutEffect(() => {
+    setPageData({
+      hideRightSidebar: true,
+      tocItems: [],
+      apiExamplesData: undefined,
+      activeSection: undefined,
+      pageTitle: "Widget Playground",
+    });
   }, [setPageData]);
 
   return (

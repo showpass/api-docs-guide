@@ -28,6 +28,14 @@ export class ContentManager {
   }
 
   /**
+   * Returns eagerly bundled content without introducing a loading frame.
+   * Remote or custom loaders can omit this optional fast path.
+   */
+  loadContentSync(contentPath: string): string | undefined {
+    return this.docsLoader.loadContentSync?.(contentPath);
+  }
+
+  /**
    * Extracts heading information from markdown content for table of contents generation.
    * 
    * @param content - Raw markdown content
@@ -59,7 +67,7 @@ export class ContentManager {
    */
   private cleanHeadingTitle(title: string): string {
     // Remove backticks first
-    let cleaned = title.replace(/`/g, '');
+    const cleaned = title.replace(/`/g, '');
     
     // Check if this is a parameter-style heading: something="value"
     const paramMatch = cleaned.match(/^([a-z_][a-z0-9_-]*)\s*=/i);
@@ -87,7 +95,7 @@ export class ContentManager {
     let inFence = false;
     let fenceMarker: string | null = null; // ``` or ~~~
 
-    for (let raw of lines) {
+    for (const raw of lines) {
       const line = raw.trimEnd();
 
       // Toggle fenced code block state

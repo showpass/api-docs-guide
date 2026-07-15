@@ -27,7 +27,13 @@ const sectionLabels: Record<string, string> = {
   'widget-playground': 'Widget Playground'
 };
 
-const BreadcrumbNavigation: React.FC = () => {
+interface BreadcrumbNavigationProps {
+  currentPageTitle?: string;
+}
+
+const BreadcrumbNavigation: React.FC<BreadcrumbNavigationProps> = ({
+  currentPageTitle,
+}) => {
   const location = useLocation();
   const pathSegments = location.pathname.split('/').filter(Boolean);
 
@@ -53,11 +59,17 @@ const BreadcrumbNavigation: React.FC = () => {
       });
     } else {
       // For subsequent segments, try to create a readable label
-      const label = segment
+      const isCurrentPage = index === pathSegments.length - 1;
+      const fallbackLabel = segment
         .split('-')
         .map(word => word.charAt(0).toUpperCase() + word.slice(1))
         .join(' ')
-        .replace(/^\d+\s*/, ''); // Remove leading numbers like "01 "
+        .replace(/^\d+\s*/, '')
+        .replace(/\bApi\b/g, 'API')
+        .replace(/\bSdk\b/g, 'SDK');
+      const label = isCurrentPage && currentPageTitle
+        ? currentPageTitle
+        : fallbackLabel;
       
       breadcrumbItems.push({
         label: label || segment,
@@ -98,4 +110,4 @@ const BreadcrumbNavigation: React.FC = () => {
   );
 };
 
-export default BreadcrumbNavigation; 
+export default BreadcrumbNavigation;

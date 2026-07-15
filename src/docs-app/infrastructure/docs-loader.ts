@@ -6,6 +6,7 @@
 
 export interface IDocsLoader {
   loadContent(contentPath: string): Promise<string>;
+  loadContentSync?(contentPath: string): string;
 }
 
 export class DocsLoader implements IDocsLoader {
@@ -35,7 +36,7 @@ export class DocsLoader implements IDocsLoader {
    * Returns markdown content for a given relative path.
    * If not found, returns a fallback error message.
    */
-  async loadContent(relativePath: string): Promise<string> {
+  loadContentSync(relativePath: string): string {
     try {
       // Normalizes the path for consistency
       const normalizedPath = relativePath.startsWith('/')
@@ -54,6 +55,10 @@ export class DocsLoader implements IDocsLoader {
       console.error(`Error loading content: ${error}`);
       throw error;
     }
+  }
+
+  async loadContent(relativePath: string): Promise<string> {
+    return this.loadContentSync(relativePath);
   }
 }
 

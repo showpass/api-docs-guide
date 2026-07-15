@@ -82,7 +82,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
           (preNode.children[0] as MdElement).properties?.className as string[]
         ).some((cn) => typeof cn === "string" && cn.startsWith("language-"))
       ) {
-        return <>{children}</>;
+        return <div className="contents">{children}</div>;
       }
       return (
         <pre className="my-4 overflow-x-auto rounded-lg bg-muted p-4" {...rest}>
@@ -98,7 +98,7 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
         return (
           <code
             className={cn(
-              "px-1.5 py-0.5 rounded font-mono text-sm",
+              "break-words rounded px-1.5 py-0.5 font-mono text-sm",
               "bg-[hsl(var(--prose-code-bg))] text-[hsl(var(--prose-code-fg))]"
             )}
             {...props}
@@ -121,12 +121,12 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
       const text = extractTextFromChildren(children);
       const id = generateHeadingId(text);
         return (
-          <>
+          <div className="contents">
             <HeaderWithLink id={id} level={1} {...props}>
               {children}
             </HeaderWithLink>
             <Separator className="mb-2 opacity-60" />
-          </>
+          </div>
         );
     },
     h2: ({ node, children, ...props }) => {
@@ -207,8 +207,8 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
     ),
     // Enhanced table components
     table: ({ node, ...props }) => (
-      <div className="my-6 rounded-md border overflow-hidden">
-        <Table {...props} />
+      <div className="my-6 max-w-full overflow-hidden rounded-md border">
+        <Table className="min-w-[40rem]" {...props} />
       </div>
     ),
     thead: ({ node, ...props }) => <TableHeader {...props} />,
@@ -238,19 +238,19 @@ const MarkdownContent: React.FC<MarkdownContentProps> = ({
             {childText.split(" ").map((part, i) => {
               if (part.startsWith("http")) {
                 return (
-                  <React.Fragment key={i}>
+                  <span key={i} className="contents">
                     {i > 0 && " "}
                     <a href={part} className="underline break-all">
                       {part}
                     </a>
-                  </React.Fragment>
+                  </span>
                 );
               }
               return (
-                <React.Fragment key={i}>
+                <span key={i} className="contents">
                   {i > 0 && " "}
                   {part}
-                </React.Fragment>
+                </span>
               );
             })}
           </TableCell>

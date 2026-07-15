@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Outlet, useLocation } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Braces, ListTree } from "lucide-react";
 import { cn } from "@/shared/lib/utils.ts";
-import { Button } from "@/shared/components/button.tsx";
 import {
   Sheet,
   SheetContent,
@@ -10,18 +9,16 @@ import {
   SheetTitle,
 } from "@/shared/components/sheet.tsx";
 import Navigation from "@/docs-app/ui/components/navigation/Navigation.tsx";
-import TableOfContents from "@/docs-app/ui/components/navigation/TableOfContents.tsx";
-import ApiExamples from "@/docs-app/ui/components/api/ApiExamples.tsx";
-import { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
-import DocSearch, {
-  DocSearchTrigger,
-} from "@/docs-app/ui/components/search/DocSearch.tsx";
+import PageTools from "@/docs-app/ui/components/layout/PageTools.tsx";
+import type { TocItem, ApiExamplesData } from "@/docs-app/data/types.ts";
+import DocSearch from "@/docs-app/ui/components/search/DocSearch.tsx";
 import BreadcrumbNavigation from "@/shared/components/BreadcrumbNavigation.tsx";
-import { Separator } from "@/shared/components/separator.tsx";
 import TopNavigation from "@/shared/components/TopNavigation.tsx";
 
 const PERSISTENT_NAVIGATION_QUERY = "(min-width: 1536px)";
+const PERSISTENT_PAGE_TOOLS_QUERY = "(min-width: 1280px)";
 const OVERLAY_NAVIGATION_ID = "docs-navigation-overlay";
+const PAGE_TOOLS_ID = "docs-page-tools";
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() =>
@@ -47,9 +44,9 @@ export interface DocLayoutContextProps {
   apiExamplesData?: ApiExamplesData;
   activeSection?: string;
   hideRightSidebar?: boolean;
+  pageTitle?: string;
 }
 
-// Define the shape of the context value including the updater function
 interface FullDocLayoutContextProps extends DocLayoutContextProps {
   setPageData: React.Dispatch<React.SetStateAction<DocLayoutContextProps>>;
 }
@@ -67,7 +64,6 @@ export const useDocLayoutData = () => {
   return context;
 };
 
-// This Provider will be used ONCE in App.tsx, wrapping DocLayout
 export const DocLayoutDataProvider: React.FC<React.PropsWithChildren> = ({
   children,
 }) => {
@@ -76,6 +72,7 @@ export const DocLayoutDataProvider: React.FC<React.PropsWithChildren> = ({
     apiExamplesData: undefined,
     activeSection: undefined,
     hideRightSidebar: false,
+    pageTitle: undefined,
   });
 
   return (
@@ -87,21 +84,39 @@ export const DocLayoutDataProvider: React.FC<React.PropsWithChildren> = ({
 
 const DocLayout = () => {
   const [overlayNavigationOpen, setOverlayNavigationOpen] = useState(false);
+  const [pageToolsOpen, setPageToolsOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const overlayNavigationTriggerRef = useRef<HTMLElement | null>(null);
+  const pageToolsTriggerRef = useRef<HTMLElement | null>(null);
   const layoutContentRef = useRef<HTMLDivElement | null>(null);
   const hasPersistentNavigation = useMediaQuery(PERSISTENT_NAVIGATION_QUERY);
+  const hasPersistentPageTools = useMediaQuery(PERSISTENT_PAGE_TOOLS_QUERY);
   const location = useLocation();
   const currentPath = location.pathname;
+  const normalizedPath =
+    currentPath === "/" ? currentPath : currentPath.replace(/\/+$/, "");
+  const isWideCanvas =
+    normalizedPath === "/" || normalizedPath === "/widget-playground";
 
-  // Consume the context provided by DocLayoutDataProvider in App.tsx
-  const { tocItems, apiExamplesData, activeSection, hideRightSidebar } =
-    useDocLayoutData();
+  const {
+    tocItems,
+    apiExamplesData,
+    activeSection,
+    hideRightSidebar,
+    pageTitle,
+  } = useDocLayoutData();
+  const hasPageTools =
+    !hideRightSidebar &&
+    Boolean(apiExamplesData || (tocItems && tocItems.length > 0));
+  const spansWorkspace = isWideCanvas || !hasPageTools;
+  const pageToolsLabel = apiExamplesData ? "Examples" : "On this page";
+  const pageToolsHeading = apiExamplesData ? "API reference" : "On this page";
 
   useEffect(() => {
     setOverlayNavigationOpen(false);
+    setPageToolsOpen(false);
     setSearchOpen(false);
-  }, [currentPath, hasPersistentNavigation]);
+  }, [currentPath, hasPersistentNavigation, hasPersistentPageTools]);
 
   useEffect(() => {
     if (!overlayNavigationOpen || hasPersistentNavigation) {
@@ -125,11 +140,15 @@ const DocLayout = () => {
     };
   }, [overlayNavigationOpen, hasPersistentNavigation]);
 
-  const openOverlayNavigation = () => {
-    overlayNavigationTriggerRef.current =
+  const rememberTrigger = (ref: React.MutableRefObject<HTMLElement | null>) => {
+    ref.current =
       document.activeElement instanceof HTMLElement
         ? document.activeElement
         : null;
+  };
+
+  const openOverlayNavigation = () => {
+    rememberTrigger(overlayNavigationTriggerRef);
     setOverlayNavigationOpen(true);
   };
 
@@ -141,14 +160,29 @@ const DocLayout = () => {
     }
   };
 
+  const handlePageToolsToggle = () => {
+    if (pageToolsOpen) {
+      setPageToolsOpen(false);
+      return;
+    }
+
+    rememberTrigger(pageToolsTriggerRef);
+    setPageToolsOpen(true);
+  };
+
   return (
-    <div className="flex flex-col min-h-screen">
-      {/* Top Navigation - Consistent across all pages */}
+    <div className="flex min-h-screen min-w-0 flex-col">
       <TopNavigation
         navigationOpen={overlayNavigationOpen}
         navigationControlsId={OVERLAY_NAVIGATION_ID}
         onNavigationToggle={handleOverlayNavigationToggle}
         showNavigationToggle={!hasPersistentNavigation}
+        pageToolsOpen={pageToolsOpen}
+        pageToolsControlsId={PAGE_TOOLS_ID}
+        pageToolsLabel={pageToolsLabel}
+        pageToolsKind={apiExamplesData ? "examples" : "outline"}
+        onPageToolsToggle={handlePageToolsToggle}
+        showPageTools={hasPageTools && !hasPersistentPageTools}
         searchOpen={searchOpen}
         onSearchOpen={() => setSearchOpen(true)}
       />
@@ -168,29 +202,8 @@ const DocLayout = () => {
 
       <div
         ref={layoutContentRef}
-        className="flex flex-1 flex-col 2xl:grid 2xl:grid-cols-[330px_minmax(0,1fr)]"
+        className="grid min-w-0 flex-1 grid-cols-1 2xl:grid-cols-[304px_minmax(0,1fr)]"
       >
-        {/* Mobile Menu Button - Only visible on mobile */}
-        <div className="sticky top-16 z-30 flex items-center gap-3 border-b bg-background/95 px-4 py-2.5 backdrop-blur md:hidden">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={openOverlayNavigation}
-            aria-expanded={overlayNavigationOpen}
-            aria-controls={OVERLAY_NAVIGATION_ID}
-          >
-            <Menu className="h-5 w-5" />
-            <span>Menu</span>
-          </Button>
-          <div className="flex min-w-0 flex-1 justify-end">
-            <DocSearchTrigger
-              open={searchOpen}
-              onOpen={() => setSearchOpen(true)}
-            />
-          </div>
-        </div>
-
-        {/* Overlay navigation for phones and tablets */}
         <Sheet
           modal={false}
           open={overlayNavigationOpen && !hasPersistentNavigation}
@@ -200,7 +213,7 @@ const DocLayout = () => {
             id={OVERLAY_NAVIGATION_ID}
             side="left"
             showOverlay={false}
-            closeButtonClassName="right-2 top-2 inline-flex h-10 w-10 items-center justify-center rounded-md md:hidden"
+            closeButtonClassName="right-2 top-2 inline-flex h-10 w-10 items-center justify-center rounded-md"
             onInteractOutside={(event) => {
               const target = event.target;
               if (
@@ -232,7 +245,53 @@ const DocLayout = () => {
           </SheetContent>
         </Sheet>
 
-        {/* Persistent desktop navigation */}
+        <Sheet
+          open={pageToolsOpen && hasPageTools && !hasPersistentPageTools}
+          onOpenChange={setPageToolsOpen}
+        >
+          <SheetContent
+            id={PAGE_TOOLS_ID}
+            side="right"
+            onCloseAutoFocus={(event) => {
+              event.preventDefault();
+              pageToolsTriggerRef.current?.focus();
+            }}
+            className={cn(
+              "flex max-w-none flex-col gap-0 bg-sidebar p-0 sm:max-w-none",
+              apiExamplesData
+                ? "w-[min(100vw,42rem)]"
+                : "w-[min(100vw,25rem)]"
+            )}
+          >
+            <div className="flex min-h-16 shrink-0 items-center gap-3 border-b border-sidebar-border px-5 pr-14 sm:px-6">
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-md border border-border bg-background/50 text-muted-foreground">
+                {apiExamplesData ? (
+                  <Braces className="h-4 w-4" />
+                ) : (
+                  <ListTree className="h-4 w-4" />
+                )}
+              </span>
+              <div className="min-w-0">
+                <SheetTitle className="text-sm">{pageToolsHeading}</SheetTitle>
+                <SheetDescription className="mt-0.5 text-xs">
+                  {apiExamplesData
+                    ? "Browse this page or inspect working request examples."
+                    : "Jump directly to a section on this page."}
+                </SheetDescription>
+              </div>
+            </div>
+            <div className="page-tools-scroll min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
+              <PageTools
+                key={currentPath}
+                tocItems={tocItems}
+                apiExamplesData={apiExamplesData}
+                activeSection={activeSection}
+                onNavigate={() => setPageToolsOpen(false)}
+              />
+            </div>
+          </SheetContent>
+        </Sheet>
+
         <aside
           aria-label="Documentation navigation"
           className="sticky top-16 hidden h-[calc(100vh-4rem)] min-w-0 self-start flex-col overflow-hidden border-r border-sidebar-border bg-sidebar 2xl:flex"
@@ -240,55 +299,76 @@ const DocLayout = () => {
           <Navigation currentPath={currentPath} />
         </aside>
 
-        {/* Main Content & Right Sidebar */}
         <div
           className={cn(
-            "flex flex-col min-w-0",
-            !hideRightSidebar &&
-              "xl:grid xl:grid-cols-[minmax(0,1fr)_auto]"
+            "docs-workspace min-w-0",
+            !isWideCanvas && "docs-workspace-document"
           )}
         >
-          {/* Main Content */}
-          <div
+          <main
             className={cn(
-              "px-5 py-8 pt-3 lg:px-10 xl:px-12 prose dark:prose-invert prose-slate prose-pre:overflow-x-auto prose-table:overflow-x-auto",
-              hideRightSidebar 
-                ? "max-w-none" 
-                : apiExamplesData
-                  ? "max-w-[1200px] mx-auto xl:mx-0"
-                  : "max-w-[820px]"
+              "min-w-0",
+              spansWorkspace && "docs-workspace-main-wide"
             )}
           >
-            <BreadcrumbNavigation />
-            <Outlet />
-          </div>
-
-          {/* Right Sidebar - API Examples or Table of Contents */}
-          {!hideRightSidebar && (
-            <div className={cn(
-              "hidden xl:block border-l border-sidebar-border bg-sidebar",
-              apiExamplesData ? "w-[600px]" : "w-72"
-            )}>
-              <div className="sticky top-16 p-6 pt-2 self-start max-h-[calc(100vh-4rem)] overflow-y-auto">
-                <div className="flex items-center gap-2 mb-4 pb-3 border-b border-border">
-                  <p className="text-sm font-medium text-muted-foreground">
-                    {apiExamplesData ? "API Reference" : "On This Page"}
-                  </p>
-                </div>
-                {apiExamplesData ? (
-                  <ApiExamples {...apiExamplesData} />
-                ) : (
-                  tocItems &&
-                  tocItems.length > 0 && (
-                    <TableOfContents
-                      key={currentPath}
-                      items={tocItems}
-                      activeItem={activeSection}
-                    />
-                  )
-                )}
-              </div>
+            <div
+              className={cn(
+                "docs-content mx-auto w-full min-w-0 px-4 pb-16 pt-3 sm:px-6 lg:px-10 xl:px-12",
+                isWideCanvas && "docs-content-wide",
+                !isWideCanvas && !hasPageTools && "docs-content-no-tools"
+              )}
+            >
+              <BreadcrumbNavigation currentPageTitle={pageTitle} />
+              <Outlet />
             </div>
+          </main>
+
+          {hasPageTools && !isWideCanvas && (
+            <aside
+              aria-label={pageToolsHeading}
+              className={cn(
+                "hidden min-w-0 xl:block",
+                apiExamplesData &&
+                  "border-l border-sidebar-border bg-sidebar"
+              )}
+            >
+              {apiExamplesData ? (
+                <div className="docs-api-tools-inner page-tools-scroll sticky top-16 max-h-[calc(100vh-4rem)] w-full overflow-y-auto px-5 pb-8 pt-3">
+                  <div className="flex h-9 items-center gap-2 border-b border-border">
+                    <Braces className="h-4 w-4 text-muted-foreground" />
+                    <p className="m-0 text-xs font-semibold uppercase tracking-[0.08em] text-muted-foreground">
+                      {pageToolsHeading}
+                    </p>
+                  </div>
+                  <PageTools
+                    key={currentPath}
+                    tocItems={tocItems}
+                    apiExamplesData={apiExamplesData}
+                    activeSection={activeSection}
+                  />
+                </div>
+              ) : (
+                <div className="docs-floating-toc sticky top-24 pr-4">
+                  <div className="mb-3 flex items-center gap-2.5">
+                    <span
+                      aria-hidden="true"
+                      className="h-px w-5 shrink-0 bg-primary/70"
+                    />
+                    <p className="m-0 text-[0.6875rem] font-semibold uppercase tracking-[0.12em] text-muted-foreground">
+                      {pageToolsHeading}
+                    </p>
+                  </div>
+                  <div className="page-tools-scroll max-h-[calc(100vh-10rem)] overflow-y-auto overscroll-contain pb-4 pr-2">
+                    <PageTools
+                      key={currentPath}
+                      tocItems={tocItems}
+                      activeSection={activeSection}
+                      outlineVariant="floating"
+                    />
+                  </div>
+                </div>
+              )}
+            </aside>
           )}
         </div>
       </div>

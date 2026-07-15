@@ -44,7 +44,7 @@ export function ThemeToggle() {
   const CurrentIcon = themeIcons[currentThemeData.id] || Sun;
 
   return (
-    <DropdownMenu>
+    <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
         <Button
           variant="ghost"

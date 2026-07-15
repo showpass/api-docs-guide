@@ -59,8 +59,8 @@
     --card-foreground: 0 0% 98%;
     --popover: 222 47% 14%;
     --popover-foreground: 0 0% 98%;
-    --site-primary: 186 55% 35%;
-    --site-primary-foreground: 0 0% 98%;
+    --site-primary: 186 55% 42%;
+    --site-primary-foreground: 222 47% 11%;
     --secondary: 217 33% 17%;
     --secondary-foreground: 0 0% 98%;
     --muted: 217 33% 17%;
@@ -71,18 +71,18 @@
     --destructive-foreground: 0 0% 98%;
     --border: 217 33% 17%;
     --input: 217 33% 17%;
-    --ring: 186 55% 35%;
+    --ring: 186 55% 42%;
     --sidebar-background: 222 47% 13%;
     --sidebar-foreground: 0 0% 98%;
-    --sidebar-primary: 186 55% 35%;
-    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-primary: 186 55% 42%;
+    --sidebar-primary-foreground: 222 47% 11%;
     --sidebar-accent: 183 62% 30%;
     --sidebar-accent-foreground: 0 0% 98%;
     --sidebar-border: 217 33% 17%;
-    --sidebar-ring: 186 55% 35%;
+    --sidebar-ring: 186 55% 42%;
     --prose-body: 0 0% 98%;
     --prose-headings: 0 0% 98%;
-    --prose-links: 186 55% 35%;
+    --prose-links: 186 55% 42%;
     --prose-code-fg: 190 25% 88%;
     --prose-code-bg: 210 70% 11%;
     --prose-pre-bg: 210 65% 8%;
@@ -130,24 +130,48 @@
     @apply border-border;
   }
 
+  html {
+    overflow-x: clip;
+    scrollbar-gutter: stable;
+  }
+
   body {
-    @apply bg-background text-foreground;
+    @apply min-w-0 bg-background text-foreground;
+  }
+
+  /*
+   * Radix dialogs lock body scrolling and add their own scrollbar
+   * compensation. The root already reserves a stable gutter, so retaining
+   * that extra margin would move the entire documentation workspace.
+   */
+  html body[data-scroll-locked] {
+    margin-right: 0 !important;
+  }
+
+  body,
+  #root {
+    max-width: 100%;
+    min-width: 0;
   }
 
   h1 {
     @apply text-3xl font-bold tracking-tight scroll-m-20;
+    word-spacing: 0.07em;
   }
 
   h2 {
     @apply text-2xl font-semibold tracking-tighter mt-8 scroll-m-20;
+    word-spacing: 0.07em;
   }
 
   h3 {
     @apply text-xl font-semibold tracking-tighter mt-6 scroll-m-20;
+    word-spacing: 0.06em;
   }
 
   h4 {
     @apply text-lg font-semibold tracking-tighter mt-4 scroll-m-20;
+    word-spacing: 0.05em;
   }
 
   p {
@@ -232,6 +256,173 @@
   .prose h1:first-of-type,
   .prose > :first-child:is(h1) {
     @apply mt-5;
+  }
+
+  .docs-content {
+    max-width: 53.75rem;
+    overflow-wrap: break-word;
+  }
+
+  .docs-workspace {
+    --docs-reading-width: 53.75rem;
+    --docs-workspace-gap: 1.5rem;
+    --docs-page-tools-min-width: 25rem;
+    /*
+     * Keep examples compact on laptops, then let them grow toward the
+     * reference-friendly 36rem measure as larger displays provide room.
+     */
+    --docs-page-tools-width: clamp(25rem, calc(45vw - 18rem), 36rem);
+    container-type: inline-size;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  @media (min-width: 1280px) {
+    .docs-workspace {
+      grid-template-columns:
+        minmax(0, 1fr)
+        minmax(0, var(--docs-reading-width))
+        var(--docs-workspace-gap)
+        var(--docs-page-tools-width)
+        minmax(0, 1fr);
+    }
+
+    .docs-workspace > main {
+      grid-column: 2;
+      grid-row: 1;
+    }
+
+    .docs-workspace > aside {
+      grid-column: 4 / -1;
+      grid-row: 1;
+    }
+
+    .docs-workspace > .docs-workspace-main-wide {
+      grid-column: 1 / -1;
+    }
+
+    .docs-content-wide {
+      max-width: calc(
+        var(--docs-reading-width) + var(--docs-workspace-gap) +
+          var(--docs-page-tools-width)
+      );
+    }
+
+    .docs-content-no-tools {
+      margin-inline-end: auto;
+      margin-inline-start: max(
+        0px,
+        (
+            100cqw - var(--docs-reading-width) -
+              var(--docs-workspace-gap) - var(--docs-page-tools-width)
+          ) / 2
+      );
+      max-width: min(
+        var(--docs-reading-width),
+        calc(
+          100cqw - var(--docs-workspace-gap) -
+            var(--docs-page-tools-width)
+        )
+      );
+    }
+
+    /*
+     * Documentation pages share one three-column workbench. The explanation
+     * stays anchored to navigation while the last track holds either a quiet
+     * outline or working API examples, so changing sections never changes the
+     * page geometry.
+     */
+    .docs-workspace-document .docs-content {
+      max-width: 61rem;
+    }
+
+    .docs-workspace.docs-workspace-document {
+      --docs-reading-width: 61rem;
+      grid-template-columns:
+        minmax(
+          0,
+          min(
+            var(--docs-reading-width),
+            calc(
+              100% - var(--docs-workspace-gap) -
+                var(--docs-page-tools-min-width)
+            )
+          )
+        )
+        var(--docs-workspace-gap)
+        minmax(var(--docs-page-tools-min-width), 1fr);
+    }
+
+    .docs-workspace.docs-workspace-document > main {
+      grid-column: 1;
+    }
+
+    .docs-workspace.docs-workspace-document > aside {
+      grid-column: 3;
+    }
+
+    .docs-workspace.docs-workspace-document > .docs-workspace-main-wide {
+      grid-column: 1 / -1;
+    }
+
+    .docs-workspace-document .docs-api-tools-inner {
+      max-width: 36rem;
+    }
+
+    .docs-workspace-document .docs-content-no-tools {
+      margin-inline-start: 0;
+      max-width: var(--docs-reading-width);
+    }
+  }
+
+  .docs-content pre,
+  .docs-content table,
+  .docs-content img,
+  .docs-content video {
+    max-width: 100%;
+  }
+
+  .docs-content :where(h1, h2, h3, h4)[id] {
+    scroll-margin-top: 6rem;
+  }
+
+  .docs-content :where(th, td) {
+    overflow-wrap: normal;
+    word-break: normal;
+  }
+
+  .page-tools-scroll {
+    scrollbar-color: hsl(var(--sidebar-border)) transparent;
+    scrollbar-gutter: stable;
+    scrollbar-width: thin;
+  }
+
+  .page-tools-scroll::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  .page-tools-scroll::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .page-tools-scroll::-webkit-scrollbar-thumb {
+    background-clip: padding-box;
+    background-color: hsl(var(--sidebar-border));
+    border: 2px solid transparent;
+    border-radius: 9999px;
+  }
+
+  .page-tools-scroll::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+
+  .docs-api-tools-inner {
+    max-width: var(--docs-page-tools-width);
+  }
+
+  /* Prose outlines share the API rail's anchor without inheriting its weight. */
+  .docs-floating-toc {
+    max-width: 17rem;
   }
 
   /* Navigation scroll customization */

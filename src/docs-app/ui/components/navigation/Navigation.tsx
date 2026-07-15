@@ -50,7 +50,7 @@ const getOpenSections = (currentPath: string): string[] => {
 };
 
 const accordionTriggerClass =
-  "rounded-md border-b-0 px-2 py-2.5 text-left text-sm font-medium leading-5 text-muted-foreground transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar";
+  "rounded-md border-b-0 px-2 py-2.5 text-left text-sm font-medium leading-5 [word-spacing:0.12em] text-muted-foreground transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground hover:no-underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar";
 
 const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
   const [openSections, setOpenSections] = useState<string[]>(() =>
@@ -67,7 +67,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
     cn(
-      "relative block rounded-md px-3 py-2 text-sm leading-5 text-muted-foreground transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
+      "relative block rounded-md px-3 py-2 text-sm leading-5 [word-spacing:0.04em] text-muted-foreground transition-colors hover:bg-sidebar-accent/60 hover:text-sidebar-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring focus-visible:ring-offset-1 focus-visible:ring-offset-sidebar",
       "before:content-[''] before:absolute before:left-0 before:top-1/2 before:-translate-y-1/2 before:w-0.5 before:h-4 before:rounded-full before:transition-colors",
       isActive && "font-medium text-primary before:bg-primary"
     );

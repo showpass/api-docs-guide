@@ -1,63 +1,123 @@
-
-import { useState, useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ContentManager } from "@/docs-app/application/content-manager.ts";
+import type { TocItem } from "@/docs-app/data/types.ts";
+
+interface ContentState {
+  path: string;
+  content: string;
+  isLoading: boolean;
+  error: Error | null;
+  tableOfContents: TocItem[];
+  pageTitle?: string;
+}
+
+const createLoadingState = (path: string): ContentState => ({
+  path,
+  content: "",
+  isLoading: true,
+  error: null,
+  tableOfContents: [],
+  pageTitle: undefined,
+});
+
+const normalizeError = (error: unknown): Error =>
+  error instanceof Error ? error : new Error(String(error));
+
+const createErrorState = (path: string, error: unknown): ContentState => ({
+  ...createLoadingState(path),
+  isLoading: false,
+  error: normalizeError(error),
+});
+
+const createLoadedState = (
+  path: string,
+  content: string,
+  contentManager: ContentManager
+): ContentState => {
+  const titleMatch = content.match(/^#\s+(.+?)\s*$/m);
+
+  return {
+    path,
+    content,
+    isLoading: false,
+    error: null,
+    tableOfContents: contentManager.extractHeadings(content),
+    pageTitle: titleMatch?.[1]?.replace(/[`*_]/g, "").trim(),
+  };
+};
 
 /**
- * Hook for fetching content directly from markdown files
+ * Fetch documentation content as one route-keyed state snapshot. Keeping the
+ * path with its data prevents a newly selected route from painting the
+ * previous document while its Markdown is loading.
  */
 export const useContent = (contentPath: string) => {
-  const [content, setContent] = useState<string>("");
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
-  const [tableOfContents, setTableOfContents] = useState<{title: string; href: string; level: number}[]>([]);
+  const contentManager = useMemo(() => new ContentManager(), []);
+  const routeState = useMemo(
+    () => {
+      try {
+        const bundledContent = contentManager.loadContentSync(contentPath);
 
-  // Memoize so it is only created once
-  const contentManager = useMemo(() => {
-    return new ContentManager();
-  }, []);
+        return bundledContent === undefined
+          ? createLoadingState(contentPath)
+          : createLoadedState(contentPath, bundledContent, contentManager);
+      } catch (error) {
+        return createErrorState(contentPath, error);
+      }
+    },
+    [contentManager, contentPath]
+  );
+  const [state, setState] = useState<ContentState>(routeState);
 
   useEffect(() => {
     let didCancel = false;
-    const path = contentPath;
+
+    if (!routeState.isLoading) {
+      setState((current) =>
+        current.path === routeState.path &&
+        current.content === routeState.content
+          ? current
+          : routeState
+      );
+      return;
+    }
+
+    setState((current) =>
+      current.path === contentPath && current.isLoading
+        ? current
+        : routeState
+    );
 
     const fetchContent = async () => {
       try {
-        setIsLoading(true);
-        setError(null);
-        // Clear previous TOC and content immediately to prevent stale data between routes
-        setTableOfContents([]);
-        setContent("");
-        
-        // Load content directly from file
-        const loadedContent = await contentManager.loadContent(path);
+        const loadedContent = await contentManager.loadContent(contentPath);
         if (didCancel) return;
-        
-        // Extract headings for table of contents
-        const headings = contentManager.extractHeadings(loadedContent);
-        
-        setContent(loadedContent);
-        setTableOfContents(headings);
-      } catch (err) {
+
+        setState(createLoadedState(contentPath, loadedContent, contentManager));
+      } catch (error) {
         if (didCancel) return;
-        console.error("Failed to load content:", err);
-        setError(err instanceof Error ? err : new Error(String(err)));
-      } finally {
-        if (!didCancel) setIsLoading(false);
+
+        const contentError = normalizeError(error);
+        console.error("Failed to load content:", contentError);
+
+        setState(createErrorState(contentPath, contentError));
       }
     };
 
     fetchContent();
 
-    // Cancel any in-flight load when path changes/unmounts to avoid race conditions
     return () => {
       didCancel = true;
     };
-  }, [contentPath, contentManager]);
+  }, [contentManager, contentPath, routeState]);
+
+  const visibleState = state.path === contentPath ? state : routeState;
 
   return {
-    content,
-    isLoading,
-    error,
-    tableOfContents
+    content: visibleState.content,
+    isLoading: visibleState.isLoading,
+    error: visibleState.error,
+    tableOfContents: visibleState.tableOfContents,
+    pageTitle: visibleState.pageTitle,
   };
 };

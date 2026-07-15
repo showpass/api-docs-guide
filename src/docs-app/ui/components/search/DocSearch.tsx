@@ -2,6 +2,7 @@ import React, {
   useCallback,
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
 } from "react";
@@ -34,6 +35,52 @@ interface DocSearchTriggerProps {
   onOpen: () => void;
 }
 
+const sectionLabels: Record<string, string> = {
+  api: "API Reference",
+  sdk: "JavaScript SDK",
+  cli: "CLI",
+  wordpress: "WordPress",
+  webhooks: "Webhooks",
+  "google-tag-manager": "Google Tag Manager",
+  facebook: "Facebook",
+  security: "Security",
+};
+
+const getSectionLabel = (path: string) => {
+  const section = path.split("/").filter(Boolean)[0];
+  return sectionLabels[section] ?? "Documentation";
+};
+
+const getSearchSnippet = (content: string, query: string) => {
+  const normalizedContent = content.replace(/\s+/g, " ").trim();
+  const normalizedQuery = query.trim().toLowerCase();
+
+  if (!normalizedQuery) {
+    return "";
+  }
+
+  const queryTerms = normalizedQuery.split(/\s+/).filter(Boolean);
+  const contentLower = normalizedContent.toLowerCase();
+  let matchIndex = contentLower.indexOf(normalizedQuery);
+
+  if (matchIndex < 0) {
+    matchIndex = queryTerms.reduce((firstMatch, term) => {
+      if (firstMatch >= 0) return firstMatch;
+      return contentLower.indexOf(term);
+    }, -1);
+  }
+
+  if (matchIndex < 0) {
+    return normalizedContent.slice(0, 150);
+  }
+
+  const start = Math.max(0, matchIndex - 55);
+  const end = Math.min(normalizedContent.length, matchIndex + 120);
+  return `${start > 0 ? "…" : ""}${normalizedContent.slice(start, end)}${
+    end < normalizedContent.length ? "…" : ""
+  }`;
+};
+
 export const DocSearchTrigger = ({ open, onOpen }: DocSearchTriggerProps) => (
   <Button
     type="button"
@@ -57,6 +104,37 @@ const DocSearch = ({ open, onOpenChange }: DocSearchProps) => {
   const [loading, setLoading] = useState(true);
   const listRef = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
+
+  const filteredDocs = useMemo(() => {
+    const normalizedQuery = query.trim().toLowerCase();
+    if (!normalizedQuery) {
+      return searchDocs;
+    }
+
+    const terms = normalizedQuery.split(/\s+/).filter(Boolean);
+
+    return searchDocs
+      .map((doc) => {
+        const title = doc.title.toLowerCase();
+        const content = doc.content.toLowerCase();
+        const haystack = `${title} ${content}`;
+        const contentMatch = content.indexOf(normalizedQuery);
+        const score =
+          title === normalizedQuery
+            ? 0
+            : title.startsWith(normalizedQuery)
+              ? 1
+              : title.includes(normalizedQuery)
+                ? 2
+                : 10 + (contentMatch >= 0 ? contentMatch / 1000 : 10);
+
+        return { doc, haystack, score };
+      })
+      .filter(({ haystack }) => terms.every((term) => haystack.includes(term)))
+      .sort((a, b) => a.score - b.score || a.doc.title.localeCompare(b.doc.title))
+      .slice(0, 40)
+      .map(({ doc }) => doc);
+  }, [query, searchDocs]);
 
   useEffect(() => {
     // Load the search index
@@ -115,13 +193,17 @@ const DocSearch = ({ open, onOpenChange }: DocSearchProps) => {
   );
 
   return (
-    <CommandDialog open={open} onOpenChange={handleOpenChange}>
+    <CommandDialog
+      open={open}
+      onOpenChange={handleOpenChange}
+      shouldFilter={false}
+    >
       <CommandInput
         value={query}
         onValueChange={setQuery}
         placeholder="Type a command or search..."
       />
-      <CommandList ref={listRef}>
+      <CommandList ref={listRef} className="max-h-[min(60vh,28rem)]">
         {loading ? (
           <CommandEmpty>Loading documents...</CommandEmpty>
         ) : searchDocs.length === 0 && !loading ? (
@@ -132,16 +214,30 @@ const DocSearch = ({ open, onOpenChange }: DocSearchProps) => {
           <CommandEmpty>No results found.</CommandEmpty>
         )}
         {searchDocs.length > 0 && (
-          <CommandGroup heading="Documents">
-            {searchDocs.map((doc) => (
+          <CommandGroup heading="Documentation">
+            {filteredDocs.map((doc) => (
               <CommandItem
                 key={doc.id}
-                value={`${doc.title} ${doc.content.substring(0, 100)}`} // Value for cmdk filtering
+                value={doc.id}
                 onSelect={() => handleSelect(doc.path)}
-                className="flex cursor-pointer items-center"
+                className="flex cursor-pointer items-start gap-3 py-3 data-[selected=true]:bg-accent data-[selected=true]:text-foreground"
               >
-                <FileText className="mr-2 h-4 w-4" />
-                <span>{doc.title}</span>
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border/70 bg-muted/40">
+                  <FileText className="h-4 w-4" />
+                </span>
+                <span className="min-w-0 flex-1">
+                  <span className="flex min-w-0 items-baseline gap-2">
+                    <span className="truncate font-medium">{doc.title}</span>
+                    <span className="ml-auto shrink-0 text-[11px] text-muted-foreground">
+                      {getSectionLabel(doc.path)}
+                    </span>
+                  </span>
+                  {query.trim() && (
+                    <span className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">
+                      {getSearchSnippet(doc.content, query)}
+                    </span>
+                  )}
+                </span>
               </CommandItem>
             ))}
           </CommandGroup>

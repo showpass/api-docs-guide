@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useLayoutEffect } from "react";
 import MarkdownContent from "@/docs-app/ui/components/content/MarkdownContent.tsx";
 import EditPageLinks from "@/docs-app/ui/components/content/EditPageLinks.tsx";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
@@ -19,48 +19,32 @@ const ContentPage: React.FC<ContentPageProps> = ({
   currentPath,
   apiExamples,
 }) => {
-  const { content, isLoading, error, tableOfContents } =
+  const { content, isLoading, error, tableOfContents, pageTitle } =
     useContent(contentPath);
   const activeSection = useScrollSpy("h2[id], h3[id], h4[id]", 100);
   const { setPageData } = useDocLayoutData();
 
   // Use the hash scroll hook
-  useHashScroll(100);
+  useHashScroll(100, !isLoading && Boolean(content), contentPath);
 
-  // Immediately clear right sidebar data on route change to avoid stale TOC during fast navigation
-  useEffect(() => {
-    if (setPageData) {
-      setPageData({
-        tocItems: [],
-        apiExamplesData: undefined,
-        activeSection: undefined,
-        hideRightSidebar: true,
-      });
-    }
-  }, [contentPath, setPageData]);
-
-  // Update layout context when page-specific data changes
-  useEffect(() => {
-    if (setPageData) {
-      setPageData({
-        tocItems: tableOfContents,
-        apiExamplesData: apiExamples,
-        activeSection: activeSection,
-        hideRightSidebar: (tableOfContents?.length ?? 0) === 0 && !apiExamples,
-      });
-    }
-    // Cleanup function to reset data when component unmounts (optional, but good practice)
-    return () => {
-      if (setPageData) {
-        setPageData({
-          tocItems: [],
-          apiExamplesData: undefined,
-          activeSection: undefined,
-          hideRightSidebar: false,
-        });
-      }
-    };
-  }, [setPageData, tableOfContents, apiExamples, activeSection, contentPath]);
+  // Publish route-owned layout data before paint so the shell never renders
+  // the next page inside the previous page's tools state.
+  useLayoutEffect(() => {
+    setPageData({
+      tocItems: tableOfContents,
+      apiExamplesData: apiExamples,
+      activeSection,
+      hideRightSidebar: tableOfContents.length === 0 && !apiExamples,
+      pageTitle,
+    });
+  }, [
+    setPageData,
+    tableOfContents,
+    apiExamples,
+    activeSection,
+    contentPath,
+    pageTitle,
+  ]);
 
   // Show error toast if content failed to load
   useEffect(() => {

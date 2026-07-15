@@ -13,6 +13,13 @@ import { Highlight } from "prism-react-renderer";
 import { useClipboard } from "@/shared/hooks/use-clipboard.ts";
 
 type ApiExamplesProps = ApiExamplesData;
+type ExampleLanguage = "python" | "node" | "curl";
+
+const LANGUAGE_STORAGE_KEY = "showpass-docs-api-language";
+const exampleLanguages: ExampleLanguage[] = ["python", "node", "curl"];
+
+const isExampleLanguage = (value: string | null): value is ExampleLanguage =>
+  value !== null && exampleLanguages.includes(value as ExampleLanguage);
 
 const exampleTabClass =
   "relative h-full gap-1 rounded-none border-b border-r border-border/40 bg-transparent px-2 text-[11px] font-medium text-muted-foreground shadow-none transition-colors duration-150 last:border-r-0 hover:bg-foreground/[0.04] hover:text-foreground focus-visible:z-10 focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring focus-visible:ring-offset-0 data-[state=active]:border-b-transparent data-[state=active]:bg-[hsl(var(--prose-pre-bg))] data-[state=active]:text-foreground data-[state=active]:shadow-none";
@@ -29,6 +36,28 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
 }) => {
   const { copy: copyCode, isCopied: isCodeCopied } = useClipboard();
   const { copy: copyResponse, isCopied: isResponseCopied } = useClipboard();
+  const { copy: copyEndpoint, isCopied: isEndpointCopied } = useClipboard();
+  const [language, setLanguage] = React.useState<ExampleLanguage>(() => {
+    if (typeof window === "undefined") return "python";
+
+    try {
+      const storedLanguage = window.localStorage.getItem(LANGUAGE_STORAGE_KEY);
+      return isExampleLanguage(storedLanguage) ? storedLanguage : "python";
+    } catch {
+      return "python";
+    }
+  });
+
+  const handleLanguageChange = (value: string) => {
+    if (!isExampleLanguage(value)) return;
+
+    setLanguage(value);
+    try {
+      window.localStorage.setItem(LANGUAGE_STORAGE_KEY, value);
+    } catch {
+      // Storage can be unavailable in privacy-restricted browser contexts.
+    }
+  };
 
   // Use a minimal theme - our CSS will handle all the colors
   const minimalTheme = {
@@ -42,9 +71,9 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
   const responseText = JSON.stringify(response.body, null, 2);
 
   return (
-    <div className="w-full space-y-6">
+    <div className="w-full space-y-4">
       <div className="border-b border-border/50 pb-3">
-        <div className="mb-1.5 flex min-w-0 items-center gap-2">
+        <div className="mb-2 flex min-w-0 items-center gap-2">
           <span
             className={cn(
               "shrink-0 rounded-md border px-2 py-0.5 font-mono text-xs font-medium",
@@ -54,11 +83,27 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             {method}
           </span>
           <code
-            className="min-w-0 overflow-hidden text-ellipsis whitespace-nowrap rounded-md bg-muted/50 px-2 py-0.5 font-mono text-xs text-muted-foreground"
+            className="min-w-0 flex-1 overflow-x-auto whitespace-nowrap rounded-md bg-muted/50 px-2 py-0.5 font-mono text-xs text-muted-foreground [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            tabIndex={0}
             title={endpoint}
           >
             {endpoint}
           </code>
+          <button
+            type="button"
+            onClick={() => copyEndpoint(endpoint)}
+            className="inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-md border border-border/50 bg-background/60 text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1"
+            aria-label={
+              isEndpointCopied ? "Endpoint copied" : "Copy endpoint URL"
+            }
+            title={isEndpointCopied ? "Copied" : "Copy endpoint URL"}
+          >
+            {isEndpointCopied ? (
+              <Check className="h-3.5 w-3.5 text-[hsl(var(--success))]" />
+            ) : (
+              <Copy className="h-3.5 w-3.5" />
+            )}
+          </button>
         </div>
         {description && (
           <p className="text-xs leading-relaxed text-muted-foreground/80">
@@ -69,7 +114,8 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
 
       <div>
         <Tabs
-          defaultValue="python"
+          value={language}
+          onValueChange={handleLanguageChange}
           className="w-full overflow-hidden rounded-lg border border-border/50 bg-[hsl(var(--prose-pre-bg))] shadow-sm"
         >
           <TabsList className="grid h-9 w-full grid-cols-3 rounded-none bg-foreground/[0.06] p-0">

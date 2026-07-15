@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useLayoutEffect } from "react";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import { Link } from "react-router-dom";
 import { Button } from "@/shared/components/button.tsx";
@@ -10,22 +10,14 @@ const Index = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/"];
 
-  useEffect(() => {
-    if (setPageData) {
-      setPageData({
-        hideRightSidebar: true,
-        apiExamplesData: undefined,
-      });
-    }
-    return () => {
-      if (setPageData) {
-        setPageData({
-          tocItems: [],
-          apiExamplesData: undefined,
-          hideRightSidebar: false,
-        });
-      }
-    };
+  useLayoutEffect(() => {
+    setPageData({
+      hideRightSidebar: true,
+      tocItems: [],
+      apiExamplesData: undefined,
+      activeSection: undefined,
+      pageTitle: undefined,
+    });
   }, [setPageData]);
 
   return (
@@ -35,7 +27,7 @@ const Index = () => {
         description={seoData.description}
         keywords={seoData.keywords}
       />
-      <div className="pl-2 py-2 max-w-6xl">
+      <div className="w-full py-2">
         {/* Compact Hero */}
         <div className="mb-8">
           <div className="flex items-baseline gap-2 mb-2">
@@ -67,28 +59,28 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Public API */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Code className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">API Reference</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Event listings</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Event filtering</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Ticket management</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">Access event information and perform operations with our REST APIs.</p>
               </div>
-              <div className="flex flex-col gap-2 ml-11 2xl:flex-row">
-                <Button asChild size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
+              <div className="flex flex-wrap gap-2 sm:ml-11">
+                <Button asChild size="sm" className="min-w-[8rem] flex-1">
                   <Link to="/api/01-public-api-introduction" className="flex items-center justify-center">
                     Public API <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
+                <Button asChild variant="outline" size="sm" className="min-w-[8rem] flex-1">
                   <Link to="/api/10-private-api-overview" className="flex items-center justify-center">
                     Private API <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
@@ -97,51 +89,51 @@ const Index = () => {
             </div>
 
             {/* JavaScript SDK */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Zap className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">JavaScript SDK</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Interactive widgets</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Shopping cart</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Event calendars</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">Embeddable widgets and functions to integrate Showpass directly into your frontend.</p>
               </div>
-              <div className="flex flex-col gap-2 ml-11 2xl:flex-row">
-                <Button asChild size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
+              <div className="flex flex-wrap gap-2 sm:ml-11">
+                <Button asChild size="sm" className="min-w-[8rem] flex-1">
                   <Link to="/sdk/01-sdk-getting-started" className="flex items-center justify-center">
                     Get Started <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
                 </Button>
-                <Button asChild variant="outline" size="sm" className="w-full 2xl:w-auto 2xl:flex-1">
+                <Button asChild variant="outline" size="sm" className="min-w-[8rem] flex-1">
                   <Link to="/widget-playground">Try Live</Link>
                 </Button>
               </div>
             </div>
 
             {/* WordPress Plugin */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Globe className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">WordPress Plugin</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Simple shortcodes</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Custom templates</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Easy config</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">Effortlessly integrate Showpass into your WordPress site with our official plugin.</p>
               </div>
-              <div className="ml-11">
-                <Button asChild size="sm" className="w-full">
+              <div className="sm:ml-11">
+                <Button asChild size="sm" className="w-fit">
                   <Link to="/wordpress/01-getting-started-install-and-configure" className="flex items-center justify-center">
                     Get Started <ArrowRight className="ml-1 h-3 w-3" />
                   </Link>
@@ -167,75 +159,75 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Webhooks */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Webhook className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Webhooks</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Real-time updates</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Secure delivery</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Event automation</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">
                   Automate workflows and receive real-time notifications for Showpass events.
                 </p>
               </div>
-              <div className="ml-11">
-                <Button asChild size="sm" className="w-full">
+              <div className="sm:ml-11">
+                <Button asChild size="sm" className="w-fit">
                   <Link to="/webhooks/01-webhooks-introduction">Get Started</Link>
                 </Button>
               </div>
             </div>
 
             {/* Google Tag Manager */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <BarChart3 className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Google Tag Manager</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">GA4 integration</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Ecommerce tracking</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Custom events</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">
                   Advanced analytics and marketing tag integration with comprehensive tracking.
                 </p>
               </div>
-              <div className="ml-11">
-                <Button asChild size="sm" className="w-full">
+              <div className="sm:ml-11">
+                <Button asChild size="sm" className="w-fit">
                   <Link to="/google-tag-manager/01-introduction-to-showpass-gtm-integration">Get Started</Link>
                 </Button>
               </div>
             </div>
 
             {/* Facebook Pixels */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Target className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Facebook Integration</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Pixel tracking</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Conversions API</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Custom audiences</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">
                   Track conversions and optimize advertising campaigns with Meta integration.
                 </p>
               </div>
-              <div className="ml-11">
-                <Button asChild size="sm" className="w-full">
+              <div className="sm:ml-11">
+                <Button asChild size="sm" className="w-fit">
                   <Link to="/facebook/01-introduction-to-facebook-pixel">Get Started</Link>
                 </Button>
               </div>
@@ -259,25 +251,25 @@ const Index = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
             {/* Security & Compliance */}
-            <div className="group border border-border/50 dark:border-border/30 rounded-lg p-5 bg-card shadow-sm transition-shadow duration-200 hover:shadow-md md:col-span-2 xl:col-span-3">
+            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5 md:col-span-2 xl:col-span-3">
               <div className="flex items-center mb-3">
                 <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
                   <Shield className="h-5 w-5 text-primary" />
                 </div>
                 <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Security & Compliance</h3>
               </div>
-              <div className="flex flex-wrap gap-1 mb-3 text-xs ml-11">
+              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
                 <span className="feature-badge px-1.5 py-0.5 rounded border">PCI DSS Level 1</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">TX-RAMP Certified</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">GDPR Compliant</span>
                 <span className="feature-badge px-1.5 py-0.5 rounded border">Responsibility Matrix</span>
               </div>
-              <div className="mb-4 ml-11">
+              <div className="mb-4 flex-1 sm:ml-11">
                 <p className="text-muted-foreground text-sm">
                   Access compliance certificates, security documentation, and understand our shared responsibility model for enterprise and government customers.
                 </p>
               </div>
-              <div className="flex gap-2 ml-11 flex-wrap sm:flex-nowrap">
+              <div className="flex flex-wrap gap-2 sm:ml-11">
                 <Button asChild size="sm">
                   <Link to="/security/01-compliance-overview" className="flex items-center justify-center">
                     Overview <ArrowRight className="ml-1 h-3 w-3" />

@@ -49,7 +49,7 @@ const HeaderWithLink: React.FC<HeaderWithLinkProps> = ({
 
   return (
     <Tag id={id} className={cn(baseClasses, levelClasses[level], className)}>
-      <span className="flex items-center gap-2">
+      <span className="flex min-w-0 flex-wrap items-center gap-2">
         {children}
         <button
           onClick={handleCopyLink}
