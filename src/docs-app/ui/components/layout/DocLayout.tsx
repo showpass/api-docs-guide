@@ -313,7 +313,8 @@ const DocLayout = () => {
               className={cn(
                 "docs-content mx-auto w-full min-w-0 px-4 pb-16 pt-3 sm:px-6 lg:px-10 xl:px-12",
                 isWideCanvas && "docs-content-wide",
-                isHomepage && "!max-w-[86rem] !pb-0 xl:!px-8",
+                isHomepage &&
+                  "!max-w-[86rem] !pb-0 xl:!px-8 2xl:!max-w-[96rem]",
                 !isWideCanvas && !hasPageTools && "docs-content-no-tools",
               )}
             >

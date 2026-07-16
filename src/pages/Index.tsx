@@ -339,7 +339,7 @@ const Index = () => {
             Choose an integration
           </h2>
 
-          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_18px_48px_-36px_hsl(var(--foreground)/0.22)] lg:grid lg:grid-cols-[21rem_minmax(0,1fr)]">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_hsl(var(--foreground)/0.04)] lg:grid lg:grid-cols-[21rem_minmax(0,1fr)]">
             <div
               aria-label="Integration options"
               className="page-tools-scroll flex snap-x gap-1 overflow-x-auto border-b border-border bg-muted/[0.08] p-2 lg:block lg:overflow-visible lg:border-b-0 lg:border-r"
@@ -392,16 +392,16 @@ const Index = () => {
 
             <div
               aria-live="polite"
-              className="grid min-w-0 lg:min-h-[34.25rem] xl:grid-cols-[minmax(0,1fr)_minmax(23rem,0.82fr)]"
+              className="grid min-w-0 lg:min-h-[clamp(37rem,68vh,42rem)] xl:grid-cols-[minmax(0,1fr)_minmax(23rem,0.82fr)]"
             >
-              <div className="flex min-w-0 flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 xl:px-10 2xl:px-12">
-                <h3 className="m-0 max-w-[32rem] text-[1.7rem] font-semibold leading-[1.15] tracking-[-0.035em] text-foreground sm:text-[2rem] 2xl:text-[1.8rem]">
+              <div className="flex min-w-0 flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 xl:px-12 2xl:px-16">
+                <h3 className="m-0 max-w-[35rem] text-[1.75rem] font-semibold leading-[1.12] tracking-[-0.038em] text-foreground sm:text-[2rem] xl:text-[2.15rem] 2xl:text-[2.35rem]">
                   {selectedPath.title}
                 </h3>
-                <p className="mb-0 mt-3 max-w-[34rem] text-sm leading-6 text-muted-foreground">
+                <p className="mb-0 mt-4 max-w-[35rem] text-sm leading-6 text-muted-foreground sm:text-[0.95rem] 2xl:text-base 2xl:leading-7">
                   {selectedPath.description}
                 </p>
-                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2">
                   {selectedPath.facts.map((fact) => (
                     <span
                       key={fact}
@@ -417,7 +417,7 @@ const Index = () => {
                 </div>
                 <Link
                   to={activeDestination}
-                  className="group/action mt-6 inline-flex min-h-10 self-start items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                  className="landing-primary-action group/action mt-6 inline-flex min-h-10 self-start items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 2xl:mt-7"
                 >
                   {activeAction}
                   <ArrowRight className="h-4 w-4" aria-hidden="true" />

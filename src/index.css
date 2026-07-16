@@ -232,6 +232,16 @@
 }
 
 @layer components {
+  /* Keep the Forest landing CTA calm without weakening primary actions sitewide. */
+  .forest .landing-primary-action {
+    background-color: hsl(var(--accent));
+    color: hsl(var(--background));
+  }
+
+  .forest .landing-primary-action:hover {
+    background-color: hsl(var(--site-primary));
+  }
+
   .sidebar-link {
     @apply block text-sm py-2 px-3 rounded-lg hover:text-foreground hover:bg-accent/50 transition-all duration-200;
   }
