@@ -7,6 +7,7 @@ import {
   Braces,
   Building2,
   Check,
+  ChevronDown,
   Code2,
   ExternalLink,
   Globe2,
@@ -67,9 +68,24 @@ const gtmTrackingCodeLines = [
     event: &quot;purchase&quot;,
   </span>,
   <span key="gtm-guide-3" className="pl-4 text-foreground">
-    ecommerce: {`{ value, currency, transaction_id, items }`}
+    ecommerce: {`{`}
   </span>,
-  <span key="gtm-guide-4">{`});`}</span>,
+  <span key="gtm-guide-4" className="pl-8 text-foreground">
+    value,
+  </span>,
+  <span key="gtm-guide-5" className="pl-8 text-foreground">
+    currency,
+  </span>,
+  <span key="gtm-guide-6" className="pl-8 text-foreground">
+    transaction_id,
+  </span>,
+  <span key="gtm-guide-7" className="pl-8 text-foreground">
+    items,
+  </span>,
+  <span key="gtm-guide-8" className="pl-4 text-foreground">
+    {`},`}
+  </span>,
+  <span key="gtm-guide-9">{`});`}</span>,
 ];
 
 const integrationPaths: IntegrationPath[] = [
@@ -340,9 +356,38 @@ const Index = () => {
           </h2>
 
           <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_hsl(var(--foreground)/0.04)] lg:grid lg:grid-cols-[21rem_minmax(0,1fr)]">
+            <label
+              htmlFor="integration-select"
+              className="block border-b border-border bg-muted/[0.08] p-3 lg:hidden"
+            >
+              <span className="mb-2 block px-1 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                Capability
+              </span>
+              <span className="relative block">
+                <select
+                  id="integration-select"
+                  value={selectedId}
+                  onChange={(event) =>
+                    setSelectedId(event.target.value as IntegrationId)
+                  }
+                  className="min-h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 py-3 pr-11 text-base font-semibold text-foreground shadow-[0_1px_1px_hsl(var(--foreground)/0.03)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                >
+                  {integrationPaths.map(({ id, label }) => (
+                    <option key={id} value={id}>
+                      {label}
+                    </option>
+                  ))}
+                </select>
+                <ChevronDown
+                  className="pointer-events-none absolute right-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground"
+                  aria-hidden="true"
+                />
+              </span>
+            </label>
+
             <div
               aria-label="Integration options"
-              className="page-tools-scroll flex snap-x gap-1 overflow-x-auto border-b border-border bg-muted/[0.08] p-2 lg:block lg:overflow-visible lg:border-b-0 lg:border-r"
+              className="hidden gap-1 border-r border-border bg-muted/[0.08] p-2 lg:flex lg:flex-col lg:justify-center"
             >
               {integrationPaths.map(({ id, label, outcome, icon: Icon }) => {
                 const isSelected = id === selectedId;
@@ -353,7 +398,7 @@ const Index = () => {
                     type="button"
                     aria-pressed={isSelected}
                     onClick={() => setSelectedId(id)}
-                    className={`group/option flex min-h-[4.75rem] w-full min-w-[12.75rem] snap-start items-center gap-3 rounded-xl px-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-w-0 ${
+                    className={`group/option flex min-h-[4.75rem] w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                       isSelected
                         ? "bg-background text-foreground shadow-[inset_0_0_0_1px_hsl(var(--border))]"
                         : "text-muted-foreground hover:bg-muted/20 hover:text-foreground"
@@ -395,33 +440,35 @@ const Index = () => {
               className="grid min-w-0 lg:min-h-[clamp(37rem,68vh,42rem)] xl:grid-cols-[minmax(0,1fr)_minmax(23rem,0.82fr)]"
             >
               <div className="flex min-w-0 flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 xl:px-12 2xl:px-16">
-                <h3 className="m-0 max-w-[35rem] text-[1.75rem] font-semibold leading-[1.12] tracking-[-0.038em] text-foreground sm:text-[2rem] xl:text-[2.15rem] 2xl:text-[2.35rem]">
-                  {selectedPath.title}
-                </h3>
-                <p className="mb-0 mt-4 max-w-[35rem] text-sm leading-6 text-muted-foreground sm:text-[0.95rem] 2xl:text-base 2xl:leading-7">
-                  {selectedPath.description}
-                </p>
-                <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2">
-                  {selectedPath.facts.map((fact) => (
-                    <span
-                      key={fact}
-                      className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
-                    >
-                      <Check
-                        className="h-3.5 w-3.5 text-primary"
-                        aria-hidden="true"
-                      />
-                      {fact}
-                    </span>
-                  ))}
+                <div className="mx-auto flex w-full max-w-[35rem] flex-col">
+                  <h3 className="m-0 text-[1.75rem] font-semibold leading-[1.12] tracking-[-0.038em] text-foreground sm:text-[2rem] xl:text-[2.15rem] 2xl:text-[2.35rem]">
+                    {selectedPath.title}
+                  </h3>
+                  <p className="mb-0 mt-4 text-sm leading-6 text-muted-foreground sm:text-[0.95rem] 2xl:text-base 2xl:leading-7">
+                    {selectedPath.description}
+                  </p>
+                  <div className="mt-5 flex flex-wrap gap-x-4 gap-y-2">
+                    {selectedPath.facts.map((fact) => (
+                      <span
+                        key={fact}
+                        className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                      >
+                        <Check
+                          className="h-3.5 w-3.5 text-primary"
+                          aria-hidden="true"
+                        />
+                        {fact}
+                      </span>
+                    ))}
+                  </div>
+                  <Link
+                    to={activeDestination}
+                    className="landing-primary-action group/action mt-6 inline-flex min-h-10 self-start items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 2xl:mt-7"
+                  >
+                    {activeAction}
+                    <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                  </Link>
                 </div>
-                <Link
-                  to={activeDestination}
-                  className="landing-primary-action group/action mt-6 inline-flex min-h-10 self-start items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 2xl:mt-7"
-                >
-                  {activeAction}
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </Link>
               </div>
 
               <aside
@@ -433,11 +480,11 @@ const Index = () => {
                 className="flex min-w-0 items-center border-t border-border bg-muted/[0.07] px-5 py-8 sm:px-8 sm:py-10 xl:border-l xl:border-t-0 xl:px-8"
               >
                 <div className="w-full min-w-0">
-                  <p className="m-0 mb-3 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                    {selectedPath.trackingGuides
-                      ? "Choose a tracking guide"
-                      : "Implementation example"}
-                  </p>
+                  {selectedPath.trackingGuides && (
+                    <p className="m-0 mb-3 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                      Choose a tracking guide
+                    </p>
+                  )}
 
                   {selectedPath.trackingGuides && (
                     <div
@@ -468,7 +515,16 @@ const Index = () => {
 
                   <div className="min-w-0 overflow-hidden rounded-xl border border-border bg-sidebar/55">
                     <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
-                      <span className="text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                      <span className="flex min-w-0 items-center gap-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        {!selectedPath.trackingGuides && (
+                          <>
+                            <span>Example</span>
+                            <span
+                              aria-hidden="true"
+                              className="h-3 w-px shrink-0 bg-border"
+                            />
+                          </>
+                        )}
                         {activeCodeLabel}
                       </span>
                       <span className="flex items-center gap-2 text-[0.625rem] text-muted-foreground">
