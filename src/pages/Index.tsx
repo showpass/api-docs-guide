@@ -1,14 +1,307 @@
-import React, { useLayoutEffect } from "react";
-import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
+import React, { useLayoutEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { Button } from "@/shared/components/button.tsx";
-import SEOHead from "@/shared/components/SEOHead.tsx";
+import {
+  ArrowRight,
+  BarChart3,
+  Bot,
+  Braces,
+  Building2,
+  Check,
+  Code2,
+  ExternalLink,
+  Globe2,
+  ShieldCheck,
+  Webhook,
+  type LucideIcon,
+} from "lucide-react";
+import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout.tsx";
 import { seoDataMap } from "@/docs-app/data/seoData.ts";
-import { ArrowRight, Code, Zap, Globe, Webhook, BarChart3, Target, Shield } from "lucide-react";
+import SEOHead from "@/shared/components/SEOHead.tsx";
+
+type IntegrationId =
+  | "public-api"
+  | "javascript-sdk"
+  | "organizer-api"
+  | "wordpress"
+  | "conversion-tracking"
+  | "webhooks"
+  | "security";
+
+type TrackingGuideId = "google-tag-manager" | "meta";
+
+interface TrackingGuide {
+  id: TrackingGuideId;
+  label: string;
+  badge: string;
+  codeLabel: string;
+  codeLines: React.ReactNode[];
+  action: string;
+  to: string;
+}
+
+interface IntegrationPath {
+  id: IntegrationId;
+  label: string;
+  outcome: string;
+  title: string;
+  description: string;
+  facts: string[];
+  codeLabel: string;
+  codeLines: React.ReactNode[];
+  action: string;
+  to: string;
+  icon: LucideIcon;
+  trackingGuides?: TrackingGuide[];
+  agentGuide?: {
+    label: string;
+    description: string;
+    href: string;
+  };
+}
+
+const gtmTrackingCodeLines = [
+  <span key="gtm-guide-1">
+    dataLayer.<span className="text-primary">push</span>({`{`}
+  </span>,
+  <span key="gtm-guide-2" className="pl-4 text-foreground">
+    event: &quot;purchase&quot;,
+  </span>,
+  <span key="gtm-guide-3" className="pl-4 text-foreground">
+    ecommerce: {`{ value, currency, transaction_id, items }`}
+  </span>,
+  <span key="gtm-guide-4">{`});`}</span>,
+];
+
+const integrationPaths: IntegrationPath[] = [
+  {
+    id: "javascript-sdk",
+    label: "JavaScript SDK",
+    outcome: "Embed purchase experiences",
+    title: "Embed Showpass purchase and checkout flows in your site.",
+    description:
+      "Add event, product, membership, calendar, cart, and checkout experiences without rebuilding the Showpass purchase flow.",
+    facts: ["Browser SDK", "Modal or embedded", "Hosted purchase flow"],
+    codeLabel: "JavaScript",
+    codeLines: [
+      <span key="sdk-1">
+        <span className="text-primary">showpass</span>.tickets
+      </span>,
+      <span key="sdk-2" className="pl-4 text-foreground">
+        .eventPurchaseWidget(
+      </span>,
+      <span key="sdk-3" className="pl-8 text-foreground">
+        &quot;my-event-slug&quot;,
+      </span>,
+      <span key="sdk-4" className="pl-8 text-foreground">
+        {`{ "keep-shopping": true }`}
+      </span>,
+      <span key="sdk-5" className="pl-4">
+        );
+      </span>,
+    ],
+    action: "Read the widget guide",
+    to: "/sdk/01-sdk-getting-started",
+    icon: Code2,
+    agentGuide: {
+      label: "Integrate with your coding agent",
+      description:
+        "Give your coding agent the Showpass widget skill for framework-aware implementation guidance.",
+      href: "https://github.com/showpass/api-docs-guide/tree/master/skills/build-showpass-widgets",
+    },
+  },
+  {
+    id: "public-api",
+    label: "Public API",
+    outcome: "Display Showpass events",
+    title: "Search and display Showpass events in your product.",
+    description:
+      "Use public event data for listings, calendars, maps, and event pages. Responses are JSON and do not require an API token.",
+    facts: ["REST API", "JSON responses", "No authentication"],
+    codeLabel: "Request",
+    codeLines: [
+      <span key="public-1">
+        <span className="text-primary">GET</span> /api/public/discovery/
+      </span>,
+      <span key="public-2" className="pl-4 text-foreground">
+        Host: www.showpass.com
+      </span>,
+      <span key="public-3" className="pl-4 text-foreground">
+        Query: page_size=3
+      </span>,
+    ],
+    action: "Read the Discovery API",
+    to: "/api/01-public-api-introduction",
+    icon: Braces,
+  },
+  {
+    id: "organizer-api",
+    label: "Private Organizer API",
+    outcome: "Connect ticket operations",
+    title:
+      "Bring ticket verification, scanning, discounts, and access control into your tools.",
+    description:
+      "Use authenticated organizer endpoints to connect check-in and ticket operations to internal applications or partner systems.",
+    facts: ["REST API", "Organizer authentication", "Ticket operations"],
+    codeLabel: "HTTP",
+    codeLines: [
+      <span key="organizer-1">
+        <span className="text-primary">GET</span> /api/venue/{`{venue_id}`}/
+      </span>,
+      <span key="organizer-2" className="pl-4 text-foreground">
+        tickets/items/scan/
+      </span>,
+      <span key="organizer-3" className="pl-4 text-foreground">
+        ?code={`{ticket_code}`}
+      </span>,
+      <span key="organizer-4" className="pt-2 text-muted-foreground">
+        Authorization: Token YOUR_API_TOKEN
+      </span>,
+    ],
+    action: "Read the Organizer API",
+    to: "/api/10-private-api-overview",
+    icon: Building2,
+  },
+  {
+    id: "wordpress",
+    label: "WordPress plugin",
+    outcome: "Add Showpass to WordPress",
+    title: "Publish events and purchase experiences in WordPress.",
+    description:
+      "Use official shortcodes and templates for event lists, event pages, calendars, and Showpass purchase widgets.",
+    facts: ["Event publishing", "Purchase widgets", "Custom templates"],
+    codeLabel: "Shortcode",
+    codeLines: [
+      <span key="wordpress-1" className="text-foreground">
+        [showpass_events
+      </span>,
+      <span key="wordpress-2" className="pl-4 text-foreground">
+        type=&quot;list&quot;
+      </span>,
+      <span key="wordpress-3" className="pl-4 text-foreground">
+        page_size=&quot;5&quot;
+      </span>,
+      <span key="wordpress-4" className="text-foreground">
+        ]
+      </span>,
+    ],
+    action: "Set up the WordPress plugin",
+    to: "/wordpress/01-getting-started-install-and-configure",
+    icon: Globe2,
+  },
+  {
+    id: "conversion-tracking",
+    label: "Conversion tracking",
+    outcome: "Measure purchases and campaigns",
+    title:
+      "Send Showpass conversion activity to your analytics and advertising tools.",
+    description:
+      "Connect GA4 through Google Tag Manager or use Meta Pixel and the Conversions API for campaign attribution.",
+    facts: ["GA4 + GTM", "Meta Pixel", "Conversions API"],
+    codeLabel: "Data layer",
+    codeLines: gtmTrackingCodeLines,
+    action: "Open the GTM guide",
+    to: "/google-tag-manager/01-introduction-to-showpass-gtm-integration",
+    icon: BarChart3,
+    trackingGuides: [
+      {
+        id: "google-tag-manager",
+        label: "Google Tag Manager",
+        badge: "GA4 + GTM",
+        codeLabel: "Data layer",
+        codeLines: gtmTrackingCodeLines,
+        action: "Open the GTM guide",
+        to: "/google-tag-manager/01-introduction-to-showpass-gtm-integration",
+      },
+      {
+        id: "meta",
+        label: "Meta",
+        badge: "Pixel + CAPI",
+        codeLabel: "Organizer settings",
+        codeLines: [
+          <span key="meta-guide-1" className="text-foreground">
+            Pixel ID: 123456789012345
+          </span>,
+          <span key="meta-guide-2" className="text-foreground">
+            Conversions API: enabled
+          </span>,
+          <span key="meta-guide-3" className="text-foreground">
+            Events: AddToCart, Purchase
+          </span>,
+        ],
+        action: "Open the Meta guide",
+        to: "/facebook/01-introduction-to-facebook-pixel",
+      },
+    ],
+  },
+  {
+    id: "webhooks",
+    label: "Webhooks",
+    outcome: "Sync Showpass with your systems",
+    title:
+      "Send purchases, refunds, and transfers to your CRM, automation, or backend.",
+    description:
+      "Deliver Showpass activity to Zapier, customer records, data pipelines, and internal services through signed webhooks.",
+    facts: ["HTTP webhooks", "Event payloads", "Signed delivery"],
+    codeLabel: "Delivery",
+    codeLines: [
+      <span key="webhooks-1">
+        <span className="text-primary">POST</span> /api/showpass-webhook
+      </span>,
+      <span key="webhooks-2" className="text-foreground">
+        X-SHOWPASS-SIGNATURE: ...
+      </span>,
+      <span key="webhooks-3" className="text-foreground">
+        event_type: invoice.purchase
+      </span>,
+    ],
+    action: "Configure webhooks",
+    to: "/webhooks/01-webhooks-introduction",
+    icon: Webhook,
+  },
+  {
+    id: "security",
+    label: "Security & compliance",
+    outcome: "Prepare for security review",
+    title: "Review the controls and responsibilities for your integration.",
+    description:
+      "Find certifications, platform controls, privacy practices, and shared PCI responsibilities before launch.",
+    facts: ["PCI DSS Level 1", "TX-RAMP", "GDPR-aligned"],
+    codeLabel: "Highlights",
+    codeLines: [
+      <span key="security-1" className="text-foreground">
+        Payments: tokenized
+      </span>,
+      <span key="security-2" className="text-foreground">
+        Access: MFA + role based
+      </span>,
+      <span key="security-3" className="text-foreground">
+        Transport: end-to-end TLS
+      </span>,
+    ],
+    action: "Review security & compliance",
+    to: "/security/01-compliance-overview",
+    icon: ShieldCheck,
+  },
+];
 
 const Index = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/"];
+  const [selectedId, setSelectedId] = useState<IntegrationId>("javascript-sdk");
+  const [selectedTrackingGuideId, setSelectedTrackingGuideId] =
+    useState<TrackingGuideId>("google-tag-manager");
+  const selectedPath =
+    integrationPaths.find(({ id }) => id === selectedId) ?? integrationPaths[0];
+  const selectedTrackingGuide = selectedPath.trackingGuides?.find(
+    ({ id }) => id === selectedTrackingGuideId,
+  );
+  const activeCodeLabel =
+    selectedTrackingGuide?.codeLabel ?? selectedPath.codeLabel;
+  const activeCodeLines =
+    selectedTrackingGuide?.codeLines ?? selectedPath.codeLines;
+  const activeAction = selectedTrackingGuide?.action ?? selectedPath.action;
+  const activeDestination = selectedTrackingGuide?.to ?? selectedPath.to;
+  const activeBadge = selectedTrackingGuide?.badge ?? selectedPath.facts[0];
 
   useLayoutEffect(() => {
     setPageData({
@@ -27,265 +320,211 @@ const Index = () => {
         description={seoData.description}
         keywords={seoData.keywords}
       />
-      <div className="w-full py-2">
-        {/* Compact Hero */}
-        <div className="mb-8">
-          <div className="flex items-baseline gap-2 mb-2">
-            <div className="h-px bg-primary/60 w-8"></div>
-            <span className="text-xs uppercase tracking-wider text-muted-foreground">Showpass Developer Platform</span>
-          </div>
-          <h1 className="text-3xl font-bold mb-2 !mt-0">
-            <span className="text-foreground">Developer </span>
-            <span className="text-primary">Documentation</span>
+
+      <div className="not-prose pb-10 pt-7 sm:pt-8 2xl:pb-4 2xl:pt-6">
+        <header className="max-w-[48rem]">
+          <h1 className="m-0 text-[2.4rem] font-bold leading-[1.05] tracking-[-0.045em] text-foreground sm:text-[2.8rem]">
+            Build with <span className="text-primary">Showpass.</span>
           </h1>
-          <p className="text-sm text-muted-foreground max-w-2xl !my-2">
-            Start building powerful event experiences today with just a few lines of code.
+          <p className="mb-0 mt-2.5 text-base leading-7 text-muted-foreground sm:text-lg">
+            Choose the capability your application needs.
           </p>
-        </div>
+        </header>
 
-        {/* Section Divider */}
-        <div className="flex items-center my-6">
-          <div className="w-1/3 h-px bg-border"></div>
-        </div>
+        <section
+          aria-labelledby="integration-heading"
+          className="mt-7 2xl:mt-6"
+        >
+          <h2 id="integration-heading" className="sr-only">
+            Choose an integration
+          </h2>
 
-        {/* Core Integrations */}
-        <div className="mb-12 relative">
-          <div className="flex flex-col mt-0 mb-1">
-            <h2 className="text-lg font-bold text-foreground !mt-0 !mb-0">Core Integrations</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Essential tools for seamless API, SDK, and WordPress integration</p>
-          </div>
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_18px_48px_-36px_hsl(var(--foreground)/0.22)] lg:grid lg:grid-cols-[21rem_minmax(0,1fr)]">
+            <div
+              aria-label="Integration options"
+              className="page-tools-scroll flex snap-x gap-1 overflow-x-auto border-b border-border bg-muted/[0.08] p-2 lg:block lg:overflow-visible lg:border-b-0 lg:border-r"
+            >
+              {integrationPaths.map(({ id, label, outcome, icon: Icon }) => {
+                const isSelected = id === selectedId;
 
-          <div className="w-full h-px bg-border mb-4 mx-auto"></div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {/* Public API */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <Code className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">API Reference</h3>
-              </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Event listings</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Event filtering</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Ticket management</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">Access event information and perform operations with our REST APIs.</p>
-              </div>
-              <div className="flex flex-wrap gap-2 sm:ml-11">
-                <Button asChild size="sm" className="min-w-[8rem] flex-1">
-                  <Link to="/api/01-public-api-introduction" className="flex items-center justify-center">
-                    Public API <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="sm" className="min-w-[8rem] flex-1">
-                  <Link to="/api/10-private-api-overview" className="flex items-center justify-center">
-                    Private API <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-              </div>
+                return (
+                  <button
+                    key={id}
+                    type="button"
+                    aria-pressed={isSelected}
+                    onClick={() => setSelectedId(id)}
+                    className={`group/option flex min-h-[4.75rem] w-full min-w-[12.75rem] snap-start items-center gap-3 rounded-xl px-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring lg:min-w-0 ${
+                      isSelected
+                        ? "bg-background text-foreground shadow-[inset_0_0_0_1px_hsl(var(--border))]"
+                        : "text-muted-foreground hover:bg-muted/20 hover:text-foreground"
+                    }`}
+                  >
+                    <span
+                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${
+                        isSelected
+                          ? "border-primary/25 bg-primary/[0.08] text-primary"
+                          : "border-border bg-background/30 text-muted-foreground group-hover/option:text-primary"
+                      }`}
+                    >
+                      <Icon
+                        className="h-[1.125rem] w-[1.125rem]"
+                        aria-hidden="true"
+                      />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.14em]">
+                        {label}
+                      </span>
+                      <span className="mt-1 block text-sm font-semibold text-foreground">
+                        {outcome}
+                      </span>
+                    </span>
+                    <ArrowRight
+                      className={`ml-auto hidden h-4 w-4 shrink-0 lg:block ${
+                        isSelected ? "text-primary" : "text-muted-foreground"
+                      }`}
+                      aria-hidden="true"
+                    />
+                  </button>
+                );
+              })}
             </div>
 
-            {/* JavaScript SDK */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <Zap className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">JavaScript SDK</h3>
-              </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Interactive widgets</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Shopping cart</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Event calendars</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">Embeddable widgets and functions to integrate Showpass directly into your frontend.</p>
-              </div>
-              <div className="flex flex-wrap gap-2 sm:ml-11">
-                <Button asChild size="sm" className="min-w-[8rem] flex-1">
-                  <Link to="/sdk/01-sdk-getting-started" className="flex items-center justify-center">
-                    Get Started <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="sm" className="min-w-[8rem] flex-1">
-                  <Link to="/widget-playground">Try Live</Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* WordPress Plugin */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <Globe className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">WordPress Plugin</h3>
-              </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Simple shortcodes</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Custom templates</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Easy config</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">Effortlessly integrate Showpass into your WordPress site with our official plugin.</p>
-              </div>
-              <div className="sm:ml-11">
-                <Button asChild size="sm" className="w-fit">
-                  <Link to="/wordpress/01-getting-started-install-and-configure" className="flex items-center justify-center">
-                    Get Started <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Section Divider */}
-        <div className="flex items-center my-6">
-          <div className="w-1/3 h-px bg-border"></div>
-        </div>
-
-        {/* Advanced Integrations */}
-        <div className="mb-12 relative">
-          <div className="flex flex-col mt-0 mb-1">
-            <h2 className="text-lg font-bold text-foreground !mt-0 !mb-0">Advanced Integrations</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">Extend functionality with webhooks, analytics, and marketing tools</p>
-          </div>
-
-          <div className="w-full h-px bg-border mb-4 mx-auto"></div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {/* Webhooks */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <Webhook className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Webhooks</h3>
-              </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Real-time updates</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Secure delivery</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Event automation</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">
-                  Automate workflows and receive real-time notifications for Showpass events.
+            <div
+              aria-live="polite"
+              className="grid min-w-0 lg:min-h-[34.25rem] xl:grid-cols-[minmax(0,1fr)_minmax(23rem,0.82fr)]"
+            >
+              <div className="flex min-w-0 flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 xl:px-10 2xl:px-12">
+                <h3 className="m-0 max-w-[32rem] text-[1.7rem] font-semibold leading-[1.15] tracking-[-0.035em] text-foreground sm:text-[2rem] 2xl:text-[1.8rem]">
+                  {selectedPath.title}
+                </h3>
+                <p className="mb-0 mt-3 max-w-[34rem] text-sm leading-6 text-muted-foreground">
+                  {selectedPath.description}
                 </p>
-              </div>
-              <div className="sm:ml-11">
-                <Button asChild size="sm" className="w-fit">
-                  <Link to="/webhooks/01-webhooks-introduction">Get Started</Link>
-                </Button>
-              </div>
-            </div>
-
-            {/* Google Tag Manager */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <BarChart3 className="h-5 w-5 text-primary" />
+                <div className="mt-4 flex flex-wrap gap-x-4 gap-y-2">
+                  {selectedPath.facts.map((fact) => (
+                    <span
+                      key={fact}
+                      className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground"
+                    >
+                      <Check
+                        className="h-3.5 w-3.5 text-primary"
+                        aria-hidden="true"
+                      />
+                      {fact}
+                    </span>
+                  ))}
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Google Tag Manager</h3>
+                <Link
+                  to={activeDestination}
+                  className="group/action mt-6 inline-flex min-h-10 self-start items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+                >
+                  {activeAction}
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
+                </Link>
               </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">GA4 integration</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Ecommerce tracking</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Custom events</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">
-                  Advanced analytics and marketing tag integration with comprehensive tracking.
-                </p>
-              </div>
-              <div className="sm:ml-11">
-                <Button asChild size="sm" className="w-fit">
-                  <Link to="/google-tag-manager/01-introduction-to-showpass-gtm-integration">Get Started</Link>
-                </Button>
-              </div>
-            </div>
 
-            {/* Facebook Pixels */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <Target className="h-5 w-5 text-primary" />
+              <aside
+                aria-label={
+                  selectedPath.trackingGuides
+                    ? "Conversion tracking guides"
+                    : "Implementation example"
+                }
+                className="flex min-w-0 items-center border-t border-border bg-muted/[0.07] px-5 py-8 sm:px-8 sm:py-10 xl:border-l xl:border-t-0 xl:px-8"
+              >
+                <div className="w-full min-w-0">
+                  <p className="m-0 mb-3 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                    {selectedPath.trackingGuides
+                      ? "Choose a tracking guide"
+                      : "Implementation example"}
+                  </p>
+
+                  {selectedPath.trackingGuides && (
+                    <div
+                      aria-label="Conversion tracking platform"
+                      className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-border bg-background/40 p-1"
+                    >
+                      {selectedPath.trackingGuides.map((guide) => {
+                        const isSelected = guide.id === selectedTrackingGuideId;
+
+                        return (
+                          <button
+                            key={guide.id}
+                            type="button"
+                            aria-pressed={isSelected}
+                            onClick={() => setSelectedTrackingGuideId(guide.id)}
+                            className={`min-h-9 rounded-lg px-3 py-2 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
+                              isSelected
+                                ? "bg-card text-foreground shadow-[inset_0_0_0_1px_hsl(var(--border))]"
+                                : "text-muted-foreground hover:bg-muted/20 hover:text-foreground"
+                            }`}
+                          >
+                            {guide.label}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+
+                  <div className="min-w-0 overflow-hidden rounded-xl border border-border bg-sidebar/55">
+                    <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
+                      <span className="text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+                        {activeCodeLabel}
+                      </span>
+                      <span className="flex items-center gap-2 text-[0.625rem] text-muted-foreground">
+                        <span
+                          className="h-1.5 w-1.5 rounded-full bg-primary"
+                          aria-hidden="true"
+                        />
+                        {activeBadge}
+                      </span>
+                    </div>
+                    <div className="overflow-x-auto px-4 py-4 font-mono text-[0.75rem] leading-6 text-sidebar-foreground">
+                      <div className="min-w-max">
+                        {activeCodeLines.map((line, index) => (
+                          <div
+                            key={index}
+                            className="flex gap-3 whitespace-nowrap"
+                          >
+                            <span className="w-3 select-none text-right text-muted-foreground">
+                              {index + 1}
+                            </span>
+                            {line}
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+
+                  {selectedPath.agentGuide && (
+                    <a
+                      href={selectedPath.agentGuide.href}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="group/agent mt-4 flex items-center gap-3 rounded-xl border border-primary/20 bg-primary/[0.05] px-4 py-3.5 text-left hover:border-primary/35 hover:bg-primary/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                    >
+                      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/[0.08] text-primary">
+                        <Bot className="h-4 w-4" aria-hidden="true" />
+                      </span>
+                      <span className="min-w-0 flex-1">
+                        <span className="block text-sm font-semibold text-foreground">
+                          {selectedPath.agentGuide.label}
+                        </span>
+                        <span className="mt-0.5 block text-xs leading-[1.125rem] text-muted-foreground">
+                          {selectedPath.agentGuide.description}
+                        </span>
+                      </span>
+                      <ExternalLink
+                        className="h-4 w-4 shrink-0 text-muted-foreground group-hover/agent:text-primary"
+                        aria-hidden="true"
+                      />
+                    </a>
+                  )}
                 </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Facebook Integration</h3>
-              </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Pixel tracking</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Conversions API</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Custom audiences</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">
-                  Track conversions and optimize advertising campaigns with Meta integration.
-                </p>
-              </div>
-              <div className="sm:ml-11">
-                <Button asChild size="sm" className="w-fit">
-                  <Link to="/facebook/01-introduction-to-facebook-pixel">Get Started</Link>
-                </Button>
-              </div>
+              </aside>
             </div>
           </div>
-        </div>
-
-        {/* Section Divider */}
-        <div className="flex items-center my-6">
-          <div className="w-1/3 h-px bg-border"></div>
-        </div>
-
-        {/* Security & Compliance */}
-        <div className="mb-12 relative">
-          <div className="flex flex-col mt-0 mb-1">
-            <h2 className="text-lg font-bold text-foreground !mt-0 !mb-0">Security & Compliance</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">PCI compliance, certifications, and security documentation</p>
-          </div>
-
-          <div className="w-full h-px bg-border mb-4 mx-auto"></div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
-            {/* Security & Compliance */}
-            <div className="group flex h-full flex-col rounded-lg border border-border/50 bg-card p-4 shadow-sm transition-shadow duration-200 hover:shadow-md dark:border-border/30 sm:p-5 md:col-span-2 xl:col-span-3">
-              <div className="flex items-center mb-3">
-                <div className="p-2 bg-primary/10 rounded-lg mr-3 flex-shrink-0">
-                  <Shield className="h-5 w-5 text-primary" />
-                </div>
-                <h3 className="mt-[-0.3rem] text-lg font-semibold text-card-foreground leading-tight flex-1">Security & Compliance</h3>
-              </div>
-              <div className="mb-3 flex flex-wrap gap-1 text-xs sm:ml-11">
-                <span className="feature-badge px-1.5 py-0.5 rounded border">PCI DSS Level 1</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">TX-RAMP Certified</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">GDPR Compliant</span>
-                <span className="feature-badge px-1.5 py-0.5 rounded border">Responsibility Matrix</span>
-              </div>
-              <div className="mb-4 flex-1 sm:ml-11">
-                <p className="text-muted-foreground text-sm">
-                  Access compliance certificates, security documentation, and understand our shared responsibility model for enterprise and government customers.
-                </p>
-              </div>
-              <div className="flex flex-wrap gap-2 sm:ml-11">
-                <Button asChild size="sm">
-                  <Link to="/security/01-compliance-overview" className="flex items-center justify-center">
-                    Overview <ArrowRight className="ml-1 h-3 w-3" />
-                  </Link>
-                </Button>
-                <Button asChild variant="outline" size="sm">
-                  <Link to="/security/02-certifications">Certifications</Link>
-                </Button>
-                <Button asChild variant="outline" size="sm">
-                  <Link to="/security/03-pci-responsibility-matrix">PCI Compliance</Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        </section>
       </div>
     </>
   );

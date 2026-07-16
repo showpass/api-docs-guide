@@ -22,7 +22,7 @@ const PAGE_TOOLS_ID = "docs-page-tools";
 
 const useMediaQuery = (query: string) => {
   const [matches, setMatches] = useState(() =>
-    typeof window === "undefined" ? false : window.matchMedia(query).matches
+    typeof window === "undefined" ? false : window.matchMedia(query).matches,
   );
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export const useDocLayoutData = () => {
   const context = React.useContext(DocLayoutContext);
   if (!context) {
     throw new Error(
-      "useDocLayoutData must be used within a DocLayoutDataProvider"
+      "useDocLayoutData must be used within a DocLayoutDataProvider",
     );
   }
   return context;
@@ -95,8 +95,8 @@ const DocLayout = () => {
   const currentPath = location.pathname;
   const normalizedPath =
     currentPath === "/" ? currentPath : currentPath.replace(/\/+$/, "");
-  const isWideCanvas =
-    normalizedPath === "/" || normalizedPath === "/widget-playground";
+  const isHomepage = normalizedPath === "/";
+  const isWideCanvas = normalizedPath === "/widget-playground";
 
   const {
     tocItems,
@@ -195,7 +195,7 @@ const DocLayout = () => {
           "fixed inset-x-0 bottom-0 top-16 z-40 bg-background/60 backdrop-blur-sm transition-opacity motion-reduce:transition-none",
           overlayNavigationOpen && !hasPersistentNavigation
             ? "opacity-100"
-            : "pointer-events-none opacity-0"
+            : "pointer-events-none opacity-0",
         )}
         style={{ transitionDuration: "180ms" }}
       />
@@ -258,9 +258,7 @@ const DocLayout = () => {
             }}
             className={cn(
               "flex max-w-none flex-col gap-0 bg-sidebar p-0 sm:max-w-none",
-              apiExamplesData
-                ? "w-[min(100vw,42rem)]"
-                : "w-[min(100vw,25rem)]"
+              apiExamplesData ? "w-[min(100vw,42rem)]" : "w-[min(100vw,25rem)]",
             )}
           >
             <div className="flex min-h-16 shrink-0 items-center gap-3 border-b border-sidebar-border px-5 pr-14 sm:px-6">
@@ -294,7 +292,7 @@ const DocLayout = () => {
 
         <aside
           aria-label="Documentation navigation"
-          className="sticky top-16 hidden h-[calc(100vh-4rem)] min-w-0 self-start flex-col overflow-hidden border-r border-sidebar-border bg-sidebar 2xl:flex"
+          className="sticky top-16 hidden h-[calc(100vh-4rem-1px)] min-w-0 self-start flex-col overflow-hidden border-r border-sidebar-border bg-sidebar 2xl:flex"
         >
           <Navigation currentPath={currentPath} />
         </aside>
@@ -302,20 +300,21 @@ const DocLayout = () => {
         <div
           className={cn(
             "docs-workspace min-w-0",
-            !isWideCanvas && "docs-workspace-document"
+            !isWideCanvas && "docs-workspace-document",
           )}
         >
           <main
             className={cn(
               "min-w-0",
-              spansWorkspace && "docs-workspace-main-wide"
+              spansWorkspace && "docs-workspace-main-wide",
             )}
           >
             <div
               className={cn(
                 "docs-content mx-auto w-full min-w-0 px-4 pb-16 pt-3 sm:px-6 lg:px-10 xl:px-12",
                 isWideCanvas && "docs-content-wide",
-                !isWideCanvas && !hasPageTools && "docs-content-no-tools"
+                isHomepage && "!max-w-[86rem] !pb-0 xl:!px-8",
+                !isWideCanvas && !hasPageTools && "docs-content-no-tools",
               )}
             >
               <BreadcrumbNavigation currentPageTitle={pageTitle} />
@@ -328,8 +327,7 @@ const DocLayout = () => {
               aria-label={pageToolsHeading}
               className={cn(
                 "hidden min-w-0 xl:block",
-                apiExamplesData &&
-                  "border-l border-sidebar-border bg-sidebar"
+                apiExamplesData && "border-l border-sidebar-border bg-sidebar",
               )}
             >
               {apiExamplesData ? (

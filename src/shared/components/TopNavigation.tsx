@@ -89,13 +89,17 @@ const TopNavigation = ({
 
           <a
             href="https://dev.showpass.com/"
-            className="flex min-w-0 items-center rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+            aria-label="Showpass documentation home"
+            className="flex min-w-0 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
-            <img
-              src={currentLogo}
-              alt="Showpass developer documentation"
-              className="h-7 w-auto sm:h-8"
-            />
+            <img src={currentLogo} alt="" className="h-7 w-auto sm:h-8" />
+            <span aria-hidden="true" className="h-6 w-px shrink-0 bg-border" />
+            <span
+              aria-hidden="true"
+              className="text-base font-normal tracking-[-0.01em] text-muted-foreground"
+            >
+              Docs
+            </span>
           </a>
         </div>
 
