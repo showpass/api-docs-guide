@@ -202,7 +202,10 @@ const DocLayout = () => {
 
       <div
         ref={layoutContentRef}
-        className="grid min-w-0 flex-1 grid-cols-1 2xl:grid-cols-[304px_minmax(0,1fr)]"
+        className={cn(
+          "grid min-w-0 flex-1 grid-cols-1",
+          !isHomepage && "2xl:grid-cols-[304px_minmax(0,1fr)]",
+        )}
       >
         <Sheet
           modal={false}
@@ -290,12 +293,14 @@ const DocLayout = () => {
           </SheetContent>
         </Sheet>
 
-        <aside
-          aria-label="Documentation navigation"
-          className="sticky top-16 hidden h-[calc(100vh-4rem-1px)] min-w-0 self-start flex-col overflow-hidden border-r border-sidebar-border bg-sidebar 2xl:flex"
-        >
-          <Navigation currentPath={currentPath} />
-        </aside>
+        {!isHomepage && (
+          <aside
+            aria-label="Documentation navigation"
+            className="sticky top-16 hidden h-[calc(100vh-4rem-1px)] min-w-0 self-start flex-col overflow-hidden border-r border-sidebar-border bg-sidebar 2xl:flex"
+          >
+            <Navigation currentPath={currentPath} />
+          </aside>
+        )}
 
         <div
           className={cn(
@@ -314,7 +319,7 @@ const DocLayout = () => {
                 "docs-content mx-auto w-full min-w-0 px-4 pb-16 pt-3 sm:px-6 lg:px-10 xl:px-12",
                 isWideCanvas && "docs-content-wide",
                 isHomepage &&
-                  "!max-w-[86rem] !pb-0 xl:!px-8 2xl:!max-w-[96rem]",
+                  "!mx-auto !max-w-[86rem] !pb-0 xl:!px-8 2xl:!max-w-[96rem]",
                 !isWideCanvas && !hasPageTools && "docs-content-no-tools",
               )}
             >
