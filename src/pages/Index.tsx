@@ -60,32 +60,67 @@ interface IntegrationPath {
   };
 }
 
+type SyntaxTokenType =
+  | "boolean"
+  | "class-name"
+  | "constant"
+  | "function"
+  | "keyword"
+  | "number"
+  | "operator"
+  | "property"
+  | "punctuation"
+  | "string"
+  | "tag";
+
+const SyntaxToken = ({
+  type,
+  children,
+}: {
+  type: SyntaxTokenType;
+  children: React.ReactNode;
+}) => <span className={`token ${type}`}>{children}</span>;
+
 const gtmTrackingCodeLines = [
   <span key="gtm-guide-1">
-    dataLayer.<span className="text-primary">push</span>({`{`}
+    <SyntaxToken type="class-name">dataLayer</SyntaxToken>
+    <SyntaxToken type="punctuation">.</SyntaxToken>
+    <SyntaxToken type="function">push</SyntaxToken>
+    <SyntaxToken type="punctuation">({`{`}</SyntaxToken>
   </span>,
-  <span key="gtm-guide-2" className="pl-4 text-foreground">
-    event: &quot;purchase&quot;,
+  <span key="gtm-guide-2" className="pl-4">
+    <SyntaxToken type="property">event</SyntaxToken>
+    <SyntaxToken type="operator">: </SyntaxToken>
+    <SyntaxToken type="string">&quot;purchase&quot;</SyntaxToken>
+    <SyntaxToken type="punctuation">,</SyntaxToken>
   </span>,
-  <span key="gtm-guide-3" className="pl-4 text-foreground">
-    ecommerce: {`{`}
+  <span key="gtm-guide-3" className="pl-4">
+    <SyntaxToken type="property">ecommerce</SyntaxToken>
+    <SyntaxToken type="operator">: </SyntaxToken>
+    <SyntaxToken type="punctuation">{`{`}</SyntaxToken>
   </span>,
-  <span key="gtm-guide-4" className="pl-8 text-foreground">
-    value,
+  <span key="gtm-guide-4" className="pl-8">
+    <SyntaxToken type="property">value</SyntaxToken>
+    <SyntaxToken type="punctuation">,</SyntaxToken>
   </span>,
-  <span key="gtm-guide-5" className="pl-8 text-foreground">
-    currency,
+  <span key="gtm-guide-5" className="pl-8">
+    <SyntaxToken type="property">currency</SyntaxToken>
+    <SyntaxToken type="punctuation">,</SyntaxToken>
   </span>,
-  <span key="gtm-guide-6" className="pl-8 text-foreground">
-    transaction_id,
+  <span key="gtm-guide-6" className="pl-8">
+    <SyntaxToken type="property">transaction_id</SyntaxToken>
+    <SyntaxToken type="punctuation">,</SyntaxToken>
   </span>,
-  <span key="gtm-guide-7" className="pl-8 text-foreground">
-    items,
+  <span key="gtm-guide-7" className="pl-8">
+    <SyntaxToken type="property">items</SyntaxToken>
+    <SyntaxToken type="punctuation">,</SyntaxToken>
   </span>,
-  <span key="gtm-guide-8" className="pl-4 text-foreground">
-    {`},`}
+  <span key="gtm-guide-8" className="pl-4">
+    <SyntaxToken type="punctuation">{`},`}</SyntaxToken>
   </span>,
-  <span key="gtm-guide-9">{`});`}</span>,
+  <span key="gtm-guide-9">
+    <SyntaxToken type="punctuation">{`});`}</SyntaxToken>
+  </span>,
 ];
 
 const integrationPaths: IntegrationPath[] = [
@@ -100,19 +135,28 @@ const integrationPaths: IntegrationPath[] = [
     codeLabel: "JavaScript",
     codeLines: [
       <span key="sdk-1">
-        <span className="text-primary">showpass</span>.tickets
+        <SyntaxToken type="class-name">showpass</SyntaxToken>
+        <SyntaxToken type="punctuation">.</SyntaxToken>
+        <SyntaxToken type="property">tickets</SyntaxToken>
       </span>,
-      <span key="sdk-2" className="pl-4 text-foreground">
-        .eventPurchaseWidget(
+      <span key="sdk-2" className="pl-4">
+        <SyntaxToken type="punctuation">.</SyntaxToken>
+        <SyntaxToken type="function">eventPurchaseWidget</SyntaxToken>
+        <SyntaxToken type="punctuation">(</SyntaxToken>
       </span>,
-      <span key="sdk-3" className="pl-8 text-foreground">
-        &quot;my-event-slug&quot;,
+      <span key="sdk-3" className="pl-8">
+        <SyntaxToken type="string">&quot;my-event-slug&quot;</SyntaxToken>
+        <SyntaxToken type="punctuation">,</SyntaxToken>
       </span>,
-      <span key="sdk-4" className="pl-8 text-foreground">
-        {`{ "keep-shopping": true }`}
+      <span key="sdk-4" className="pl-8">
+        <SyntaxToken type="punctuation">{`{ `}</SyntaxToken>
+        <SyntaxToken type="property">&quot;keep-shopping&quot;</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="boolean">true</SyntaxToken>
+        <SyntaxToken type="punctuation">{` }`}</SyntaxToken>
       </span>,
       <span key="sdk-5" className="pl-4">
-        );
+        <SyntaxToken type="punctuation">);</SyntaxToken>
       </span>,
     ],
     action: "Read the widget guide",
@@ -136,13 +180,20 @@ const integrationPaths: IntegrationPath[] = [
     codeLabel: "Request",
     codeLines: [
       <span key="public-1">
-        <span className="text-primary">GET</span> /api/public/discovery/
+        <SyntaxToken type="keyword">GET</SyntaxToken>{" "}
+        <SyntaxToken type="string">/api/public/discovery/</SyntaxToken>
       </span>,
-      <span key="public-2" className="pl-4 text-foreground">
-        Host: www.showpass.com
+      <span key="public-2" className="pl-4">
+        <SyntaxToken type="property">Host</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="string">www.showpass.com</SyntaxToken>
       </span>,
-      <span key="public-3" className="pl-4 text-foreground">
-        Query: page_size=3
+      <span key="public-3" className="pl-4">
+        <SyntaxToken type="property">Query</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="property">page_size</SyntaxToken>
+        <SyntaxToken type="operator">=</SyntaxToken>
+        <SyntaxToken type="number">3</SyntaxToken>
       </span>,
     ],
     action: "Read the Discovery API",
@@ -161,16 +212,25 @@ const integrationPaths: IntegrationPath[] = [
     codeLabel: "HTTP",
     codeLines: [
       <span key="organizer-1">
-        <span className="text-primary">GET</span> /api/venue/{`{venue_id}`}/
+        <SyntaxToken type="keyword">GET</SyntaxToken>{" "}
+        <SyntaxToken type="string">/api/venue/</SyntaxToken>
+        <SyntaxToken type="constant">{`{venue_id}`}</SyntaxToken>
+        <SyntaxToken type="string">/</SyntaxToken>
       </span>,
-      <span key="organizer-2" className="pl-4 text-foreground">
-        tickets/items/scan/
+      <span key="organizer-2" className="pl-4">
+        <SyntaxToken type="string">tickets/items/scan/</SyntaxToken>
       </span>,
-      <span key="organizer-3" className="pl-4 text-foreground">
-        ?code={`{ticket_code}`}
+      <span key="organizer-3" className="pl-4">
+        <SyntaxToken type="operator">?</SyntaxToken>
+        <SyntaxToken type="property">code</SyntaxToken>
+        <SyntaxToken type="operator">=</SyntaxToken>
+        <SyntaxToken type="constant">{`{ticket_code}`}</SyntaxToken>
       </span>,
-      <span key="organizer-4" className="pt-2 text-muted-foreground">
-        Authorization: Token YOUR_API_TOKEN
+      <span key="organizer-4" className="pt-2">
+        <SyntaxToken type="property">Authorization</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="keyword">Token</SyntaxToken>{" "}
+        <SyntaxToken type="constant">YOUR_API_TOKEN</SyntaxToken>
       </span>,
     ],
     action: "Read the Organizer API",
@@ -187,17 +247,22 @@ const integrationPaths: IntegrationPath[] = [
     facts: ["Event publishing", "Purchase widgets", "Custom templates"],
     codeLabel: "Shortcode",
     codeLines: [
-      <span key="wordpress-1" className="text-foreground">
-        [showpass_events
+      <span key="wordpress-1">
+        <SyntaxToken type="punctuation">[</SyntaxToken>
+        <SyntaxToken type="tag">showpass_events</SyntaxToken>
       </span>,
-      <span key="wordpress-2" className="pl-4 text-foreground">
-        type=&quot;list&quot;
+      <span key="wordpress-2" className="pl-4">
+        <SyntaxToken type="property">type</SyntaxToken>
+        <SyntaxToken type="operator">=</SyntaxToken>
+        <SyntaxToken type="string">&quot;list&quot;</SyntaxToken>
       </span>,
-      <span key="wordpress-3" className="pl-4 text-foreground">
-        page_size=&quot;5&quot;
+      <span key="wordpress-3" className="pl-4">
+        <SyntaxToken type="property">page_size</SyntaxToken>
+        <SyntaxToken type="operator">=</SyntaxToken>
+        <SyntaxToken type="string">&quot;5&quot;</SyntaxToken>
       </span>,
-      <span key="wordpress-4" className="text-foreground">
-        ]
+      <span key="wordpress-4">
+        <SyntaxToken type="punctuation">]</SyntaxToken>
       </span>,
     ],
     action: "Set up the WordPress plugin",
@@ -234,14 +299,22 @@ const integrationPaths: IntegrationPath[] = [
         badge: "Pixel + CAPI",
         codeLabel: "Organizer settings",
         codeLines: [
-          <span key="meta-guide-1" className="text-foreground">
-            Pixel ID: 123456789012345
+          <span key="meta-guide-1">
+            <SyntaxToken type="property">Pixel ID</SyntaxToken>
+            <SyntaxToken type="operator">: </SyntaxToken>
+            <SyntaxToken type="number">123456789012345</SyntaxToken>
           </span>,
-          <span key="meta-guide-2" className="text-foreground">
-            Conversions API: enabled
+          <span key="meta-guide-2">
+            <SyntaxToken type="property">Conversions API</SyntaxToken>
+            <SyntaxToken type="operator">: </SyntaxToken>
+            <SyntaxToken type="boolean">enabled</SyntaxToken>
           </span>,
-          <span key="meta-guide-3" className="text-foreground">
-            Events: AddToCart, Purchase
+          <span key="meta-guide-3">
+            <SyntaxToken type="property">Events</SyntaxToken>
+            <SyntaxToken type="operator">: </SyntaxToken>
+            <SyntaxToken type="constant">AddToCart</SyntaxToken>
+            <SyntaxToken type="punctuation">, </SyntaxToken>
+            <SyntaxToken type="constant">Purchase</SyntaxToken>
           </span>,
         ],
         action: "Open the Meta guide",
@@ -261,13 +334,18 @@ const integrationPaths: IntegrationPath[] = [
     codeLabel: "Delivery",
     codeLines: [
       <span key="webhooks-1">
-        <span className="text-primary">POST</span> /api/showpass-webhook
+        <SyntaxToken type="keyword">POST</SyntaxToken>{" "}
+        <SyntaxToken type="string">/api/showpass-webhook</SyntaxToken>
       </span>,
-      <span key="webhooks-2" className="text-foreground">
-        X-SHOWPASS-SIGNATURE: ...
+      <span key="webhooks-2">
+        <SyntaxToken type="property">X-SHOWPASS-SIGNATURE</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="constant">...</SyntaxToken>
       </span>,
-      <span key="webhooks-3" className="text-foreground">
-        event_type: invoice.purchase
+      <span key="webhooks-3">
+        <SyntaxToken type="property">event_type</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="string">invoice.purchase</SyntaxToken>
       </span>,
     ],
     action: "Configure webhooks",
@@ -284,14 +362,20 @@ const integrationPaths: IntegrationPath[] = [
     facts: ["PCI DSS Level 1", "TX-RAMP", "GDPR-aligned"],
     codeLabel: "Highlights",
     codeLines: [
-      <span key="security-1" className="text-foreground">
-        Payments: tokenized
+      <span key="security-1">
+        <SyntaxToken type="property">Payments</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="constant">tokenized</SyntaxToken>
       </span>,
-      <span key="security-2" className="text-foreground">
-        Access: MFA + role based
+      <span key="security-2">
+        <SyntaxToken type="property">Access</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="constant">MFA + role based</SyntaxToken>
       </span>,
-      <span key="security-3" className="text-foreground">
-        Transport: end-to-end TLS
+      <span key="security-3">
+        <SyntaxToken type="property">Transport</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="constant">end-to-end TLS</SyntaxToken>
       </span>,
     ],
     action: "Review security & compliance",
@@ -355,10 +439,10 @@ const Index = () => {
             Choose an integration
           </h2>
 
-          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_hsl(var(--foreground)/0.04)] lg:grid lg:grid-cols-[21rem_minmax(0,1fr)]">
+          <div className="overflow-hidden rounded-2xl border border-border bg-card shadow-[0_1px_2px_hsl(var(--foreground)/0.04)] xl:grid xl:grid-cols-[21rem_minmax(0,1fr)]">
             <label
               htmlFor="integration-select"
-              className="block border-b border-border bg-muted/[0.08] p-3 lg:hidden"
+              className="block border-b border-border bg-muted/[0.08] p-3 xl:hidden"
             >
               <span className="mb-2 block px-1 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
                 Capability
@@ -387,57 +471,61 @@ const Index = () => {
 
             <div
               aria-label="Integration options"
-              className="hidden gap-1 border-r border-border bg-muted/[0.08] p-2 lg:flex lg:flex-col lg:justify-center"
+              className="hidden border-r border-border bg-muted/[0.14] xl:flex xl:flex-col"
             >
-              {integrationPaths.map(({ id, label, outcome, icon: Icon }) => {
-                const isSelected = id === selectedId;
+              <div className="flex w-full flex-1 flex-col divide-y divide-border/70 bg-background/25">
+                {integrationPaths.map(({ id, label, outcome, icon: Icon }) => {
+                  const isSelected = id === selectedId;
 
-                return (
-                  <button
-                    key={id}
-                    type="button"
-                    aria-pressed={isSelected}
-                    onClick={() => setSelectedId(id)}
-                    className={`group/option flex min-h-[4.75rem] w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                      isSelected
-                        ? "bg-background text-foreground shadow-[inset_0_0_0_1px_hsl(var(--border))]"
-                        : "text-muted-foreground hover:bg-muted/20 hover:text-foreground"
-                    }`}
-                  >
-                    <span
-                      className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${
+                  return (
+                    <button
+                      key={id}
+                      type="button"
+                      aria-pressed={isSelected}
+                      onClick={() => setSelectedId(id)}
+                      className={`group/option relative flex min-h-[4.5rem] w-full grow basis-0 cursor-pointer items-center gap-3 px-4 py-2.5 text-left focus-visible:z-10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring ${
                         isSelected
-                          ? "border-primary/25 bg-primary/[0.08] text-primary"
-                          : "border-border bg-background/30 text-muted-foreground group-hover/option:text-primary"
+                          ? "bg-primary/[0.055] text-primary"
+                          : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                       }`}
                     >
-                      <Icon
-                        className="h-[1.125rem] w-[1.125rem]"
+                      <span
+                        className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border ${
+                          isSelected
+                            ? "border-primary/25 bg-primary/[0.08] text-primary"
+                            : "border-border bg-background/35 text-muted-foreground group-hover/option:text-primary"
+                        }`}
+                      >
+                        <Icon
+                          className="h-[1.125rem] w-[1.125rem]"
+                          aria-hidden="true"
+                        />
+                      </span>
+                      <span className="min-w-0">
+                        <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.14em]">
+                          {label}
+                        </span>
+                        <span className="mt-1 block text-sm font-semibold text-foreground">
+                          {outcome}
+                        </span>
+                      </span>
+                      <ArrowRight
+                        className={`ml-auto h-4 w-4 shrink-0 ${
+                          isSelected
+                            ? "text-primary"
+                            : "text-muted-foreground group-hover/option:text-foreground"
+                        }`}
                         aria-hidden="true"
                       />
-                    </span>
-                    <span className="min-w-0">
-                      <span className="block text-[0.625rem] font-semibold uppercase tracking-[0.14em]">
-                        {label}
-                      </span>
-                      <span className="mt-1 block text-sm font-semibold text-foreground">
-                        {outcome}
-                      </span>
-                    </span>
-                    <ArrowRight
-                      className={`ml-auto hidden h-4 w-4 shrink-0 lg:block ${
-                        isSelected ? "text-primary" : "text-muted-foreground"
-                      }`}
-                      aria-hidden="true"
-                    />
-                  </button>
-                );
-              })}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
 
             <div
               aria-live="polite"
-              className="grid min-w-0 lg:min-h-[clamp(37rem,68vh,42rem)] xl:grid-cols-[minmax(0,1fr)_minmax(23rem,0.82fr)]"
+              className="grid min-w-0 xl:min-h-[clamp(35rem,58vh,38rem)] xl:grid-cols-[minmax(0,1fr)_minmax(23rem,0.82fr)]"
             >
               <div className="flex min-w-0 flex-col justify-center px-5 py-8 sm:px-8 sm:py-10 xl:px-12 2xl:px-16">
                 <div className="mx-auto flex w-full max-w-[35rem] flex-col">
@@ -535,10 +623,10 @@ const Index = () => {
                         {activeBadge}
                       </span>
                     </div>
-                    <div className="overflow-x-auto px-4 py-4 font-mono text-[0.75rem] leading-6 text-sidebar-foreground">
-                      <div className="min-w-max">
+                    <pre className="m-0 overflow-x-auto px-4 py-4 font-mono text-[0.75rem] leading-6 text-sidebar-foreground">
+                      <code className="block min-w-max">
                         {activeCodeLines.map((line, index) => (
-                          <div
+                          <span
                             key={index}
                             className="flex gap-3 whitespace-nowrap"
                           >
@@ -546,10 +634,10 @@ const Index = () => {
                               {index + 1}
                             </span>
                             {line}
-                          </div>
+                          </span>
                         ))}
-                      </div>
-                    </div>
+                      </code>
+                    </pre>
                   </div>
 
                   {selectedPath.agentGuide && (
