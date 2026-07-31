@@ -822,14 +822,47 @@ brew install showpass/tap/showpass
 Homebrew verifies the release checksum and keeps the CLI upgradeable with
 \`brew upgrade showpass\`.
 
+### Nix
+
+Install the CLI and its project templates from the public release flake:
+
+\`\`\`bash
+nix profile install github:showpass/cli-releases#showpass
+\`\`\`
+
+### Debian / Ubuntu
+
+Install the native package matching the machine's architecture:
+
+\`\`\`bash
+arch="$(dpkg --print-architecture)"
+curl -fLO "https://github.com/showpass/cli-releases/releases/download/linux-v2.1.0-r1/showpass_2.1.0-1_\${arch}.deb"
+sudo apt install "./showpass_2.1.0-1_\${arch}.deb"
+\`\`\`
+
+The release supports the \`amd64\` and \`arm64\` Debian architectures.
+
+### Fedora / RHEL
+
+DNF can install the native package directly from the immutable release:
+
+\`\`\`bash
+arch="$(rpm --eval '%{_arch}')"
+sudo dnf install "https://github.com/showpass/cli-releases/releases/download/linux-v2.1.0-r1/showpass-2.1.0-1.\${arch}.rpm"
+\`\`\`
+
+The release supports the \`x86_64\` and \`aarch64\` RPM architectures. Package
+checksums are available with the
+[native Linux release](https://github.com/showpass/cli-releases/releases/tag/linux-v2.1.0-r1).
+
 ### Shell installer
 
 \`\`\`bash
 curl -fsSL "https://www.showpass.com/install.sh" | bash
 \`\`\`
 
-Both installation methods support macOS and Linux on Intel/AMD and ARM64
-systems. Verify the installation with:
+The currently published packages support macOS and Linux on Intel/AMD and
+ARM64 systems. Verify the installation with:
 
 \`\`\`bash
 showpass --version
@@ -929,6 +962,24 @@ For a Homebrew installation:
 
 \`\`\`bash
 brew uninstall showpass
+\`\`\`
+
+For a Nix profile installation:
+
+\`\`\`bash
+nix profile remove showpass
+\`\`\`
+
+For a Debian / Ubuntu installation:
+
+\`\`\`bash
+sudo apt remove showpass
+\`\`\`
+
+For a Fedora / RHEL installation:
+
+\`\`\`bash
+sudo dnf remove showpass
 \`\`\`
 
 For a shell-installer installation:

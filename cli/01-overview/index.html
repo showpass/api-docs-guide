@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-Dff7GS9H.js"></script>
+    <script type="module" crossorigin src="/assets/index-BHm_-Jyf.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-vtmNqfzm.css">
   </head>
 
@@ -96,11 +96,30 @@
 </code></pre>
 <p>Homebrew verifies the release checksum and keeps the CLI upgradeable with
 <code>brew upgrade showpass</code>.</p>
+<h3>Nix</h3>
+<p>Install the CLI and its project templates from the public release flake:</p>
+<pre><code class="language-bash">nix profile install github:showpass/cli-releases#showpass
+</code></pre>
+<h3>Debian / Ubuntu</h3>
+<p>Install the native package matching the machine&#39;s architecture:</p>
+<pre><code class="language-bash">arch=&quot;$(dpkg --print-architecture)&quot;
+curl -fLO &quot;https://github.com/showpass/cli-releases/releases/download/linux-v2.1.0-r1/showpass_2.1.0-1_${arch}.deb&quot;
+sudo apt install &quot;./showpass_2.1.0-1_${arch}.deb&quot;
+</code></pre>
+<p>The release supports the <code>amd64</code> and <code>arm64</code> Debian architectures.</p>
+<h3>Fedora / RHEL</h3>
+<p>DNF can install the native package directly from the immutable release:</p>
+<pre><code class="language-bash">arch=&quot;$(rpm --eval &#39;%{_arch}&#39;)&quot;
+sudo dnf install &quot;https://github.com/showpass/cli-releases/releases/download/linux-v2.1.0-r1/showpass-2.1.0-1.${arch}.rpm&quot;
+</code></pre>
+<p>The release supports the <code>x86_64</code> and <code>aarch64</code> RPM architectures. Package
+checksums are available with the
+<a href="https://github.com/showpass/cli-releases/releases/tag/linux-v2.1.0-r1">native Linux release</a>.</p>
 <h3>Shell installer</h3>
 <pre><code class="language-bash">curl -fsSL &quot;https://www.showpass.com/install.sh&quot; | bash
 </code></pre>
-<p>Both installation methods support macOS and Linux on Intel/AMD and ARM64
-systems. Verify the installation with:</p>
+<p>The currently published packages support macOS and Linux on Intel/AMD and
+ARM64 systems. Verify the installation with:</p>
 <pre><code class="language-bash">showpass --version
 </code></pre>
 <h3>Add to PATH</h3>
@@ -168,6 +187,15 @@ available yet because its backend deployment endpoint has not been released.</p>
 <h2>Uninstall</h2>
 <p>For a Homebrew installation:</p>
 <pre><code class="language-bash">brew uninstall showpass
+</code></pre>
+<p>For a Nix profile installation:</p>
+<pre><code class="language-bash">nix profile remove showpass
+</code></pre>
+<p>For a Debian / Ubuntu installation:</p>
+<pre><code class="language-bash">sudo apt remove showpass
+</code></pre>
+<p>For a Fedora / RHEL installation:</p>
+<pre><code class="language-bash">sudo dnf remove showpass
 </code></pre>
 <p>For a shell-installer installation:</p>
 <pre><code class="language-bash">rm ~/.local/bin/showpass
