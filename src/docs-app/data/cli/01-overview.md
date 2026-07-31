@@ -4,12 +4,25 @@ Build and manage event websites that connect directly to your Showpass venue.
 
 ## Install
 
+### Homebrew
+
+Install the versioned CLI release and its project templates on macOS or Linux:
+
+```bash
+brew install showpass/tap/showpass
+```
+
+Homebrew verifies the release checksum and keeps the CLI upgradeable with
+`brew upgrade showpass`.
+
+### Shell installer
+
 ```bash
 curl -fsSL "https://www.showpass.com/install.sh" | bash
 ```
 
-The installer supports macOS and Linux on Intel/AMD and ARM64 systems. Verify
-the installation with:
+Both installation methods support macOS and Linux on Intel/AMD and ARM64
+systems. Verify the installation with:
 
 ```bash
 showpass --version
@@ -105,6 +118,14 @@ available yet because its backend deployment endpoint has not been released.
 
 ## Uninstall
 
+For a Homebrew installation:
+
+```bash
+brew uninstall showpass
+```
+
+For a shell-installer installation:
+
 ```bash
 rm ~/.local/bin/showpass
 rm -rf ~/.local/share/showpass
@@ -117,3 +138,4 @@ installed project templates.
 
 - [Commands reference](/cli/02-commands)
 - [Private Organizer API overview](/api/10-private-api-overview)
+- [Versioned CLI releases](https://github.com/showpass/cli-releases/releases)
