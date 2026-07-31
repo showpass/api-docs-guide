@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-D4jP3BmI.js"></script>
+    <script type="module" crossorigin src="/assets/index-Dff7GS9H.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-vtmNqfzm.css">
   </head>
 
@@ -90,10 +90,17 @@
   <article><h1>Showpass CLI</h1>
 <p>Build and manage event websites that connect directly to your Showpass venue.</p>
 <h2>Install</h2>
+<h3>Homebrew</h3>
+<p>Install the versioned CLI release and its project templates on macOS or Linux:</p>
+<pre><code class="language-bash">brew install showpass/tap/showpass
+</code></pre>
+<p>Homebrew verifies the release checksum and keeps the CLI upgradeable with
+<code>brew upgrade showpass</code>.</p>
+<h3>Shell installer</h3>
 <pre><code class="language-bash">curl -fsSL &quot;https://www.showpass.com/install.sh&quot; | bash
 </code></pre>
-<p>The installer supports macOS and Linux on Intel/AMD and ARM64 systems. Verify
-the installation with:</p>
+<p>Both installation methods support macOS and Linux on Intel/AMD and ARM64
+systems. Verify the installation with:</p>
 <pre><code class="language-bash">showpass --version
 </code></pre>
 <h3>Add to PATH</h3>
@@ -159,6 +166,10 @@ or <code>showpass logout</code> removes the obsolete JWT fields.</p>
 <p>The CLI can create and build sites locally. Showpass-hosted deployment is not
 available yet because its backend deployment endpoint has not been released.</p>
 <h2>Uninstall</h2>
+<p>For a Homebrew installation:</p>
+<pre><code class="language-bash">brew uninstall showpass
+</code></pre>
+<p>For a shell-installer installation:</p>
 <pre><code class="language-bash">rm ~/.local/bin/showpass
 rm -rf ~/.local/share/showpass
 </code></pre>
@@ -168,6 +179,7 @@ installed project templates.</p>
 <ul>
 <li><a href="/cli/02-commands">Commands reference</a></li>
 <li><a href="/api/10-private-api-overview">Private Organizer API overview</a></li>
+<li><a href="https://github.com/showpass/cli-releases/releases">Versioned CLI releases</a></li>
 </ul>
 </article>
 </div></div>
