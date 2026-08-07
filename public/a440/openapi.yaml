@@ -1,0 +1,522 @@
+openapi: 3.0.3
+info:
+  title: A440 + Showpass account integration API
+  version: 1.0.0
+  contact:
+    name: Showpass integrations team
+servers:
+  - url: https://demo.showpass.com
+    description: Demo
+tags:
+  - name: Authentication
+  - name: Public catalog
+  - name: Historical account
+  - name: Memberships
+  - name: Order actions
+security: []
+paths:
+  /api/auth/login/:
+    post:
+      tags: [Authentication]
+      operationId: login
+      summary: Authenticate a Showpass patron
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated patron and tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/auth/registration/:
+    post:
+      tags: [Authentication]
+      operationId: register
+      summary: Register a Showpass patron account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '200':
+          description: Registered patron and tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/auth/jwt/refresh/:
+    post:
+      tags: [Authentication]
+      operationId: refreshJwt
+      summary: Refresh an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Refreshed access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/auth/profile/:
+    get:
+      tags: [Authentication]
+      operationId: getProfile
+      summary: Get the authenticated patron profile
+      security:
+        - JwtAuth: []
+      responses:
+        '200':
+          description: Patron profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/public/events/:
+    get:
+      tags: [Public catalog]
+      operationId: listPublicEvents
+      summary: List public events
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: q
+          in: query
+          schema: { type: string }
+        - name: starts_on__gte
+          in: query
+          schema: { type: string, format: date-time }
+        - name: ends_on__lte
+          in: query
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: Public event page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEvents'
+
+  /api/public/events/{slugOrId}/:
+    get:
+      tags: [Public catalog]
+      operationId: getPublicEvent
+      summary: Get one public event
+      parameters:
+        - $ref: '#/components/parameters/SlugOrId'
+      responses:
+        '200':
+          description: Public event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/user/financials/invoices/v2/:
+    get:
+      tags: [Historical account]
+      operationId: listPatronOrders
+      summary: List orders for the authenticated patron
+      description: >-
+        This is an account-scoped list and does not accept an event_id filter.
+        Follow the next link for every page, then retrieve each transaction
+        detail and filter its ticket_items.event or invoice_items.event.id.
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: is_group_sale__isnull
+          in: query
+          description: Use true to omit group-sale invoices from the list.
+          schema: { type: boolean }
+        - name: type__in
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Paginated patron orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInvoices'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/user/financials/invoices/{transactionId}/transaction/:
+    get:
+      tags: [Historical account]
+      operationId: getPatronOrder
+      summary: Get one patron order by transaction ID
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Order detail with event and ticket information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/user/tickets/items/:
+    get:
+      tags: [Historical account]
+      operationId: listPatronTickets
+      summary: List tickets owned by the authenticated patron
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID.
+          schema: { type: integer }
+        - name: status
+          in: query
+          schema: { type: string }
+      responses:
+        '200':
+          description: Paginated ticket items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTickets'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/user/tickets/events/{eventId}/:
+    get:
+      tags: [Historical account]
+      operationId: getPatronEventSummary
+      summary: Get an event summary for the authenticated patron
+      description: Returns the event and the patron's ticket count for it; use order detail reads to identify orders.
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Event summary with the patron ticket count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatronEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/user/memberships/member-activity-histories/:
+    get:
+      tags: [Memberships]
+      operationId: listMembershipActivity
+      summary: List authenticated patron membership activity
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated membership activity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMembershipActivity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/user/financials/invoices/{invoiceId}/get-return-amounts/:
+    get:
+      tags: [Order actions]
+      operationId: getReturnAmounts
+      summary: Calculate return amounts for selected tickets
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+        - name: tickets
+          in: query
+          description: Comma-separated ticket item IDs.
+          schema: { type: string }
+        - name: is_resale
+          in: query
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Return calculation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnAmounts'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/user/financials/invoices/{invoiceId}/return/:
+    post:
+      tags: [Order actions]
+      operationId: returnTickets
+      summary: Return selected tickets from an order
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [tickets]
+              properties:
+                tickets:
+                  type: array
+                  items: { type: integer }
+      responses:
+        '200': { description: Return accepted }
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  securitySchemes:
+    JwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Send `JWT <access-token>`.'
+  parameters:
+    Page:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    PageSize:
+      name: page_size
+      in: query
+      schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    SlugOrId:
+      name: slugOrId
+      in: path
+      required: true
+      schema: { type: string }
+    InvoiceId:
+      name: invoiceId
+      in: path
+      required: true
+      schema: { type: integer }
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    Unauthorized:
+      description: Authentication required or invalid
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+    NotFound:
+      description: Resource not found or outside the authenticated patron scope
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
+  schemas:
+    Error:
+      type: object
+      additionalProperties: true
+      properties:
+        detail: { type: string }
+        field: { type: string, nullable: true }
+        error_list: { type: array, items: { type: string } }
+        error_code: { type: object, additionalProperties: true }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, format: password }
+        remember: { type: boolean, default: true }
+        otp_token: { type: string, nullable: true }
+        captcha_token: { type: string, nullable: true }
+    RegistrationRequest:
+      type: object
+      required: [email, first_name, last_name, password1, password2, remember]
+      properties:
+        email: { type: string, format: email }
+        first_name: { type: string }
+        last_name: { type: string }
+        password1: { type: string, format: password }
+        password2: { type: string, format: password }
+        remember: { type: boolean, default: true }
+        captcha_token: { type: string, nullable: true }
+    LoginResponse:
+      type: object
+      properties:
+        user: { $ref: '#/components/schemas/User' }
+        token: { type: string }
+        jwt_token: { type: string }
+        refresh: { type: string, nullable: true }
+    RefreshRequest:
+      type: object
+      required: [refresh]
+      properties:
+        refresh: { type: string }
+    JwtResponse:
+      type: object
+      properties:
+        access: { type: string }
+        refresh: { type: string, nullable: true }
+    User:
+      type: object
+      properties:
+        pk: { type: integer }
+        username: { type: string }
+        email: { type: string, format: email }
+        first_name: { type: string }
+        last_name: { type: string }
+    Event:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        slug: { type: string }
+        name: { type: string }
+        starts_on: { type: string, format: date-time }
+        ends_on: { type: string, format: date-time }
+        timezone: { type: string }
+        ticket_types: { type: array, items: { type: object, additionalProperties: true } }
+    PatronEvent:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            user_ticket_count: { type: integer, nullable: true }
+    PaginatedEvents:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/Event' } }
+    InvoiceSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        transaction_id: { type: string }
+        created: { type: string, format: date-time }
+        type: { type: integer }
+        final_amount: { type: string }
+        amount_refunded: { type: string }
+        is_refunded: { type: boolean }
+        ticket_items: { type: array, items: { type: object, additionalProperties: true } }
+        invoice_items: { type: array, items: { type: object, additionalProperties: true } }
+    PaginatedInvoices:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/InvoiceSummary' } }
+    InvoiceItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        invoice: { type: integer }
+        description: { type: string }
+        quantity: { type: integer }
+        price: { type: string }
+        event: { $ref: '#/components/schemas/Event' }
+    TicketItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        event: { type: integer }
+        invoice_item_id: { type: integer }
+        status: { type: integer }
+        is_activated: { type: boolean }
+        name_on_ticket: { type: string, nullable: true }
+        seat: { type: object, nullable: true, additionalProperties: true }
+    InvoiceDetail:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        transaction_id: { type: string }
+        created: { type: string, format: date-time }
+        final_amount: { type: string }
+        amount_refunded: { type: string }
+        is_refunded: { type: boolean }
+        venue: { type: object, additionalProperties: true }
+        invoice_items: { type: array, items: { $ref: '#/components/schemas/InvoiceItem' } }
+        ticket_items: { type: array, items: { $ref: '#/components/schemas/TicketItem' } }
+        memberships: { type: array, items: { type: object, additionalProperties: true } }
+    PaginatedTickets:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/TicketItem' } }
+    MembershipActivity:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        member: { type: integer }
+        created: { type: string, format: date-time }
+    PaginatedMembershipActivity:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/MembershipActivity' } }
+    ReturnAmounts:
+      type: object
+      properties:
+        tax: { type: number }
+        service_charges: { type: number }
+        amount_refunded: { type: number }
+        refund_amount: { type: number }
+        items_total_amount: { type: number }
