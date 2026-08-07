@@ -7,12 +7,37 @@ info:
 servers:
   - url: https://demo.showpass.com
     description: Demo
+externalDocs:
+  description: Showpass embedded purchase SDK documentation
+  url: https://dev.showpass.com/sdk/02-ticket-purchase-widget
 tags:
   - name: Authentication
   - name: Public catalog
   - name: Historical account
   - name: Memberships
   - name: Order actions
+x-embedded-purchase:
+  description: Use the hosted Showpass SDK/widget for ticket selection, assigned seating, payment, and issuance.
+  sdk_example: 'showpass.tickets.eventPurchaseWidget("red-deer-event-slug");'
+  widget_urls:
+    - /widget/tickets/events/purchase/{event-slug}/
+    - /widget/tickets/events/calendar/{venue-id}/
+    - /widget/calendar/venue/{venue-id}/
+    - /widget/tickets/products/purchase/{product-id}/
+    - /widget/tickets/memberships/{membership-id}/
+x-webhook-integration:
+  description: A440 supplies an HTTPS receiver; the Red Deer Showpass venue configures supported purchase, refund, and void notifications.
+  requirements:
+    - Verify the webhook signature against the raw request body.
+    - Persist and deduplicate each delivery before acknowledging it.
+    - Reconcile with authenticated order and ticket reads after downtime.
+    - Do not use webhook delivery as a replacement for patron authentication or historical reads.
+x-recommended-flow:
+  - Discover the event with /api/public/events/.
+  - Open the hosted purchase widget through the Showpass SDK.
+  - Authenticate the patron with Showpass.
+  - Read invoices, transaction details, tickets, and membership data with the authenticated routes.
+  - Subscribe to venue-configured notifications and reconcile after any delivery gap.
 security: []
 paths:
   /api/auth/login/:
@@ -264,6 +289,95 @@ paths:
         '401':
           $ref: '#/components/responses/Unauthorized'
 
+  /api/user/memberships/members/:
+    get:
+      tags: [Memberships]
+      operationId: listPatronMemberships
+      summary: List memberships for the authenticated patron
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: status
+          in: query
+          schema: { type: string }
+        - name: membership_group
+          in: query
+          schema: { type: integer }
+        - name: membership_level
+          in: query
+          schema: { type: integer }
+      responses:
+        '200':
+          description: Paginated memberships
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMemberships'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /api/user/memberships/members/{memberId}/event-schedule/:
+    get:
+      tags: [Memberships]
+      operationId: getMembershipEventSchedule
+      summary: Get events and issued tickets for a membership
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: memberId
+          in: path
+          required: true
+          schema: { type: integer }
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: past_events
+          in: query
+          description: Set true to return past events instead of upcoming events.
+          schema: { type: boolean, default: false }
+      responses:
+        '200':
+          description: Paginated membership event schedule with ticket items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMembershipEvents'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/user/memberships/membership-benefit-accesses/:
+    get:
+      tags: [Memberships]
+      operationId: listMembershipBenefitAccess
+      summary: List membership benefits and event access
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: member
+          in: query
+          required: true
+          description: Membership member ID.
+          schema: { type: integer }
+        - name: unused
+          in: query
+          schema: { type: boolean }
+      responses:
+        '200':
+          description: Paginated membership benefit access records
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBenefitAccess'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
   /api/user/financials/invoices/{invoiceId}/get-return-amounts/:
     get:
       tags: [Order actions]
@@ -512,6 +626,59 @@ components:
         next: { type: string, nullable: true }
         previous: { type: string, nullable: true }
         results: { type: array, items: { $ref: '#/components/schemas/MembershipActivity' } }
+    Membership:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        status: { type: integer }
+        expiry_date: { type: string, format: date }
+        invoice_item_id: { type: integer, nullable: true }
+        membership_group: { type: object, additionalProperties: true }
+        membership_level: { type: object, additionalProperties: true }
+        digital_passes: { type: object, additionalProperties: true }
+    PaginatedMemberships:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/Membership' } }
+    MembershipEvent:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        starts_on: { type: string, format: date-time }
+        ends_on: { type: string, format: date-time }
+        ticket_items: { type: array, items: { $ref: '#/components/schemas/TicketItem' } }
+        is_itemized: { type: boolean }
+    PaginatedMembershipEvents:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/MembershipEvent' } }
+    BenefitAccess:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        scans_used: { type: integer }
+        scans_allowed: { type: integer, nullable: true }
+        related_events: { type: array, items: { type: integer } }
+        exclude_related_events: { type: boolean, nullable: true }
+        ticket_type: { type: object, additionalProperties: true }
+        membership_benefit: { type: object, additionalProperties: true }
+    PaginatedBenefitAccess:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results: { type: array, items: { $ref: '#/components/schemas/BenefitAccess' } }
     ReturnAmounts:
       type: object
       properties:
