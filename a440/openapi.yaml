@@ -13,9 +13,19 @@ externalDocs:
 tags:
   - name: Authentication
   - name: Public catalog
+  - name: Private organization API
   - name: Historical account
   - name: Memberships
   - name: Order actions
+x-organization-integration:
+  description: >-
+    Use the private venue API for an organization-owned A440 integration. The
+    organization API token is sent as `Authorization: Token <organization-api-key>`
+    and is scoped to the venue in the URL. This flow does not require a patron
+    JWT, patron login, or the Partner API.
+  base_url: https://demo.showpass.com
+  event_list: /api/venue/{venue_id}/events/
+  invoice_list: /api/venue/{venue_id}/financials/invoices/
 x-embedded-purchase:
   description: Use the hosted Showpass SDK/widget for ticket selection, assigned seating, payment, and issuance.
   sdk_example: 'showpass.tickets.eventPurchaseWidget("red-deer-event-slug");'
@@ -30,13 +40,13 @@ x-webhook-integration:
   requirements:
     - Verify the webhook signature against the raw request body.
     - Persist and deduplicate each delivery before acknowledging it.
-    - Reconcile with authenticated order and ticket reads after downtime.
-    - Do not use webhook delivery as a replacement for patron authentication or historical reads.
+    - Reconcile with private organization order and ticket reads after downtime.
+    - Do not use webhook delivery as a replacement for private historical order reads.
 x-recommended-flow:
-  - Discover the event with /api/public/events/.
-  - Open the hosted purchase widget through the Showpass SDK.
-  - Authenticate the patron with Showpass.
-  - Read invoices, transaction details, tickets, and membership data with the authenticated routes.
+  - Use the private organization event endpoint to find the Showpass event ID.
+  - Open the hosted purchase widget through the Showpass SDK when A440 needs to sell tickets.
+  - Read organization orders with the private invoice endpoint, filtered by email, user ID, or event ID.
+  - Follow `next` on every paginated response.
   - Subscribe to venue-configured notifications and reconcile after any delivery gap.
 security: []
 paths:
@@ -159,6 +169,138 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/events/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationEvents
+      summary: List events for the organization
+      description: >-
+        Lists events owned by the organization identified by `venueId`. Use the
+        numeric event `id` as A440's primary external event key; `slug` is an
+        additional URL-friendly reference. The organization token cannot access
+        another organization's events.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: id
+          in: query
+          description: Return one event by numeric Showpass event ID.
+          schema: { type: integer, minimum: 1 }
+        - name: id__in
+          in: query
+          description: Return events by comma-separated numeric IDs.
+          schema: { type: string }
+        - name: search
+          in: query
+          description: Search event names.
+          schema: { type: string }
+      responses:
+        '200':
+          description: Paginated organization event page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationEvents'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/events/{slugOrId}/:
+    get:
+      tags: [Private organization API]
+      operationId: getOrganizationEvent
+      summary: Get one organization event
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/SlugOrId'
+      responses:
+        '200':
+          description: Organization event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/financials/invoices/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationInvoices
+      summary: List organization orders
+      description: >-
+        Lists organization-scoped orders. This endpoint can be used to find all
+        organization orders for a patron by email without authenticating the
+        patron with Showpass. Historical, refunded, voided, and transferred
+        records are returned when they remain visible to the organization.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: email
+          in: query
+          description: Patron email associated with the order. URL-encode the value.
+          schema: { type: string, format: email }
+          example: patron%40example.com
+        - name: user_id
+          in: query
+          description: Showpass user ID associated with the order.
+          schema: { type: integer, minimum: 1 }
+        - name: invoice_items__event_for_filtering
+          in: query
+          description: Restrict results to orders containing this Showpass event ID.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Paginated organization invoice page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationInvoices'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/financials/invoices/{transactionId}/:
+    get:
+      tags: [Private organization API]
+      operationId: getOrganizationInvoice
+      summary: Get one organization order
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transactionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Organization order detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
         '404':
           $ref: '#/components/responses/NotFound'
 
@@ -438,7 +580,18 @@ components:
       in: header
       name: Authorization
       description: 'Send `JWT <access-token>`.'
+    OrganizationToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Send `Token <organization-api-key>`. This key is scoped to one organization.'
   parameters:
+    VenueId:
+      name: venueId
+      in: path
+      required: true
+      description: Numeric Showpass organization/venue ID.
+      schema: { type: integer, minimum: 1 }
     Page:
       name: page
       in: query
@@ -447,6 +600,15 @@ components:
       name: page_size
       in: query
       schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    VenuePage:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    VenuePageSize:
+      name: page_size
+      in: query
+      description: Organization API page size. The invoice and event list defaults to 10.
+      schema: { type: integer, minimum: 1, maximum: 1000, default: 10 }
     SlugOrId:
       name: slugOrId
       in: path
@@ -468,8 +630,13 @@ components:
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: The organization token is not permitted for this organization or operation.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
     NotFound:
-      description: Resource not found or outside the authenticated patron scope
+      description: Resource not found or outside the caller's permitted scope
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
@@ -551,6 +718,33 @@ components:
         next: { type: string, nullable: true }
         previous: { type: string, nullable: true }
         results: { type: array, items: { $ref: '#/components/schemas/Event' } }
+    OrganizationEvent:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            venue:
+              $ref: '#/components/schemas/Organization'
+    PaginatedOrganizationEvents:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        next_page_number: { type: integer, nullable: true }
+        previous_page_number: { type: integer, nullable: true }
+        page_number: { type: integer }
+        num_pages: { type: integer }
+        next_list: { type: array, items: { type: integer } }
+        previous_list: { type: array, items: { type: integer } }
+        results: { type: array, items: { $ref: '#/components/schemas/OrganizationEvent' } }
+    Organization:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
     InvoiceSummary:
       type: object
       additionalProperties: true
@@ -570,6 +764,28 @@ components:
         next: { type: string, nullable: true }
         previous: { type: string, nullable: true }
         results: { type: array, items: { $ref: '#/components/schemas/InvoiceSummary' } }
+    OrganizationInvoice:
+      allOf:
+        - $ref: '#/components/schemas/InvoiceDetail'
+        - type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            email: { type: string, format: email }
+            venue:
+              $ref: '#/components/schemas/Organization'
+            venue_id: { type: integer }
+    PaginatedOrganizationInvoices:
+      type: object
+      properties:
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        next_page_number: { type: integer, nullable: true }
+        previous_page_number: { type: integer, nullable: true }
+        page_number: { type: integer }
+        next_list: { type: array, items: { type: integer } }
+        previous_list: { type: array, items: { type: integer } }
+        results: { type: array, items: { $ref: '#/components/schemas/OrganizationInvoice' } }
     InvoiceItem:
       type: object
       additionalProperties: true
