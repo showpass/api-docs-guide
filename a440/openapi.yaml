@@ -246,6 +246,9 @@ paths:
         organization orders for a patron by email without authenticating the
         patron with Showpass. Historical, refunded, voided, and transferred
         records are returned when they remain visible to the organization.
+        The response contains invoice-level fields only; it does not embed
+        `invoice_items` or `ticket_items`. Use the invoice-items endpoint and
+        the invoice tickets endpoint when those records are required.
       security:
         - OrganizationToken: []
       parameters:
@@ -277,11 +280,46 @@ paths:
         '403':
           $ref: '#/components/responses/Forbidden'
 
+  /api/venue/{venueId}/financials/invoices/items/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationInvoiceItems
+      summary: List invoice line items
+      description: >-
+        Lists the accounting line items for organization invoices. Pass the
+        numeric invoice `id` returned by the organization invoice endpoint in
+        the `invoice` query parameter. These are invoice lines, not individual
+        ticket records.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID from the organization invoice response.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Paginated invoice line items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationInvoiceItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
   /api/venue/{venueId}/financials/invoices/{transactionId}/:
     get:
       tags: [Private organization API]
       operationId: getOrganizationInvoice
       summary: Get one organization order
+      description: >-
+        Returns the same invoice-level shape as the organization invoice list.
+        `invoice_items` and `ticket_items` are not embedded in this response.
       security:
         - OrganizationToken: []
       parameters:
@@ -297,6 +335,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OrganizationInvoice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/financials/invoices/{transactionId}/tickets/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationInvoiceTickets
+      summary: List ticket barcodes for an organization order
+      description: >-
+        Returns the ticket barcode data for an organization order. The
+        `barcode_string` value is the ticket barcode/QR payload used for
+        scanning; it is not the ticket database ID. The response is ready only
+        after post-purchase ticket generation has completed.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transactionId
+          in: path
+          required: true
+          description: Showpass invoice transaction ID.
+          schema: { type: string }
+      responses:
+        '200':
+          description: Ticket barcode data is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoiceTickets'
+        '202':
+          description: Ticket generation is not complete yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoiceTickets'
         '401':
           $ref: '#/components/responses/Unauthorized'
         '403':
@@ -765,16 +842,31 @@ components:
         previous: { type: string, nullable: true }
         results: { type: array, items: { $ref: '#/components/schemas/InvoiceSummary' } }
     OrganizationInvoice:
-      allOf:
-        - $ref: '#/components/schemas/InvoiceDetail'
-        - type: object
-          properties:
-            user:
-              $ref: '#/components/schemas/User'
-            email: { type: string, format: email }
-            venue:
-              $ref: '#/components/schemas/Organization'
-            venue_id: { type: integer }
+      type: object
+      additionalProperties: true
+      description: >-
+        Flat invoice-level organization response. Related invoice lines and
+        ticket barcode data are returned by separate endpoints.
+      properties:
+        id: { type: integer }
+        transaction_id: { type: string }
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        final_amount: { type: string }
+        amount_paid: { type: string }
+        amount_refunded: { type: string }
+        is_refunded: { type: boolean }
+        email: { type: string, format: email }
+        phone_number: { type: string, nullable: true }
+        name_on_ticket: { type: string, nullable: true }
+        payment_type: { type: string }
+        type: { type: integer }
+        venue_id: { type: integer }
+        venue:
+          $ref: '#/components/schemas/Organization'
+        user:
+          $ref: '#/components/schemas/User'
+        receipt_url: { type: string, format: uri, nullable: true }
     PaginatedOrganizationInvoices:
       type: object
       properties:
@@ -796,6 +888,58 @@ components:
         quantity: { type: integer }
         price: { type: string }
         event: { $ref: '#/components/schemas/Event' }
+    OrganizationInvoiceItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        description: { type: string }
+        quantity: { type: integer }
+        transfer_quantity: { type: integer }
+        price: { type: string }
+        amount_earned: { type: string }
+        tax: { type: string }
+        final_amount: { type: string }
+        amount_refunded: { type: string }
+        amount_paid: { type: string }
+        type: { type: string }
+        event: { $ref: '#/components/schemas/Event', nullable: true }
+        membership_group: { type: object, nullable: true, additionalProperties: true }
+    PaginatedOrganizationInvoiceItems:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationInvoiceItem' }
+    OrganizationInvoiceTicket:
+      type: object
+      additionalProperties: true
+      properties:
+        barcode_string:
+          type: string
+          description: Barcode/QR payload used to scan the ticket.
+        item_type: { type: string }
+        type: { type: integer, nullable: true }
+        product_attribute: { type: integer, nullable: true }
+        type_name: { type: string, nullable: true }
+        product_attribute_name: { type: string, nullable: true }
+        event_name: { type: string, nullable: true }
+        product_name: { type: string, nullable: true }
+        event_starts_on: { type: string, format: date-time, nullable: true }
+        event_ends_on: { type: string, format: date-time, nullable: true }
+        event_timezone: { type: string, nullable: true }
+        venue_timezone: { type: string, nullable: true }
+    OrganizationInvoiceTickets:
+      type: object
+      required: [ready, items]
+      properties:
+        ready: { type: boolean }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationInvoiceTicket' }
     TicketItem:
       type: object
       additionalProperties: true
