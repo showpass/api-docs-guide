@@ -1,5 +1,24 @@
 # Showpass CLI Commands
 
+## Install and upgrade
+
+Install the CLI with Homebrew:
+
+```bash
+brew tap showpass/tap
+brew install showpass
+showpass --version
+```
+
+Upgrade it with:
+
+```bash
+brew upgrade showpass
+```
+
+See [CLI overview and installation](/cli/overview) for PATH conflict
+troubleshooting and the installer-script alternative.
+
 ## login
 
 Securely prompt for, validate, and save a Private Organizer API token:
@@ -113,5 +132,5 @@ showpass init --help
 
 ## See Also
 
-- [CLI overview and installation](/cli/01-overview)
-- [Private Organizer API overview](/api/10-private-api-overview)
+- [CLI overview and installation](/cli/overview)
+- [Private Organizer API overview](/api/private-api-overview)

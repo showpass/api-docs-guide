@@ -48,20 +48,30 @@ function loadSeoDataMap() {
   } catch (error) {
     console.error('Error loading SEO data:', error);
     return {
-      routes: ['/', '/api/01-public-api-introduction'],
+      routes: ['/', '/api/public-api-introduction'],
       seoByRoute: {},
     };
   }
 }
 
 // ---------------------------------------------------------------------------
-// Map a route like "/api/01-public-api-introduction" to its markdown file
+// Map a route like "/api/public-api-introduction" to its markdown file
 // ---------------------------------------------------------------------------
 function resolveMarkdownPath(route) {
   // route starts with "/" + section + "/" + slug
   // markdown lives at DATA_DIR + route + ".md"
   const mdFile = path.join(DATA_DIR, `${route}.md`);
-  return fs.existsSync(mdFile) ? mdFile : null;
+  if (fs.existsSync(mdFile)) return mdFile;
+
+  const section = route.split('/')[1];
+  const slug = route.split('/')[2];
+  if (!section || !slug) return null;
+
+  const sectionDir = path.join(DATA_DIR, section);
+  const legacyFile = fs.readdirSync(sectionDir).find(
+    (file) => file.replace(/^\d+-/, '') === `${slug}.md`
+  );
+  return legacyFile ? path.join(sectionDir, legacyFile) : null;
 }
 
 // ---------------------------------------------------------------------------

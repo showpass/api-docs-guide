@@ -67,4 +67,4 @@ Eliminate manual data entry and frequent API polling to check for changes.
 
 ## Getting started
 
-Ready to set up webhooks? Continue to the next section on [Setup and Management](/webhooks/02-webhooks-setup-and-management) to configure your first endpoint.
+Ready to set up webhooks? Continue to the next section on [Setup and Management](/webhooks/webhooks-setup-and-management) to configure your first endpoint.

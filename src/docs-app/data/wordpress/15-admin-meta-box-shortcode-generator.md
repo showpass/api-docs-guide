@@ -179,7 +179,7 @@ If the meta box isn't available or you prefer manual entry:
    [showpass_widget slug="my-event"]
    ```
 
-See **[Adding a single button widget](/wordpress/02-adding-single-button-embed-widget)** for complete parameter documentation.
+See **[Adding a single button widget](/wordpress/adding-single-button-embed-widget)** for complete parameter documentation.
 
 ---
 
@@ -187,9 +187,9 @@ See **[Adding a single button widget](/wordpress/02-adding-single-button-embed-w
 
 Now that you know how to use the meta box generator:
 
-- **[Adding a single button widget](/wordpress/02-adding-single-button-embed-widget)** – Learn all widget parameters
-- **[Adding event lists](/wordpress/03-adding-event-list)** – Display multiple events
-- **[Tips and troubleshooting](/wordpress/13-tips-and-troubleshooting)** – Common issues and solutions
+- **[Adding a single button widget](/wordpress/adding-single-button-embed-widget)** – Learn all widget parameters
+- **[Adding event lists](/wordpress/adding-event-list)** – Display multiple events
+- **[Tips and troubleshooting](/wordpress/tips-and-troubleshooting)** – Common issues and solutions
 
 ---
 

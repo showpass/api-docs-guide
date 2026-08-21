@@ -223,7 +223,7 @@ This tag listens for messages from the Showpass iFrame and processes them.
 4. Click **Save**
 5. Update your existing tag to use this trigger. Your `Custom HTML - Listen for Showpass iFrame postMessage` should now trigger both `Window Loaded` and `Custom - Custom - Showpass Ecommerce Events`
 
-For tracking specific single events like `add_to_cart` - please see [Tracking Custom Conversions](https://dev.showpass.com/google-tag-manager/06-tracking-custom-conversions-marketing-pixels)
+For tracking specific single events like `add_to_cart` - please see [Tracking Custom Conversions](https://dev.showpass.com/google-tag-manager/tracking-custom-conversions-marketing-pixels)
 
 ---
 

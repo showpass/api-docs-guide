@@ -23,22 +23,12 @@ type IntegrationId =
   | "public-api"
   | "javascript-sdk"
   | "organizer-api"
+  | "cli"
   | "wordpress"
-  | "conversion-tracking"
+  | "google-tag-manager"
+  | "meta"
   | "webhooks"
   | "security";
-
-type TrackingGuideId = "google-tag-manager" | "meta";
-
-interface TrackingGuide {
-  id: TrackingGuideId;
-  label: string;
-  badge: string;
-  codeLabel: string;
-  codeLines: React.ReactNode[];
-  action: string;
-  to: string;
-}
 
 interface IntegrationPath {
   id: IntegrationId;
@@ -52,7 +42,6 @@ interface IntegrationPath {
   action: string;
   to: string;
   icon: LucideIcon;
-  trackingGuides?: TrackingGuide[];
   agentGuide?: {
     label: string;
     description: string;
@@ -160,7 +149,7 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
     ],
     action: "Read the widget guide",
-    to: "/sdk/01-sdk-getting-started",
+    to: "/sdk/sdk-getting-started",
     icon: Code2,
     agentGuide: {
       label: "Integrate with your coding agent",
@@ -197,7 +186,7 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
     ],
     action: "Read the Discovery API",
-    to: "/api/01-public-api-introduction",
+    to: "/api/public-api-introduction",
     icon: Braces,
   },
   {
@@ -234,7 +223,7 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
     ],
     action: "Read the Organizer API",
-    to: "/api/10-private-api-overview",
+    to: "/api/private-api-overview",
     icon: Building2,
   },
   {
@@ -266,61 +255,8 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
     ],
     action: "Set up the WordPress plugin",
-    to: "/wordpress/01-getting-started-install-and-configure",
+    to: "/wordpress/getting-started-install-and-configure",
     icon: Globe2,
-  },
-  {
-    id: "conversion-tracking",
-    label: "Conversion tracking",
-    outcome: "Measure purchases and campaigns",
-    title:
-      "Send Showpass conversion activity to your analytics and advertising tools.",
-    description:
-      "Connect GA4 through Google Tag Manager or use Meta Pixel and the Conversions API for campaign attribution.",
-    facts: ["GA4 + GTM", "Meta Pixel", "Conversions API"],
-    codeLabel: "Data layer",
-    codeLines: gtmTrackingCodeLines,
-    action: "Open the GTM guide",
-    to: "/google-tag-manager/01-introduction-to-showpass-gtm-integration",
-    icon: BarChart3,
-    trackingGuides: [
-      {
-        id: "google-tag-manager",
-        label: "Google Tag Manager",
-        badge: "GA4 + GTM",
-        codeLabel: "Data layer",
-        codeLines: gtmTrackingCodeLines,
-        action: "Open the GTM guide",
-        to: "/google-tag-manager/01-introduction-to-showpass-gtm-integration",
-      },
-      {
-        id: "meta",
-        label: "Meta",
-        badge: "Pixel + CAPI",
-        codeLabel: "Organizer settings",
-        codeLines: [
-          <span key="meta-guide-1">
-            <SyntaxToken type="property">Pixel ID</SyntaxToken>
-            <SyntaxToken type="operator">: </SyntaxToken>
-            <SyntaxToken type="number">123456789012345</SyntaxToken>
-          </span>,
-          <span key="meta-guide-2">
-            <SyntaxToken type="property">Conversions API</SyntaxToken>
-            <SyntaxToken type="operator">: </SyntaxToken>
-            <SyntaxToken type="boolean">enabled</SyntaxToken>
-          </span>,
-          <span key="meta-guide-3">
-            <SyntaxToken type="property">Events</SyntaxToken>
-            <SyntaxToken type="operator">: </SyntaxToken>
-            <SyntaxToken type="constant">AddToCart</SyntaxToken>
-            <SyntaxToken type="punctuation">, </SyntaxToken>
-            <SyntaxToken type="constant">Purchase</SyntaxToken>
-          </span>,
-        ],
-        action: "Open the Meta guide",
-        to: "/facebook/01-introduction-to-facebook-pixel",
-      },
-    ],
   },
   {
     id: "webhooks",
@@ -349,7 +285,7 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
     ],
     action: "Configure webhooks",
-    to: "/webhooks/01-webhooks-introduction",
+    to: "/webhooks/webhooks-introduction",
     icon: Webhook,
   },
   {
@@ -379,29 +315,91 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
     ],
     action: "Review security & compliance",
-    to: "/security/01-compliance-overview",
+    to: "/security/compliance-overview",
     icon: ShieldCheck,
   },
 ];
 
+const additionalIntegrationPaths: IntegrationPath[] = [
+  {
+    id: "cli",
+    label: "CLI",
+    outcome: "Work with Showpass in terminal",
+    title: "Manage Showpass workflows from your command line.",
+    description:
+      "Install the Showpass CLI with Homebrew and use the command reference to work with supported developer workflows.",
+    facts: ["Homebrew install", "Terminal workflow", "Command reference"],
+    codeLabel: "Shell",
+    codeLines: [
+      <span key="cli-1">
+        <SyntaxToken type="function">brew install showpass</SyntaxToken>
+      </span>,
+    ],
+    action: "Read the CLI guide",
+    to: "/cli/overview",
+    icon: Code2,
+  },
+  {
+    id: "google-tag-manager",
+    label: "Google Tag Manager",
+    outcome: "Measure purchases with GA4",
+    title: "Connect Showpass purchase activity to GA4 and GTM.",
+    description:
+      "Configure ecommerce events, data layer values, and conversion tracking for your analytics workflow.",
+    facts: ["GA4", "Google Tag Manager", "Ecommerce events"],
+    codeLabel: "Data layer",
+    codeLines: gtmTrackingCodeLines,
+    action: "Open the GTM guide",
+    to: "/google-tag-manager/introduction-to-showpass-gtm-integration",
+    icon: BarChart3,
+  },
+  {
+    id: "meta",
+    label: "Meta tracking",
+    outcome: "Measure campaigns and purchases",
+    title: "Connect Showpass activity to Meta advertising tools.",
+    description:
+      "Set up Meta Pixel and the Conversions API for campaign attribution and purchase measurement.",
+    facts: ["Meta Pixel", "Conversions API", "Campaign attribution"],
+    codeLabel: "Meta settings",
+    codeLines: [
+      <span key="meta-1">
+        <SyntaxToken type="property">Conversions API</SyntaxToken>
+        <SyntaxToken type="operator">: </SyntaxToken>
+        <SyntaxToken type="boolean">enabled</SyntaxToken>
+      </span>,
+    ],
+    action: "Open the Meta guide",
+    to: "/facebook/introduction-to-facebook-pixel",
+    icon: BarChart3,
+  },
+];
+
+const allIntegrationPaths = [...integrationPaths, ...additionalIntegrationPaths];
+
+const indexMenuOrder: IntegrationId[] = [
+  "public-api",
+  "organizer-api",
+  "webhooks",
+  "javascript-sdk",
+  "cli",
+  "wordpress",
+  "google-tag-manager",
+  "meta",
+  "security",
+];
+
+const orderedIntegrationPaths = indexMenuOrder.map(
+  (id) => allIntegrationPaths.find((path) => path.id === id)!,
+);
+
 const Index = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/"];
-  const [selectedId, setSelectedId] = useState<IntegrationId>("javascript-sdk");
-  const [selectedTrackingGuideId, setSelectedTrackingGuideId] =
-    useState<TrackingGuideId>("google-tag-manager");
+  const [selectedId, setSelectedId] = useState<IntegrationId>("public-api");
   const selectedPath =
-    integrationPaths.find(({ id }) => id === selectedId) ?? integrationPaths[0];
-  const selectedTrackingGuide = selectedPath.trackingGuides?.find(
-    ({ id }) => id === selectedTrackingGuideId,
-  );
-  const activeCodeLabel =
-    selectedTrackingGuide?.codeLabel ?? selectedPath.codeLabel;
-  const activeCodeLines =
-    selectedTrackingGuide?.codeLines ?? selectedPath.codeLines;
-  const activeAction = selectedTrackingGuide?.action ?? selectedPath.action;
-  const activeDestination = selectedTrackingGuide?.to ?? selectedPath.to;
-  const activeBadge = selectedTrackingGuide?.badge ?? selectedPath.facts[0];
+    orderedIntegrationPaths.find(({ id }) => id === selectedId) ??
+    orderedIntegrationPaths[0];
 
   useLayoutEffect(() => {
     setPageData({
@@ -424,7 +422,7 @@ const Index = () => {
       <div className="not-prose pb-10 pt-7 sm:pt-8 2xl:pb-4 2xl:pt-6">
         <header className="max-w-[48rem]">
           <h1 className="m-0 text-[2.4rem] font-bold leading-[1.05] tracking-[-0.045em] text-foreground sm:text-[2.8rem]">
-            Build with <span className="text-primary">Showpass.</span>
+            Build your event ticketing platform with <span className="text-primary">Showpass</span> infrastructure.
           </h1>
           <p className="mb-0 mt-2.5 text-base leading-7 text-muted-foreground sm:text-lg">
             Choose the capability your application needs.
@@ -456,7 +454,7 @@ const Index = () => {
                   }
                   className="min-h-12 w-full appearance-none rounded-xl border border-border bg-background px-4 py-3 pr-11 text-base font-semibold text-foreground shadow-[0_1px_1px_hsl(var(--foreground)/0.03)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
-                  {integrationPaths.map(({ id, label }) => (
+                  {orderedIntegrationPaths.map(({ id, label }) => (
                     <option key={id} value={id}>
                       {label}
                     </option>
@@ -474,7 +472,7 @@ const Index = () => {
               className="hidden border-r border-border bg-muted/[0.14] xl:flex xl:flex-col"
             >
               <div className="flex w-full flex-1 flex-col divide-y divide-border/70 bg-background/25">
-                {integrationPaths.map(({ id, label, outcome, icon: Icon }) => {
+                {orderedIntegrationPaths.map(({ id, label, outcome, icon: Icon }) => {
                   const isSelected = id === selectedId;
 
                   return (
@@ -550,82 +548,41 @@ const Index = () => {
                     ))}
                   </div>
                   <Link
-                    to={activeDestination}
+                    to={selectedPath.to}
                     className="landing-primary-action group/action mt-6 inline-flex min-h-10 self-start items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-semibold text-primary-foreground hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 2xl:mt-7"
                   >
-                    {activeAction}
+                    {selectedPath.action}
                     <ArrowRight className="h-4 w-4" aria-hidden="true" />
                   </Link>
                 </div>
               </div>
 
               <aside
-                aria-label={
-                  selectedPath.trackingGuides
-                    ? "Conversion tracking guides"
-                    : "Implementation example"
-                }
+                aria-label="Implementation example"
                 className="flex min-w-0 items-center border-t border-border bg-muted/[0.07] px-5 py-8 sm:px-8 sm:py-10 xl:border-l xl:border-t-0 xl:px-8"
               >
                 <div className="w-full min-w-0">
-                  {selectedPath.trackingGuides && (
-                    <p className="m-0 mb-3 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                      Choose a tracking guide
-                    </p>
-                  )}
-
-                  {selectedPath.trackingGuides && (
-                    <div
-                      aria-label="Conversion tracking platform"
-                      className="mb-3 grid grid-cols-2 gap-1 rounded-xl border border-border bg-background/40 p-1"
-                    >
-                      {selectedPath.trackingGuides.map((guide) => {
-                        const isSelected = guide.id === selectedTrackingGuideId;
-
-                        return (
-                          <button
-                            key={guide.id}
-                            type="button"
-                            aria-pressed={isSelected}
-                            onClick={() => setSelectedTrackingGuideId(guide.id)}
-                            className={`min-h-9 rounded-lg px-3 py-2 text-xs font-semibold focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
-                              isSelected
-                                ? "bg-card text-foreground shadow-[inset_0_0_0_1px_hsl(var(--border))]"
-                                : "text-muted-foreground hover:bg-muted/20 hover:text-foreground"
-                            }`}
-                          >
-                            {guide.label}
-                          </button>
-                        );
-                      })}
-                    </div>
-                  )}
-
                   <div className="min-w-0 overflow-hidden rounded-xl border border-border bg-sidebar/55">
                     <div className="flex items-center justify-between gap-3 border-b border-border px-4 py-3">
                       <span className="flex min-w-0 items-center gap-2 text-[0.625rem] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-                        {!selectedPath.trackingGuides && (
-                          <>
-                            <span>Example</span>
-                            <span
-                              aria-hidden="true"
-                              className="h-3 w-px shrink-0 bg-border"
-                            />
-                          </>
-                        )}
-                        {activeCodeLabel}
+                        <span>Example</span>
+                        <span
+                          aria-hidden="true"
+                          className="h-3 w-px shrink-0 bg-border"
+                        />
+                        {selectedPath.codeLabel}
                       </span>
                       <span className="flex items-center gap-2 text-[0.625rem] text-muted-foreground">
                         <span
                           className="h-1.5 w-1.5 rounded-full bg-primary"
                           aria-hidden="true"
                         />
-                        {activeBadge}
+                        {selectedPath.facts[0]}
                       </span>
                     </div>
                     <pre className="m-0 overflow-x-auto px-4 py-4 font-mono text-[0.75rem] leading-6 text-sidebar-foreground">
                       <code className="block min-w-max">
-                        {activeCodeLines.map((line, index) => (
+                        {selectedPath.codeLines.map((line, index) => (
                           <span
                             key={index}
                             className="flex gap-3 whitespace-nowrap"

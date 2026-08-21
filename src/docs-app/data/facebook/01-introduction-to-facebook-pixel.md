@@ -82,9 +82,9 @@ Before setting up Facebook Pixel with Showpass, ensure you have:
 
 Ready to get started? Follow our installation guide to set up Facebook Pixel with your Showpass events:
 
-- [Installing Facebook Pixel](/facebook/02-installing-facebook-pixel)
-- [About Facebook Conversions API](/facebook/03-about-facebook-conversions-api)
-- [Installing Facebook Conversions API](/facebook/04-installing-facebook-conversions-api)
+- [Installing Facebook Pixel](/facebook/installing-facebook-pixel)
+- [About Facebook Conversions API](/facebook/about-facebook-conversions-api)
+- [Installing Facebook Conversions API](/facebook/installing-facebook-conversions-api)
 
 ---
 

@@ -9,7 +9,7 @@ servers:
     description: Demo
 externalDocs:
   description: Showpass embedded purchase SDK documentation
-  url: https://dev.showpass.com/sdk/02-ticket-purchase-widget
+  url: https://dev.showpass.com/sdk/ticket-purchase-widget
 tags:
   - name: Authentication
   - name: Public catalog

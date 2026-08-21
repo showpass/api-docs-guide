@@ -1,5 +1,5 @@
 import React from "react";
-import { useParams, Link } from "react-router-dom";
+import { Link, Navigate, useLocation, useParams } from "react-router-dom";
 import ContentPage from "@/docs-app/ui/components/content/ContentPage.tsx";
 import apiExamplesMap from "@/docs-app/data/apiExamplesMap.ts";
 import type { ApiExamplesData } from "@/docs-app/data/types.ts";
@@ -24,6 +24,7 @@ interface DynamicDocPageProps {
 
 const DynamicDocPage: React.FC<DynamicDocPageProps> = ({ section }) => {
   const { slug } = useParams<{ slug: string }>();
+  const location = useLocation();
 
   if (!slug) {
     return (
@@ -43,6 +44,20 @@ const DynamicDocPage: React.FC<DynamicDocPageProps> = ({ section }) => {
           </div>
         </AlertDescription>
       </Alert>
+    );
+  }
+
+  const canonicalSlug = slug.replace(/^\d+-/, "");
+  if (canonicalSlug !== slug) {
+    return (
+      <Navigate
+        replace
+        to={{
+          pathname: `/${section}/${canonicalSlug}`,
+          search: location.search,
+          hash: location.hash,
+        }}
+      />
     );
   }
 

@@ -211,7 +211,7 @@ Use your pixel data to build custom audiences:
 
 With Facebook Pixel successfully installed, consider:
 
-- [Setting up Facebook Conversions API](/facebook/04-installing-facebook-conversions-api) for enhanced data quality
+- [Setting up Facebook Conversions API](/facebook/installing-facebook-conversions-api) for enhanced data quality
 - Creating retargeting campaigns for event attendees
 - Building lookalike audiences based on your best customers
 - Experimenting with different ad formats and targeting options

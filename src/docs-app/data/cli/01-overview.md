@@ -4,6 +4,37 @@ Build and manage event websites that connect directly to your Showpass venue.
 
 ## Install
 
+### Homebrew
+
+On macOS or Linux with [Homebrew](https://brew.sh/) installed:
+
+```bash
+brew tap showpass/tap
+brew install showpass
+showpass --version
+```
+
+The formula is provided by the Showpass Homebrew tap. To upgrade an existing
+installation later:
+
+```bash
+brew upgrade showpass
+```
+
+If `showpass --version` reports a different local installation, check which
+executable your shell is using:
+
+```bash
+command -v showpass
+brew --prefix showpass
+"$(brew --prefix showpass)/bin/showpass" --version
+```
+
+Put the Homebrew prefix before older installations in your `PATH`, or invoke
+the Homebrew binary through the path shown by `brew --prefix showpass`.
+
+### Installer script
+
 ```bash
 curl -fsSL "https://www.showpass.com/install.sh" | bash
 ```
@@ -48,7 +79,7 @@ Authorization: Token YOUR_API_TOKEN
 
 Contact Showpass support or an authorized Showpass administrator to obtain the
 token for your venue. For more information about the credential, see the
-[Private Organizer API overview](/api/10-private-api-overview).
+[Private Organizer API overview](/api/private-api-overview).
 
 Connect the CLI before creating a project, or enter the token when the `init`
 wizard asks for it:
@@ -115,5 +146,5 @@ installed project templates.
 
 ## See Also
 
-- [Commands reference](/cli/02-commands)
-- [Private Organizer API overview](/api/10-private-api-overview)
+- [Commands reference](/cli/commands)
+- [Private Organizer API overview](/api/private-api-overview)
