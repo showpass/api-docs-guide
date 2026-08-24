@@ -47,8 +47,12 @@ The `link_reason` value is one of:
 - `reused_existing`: the partner identity already existed.
 - `email_auto_linked`: the request was linked to an existing Showpass user after the partner confirmed the email.
 
-Business conflicts such as an inactive identity, an email conflict, an invalid
-venue, or a venue outside the partner scope return `409` or `403` according to
-the failure boundary.
+Error responses use the following status codes:
 
-Validation errors return `400`. Authentication failures return `403`.
+- `400 Bad Request`: the request body is missing a required field or contains
+  an invalid field value or type.
+- `403 Forbidden`: the Partner credentials are missing or invalid, or the
+  requested `venue_id` is outside the partner's allowed venue scope.
+- `409 Conflict`: the request is valid but conflicts with existing data. This
+  includes an email conflict, an inactive partner identity, or a `venue_id`
+  that does not identify an existing venue.

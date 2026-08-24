@@ -32,6 +32,9 @@ interface ApiResponse {
 const isShowpassApiHost = (hostname: string) =>
   hostname === "showpass.com" || hostname.endsWith(".showpass.com");
 
+const isProductionShowpassHost = (hostname: string) =>
+  hostname === "showpass.com" || hostname === "www.showpass.com";
+
 const EXPLORER_STORAGE_KEYS = {
   authorization: "showpass-docs-explorer-authorization",
   baseUrl: "showpass-docs-explorer-base-url",
@@ -315,6 +318,16 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       return;
     }
 
+    if (activeMethod !== "GET" && isProductionShowpassHost(base.hostname)) {
+      const confirmed = window.confirm(
+        "This will send a write request to Showpass production and may change production data. Confirm the URL and request body before continuing.",
+      );
+      if (!confirmed) {
+        setError("Production request cancelled.");
+        return;
+      }
+    }
+
     setIsSending(true);
     try {
       const headers = new Headers();
@@ -531,7 +544,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       {activeMethod !== "GET" && (
         <div className="flex gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-xs leading-relaxed text-foreground">
           <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
-          This request can change production data. Confirm the URL and body before sending.
+          This request can change data in the selected environment. Production write requests require an additional confirmation.
         </div>
       )}
 
