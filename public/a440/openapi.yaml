@@ -9,13 +9,23 @@ servers:
     description: Demo
 externalDocs:
   description: Showpass embedded purchase SDK documentation
-  url: https://dev.showpass.com/sdk/ticket-purchase-widget
+  url: https://dev.showpass.com/sdk/02-ticket-purchase-widget
 tags:
   - name: Authentication
   - name: Public catalog
+  - name: Private organization API
   - name: Historical account
   - name: Memberships
   - name: Order actions
+x-organization-integration:
+  description: >-
+    Use the private venue API for an organization-owned A440 integration. The
+    organization API token is sent as `Authorization: Token <organization-api-key>`
+    and is scoped to the venue in the URL. This flow does not require a patron
+    JWT, patron login, or the Partner API.
+  base_url: https://demo.showpass.com
+  event_list: /api/venue/{venue_id}/events/
+  invoice_list: /api/venue/{venue_id}/financials/invoices/
 x-embedded-purchase:
   description: Use the hosted Showpass SDK/widget for ticket selection, assigned seating, payment, and issuance.
   sdk_example: 'showpass.tickets.eventPurchaseWidget("red-deer-event-slug");'
@@ -30,13 +40,13 @@ x-webhook-integration:
   requirements:
     - Verify the webhook signature against the raw request body.
     - Persist and deduplicate each delivery before acknowledging it.
-    - Reconcile with authenticated order and ticket reads after downtime.
-    - Do not use webhook delivery as a replacement for patron authentication or historical reads.
+    - Reconcile with private organization order and ticket reads after downtime.
+    - Do not use webhook delivery as a replacement for private historical order reads.
 x-recommended-flow:
-  - Discover the event with /api/public/events/.
-  - Open the hosted purchase widget through the Showpass SDK.
-  - Authenticate the patron with Showpass.
-  - Read invoices, transaction details, tickets, and membership data with the authenticated routes.
+  - Use the private organization event endpoint to find the Showpass event ID.
+  - Open the hosted purchase widget through the Showpass SDK when A440 needs to sell tickets.
+  - Read organization orders with the private invoice endpoint, filtered by email, user ID, or event ID.
+  - Follow `next` on every paginated response.
   - Subscribe to venue-configured notifications and reconcile after any delivery gap.
 security: []
 paths:
@@ -161,6 +171,396 @@ paths:
                 $ref: '#/components/schemas/Event'
         '404':
           $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/events/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationEvents
+      summary: List events for the organization
+      description: >-
+        Lists events owned by the organization identified by `venueId`. Use the
+        numeric event `id` as A440's primary external event key; `slug` is an
+        additional URL-friendly reference. The organization token cannot access
+        another organization's events.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: id
+          in: query
+          description: Return one event by numeric Showpass event ID.
+          schema: { type: integer, minimum: 1 }
+        - name: id__in
+          in: query
+          description: Return events by comma-separated numeric IDs.
+          schema: { type: string }
+        - name: search
+          in: query
+          description: Search event names.
+          schema: { type: string }
+      responses:
+        '200':
+          description: Paginated organization event page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationEvents'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/events/{slugOrId}/:
+    get:
+      tags: [Private organization API]
+      operationId: getOrganizationEvent
+      summary: Get one organization event
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/SlugOrId'
+      responses:
+        '200':
+          description: Organization event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/financials/invoices/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationInvoices
+      summary: List organization orders
+      description: >-
+        Lists organization-scoped orders. This endpoint can be used to find all
+        organization orders for a patron by email without authenticating the
+        patron with Showpass. Historical, refunded, voided, and transferred
+        records are returned when they remain visible to the organization.
+        The response contains invoice-level fields only; it does not embed
+        `invoice_items` or `ticket_items`. Use the invoice-items endpoint and
+        the invoice tickets endpoint when those records are required.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: email
+          in: query
+          description: Patron email associated with the order. URL-encode the value.
+          schema: { type: string, format: email }
+          example: patron%40example.com
+        - name: user_id
+          in: query
+          description: Showpass user ID associated with the order.
+          schema: { type: integer, minimum: 1 }
+        - name: invoice_items__event_for_filtering
+          in: query
+          description: Restrict results to orders containing this Showpass event ID.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Paginated organization invoice page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationInvoices'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/financials/invoices/items/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationInvoiceItems
+      summary: List invoice line items
+      description: >-
+        Lists the accounting line items for organization invoices. Pass the
+        numeric invoice `id` returned by the organization invoice endpoint in
+        the `invoice` query parameter. These are invoice lines, not individual
+        ticket records.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID from the organization invoice response.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Paginated invoice line items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationInvoiceItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/financials/invoices/{transactionId}/:
+    get:
+      tags: [Private organization API]
+      operationId: getOrganizationInvoice
+      summary: Get one organization order
+      description: >-
+        Returns the same invoice-level shape as the organization invoice list.
+        `invoice_items` and `ticket_items` are not embedded in this response.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transactionId
+          in: path
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: Organization order detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/financials/invoices/{transactionId}/tickets/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationInvoiceTickets
+      summary: List ticket barcodes for an organization order
+      description: >-
+        Returns the ticket barcode data for an organization order. The
+        `barcode_string` value is the ticket barcode/QR payload used for
+        scanning; it is not the ticket database ID. The response is ready only
+        after post-purchase ticket generation has completed.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transactionId
+          in: path
+          required: true
+          description: Showpass invoice transaction ID.
+          schema: { type: string }
+      responses:
+        '200':
+          description: Ticket barcode data is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoiceTickets'
+        '202':
+          description: Ticket generation is not complete yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoiceTickets'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/tickets/items/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationTicketItems
+      summary: List organization ticket items
+      description: >-
+        Lists the detailed ticket records for the organization. Use the
+        numeric `invoice` query parameter to retrieve holder, assigned-seat,
+        status, transfer, and barcode fields for one order. This endpoint is
+        read-only. A transferred original ticket remains visible with its
+        transferred status; the recipient's replacement ticket is a separate
+        ticket record.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID from the organization invoice response.
+          schema: { type: integer, minimum: 1 }
+        - name: event
+          in: query
+          description: Showpass event ID.
+          schema: { type: integer, minimum: 1 }
+        - name: type
+          in: query
+          description: Showpass ticket type ID.
+          schema: { type: integer, minimum: 1 }
+        - name: status
+          in: query
+          description: Numeric ticket status. Paid tickets use status `2`; transferred tickets use status `7`.
+          schema: { type: integer }
+        - name: barcode_string
+          in: query
+          description: Ticket barcode or scan-code value.
+          schema: { type: string }
+      responses:
+        '200':
+          description: Paginated detailed ticket items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationTicketItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/tickets/items/{ticketId}/:
+    get:
+      tags: [Private organization API]
+      operationId: getOrganizationTicketItem
+      summary: Get one organization ticket item
+      description: >-
+        Returns one detailed ticket record, including `name_on_ticket`,
+        `seat`, `status`, `transfer_in_progress`, and `barcode_string`.
+        The `seat` object is null for general-admission tickets. When present,
+        `segment_identifier` is the section, `location_identifier` is the row,
+        and `identifier` is the seat number.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: ticketId
+          in: path
+          required: true
+          description: Numeric Showpass ticket-item ID.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Detailed organization ticket item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTicketItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/tickets/transfers/:
+    get:
+      tags: [Private organization API]
+      operationId: listOrganizationTicketTransfers
+      summary: List organization ticket transfers
+      description: >-
+        Lists read-only ticket-transfer history for the organization. Use the
+        `state` filter to inspect pending, cancelled, completed, or returned
+        transfers. A completed transfer has a separate recipient invoice and
+        replacement ticket records.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: state
+          in: query
+          description: Transfer state.
+          schema:
+            type: string
+            enum: [pending, cancelled, complete, returned]
+      responses:
+        '200':
+          description: Paginated organization ticket transfers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationTicketTransfers'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/venue/{venueId}/tickets/transfers/{transferId}/:
+    get:
+      tags: [Private organization API]
+      operationId: getOrganizationTicketTransfer
+      summary: Get one organization ticket transfer
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transferId
+          in: path
+          required: true
+          description: Numeric Showpass ticket-transfer ID.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Organization ticket transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTicketTransfer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/venue/{venueId}/tickets/transfers/search-histories/:
+    get:
+      tags: [Private organization API]
+      operationId: searchOrganizationTicketTransferHistories
+      summary: Search organization ticket-transfer histories
+      description: >-
+        Searches transfer history by sender or recipient email, or by
+        customer-group ID. This endpoint is read-only and returns compact item
+        summaries in addition to the transfer metadata.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: email
+          in: query
+          description: Sender or recipient email. URL-encode the value.
+          schema: { type: string, format: email }
+        - name: customer_group_id
+          in: query
+          description: Showpass customer-group ID.
+          schema: { type: integer, minimum: 1 }
+      responses:
+        '200':
+          description: Paginated transfer-history search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationTicketTransferHistories'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
 
   /api/user/financials/invoices/v2/:
     get:
@@ -438,7 +838,18 @@ components:
       in: header
       name: Authorization
       description: 'Send `JWT <access-token>`.'
+    OrganizationToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: 'Send `Token <organization-api-key>`. This key is scoped to one organization.'
   parameters:
+    VenueId:
+      name: venueId
+      in: path
+      required: true
+      description: Numeric Showpass organization/venue ID.
+      schema: { type: integer, minimum: 1 }
     Page:
       name: page
       in: query
@@ -447,6 +858,15 @@ components:
       name: page_size
       in: query
       schema: { type: integer, minimum: 1, maximum: 100, default: 20 }
+    VenuePage:
+      name: page
+      in: query
+      schema: { type: integer, minimum: 1, default: 1 }
+    VenuePageSize:
+      name: page_size
+      in: query
+      description: Organization API page size. The invoice and event list defaults to 10.
+      schema: { type: integer, minimum: 1, maximum: 1000, default: 10 }
     SlugOrId:
       name: slugOrId
       in: path
@@ -468,8 +888,13 @@ components:
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
+    Forbidden:
+      description: The organization token is not permitted for this organization or operation.
+      content:
+        application/json:
+          schema: { $ref: '#/components/schemas/Error' }
     NotFound:
-      description: Resource not found or outside the authenticated patron scope
+      description: Resource not found or outside the caller's permitted scope
       content:
         application/json:
           schema: { $ref: '#/components/schemas/Error' }
@@ -551,6 +976,33 @@ components:
         next: { type: string, nullable: true }
         previous: { type: string, nullable: true }
         results: { type: array, items: { $ref: '#/components/schemas/Event' } }
+    OrganizationEvent:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            venue:
+              $ref: '#/components/schemas/Organization'
+    PaginatedOrganizationEvents:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        next_page_number: { type: integer, nullable: true }
+        previous_page_number: { type: integer, nullable: true }
+        page_number: { type: integer }
+        num_pages: { type: integer }
+        next_list: { type: array, items: { type: integer } }
+        previous_list: { type: array, items: { type: integer } }
+        results: { type: array, items: { $ref: '#/components/schemas/OrganizationEvent' } }
+    Organization:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        name: { type: string }
+        slug: { type: string }
     InvoiceSummary:
       type: object
       additionalProperties: true
@@ -570,6 +1022,43 @@ components:
         next: { type: string, nullable: true }
         previous: { type: string, nullable: true }
         results: { type: array, items: { $ref: '#/components/schemas/InvoiceSummary' } }
+    OrganizationInvoice:
+      type: object
+      additionalProperties: true
+      description: >-
+        Flat invoice-level organization response. Related invoice lines and
+        ticket barcode data are returned by separate endpoints.
+      properties:
+        id: { type: integer }
+        transaction_id: { type: string }
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        final_amount: { type: string }
+        amount_paid: { type: string }
+        amount_refunded: { type: string }
+        is_refunded: { type: boolean }
+        email: { type: string, format: email }
+        phone_number: { type: string, nullable: true }
+        name_on_ticket: { type: string, nullable: true }
+        payment_type: { type: string }
+        type: { type: integer }
+        venue_id: { type: integer }
+        venue:
+          $ref: '#/components/schemas/Organization'
+        user:
+          $ref: '#/components/schemas/User'
+        receipt_url: { type: string, format: uri, nullable: true }
+    PaginatedOrganizationInvoices:
+      type: object
+      properties:
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        next_page_number: { type: integer, nullable: true }
+        previous_page_number: { type: integer, nullable: true }
+        page_number: { type: integer }
+        next_list: { type: array, items: { type: integer } }
+        previous_list: { type: array, items: { type: integer } }
+        results: { type: array, items: { $ref: '#/components/schemas/OrganizationInvoice' } }
     InvoiceItem:
       type: object
       additionalProperties: true
@@ -580,6 +1069,180 @@ components:
         quantity: { type: integer }
         price: { type: string }
         event: { $ref: '#/components/schemas/Event' }
+    OrganizationInvoiceItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        description: { type: string }
+        quantity: { type: integer }
+        transfer_quantity: { type: integer }
+        price: { type: string }
+        amount_earned: { type: string }
+        tax: { type: string }
+        final_amount: { type: string }
+        amount_refunded: { type: string }
+        amount_paid: { type: string }
+        type: { type: string }
+        event: { $ref: '#/components/schemas/Event', nullable: true }
+        membership_group: { type: object, nullable: true, additionalProperties: true }
+    PaginatedOrganizationInvoiceItems:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationInvoiceItem' }
+    OrganizationInvoiceTicket:
+      type: object
+      additionalProperties: true
+      properties:
+        barcode_string:
+          type: string
+          description: Barcode/QR payload used to scan the ticket.
+        item_type: { type: string }
+        type: { type: integer, nullable: true }
+        product_attribute: { type: integer, nullable: true }
+        type_name: { type: string, nullable: true }
+        product_attribute_name: { type: string, nullable: true }
+        event_name: { type: string, nullable: true }
+        product_name: { type: string, nullable: true }
+        event_starts_on: { type: string, format: date-time, nullable: true }
+        event_ends_on: { type: string, format: date-time, nullable: true }
+        event_timezone: { type: string, nullable: true }
+        venue_timezone: { type: string, nullable: true }
+    OrganizationInvoiceTickets:
+      type: object
+      required: [ready, items]
+      properties:
+        ready: { type: boolean }
+        items:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationInvoiceTicket' }
+    OrganizationTicketSeat:
+      type: object
+      nullable: true
+      additionalProperties: true
+      description: >-
+        Assigned-seat identifiers. `segment_identifier` is the section,
+        `location_identifier` is the row, and `identifier` is the seat number.
+      properties:
+        identifier: { type: string }
+        location_identifier: { type: string }
+        segment_identifier: { type: string }
+    OrganizationTicketItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        venue: { type: integer }
+        group: { type: integer, nullable: true }
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        status: { type: integer }
+        name_on_ticket: { type: string, nullable: true }
+        barcode_string:
+          type: string
+          description: Barcode/QR payload used to scan the ticket.
+        item_type: { type: string }
+        type: { type: integer, nullable: true }
+        event: { type: integer, nullable: true }
+        product: { type: integer, nullable: true }
+        product_attribute: { type: integer, nullable: true }
+        price: { type: string, nullable: true }
+        scan_code: { type: string, nullable: true }
+        invoice_item: { type: integer, nullable: true }
+        tt_seat_permission: { type: integer, nullable: true }
+        shipping_fulfillment_status: { type: string, nullable: true }
+        seat:
+          $ref: '#/components/schemas/OrganizationTicketSeat'
+        ticket_credit_string: { type: string, nullable: true }
+        is_redeemable: { type: boolean }
+        event_data: { type: object, nullable: true, additionalProperties: true }
+        product_data: { type: object, nullable: true, additionalProperties: true }
+        parent: { type: integer, nullable: true }
+        type_name: { type: string, nullable: true }
+        product_name: { type: string, nullable: true }
+        product_attribute_name: { type: string, nullable: true }
+        transfer_in_progress: { type: boolean }
+    PaginatedOrganizationTicketItems:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        next_page_number: { type: integer, nullable: true }
+        previous_page_number: { type: integer, nullable: true }
+        page_number: { type: integer }
+        num_pages: { type: integer }
+        next_list: { type: array, items: { type: integer } }
+        previous_list: { type: array, items: { type: integer } }
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationTicketItem' }
+    OrganizationTicketTransfer:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        created: { type: string, format: date-time }
+        updated: { type: string, format: date-time }
+        tickets: { type: array, items: { type: integer } }
+        members: { type: array, items: { type: integer } }
+        venue:
+          $ref: '#/components/schemas/Organization'
+        state:
+          type: string
+          enum: [pending, cancelled, complete, returned]
+        sender: { type: integer, nullable: true }
+        receiver: { type: integer, nullable: true }
+        receiver_email: { type: string, format: email }
+        customer_group: { type: integer, nullable: true }
+        invoice: { type: integer, nullable: true }
+        basket: { type: integer, nullable: true }
+        total_item_count: { type: integer }
+        sender_email: { type: string, format: email }
+    PaginatedOrganizationTicketTransfers:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationTicketTransfer' }
+    OrganizationTicketTransferItemSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        id: { type: integer }
+        item_type: { type: string }
+        name: { type: string, nullable: true }
+        context_name: { type: string, nullable: true }
+        quantity: { type: integer }
+        starts_on: { type: string, format: date-time, nullable: true }
+        ends_on: { type: string, format: date-time, nullable: true }
+        timezone: { type: string, nullable: true }
+        date_time_to_be_determined: { type: boolean, nullable: true }
+    OrganizationTicketTransferHistory:
+      allOf:
+        - $ref: '#/components/schemas/OrganizationTicketTransfer'
+        - type: object
+          properties:
+            item_summaries:
+              type: array
+              items: { $ref: '#/components/schemas/OrganizationTicketTransferItemSummary' }
+    PaginatedOrganizationTicketTransferHistories:
+      type: object
+      properties:
+        count: { type: integer }
+        next: { type: string, nullable: true }
+        previous: { type: string, nullable: true }
+        results:
+          type: array
+          items: { $ref: '#/components/schemas/OrganizationTicketTransferHistory' }
     TicketItem:
       type: object
       additionalProperties: true
