@@ -20,6 +20,10 @@ https://www.showpass.com/api/partner/
 
 ## Authentication
 
+Partner credentials are provided by Showpass during Partner onboarding. Contact
+your CSM to receive your Key ID and Secret. Store the Secret securely on your
+server and never commit or expose it in client-side code.
+
 Partner requests use HMAC authentication. Send these headers on every request:
 
 | Header | Description |
@@ -44,6 +48,37 @@ SHA256_OF_RAW_REQUEST_BODY
 The value in `X-Showpass-Partner-Signature` is `sha256=` followed by the
 lowercase hexadecimal HMAC-SHA256 digest. Sign the exact path and query string
 sent to Showpass. For an empty request body, hash the empty byte string.
+
+For example, this Python code creates the signature for a `POST` request. The
+`body` value must be exactly the same bytes sent in the request:
+
+```python
+import hashlib
+import hmac
+import time
+import uuid
+
+partner_secret = "your-partner-secret"
+body = '{"partner_user_id":"customer-42"}'
+timestamp = str(int(time.time()))
+nonce = str(uuid.uuid4())
+path_and_query = "/api/partner/customer-attribution-token/"
+body_hash = hashlib.sha256(body.encode()).hexdigest()
+
+canonical = "\n".join([
+    "v1",
+    timestamp,
+    nonce,
+    "POST",
+    path_and_query,
+    body_hash,
+])
+signature = "sha256=" + hmac.new(
+    partner_secret.encode(),
+    canonical.encode(),
+    hashlib.sha256,
+).hexdigest()
+```
 
 ## Organization and venue scope
 
