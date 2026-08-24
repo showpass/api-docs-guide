@@ -1,4 +1,5 @@
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
+import partnerApiExamplesMap from "@/docs-app/data/partnerApiExamplesMap.ts";
 
 /**
  * Centralized map of API examples data for use in documentation pages
@@ -2062,8 +2063,12 @@ axios.get(baseUrl, {
   }
 };
 
-// Merge privateApiExamplesMap into apiExamplesMap
-const mergedApiExamplesMap = { ...apiExamplesMap, ...privateApiExamplesMap };
+// Merge private and Partner API examples into the route map.
+const mergedApiExamplesMap = {
+  ...apiExamplesMap,
+  ...privateApiExamplesMap,
+  ...partnerApiExamplesMap,
+};
 
 export default mergedApiExamplesMap;
 export { privateApiExamplesMap };

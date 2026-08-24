@@ -20,6 +20,14 @@ Below is a list of the events for which Showpass currently provides webhook supp
 
 ---
 
+## Partner attribution
+
+The purchase, refund, void, and transfer events can include optional partner
+customer fields for supported Partner integrations. See [Partner attribution in
+webhooks](/api/partner-api-webhooks).
+
+---
+
 ## Subscribing to events
 
 When you set up or edit a webhook endpoint in the Showpass dashboard (as described in "Setup and Management"), you will be able to select one or more of these event types. Your endpoint will then only receive notifications for the events it is subscribed to.

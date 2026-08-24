@@ -44,6 +44,32 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Create and manage Showpass event and ticket type access passwords for external access-code workflows.",
     keywords: "showpass passwords api, ticket type passwords, event passwords, private organizer api, entitlement codes, approved access codes, presale codes"
   },
+  "/api/partner-api-overview": {
+    title: "Showpass Partner API Overview - Developer Documentation",
+    description: "Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution.",
+    keywords: "showpass partner api, server-to-server api, event app api, partner authentication, organization scoping"
+  },
+  "/api/partner-api-users": {
+    title: "Create or Reuse a Partner User - Showpass Partner API",
+    description: "Create or reuse a partner user identity with the Showpass Partner API and HMAC authentication.",
+    keywords: "showpass partner users api, partner identity, hmac api authentication"
+  },
+  "/api/partner-api-customer-attribution-token": {
+    title: "Customer Attribution Token - Showpass Partner API",
+    description: "Issue a short-lived customer attribution token for an existing partner user.",
+    keywords: "showpass customer attribution token, partner api attribution, hmac api authentication"
+  },
+  "/api/partner-api-order-manage-link": {
+    title: "Order Management Link - Showpass Partner API",
+    description: "Create a short-lived order-management handoff link for an attributed order.",
+    keywords: "showpass order management link, partner api, hmac api authentication"
+  },
+  "/api/partner-api-webhooks": {
+    title: "Partner Attribution in Showpass Webhooks",
+    description: "Learn how existing Showpass webhook payloads can include partner customer attribution fields.",
+    keywords: "showpass partner webhooks, partner attribution, webhook enrichment"
+  },
+
   // JavaScript SDK
   "/sdk/sdk-getting-started": {
     title: "Showpass JavaScript SDK - Getting Started Guide",

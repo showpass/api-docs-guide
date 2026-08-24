@@ -23,6 +23,7 @@ type IntegrationId =
   | "public-api"
   | "javascript-sdk"
   | "organizer-api"
+  | "partner-api"
   | "cli"
   | "wordpress"
   | "google-tag-manager"
@@ -322,6 +323,25 @@ const integrationPaths: IntegrationPath[] = [
 
 const additionalIntegrationPaths: IntegrationPath[] = [
   {
+    id: "partner-api",
+    label: "Partner API",
+    outcome: "Connect partner experiences",
+    title: "Build partner-facing Showpass experiences.",
+    description:
+      "Create partner users, work with partner resources, and connect customer attribution and order-management workflows.",
+    facts: ["REST API", "HMAC signing", "Partner workflows"],
+    codeLabel: "Request",
+    codeLines: [
+      <span key="partner-1">
+        <SyntaxToken type="keyword">GET</SyntaxToken>{" "}
+        <SyntaxToken type="string">/api/partner/</SyntaxToken>
+      </span>,
+    ],
+    action: "Read the Partner API",
+    to: "/api/partner-api-overview",
+    icon: Braces,
+  },
+  {
     id: "cli",
     label: "CLI",
     outcome: "Work with Showpass in terminal",
@@ -380,6 +400,7 @@ const allIntegrationPaths = [...integrationPaths, ...additionalIntegrationPaths]
 const indexMenuOrder: IntegrationId[] = [
   "public-api",
   "organizer-api",
+  "partner-api",
   "webhooks",
   "javascript-sdk",
   "cli",

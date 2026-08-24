@@ -17,6 +17,9 @@ interface NavigationProps {
 
 const getOpenSections = (currentPath: string): string[] => {
   if (currentPath.startsWith("/api/")) {
+    if (currentPath.includes("partner-api-")) {
+      return ["partner-api-reference"];
+    }
     if (currentPath.includes("private-api-")) {
       return ["private-api-reference"];
     }
@@ -177,6 +180,61 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     onClick={handleLinkClick}
                   >
                     Passwords
+                  </NavLink>
+                </li>
+              </ul>
+            </AccordionContent>
+          </AccordionItem>
+
+          <AccordionItem value="partner-api-reference">
+            <AccordionTrigger className={accordionTriggerClass}>
+              Partner API
+            </AccordionTrigger>
+            <AccordionContent className="pb-2">
+              <ul className="px-4 space-y-1">
+                <li>
+                  <NavLink
+                    to="/api/partner-api-overview"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Overview
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/api/partner-api-users"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Create or reuse a partner user
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/api/partner-api-customer-attribution-token"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Customer attribution token
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/api/partner-api-order-manage-link"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Order-management link
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
+                    to="/api/partner-api-webhooks"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Partner attribution in webhooks
                   </NavLink>
                 </li>
               </ul>
