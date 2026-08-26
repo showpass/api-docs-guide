@@ -6,10 +6,23 @@ import { cn } from "@/shared/lib/utils.ts";
 
 interface CodeBlockProps {
   code: string;
+  colorful?: boolean;
   language: string;
 }
 
-const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
+const getJsonTokenClass = (types: string[]) => {
+  if (types.includes("property")) return "!text-cyan-700 dark:!text-cyan-300";
+  if (types.includes("string")) return "!text-amber-700 dark:!text-amber-300";
+  if (types.includes("number")) return "!text-violet-700 dark:!text-violet-300";
+  if (types.includes("boolean") || types.includes("null")) {
+    return "!text-rose-700 dark:!text-rose-300";
+  }
+  if (types.includes("punctuation")) return "!text-slate-500 dark:!text-slate-400";
+
+  return "";
+};
+
+const CodeBlock: React.FC<CodeBlockProps> = ({ code, language, colorful = false }) => {
   const { copy, isCopied } = useClipboard();
 
   const copyToClipboard = () => {
@@ -63,9 +76,20 @@ const CodeBlock: React.FC<CodeBlockProps> = ({ code, language }) => {
                       {i + 1}
                     </span>
                     <span className="table-cell">
-                      {line.map((token, key) => (
-                        <span key={key} {...getTokenProps({ token })} />
-                      ))}
+                      {line.map((token, key) => {
+                        const tokenProps = getTokenProps({ token });
+
+                        return (
+                          <span
+                            key={key}
+                            {...tokenProps}
+                            className={cn(
+                              tokenProps.className,
+                              colorful && getJsonTokenClass(token.types),
+                            )}
+                          />
+                        );
+                      })}
                     </span>
                   </div>
                 ))}

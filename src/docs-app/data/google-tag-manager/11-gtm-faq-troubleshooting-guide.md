@@ -28,7 +28,7 @@ Yes. You can setup custom tags in GTM.
 
 ### 4. I'm using the Showpass SDK and widgets, what implementation should I use?
 
-We reccomend using the [iFrame Purchase Tracking via postMessage](https://dev.showpass.com/google-tag-manager/08-advanced-iframe-purchase-tracking-via-postmessage)
+We reccomend using the [iFrame Purchase Tracking via postMessage](https://dev.showpass.com/google-tag-manager/advanced-iframe-purchase-tracking-via-postmessage)
 
 This ensures higher accuracy, as it relies on the parent domain sending data to marketing pixels.
 

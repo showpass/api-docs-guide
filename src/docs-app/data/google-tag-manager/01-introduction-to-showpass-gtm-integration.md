@@ -28,7 +28,7 @@ Integrating Showpass with Google Tag Manager allows you to:
 
 ## Ready to Use JSON
 
-If you want to skip the step-by-step documentation and simply download our ready-to-use JSON file to import into your GTM, please go to [section 12](/google-tag-manager/12-json-ready-to-use-importable-containers).
+If you want to skip the step-by-step documentation and simply download our ready-to-use JSON file to import into your GTM, please go to [section 12](/google-tag-manager/json-ready-to-use-importable-containers).
 
 ## Recommended GTM Learning Resources
 

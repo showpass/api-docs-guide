@@ -22,10 +22,31 @@ export interface ApiResponseData {
   fields?: ApiResponseField[];
 }
 
+export interface ApiQueryParameter {
+  description?: string;
+  name: string;
+  required?: boolean;
+}
+
+export type ApiMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+
+export interface ApiOperation {
+  endpoint: string;
+  id: string;
+  label: string;
+  method: ApiMethod;
+  queryParameters?: ApiQueryParameter[];
+  requestBodyTemplate?: string;
+}
+
 export interface ApiExamplesData {
   endpoint: string;
-  method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+  method: ApiMethod;
+  methods?: ApiMethod[];
+  operations?: ApiOperation[];
   description?: string;
+  queryParameters?: ApiQueryParameter[];
+  requestBodyTemplate?: string;
   examples: ApiExampleSet;
   response: ApiResponseData;
 }

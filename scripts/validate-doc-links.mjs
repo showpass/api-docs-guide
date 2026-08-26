@@ -49,8 +49,10 @@ const walkMarkdownFiles = (dir) => {
   return files.sort();
 };
 
-const routeForFile = (filePath) =>
-  `/${path.relative(docsRoot, filePath).replace(/\\/g, "/").replace(/\.md$/, "")}`;
+const routeForFile = (filePath) => {
+  const route = `/${path.relative(docsRoot, filePath).replace(/\\/g, "/").replace(/\.md$/, "")}`;
+  return route.replace(/^(\/[^/]+)\/\d+-/, "$1/");
+};
 
 const findApproximateLine = (content, href) => {
   const lines = content.split(/\r?\n/);

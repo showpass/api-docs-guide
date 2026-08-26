@@ -35,6 +35,10 @@ function stripMarkdown(markdownContent) {
     .trim();
 }
 
+function canonicalizeRoute(route) {
+  return route.replace(/^(\/[^/]+)\/\d+-/, "$1/");
+}
+
 async function buildSearchIndex() {
   const docsBasePath = path.resolve(process.cwd(), "src", "docs-app", "data");
   const publicPath = path.resolve(process.cwd(), "public");
@@ -57,8 +61,9 @@ async function buildSearchIndex() {
       // Construct the path relative to the 'data' directory
       // e.g., src/docs-app/data/wordpress/getting-started.md -> /wordpress/getting-started
       const relativePath = path.relative(docsBasePath, filePath);
-      const urlPath =
-        "/" + relativePath.replace(/\\/g, "/").replace(/\.md$/, "");
+      const urlPath = canonicalizeRoute(
+        "/" + relativePath.replace(/\\/g, "/").replace(/\.md$/, "")
+      );
 
       const plainTextContent = stripMarkdown(content);
 

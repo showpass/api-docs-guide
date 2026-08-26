@@ -94,7 +94,7 @@ Authorization: Token YOUR_API_TOKEN
 
 Contact Showpass support or an authorized Showpass administrator to obtain the
 token for your venue. For more information about the credential, see the
-[Private Organizer API overview](/api/10-private-api-overview).
+[Private Organizer API overview](/api/private-api-overview).
 
 Connect the CLI before creating a project, or enter the token when the `init`
 wizard asks for it:
@@ -187,6 +187,6 @@ installed project templates.
 
 ## See Also
 
-- [Commands reference](/cli/02-commands)
-- [Private Organizer API overview](/api/10-private-api-overview)
+- [Commands reference](/cli/commands)
+- [Private Organizer API overview](/api/private-api-overview)
 - [Versioned CLI releases](https://github.com/showpass/cli-releases/releases)

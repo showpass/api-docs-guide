@@ -1,8 +1,10 @@
 import React from "react";
 import { useTheme } from "next-themes";
+import { Link } from "react-router-dom";
 import {
   Braces,
   Briefcase,
+  Code2,
   ListTree,
   Menu,
   MoreHorizontal,
@@ -87,8 +89,8 @@ const TopNavigation = ({
             </Button>
           )}
 
-          <a
-            href="https://dev.showpass.com/"
+          <Link
+            to="/"
             aria-label="Showpass documentation home"
             className="flex min-w-0 items-center gap-3 rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
           >
@@ -100,7 +102,7 @@ const TopNavigation = ({
             >
               Docs
             </span>
-          </a>
+          </Link>
         </div>
 
         <div className="min-w-2 flex-1" />
@@ -155,6 +157,22 @@ const TopNavigation = ({
                 <span>News</span>
               </a>
             </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              asChild
+              className="text-sm hover:bg-accent hover:text-accent-foreground"
+            >
+              <a
+                href="https://engineering.showpass.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2"
+              >
+                <Code2 className="h-4 w-4" />
+                <span>Engineering Blog</span>
+              </a>
+            </Button>
           </div>
 
           <DropdownMenu>
@@ -201,6 +219,17 @@ const TopNavigation = ({
                 >
                   <Newspaper className="h-4 w-4" />
                   News
+                </a>
+              </DropdownMenuItem>
+              <DropdownMenuItem asChild>
+                <a
+                  href="https://engineering.showpass.com/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex cursor-pointer items-center gap-2"
+                >
+                  <Code2 className="h-4 w-4" />
+                  Engineering Blog
                 </a>
               </DropdownMenuItem>
             </DropdownMenuContent>

@@ -68,4 +68,4 @@ After verifying a ticket, you can perform various actions on the ticket:
 2. **Void the ticket** (invalidate) using the "void" action
 3. **Return a scanned ticket** (undo scan) using the "return" action
 
-All these operations are covered in the [Ticket Scan Actions](/api/12-private-api-ticket-scan-actions) document.
+All these operations are covered in the [Ticket Scan Actions](/api/private-api-ticket-scan-actions) document.

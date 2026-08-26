@@ -9,8 +9,8 @@ Showpass protects customer data and transactions by operating a PCI DSS Level 1 
 - **Compliance Artifacts:** AOC and other reports available from our Certifications page.
 
 ## Useful Links
-- [**Certifications & Reports**](/security/02-certifications)  
-- [**PCI Responsibilities (Client vs Showpass)**](/security/03-pci-responsibility-matrix)  
+- [**Certifications & Reports**](/security/certifications)
+- [**PCI Responsibilities (Client vs Showpass)**](/security/pci-responsibility-matrix)
 - [**Privacy Policy**](https://www.showpass.com/sell/privacy-policy)
 
 ## Contact

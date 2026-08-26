@@ -175,7 +175,7 @@ Before setting up Facebook Conversions API with Showpass:
 Ready to enhance your Facebook tracking with Conversions API?
 
 1. **Verify Prerequisites:** Ensure you have all required accounts and access
-2. **Install Conversions API:** Follow our [installation guide](/facebook/04-installing-facebook-conversions-api)
+2. **Install Conversions API:** Follow our [installation guide](/facebook/installing-facebook-conversions-api)
 3. **Test Your Setup:** Verify events are being received correctly
 4. **Monitor Performance:** Track improvements in ad performance and attribution
 

@@ -1,4 +1,5 @@
 import { ApiExamplesData } from "@/docs-app/data/types.ts";
+import partnerApiExamplesMap from "@/docs-app/data/partnerApiExamplesMap.ts";
 
 /**
  * Centralized map of API examples data for use in documentation pages
@@ -6,7 +7,7 @@ import { ApiExamplesData } from "@/docs-app/data/types.ts";
  */
 const apiExamplesMap: Record<string, ApiExamplesData> = {
   // Event API examples
-  "/api/03-public-api-query-specific-event": {
+  "/api/public-api-query-specific-event": {
     endpoint: "https://www.showpass.com/api/public/events/{slug}/",
     method: "GET",
     description: "Retrieve detailed information about a specific event",
@@ -217,7 +218,7 @@ axios.get('https://www.showpass.com/api/public/events/summer-music-festival-2025
   },
 
   // Event List API examples
-  "/api/02-public-api-event-list-by-organization": {
+  "/api/public-api-event-list-by-organization": {
     endpoint: "https://www.showpass.com/api/public/discovery/",
     method: "GET",
     description: "List events with optional filters",
@@ -572,7 +573,7 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
   },
 
   // Query Event API examples
-  "/api/01-public-api-introduction": {
+  "/api/public-api-introduction": {
     endpoint: "https://www.showpass.com/api/public/discovery/",
     method: "GET",
     description: "Search for events using various criteria",
@@ -745,7 +746,7 @@ axios.get('https://www.showpass.com/api/public/discovery/', {
  */
 const privateApiExamplesMap: Record<string, ApiExamplesData> = {
   // ---- Scan a ticket by code (GET and POST) ----
-  "/api/11-private-api-scan-ticket-by-code": {
+  "/api/private-api-scan-ticket-by-code": {
     endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/scan/",
     method: "GET",
     description: "Lookup a ticket item by barcode/code for scanning. Supports both GET and POST methods.",
@@ -868,7 +869,7 @@ axios.post(baseUrl, postData, {
   },
 
   // ---- Ticket Scan Actions (POST): pickup, return, void ----
-  "/api/12-private-api-ticket-scan-actions": {
+  "/api/private-api-ticket-scan-actions": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
     method: "POST",
     description: "Create a scan history with various actions (pickup, return, void).",
@@ -1079,7 +1080,7 @@ axios.post(baseUrl, voidPayload, { headers })
   },
 
   // ---- Create ticket scan history (POST): rotating barcode ----
-  "/api/11d-private-api-create-ticket-scan-history-rotating": {
+  "/api/private-api-create-ticket-scan-history-rotating": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
     method: "POST",
     description: "Pickup using a rotating barcode (non-NFC device allowed).",
@@ -1164,7 +1165,7 @@ axios.post(baseUrl, payload, { headers })
   },
 
   // ---- Create ticket scan history (POST): tracked barcode (e.g., Apple Wallet) ----
-  "/api/11e-private-api-create-ticket-scan-history-tracked": {
+  "/api/private-api-create-ticket-scan-history-tracked": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
     method: "POST",
     description:
@@ -1254,7 +1255,7 @@ axios.post(baseUrl, payload, { headers })
   },
 
   // ---- Scan stats (aggregated) ----
-  "/api/12-private-api-scan-stats": {
+  "/api/private-api-scan-stats": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id={event_id}",
     method: "GET",
     description:
@@ -1337,7 +1338,7 @@ axios.get(baseUrl, {
   },
 
   // ---- Tracking Links (CRUD + custom actions) ----
-  "/api/20-private-api-tracking-links": {
+  "/api/private-api-tracking-links": {
     endpoint: "https://www.showpass.com/api/venue/{venue_id}/analytics/tracking/links/",
     method: "GET",
     description: "List, create, update, and delete tracking links for your venue.",
@@ -1602,7 +1603,7 @@ axios.get(\`\${baseUrl}me/\`, { headers })
   },
 
   // ---- Discounts (CRUD) ----
-  "/api/21-private-api-discounts": {
+  "/api/private-api-discounts": {
     endpoint: "https://www.showpass.com/api/venue/{venue_id}/financials/discounts/",
     method: "POST",
     description: "Create and manage venue discount codes.",
@@ -1857,7 +1858,7 @@ run().catch(error => {
   },
 
   // ---- Passwords (CRUD) ----
-  "/api/22-private-api-passwords": {
+  "/api/private-api-passwords": {
     endpoint: "https://www.showpass.com/api/venue/{venue_id}/passwords/",
     method: "POST",
     description: "Create and manage event and ticket type access passwords for external access-code workflows.",
@@ -1994,7 +1995,7 @@ run().catch(error => {
   },
 
   // ---- Scan stats timeline (per-day) ----
-  "/api/13-private-api-scan-stats-timeline": {
+  "/api/private-api-scan-stats-timeline": {
     endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id={event_id}",
     method: "GET",
     description: "Timeline of scan stats grouped by day.",
@@ -2062,8 +2063,12 @@ axios.get(baseUrl, {
   }
 };
 
-// Merge privateApiExamplesMap into apiExamplesMap
-const mergedApiExamplesMap = { ...apiExamplesMap, ...privateApiExamplesMap };
+// Merge private and Partner API examples into the route map.
+const mergedApiExamplesMap = {
+  ...apiExamplesMap,
+  ...privateApiExamplesMap,
+  ...partnerApiExamplesMap,
+};
 
 export default mergedApiExamplesMap;
 export { privateApiExamplesMap };

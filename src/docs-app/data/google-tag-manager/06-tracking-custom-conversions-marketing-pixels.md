@@ -2,7 +2,7 @@
 
 Google Tag Manager (GTM) allows you to implement various third-party tracking tags (often called "pixels") for services like Facebook (Meta), Google Ads, X (Twitter), TikTok, Snapchat, Spotify and others. This section explains the general process of setting up these tags to fire on specific Showpass ecommerce events, using the data Showpass provides to the Data Layer.
 
-> **Note:** For your convenience, we provide ready to use configurations as an importable JSON file. You can download it and learn how to use it from [this](/google-tag-manager/12-json-ready-to-use-importable-containers) page.
+> **Note:** For your convenience, we provide ready to use configurations as an importable JSON file. You can download it and learn how to use it from [this](/google-tag-manager/json-ready-to-use-importable-containers) page.
 
 ## General Workflow
 

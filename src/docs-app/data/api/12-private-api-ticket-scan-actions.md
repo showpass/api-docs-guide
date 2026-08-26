@@ -1,6 +1,6 @@
 # Ticket Scan Actions
 
-After verifying a ticket using the [ticket verification endpoint](/api/11-private-api-scan-ticket-by-code), you can perform various actions on the ticket by creating a scan history record. This document covers the three main ticket actions:
+After verifying a ticket using the [ticket verification endpoint](/api/private-api-scan-ticket-by-code), you can perform various actions on the ticket by creating a scan history record. This document covers the three main ticket actions:
 
 1. **Pickup** - Mark a ticket as used (scan for entry)
 2. **Return** - Undo a previous scan (return to usable state)
@@ -26,7 +26,7 @@ Authorization: Token YOUR_API_TOKEN
 
 The typical workflow for ticket scanning is:
 
-1. Verify the ticket using the [verification endpoint](/api/11-private-api-scan-ticket-by-code)
+1. Verify the ticket using the [verification endpoint](/api/private-api-scan-ticket-by-code)
 2. Extract the ticket item ID from the verification response
 3. Create a scan history record with the appropriate action
 

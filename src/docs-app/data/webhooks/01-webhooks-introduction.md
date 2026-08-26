@@ -44,6 +44,15 @@ Showpass maintains delivery logs showing success/failure status for each webhook
 
 ---
 
+## Partner attribution
+
+Supported Partner integrations can optionally receive `partner_slug` and
+`partner_user_id` in webhook payloads. This uses the existing webhook events and
+URL.
+See [Partner attribution in webhooks](/api/partner-api-webhooks) for details.
+
+---
+
 ## Why use webhooks?
 
 ### Real-time automation
@@ -67,4 +76,4 @@ Eliminate manual data entry and frequent API polling to check for changes.
 
 ## Getting started
 
-Ready to set up webhooks? Continue to the next section on [Setup and Management](/webhooks/02-webhooks-setup-and-management) to configure your first endpoint.
+Ready to set up webhooks? Continue to the next section on [Setup and Management](/webhooks/webhooks-setup-and-management) to configure your first endpoint.

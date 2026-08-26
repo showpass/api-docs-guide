@@ -1,9 +1,10 @@
 import React from "react";
 import { Pencil, Bug } from "lucide-react";
 import { Separator } from "@/shared/components/separator.tsx";
+import DocsLoader from "@/docs-app/infrastructure/docs-loader";
 
 interface EditPageLinksProps {
-  /** The content path like /sdk/01-sdk-getting-started.md */
+  /** The content path like /sdk/sdk-getting-started.md */
   contentPath: string;
 }
 
@@ -15,11 +16,12 @@ const DOCS_BASE_PATH = "src/docs-app/data";
  * Generates the GitHub edit URL for a documentation page
  */
 const getEditUrl = (contentPath: string): string => {
-  // contentPath is like /sdk/01-sdk-getting-started.md
-  // We need: https://github.com/showpass/api-docs-guide/edit/master/src/docs-app/data/sdk/01-sdk-getting-started.md
-  const relativePath = contentPath.startsWith("/")
-    ? contentPath.slice(1)
-    : contentPath;
+  // contentPath is like /sdk/sdk-getting-started.md
+  // We need: https://github.com/showpass/api-docs-guide/edit/master/src/docs-app/data/sdk/sdk-getting-started.md
+  const sourcePath = DocsLoader.resolveSourcePath(contentPath);
+  const relativePath = sourcePath.startsWith("/")
+    ? sourcePath.slice(1)
+    : sourcePath;
   return `https://github.com/${GITHUB_REPO}/edit/${GITHUB_BRANCH}/${DOCS_BASE_PATH}/${relativePath}`;
 };
 
