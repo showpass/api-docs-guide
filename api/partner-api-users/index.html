@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Create or Reuse a Partner User - Showpass Partner API</title>
+    <meta name="description" content="Create or reuse a partner user identity with the Showpass Partner API and HMAC authentication." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Create or Reuse a Partner User - Showpass Partner API" />
+    <meta property="og:description" content="Create or reuse a partner user identity with the Showpass Partner API and HMAC authentication." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Create or Reuse a Partner User - Showpass Partner API" />
+    <meta name="twitter:description" content="Create or reuse a partner user identity with the Showpass Partner API and HMAC authentication." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Create or reuse a partner user</h1>
+<p>Create or reuse a partner user identity for the authenticated partner.</p>
+<pre><code class="language-http">POST /api/partner/users/
+</code></pre>
+<p>The request must be authenticated with the Partner API HMAC scheme described in
+the <a href="/api/partner-api-overview">Partner API overview</a>. The examples in the
+API reference panel sign the exact raw request body sent to Showpass.</p>
+<h2>Request body</h2>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>partner_user_id</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Stable partner-side user ID, up to 255 characters. It is trimmed and lowercased.</td>
+</tr>
+<tr>
+<td><code>email</code></td>
+<td>string</td>
+<td>Yes</td>
+<td>Partner user email address, up to 128 characters.</td>
+</tr>
+<tr>
+<td><code>email_verified</code></td>
+<td>boolean</td>
+<td>Yes</td>
+<td>Whether the partner has verified the email. If <code>true</code>, Showpass may link the request to an existing Showpass user with the same email.</td>
+</tr>
+<tr>
+<td><code>first_name</code></td>
+<td>string</td>
+<td>No</td>
+<td>First name, up to 32 characters.</td>
+</tr>
+<tr>
+<td><code>last_name</code></td>
+<td>string or null</td>
+<td>No</td>
+<td>Last name, up to 32 characters.</td>
+</tr>
+<tr>
+<td><code>phone</code></td>
+<td>string or null</td>
+<td>No</td>
+<td>Phone number, up to 32 characters.</td>
+</tr>
+<tr>
+<td><code>venue_id</code></td>
+<td>integer or null</td>
+<td>No</td>
+<td>Venue for this request. It must match the partner’s allowed venue when one is configured.</td>
+</tr>
+</tbody></table>
+<h2>Responses</h2>
+<p>The endpoint returns <code>201</code> when it creates a new identity and <code>200</code> when it
+reuses an existing identity.</p>
+<pre><code class="language-json">{
+  &quot;partner_identity_id&quot;: 123,
+  &quot;partner_user_id&quot;: &quot;customer-42&quot;,
+  &quot;status&quot;: &quot;active&quot;,
+  &quot;link_reason&quot;: &quot;created_user&quot;,
+  &quot;venue_id&quot;: 456
+}
+</code></pre>
+<p>For supported venues, the response can also include
+<code>customer_attribution_token</code> and
+<code>customer_attribution_token_expires_in_seconds</code>.</p>
+<p>The <code>link_reason</code> value is one of:</p>
+<ul>
+<li><code>created_user</code>: a new Showpass user was created.</li>
+<li><code>reused_existing</code>: the partner identity already existed.</li>
+<li><code>email_auto_linked</code>: the request was linked to an existing Showpass user after the partner confirmed the email.</li>
+</ul>
+<p>Error responses use the following status codes:</p>
+<ul>
+<li><code>400 Bad Request</code>: the request body is missing a required field or contains
+an invalid field value or type.</li>
+<li><code>403 Forbidden</code>: the Partner credentials are missing or invalid, or the
+requested <code>venue_id</code> is outside the partner&#39;s allowed venue scope.</li>
+<li><code>409 Conflict</code>: the request is valid but conflicts with existing data. This
+includes an email conflict, an inactive partner identity, or a <code>venue_id</code>
+that does not identify an existing venue.</li>
+</ul>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>

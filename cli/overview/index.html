@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Showpass CLI - Command Line Tool for Event Websites</title>
+    <meta name="description" content="Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Showpass CLI - Command Line Tool for Event Websites" />
+    <meta property="og:description" content="Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Showpass CLI - Command Line Tool for Event Websites" />
+    <meta name="twitter:description" content="Build and manage event websites with the Showpass CLI. Quick-start tool to generate React + TypeScript sites with Showpass SDK pre-configured." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass CLI</h1>
+<p>Build and manage event websites that connect directly to your Showpass venue.</p>
+<h2>Install</h2>
+<h3>Homebrew</h3>
+<p>Install the versioned CLI release and its project templates on macOS or Linux:</p>
+<pre><code class="language-bash">brew install showpass/tap/showpass
+</code></pre>
+<p>Homebrew verifies the release checksum and keeps the CLI upgradeable with
+<code>brew upgrade showpass</code>.</p>
+<h3>Nix</h3>
+<p>Install the CLI and its project templates from the public release flake:</p>
+<pre><code class="language-bash">nix profile install github:showpass/cli-releases#showpass
+</code></pre>
+<h3>Debian / Ubuntu</h3>
+<p>Install the native package matching the machine&#39;s architecture:</p>
+<pre><code class="language-bash">arch=&quot;$(dpkg --print-architecture)&quot;
+curl -fLO &quot;https://github.com/showpass/cli-releases/releases/download/linux-v2.1.0-r1/showpass_2.1.0-1_${arch}.deb&quot;
+sudo apt install &quot;./showpass_2.1.0-1_${arch}.deb&quot;
+</code></pre>
+<p>The release supports the <code>amd64</code> and <code>arm64</code> Debian architectures.</p>
+<h3>Fedora / RHEL</h3>
+<p>DNF can install the native package directly from the immutable release:</p>
+<pre><code class="language-bash">arch=&quot;$(rpm --eval &#39;%{_arch}&#39;)&quot;
+sudo dnf install &quot;https://github.com/showpass/cli-releases/releases/download/linux-v2.1.0-r1/showpass-2.1.0-1.${arch}.rpm&quot;
+</code></pre>
+<p>The release supports the <code>x86_64</code> and <code>aarch64</code> RPM architectures. Package
+checksums are available with the
+<a href="https://github.com/showpass/cli-releases/releases/tag/linux-v2.1.0-r1">native Linux release</a>.</p>
+<h3>Shell installer</h3>
+<pre><code class="language-bash">curl -fsSL &quot;https://www.showpass.com/install.sh&quot; | bash
+</code></pre>
+<p>The currently published packages support macOS and Linux on Intel/AMD and
+ARM64 systems. Verify the installation with:</p>
+<pre><code class="language-bash">showpass --version
+</code></pre>
+<h3>Add to PATH</h3>
+<p>If <code>showpass</code> is not found after installation, add the local binary directory
+to your shell configuration.</p>
+<p>For Bash (<code>~/.bashrc</code>) or Zsh (<code>~/.zshrc</code>):</p>
+<pre><code class="language-bash">export PATH=&quot;$HOME/.local/bin:$PATH&quot;
+</code></pre>
+<p>For Fish (<code>~/.config/fish/config.fish</code>):</p>
+<pre><code class="language-fish">set -gx PATH $HOME/.local/bin $PATH
+</code></pre>
+<p>Restart the terminal or reload your shell configuration after making this
+change.</p>
+<h2>Authentication</h2>
+<p>The CLI does not ask for your Showpass email address or password. Account login
+requires reCAPTCHA, which is intentionally not reproduced in a command-line
+environment. Instead, the CLI authenticates with the Private Organizer API
+token issued for your venue:</p>
+<pre><code class="language-text">Authorization: Token YOUR_API_TOKEN
+</code></pre>
+<p>Contact Showpass support or an authorized Showpass administrator to obtain the
+token for your venue. For more information about the credential, see the
+<a href="/api/private-api-overview">Private Organizer API overview</a>.</p>
+<p>Connect the CLI before creating a project, or enter the token when the <code>init</code>
+wizard asks for it:</p>
+<pre><code class="language-bash">showpass login
+showpass whoami
+</code></pre>
+<p>Token input is hidden. The CLI validates the token with Showpass, selects its
+venue automatically, and then stores it in <code>~/.local/share/showpass/config</code>.
+On macOS and Linux, the directory and file are restricted to the current OS
+user.</p>
+<p>Treat the token as a secret. It authenticates as the venue&#39;s Access Token User
+and has the permissions assigned to that employment. Private Organizer API
+tokens do not expire automatically, but Showpass can revoke them.</p>
+<blockquote>
+<p><code>Token</code> is the literal authorization scheme. <code>Bearer</code> and <code>JWT</code> do not
+authenticate this credential.</p>
+</blockquote>
+<h3>Upgrading from account login</h3>
+<p>JWT credentials saved by an earlier CLI release are no longer accepted. Run
+<code>showpass login</code> and enter the Private Organizer API token. A successful login
+or <code>showpass logout</code> removes the obsolete JWT fields.</p>
+<h2>Quick Start</h2>
+<pre><code class="language-bash">showpass init my-event-site
+</code></pre>
+<p>The interactive wizard:</p>
+<ul>
+<li>Validates your Private Organizer API token if needed</li>
+<li>Connects the project to the token&#39;s venue</li>
+<li>Generates a React and TypeScript website with the Showpass SDK configured</li>
+<li>Installs dependencies and starts the development server</li>
+</ul>
+<p>The generated site runs at <code>http://localhost:8080</code>.</p>
+<h2>What You Get</h2>
+<ul>
+<li>React 18, TypeScript, and Vite</li>
+<li>Tailwind CSS and shadcn/ui components</li>
+<li>Showpass SDK widgets for calendars, tickets, and carts</li>
+<li>A hot-reload development server</li>
+</ul>
+<h2>Hosted Deployment</h2>
+<p>The CLI can create and build sites locally. Showpass-hosted deployment is not
+available yet because its backend deployment endpoint has not been released.</p>
+<h2>Uninstall</h2>
+<p>For a Homebrew installation:</p>
+<pre><code class="language-bash">brew uninstall showpass
+</code></pre>
+<p>For a Nix profile installation:</p>
+<pre><code class="language-bash">nix profile remove showpass
+</code></pre>
+<p>For a Debian / Ubuntu installation:</p>
+<pre><code class="language-bash">sudo apt remove showpass
+</code></pre>
+<p>For a Fedora / RHEL installation:</p>
+<pre><code class="language-bash">sudo dnf remove showpass
+</code></pre>
+<p>For a shell-installer installation:</p>
+<pre><code class="language-bash">rm ~/.local/bin/showpass
+rm -rf ~/.local/share/showpass
+</code></pre>
+<p>Removing the data directory also removes the locally stored API token and
+installed project templates.</p>
+<h2>See Also</h2>
+<ul>
+<li><a href="/cli/commands">Commands reference</a></li>
+<li><a href="/api/private-api-overview">Private Organizer API overview</a></li>
+<li><a href="https://github.com/showpass/cli-releases/releases">Versioned CLI releases</a></li>
+</ul>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>

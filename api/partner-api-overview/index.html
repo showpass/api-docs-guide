@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Showpass Partner API Overview - Developer Documentation</title>
+    <meta name="description" content="Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Showpass Partner API Overview - Developer Documentation" />
+    <meta property="og:description" content="Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Showpass Partner API Overview - Developer Documentation" />
+    <meta name="twitter:description" content="Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Partner API overview</h1>
+<p>The Partner API is for server-to-server integrations between Showpass and a
+trusted partner application. It lets a partner:</p>
+<ul>
+<li>Create or reuse a Showpass customer identity.</li>
+<li>Generate a short-lived customer attribution token.</li>
+<li>Create a short-lived order-management link for a customer’s order.</li>
+<li>Receive partner customer information in supported webhook events.</li>
+</ul>
+<p>Use this API when your backend needs to connect customers and orders in your
+system with Showpass. Keep the partner secret on your server. Do not expose it
+in browser code or mobile applications.</p>
+<p>The API base URL is:</p>
+<pre><code class="language-text">https://www.showpass.com/api/partner/
+</code></pre>
+<h2>Authentication</h2>
+<p>Partner credentials are provided by Showpass during Partner onboarding. Contact
+your CSM to receive your Key ID and Secret. Store the Secret securely on your
+server and never commit or expose it in client-side code.</p>
+<p>Partner requests use HMAC authentication. Send these headers on every request:</p>
+<table>
+<thead>
+<tr>
+<th>Header</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>X-Showpass-Partner-Key-Id</code></td>
+<td>Partner credential key ID.</td>
+</tr>
+<tr>
+<td><code>X-Showpass-Partner-Timestamp</code></td>
+<td>Unix timestamp in seconds. Requests older than five minutes or too far in the future are rejected.</td>
+</tr>
+<tr>
+<td><code>X-Showpass-Partner-Nonce</code></td>
+<td>A unique value for this request. A nonce cannot be reused.</td>
+</tr>
+<tr>
+<td><code>X-Showpass-Partner-Signature</code></td>
+<td><code>sha256=</code> followed by the HMAC-SHA256 digest.</td>
+</tr>
+</tbody></table>
+<p>Calculate the signature with the partner secret over this newline-separated
+canonical value:</p>
+<pre><code class="language-text">v1
+TIMESTAMP
+NONCE
+HTTP_METHOD
+PATH_AND_QUERY
+SHA256_OF_RAW_REQUEST_BODY
+</code></pre>
+<p>The value in <code>X-Showpass-Partner-Signature</code> is <code>sha256=</code> followed by the
+lowercase hexadecimal HMAC-SHA256 digest. Sign the exact path and query string
+sent to Showpass. For an empty request body, hash the empty byte string.</p>
+<p>For example, this Python code creates the signature for a <code>POST</code> request. The
+<code>body</code> value must be exactly the same bytes sent in the request:</p>
+<pre><code class="language-python">import hashlib
+import hmac
+import time
+import uuid
+
+partner_secret = &quot;your-partner-secret&quot;
+body = &#39;{&quot;partner_user_id&quot;:&quot;customer-42&quot;}&#39;
+timestamp = str(int(time.time()))
+nonce = str(uuid.uuid4())
+path_and_query = &quot;/api/partner/customer-attribution-token/&quot;
+body_hash = hashlib.sha256(body.encode()).hexdigest()
+
+canonical = &quot;\n&quot;.join([
+    &quot;v1&quot;,
+    timestamp,
+    nonce,
+    &quot;POST&quot;,
+    path_and_query,
+    body_hash,
+])
+signature = &quot;sha256=&quot; + hmac.new(
+    partner_secret.encode(),
+    canonical.encode(),
+    hashlib.sha256,
+).hexdigest()
+</code></pre>
+<h2>Organization and venue scope</h2>
+<p>The credential identifies the partner integration and may be restricted to one
+venue. A request cannot use a different venue from the credential’s venue
+restriction. If no venue restriction exists, a supplied <code>venue_id</code> must refer
+to an existing venue.</p>
+<p>Partner user IDs are trimmed, normalized to lowercase, and unique within a
+partner. The request is rejected when the credential is invalid or the partner
+integration is inactive.</p>
+<p>Missing or invalid authentication headers and signatures return <code>403</code>. Send
+all four headers on every request, and generate a new timestamp, nonce, and
+signature for each request.</p>
+<h2>Endpoint catalog</h2>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Endpoint</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>POST</code></td>
+<td><a href="/api/partner-api-users"><code>/api/partner/users/</code></a></td>
+<td>Create or reuse a partner user identity.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="/api/partner-api-customer-attribution-token"><code>/api/partner/customer-attribution-token/</code></a></td>
+<td>Issue a short-lived customer attribution token for an existing partner identity.</td>
+</tr>
+<tr>
+<td><code>POST</code></td>
+<td><a href="/api/partner-api-order-manage-link"><code>/api/partner/orders/manage-link/</code></a></td>
+<td>Create a short-lived order-management handoff link for an order.</td>
+</tr>
+</tbody></table>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>

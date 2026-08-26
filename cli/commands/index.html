@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CLI Commands Reference - Showpass Developer Documentation</title>
+    <meta name="description" content="Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="CLI Commands Reference - Showpass Developer Documentation" />
+    <meta property="og:description" content="Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="CLI Commands Reference - Showpass Developer Documentation" />
+    <meta name="twitter:description" content="Complete reference for Showpass CLI commands. Learn about init, build, dev, deploy, and all available CLI options and flags." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Showpass CLI Commands</h1>
+<h2>Install and upgrade</h2>
+<p>Install the CLI with Homebrew:</p>
+<pre><code class="language-bash">brew tap showpass/tap
+brew install showpass
+showpass --version
+</code></pre>
+<p>Upgrade it with:</p>
+<pre><code class="language-bash">brew upgrade showpass
+</code></pre>
+<p>See <a href="/cli/overview">CLI overview and installation</a> for PATH conflict
+troubleshooting and the installer-script alternative.</p>
+<h2>login</h2>
+<p>Securely prompt for, validate, and save a Private Organizer API token:</p>
+<pre><code class="language-bash">showpass login
+</code></pre>
+<p>Input is hidden. The token is checked against Showpass before it is persisted,
+and the venue is selected automatically from the Access Token User&#39;s
+employment.</p>
+<p>If a token is already stored, use <code>showpass logout</code> before entering a different
+token interactively.</p>
+<h2>init</h2>
+<p>Create a Showpass website project with the interactive wizard:</p>
+<pre><code class="language-bash">showpass init my-event-site
+</code></pre>
+<p>Without a name, one is generated automatically:</p>
+<pre><code class="language-bash">showpass init
+</code></pre>
+<p>If no valid token is stored, the wizard asks for the venue&#39;s Private Organizer
+API token. It then generates the project, installs dependencies, and starts the
+development server.</p>
+<h2>dev</h2>
+<p>Start the local development server with hot reload:</p>
+<pre><code class="language-bash">showpass dev
+</code></pre>
+<p>Generated projects run on <code>http://localhost:8080</code> by default.</p>
+<h2>build</h2>
+<p>Create a production-optimized build:</p>
+<pre><code class="language-bash">showpass build
+</code></pre>
+<p>Output is written to the project&#39;s <code>dist/</code> directory.</p>
+<h2>whoami</h2>
+<p>Revalidate the stored token and display its connected venue:</p>
+<pre><code class="language-bash">showpass whoami
+</code></pre>
+<p>If Showpass has revoked the token, or its Access Token User no longer has a
+venue employment, the CLI removes the unusable local authentication state.</p>
+<h2>logout</h2>
+<p>Remove the locally stored API token and venue selection:</p>
+<pre><code class="language-bash">showpass logout
+</code></pre>
+<p>This does not revoke the token in Showpass. Contact Showpass support if the
+credential itself needs to be rotated or revoked.</p>
+<h2>config</h2>
+<p>Inspect CLI configuration without exposing the full API token:</p>
+<pre><code class="language-bash">showpass config list
+showpass config path
+</code></pre>
+<p>Sensitive values are masked in command output. Avoid setting authentication
+values manually because <code>showpass login</code> performs remote validation first.</p>
+<h2>deploy</h2>
+<pre><code class="language-bash">showpass deploy
+</code></pre>
+<p>Showpass-hosted deployment is not available yet because the required backend
+deployment endpoint has not been released. Use <code>showpass build</code> to produce a
+local production bundle in the meantime.</p>
+<h2>help</h2>
+<p>Show all commands:</p>
+<pre><code class="language-bash">showpass --help
+</code></pre>
+<p>Show help for one command:</p>
+<pre><code class="language-bash">showpass init --help
+</code></pre>
+<h2>See Also</h2>
+<ul>
+<li><a href="/cli/overview">CLI overview and installation</a></li>
+<li><a href="/api/private-api-overview">Private Organizer API overview</a></li>
+</ul>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>

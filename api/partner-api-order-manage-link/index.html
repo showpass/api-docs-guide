@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Showpass Docs Guide</title>
-    <meta name="description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <title>Order Management Link - Showpass Partner API</title>
+    <meta name="description" content="Create a short-lived order-management handoff link for an attributed order." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Showpass Developer Documentation" />
-    <meta property="og:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta property="og:title" content="Order Management Link - Showpass Partner API" />
+    <meta property="og:description" content="Create a short-lived order-management handoff link for an attributed order." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Showpass Developer Documentation" />
-    <meta name="twitter:description" content="Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration." />
+    <meta name="twitter:title" content="Order Management Link - Showpass Partner API" />
+    <meta name="twitter:description" content="Create a short-lived order-management handoff link for an attributed order." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -85,7 +85,46 @@
     height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     <!-- End Google Tag Manager (noscript) -->
     
-    <div id="root"></div>
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Create an order-management link</h1>
+<p>Create a short-lived order-management handoff link for an attributed order.</p>
+<pre><code class="language-http">POST /api/partner/orders/manage-link/
+</code></pre>
+<p>The request must be authenticated with the Partner API HMAC scheme described in
+the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
+<h2>Request body</h2>
+<pre><code class="language-json">{
+  &quot;partner_user_id&quot;: &quot;customer-42&quot;,
+  &quot;transaction_id&quot;: &quot;transaction-id&quot;
+}
+</code></pre>
+<p>The transaction must belong to the partner user and satisfy the partner’s venue
+scope. The endpoint returns <code>201</code>:</p>
+<pre><code class="language-json">{
+  &quot;manage_url&quot;: &quot;https://www.showpass.com/account/partner-login/opaque-code/&quot;,
+  &quot;expires_in_seconds&quot;: 120
+}
+</code></pre>
+<p>The link expires after 120 seconds. It can be used once. The code is stored as
+a hash and cannot be reused after it is consumed or expires.</p>
+<h2>Using the link</h2>
+<p>The <code>manage_url</code> is a browser handoff route:</p>
+<pre><code class="language-http">GET /account/partner-login/&lt;code&gt;/
+</code></pre>
+<p>When the code is valid, Showpass consumes it, creates a short-lived
+order-scoped session, and redirects the customer to the order page. The route
+does not return the order data directly.</p>
+<p>An invalid, expired, already-used, or out-of-scope link redirects the customer
+to the Showpass login page:</p>
+<pre><code class="language-text">/accounts/login/?next=/account/my-orders/
+</code></pre>
+<p>The request returns <code>403</code> when the order is outside the partner’s venue scope,
+and <code>409</code> when the partner user or order cannot be found or the partner user is
+inactive. Validation errors return <code>400</code> and authentication failures return
+<code>403</code>.</p>
+</article>
+</div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
     <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
   </body>
