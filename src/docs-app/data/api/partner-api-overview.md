@@ -1,40 +1,57 @@
 # Partner API overview
 
-The Partner API is for server-to-server integrations between Showpass and a
-trusted partner application. It lets a partner:
+Use the Partner API when your application owns the customer experience and Showpass provides event discovery, checkout, tickets, and order management.
 
-- Create or reuse a Showpass customer identity.
-- Generate a short-lived customer attribution token.
-- Create a short-lived order-management link for a customer’s order.
-- Receive partner customer information in supported webhook events.
+The Partner API connects a customer in your system to their Showpass purchase. It complements the [Public Discovery API](/api/public-api-introduction), the [Ticket Purchase Widget](/sdk/ticket-purchase-widget), and [Showpass webhooks](/webhooks/webhooks-introduction).
 
-Use this API when your backend needs to connect customers and orders in your
-system with Showpass. Keep the partner secret on your server. Do not expose it
-in browser code or mobile applications.
+## What the integration does
 
-The API base URL is:
+| Your application | Showpass |
+| --- | --- |
+| Owns the customer record and stable customer ID. | Links that ID to a Showpass customer. |
+| Displays events returned by the Discovery API. | Owns event inventory and availability. |
+| Opens the Showpass purchase widget. | Runs ticket selection, checkout, and payment. |
+| Receives and reconciles order webhooks. | Owns orders, tickets, refunds, and transfers. |
+| Requests an order-management link. | Gives the customer scoped access to the Showpass order page. |
+
+## How a purchase is connected
+
+1. Your backend [syncs the customer](/api/partner-api-users) using the stable ID from your system as `partner_user_id`.
+2. Your application [discovers Showpass events by organization](/api/public-api-event-list-by-organization) and keeps the selected event `slug`.
+3. Immediately before checkout, your backend [creates a customer attribution token](/api/partner-api-customer-attribution-token).
+4. Your frontend passes the event slug and token to the [Ticket Purchase Widget](/sdk/ticket-purchase-widget).
+5. Showpass validates the token and records the partner customer on the basket and completed order.
+6. [Webhook payloads identify the partner customer](/api/partner-api-webhooks), so your system can reconcile order activity.
+7. When the customer needs their tickets or receipt, your backend [creates a manage-order link](/api/partner-api-order-manage-link).
+
+See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the complete sequence and implementation examples.
+
+## Identity and authentication are separate
+
+`partner_user_id` is your stable identifier for a customer. A `customer_attribution_token` carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.
+
+Partner credentials authenticate your backend. Never send the partner secret, `partner_user_id`, bearer tokens, or refresh tokens to the purchase widget.
+
+## Base URL and access
 
 ```text
 https://www.showpass.com/api/partner/
 ```
 
-## Authentication
+Showpass provides Partner API credentials and enables the required capabilities during partner onboarding. Contact your Showpass representative for a Key ID and Secret.
 
-Partner credentials are provided by Showpass during Partner onboarding. Contact
-your CSM to receive your Key ID and Secret. Store the Secret securely on your
-server and never commit or expose it in client-side code.
+## HMAC authentication
 
-Partner requests use HMAC authentication. Send these headers on every request:
+Every Partner API request is server-to-server and includes these headers:
 
 | Header | Description |
 | --- | --- |
 | `X-Showpass-Partner-Key-Id` | Partner credential key ID. |
-| `X-Showpass-Partner-Timestamp` | Unix timestamp in seconds. Requests older than five minutes or too far in the future are rejected. |
+| `X-Showpass-Partner-Timestamp` | Unix timestamp in seconds. Requests outside the five-minute acceptance window are rejected. |
 | `X-Showpass-Partner-Nonce` | A unique value for this request. A nonce cannot be reused. |
 | `X-Showpass-Partner-Signature` | `sha256=` followed by the HMAC-SHA256 digest. |
 
-Calculate the signature with the partner secret over this newline-separated
-canonical value:
+Calculate the signature with the partner secret over this newline-separated canonical value:
 
 ```text
 v1
@@ -45,12 +62,7 @@ PATH_AND_QUERY
 SHA256_OF_RAW_REQUEST_BODY
 ```
 
-The value in `X-Showpass-Partner-Signature` is `sha256=` followed by the
-lowercase hexadecimal HMAC-SHA256 digest. Sign the exact path and query string
-sent to Showpass. For an empty request body, hash the empty byte string.
-
-For example, this Python code creates the signature for a `POST` request. The
-`body` value must be exactly the same bytes sent in the request:
+Sign the exact method, path and query string, and body bytes sent to Showpass. For an empty body, hash the empty byte string.
 
 ```python
 import hashlib
@@ -80,25 +92,18 @@ signature = "sha256=" + hmac.new(
 ).hexdigest()
 ```
 
-## Organization and venue scope
+Missing or invalid authentication returns `403`. Generate a new timestamp, nonce, and signature for every request.
 
-The credential identifies the partner integration and may be restricted to one
-venue. A request cannot use a different venue from the credential’s venue
-restriction. If no venue restriction exists, a supplied `venue_id` must refer
-to an existing venue.
+## Organization scope
 
-Partner user IDs are trimmed, normalized to lowercase, and unique within a
-partner. The request is rejected when the credential is invalid or the partner
-integration is inactive.
+A Partner integration can be restricted to one Showpass organization. When a credential has this restriction, a request cannot operate outside it. The Partner API currently represents this scope with the `venue_id` request and response field.
 
-Missing or invalid authentication headers and signatures return `403`. Send
-all four headers on every request, and generate a new timestamp, nonce, and
-signature for each request.
+Partner customer IDs are trimmed, normalized to lowercase, and unique within a Partner integration.
 
 ## Endpoint catalog
 
-| Method | Endpoint | Purpose |
+| Method | Endpoint | Use it to |
 | --- | --- | --- |
-| `POST` | [`/api/partner/users/`](/api/partner-api-users) | Create or reuse a partner user identity. |
-| `POST` | [`/api/partner/customer-attribution-token/`](/api/partner-api-customer-attribution-token) | Issue a short-lived customer attribution token for an existing partner identity. |
-| `POST` | [`/api/partner/orders/manage-link/`](/api/partner-api-order-manage-link) | Create a short-lived order-management handoff link for an order. |
+| `POST` | [`/api/partner/users/`](/api/partner-api-users) | Connect a customer in your system to Showpass. |
+| `POST` | [`/api/partner/customer-attribution-token/`](/api/partner-api-customer-attribution-token) | Carry that customer relationship into checkout. |
+| `POST` | [`/api/partner/orders/manage-link/`](/api/partner-api-order-manage-link) | Send the customer to a specific Showpass order. |

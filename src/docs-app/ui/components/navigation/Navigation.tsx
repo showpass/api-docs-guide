@@ -203,11 +203,20 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                 </li>
                 <li>
                   <NavLink
+                    to="/api/partner-api-integration-flow"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Build the integration
+                  </NavLink>
+                </li>
+                <li>
+                  <NavLink
                     to="/api/partner-api-users"
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Create or reuse a partner user
+                    Sync a customer
                   </NavLink>
                 </li>
                 <li>
@@ -216,7 +225,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Customer attribution token
+                    Create checkout attribution
                   </NavLink>
                 </li>
                 <li>
@@ -225,7 +234,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Order-management link
+                    Send a customer to an order
                   </NavLink>
                 </li>
                 <li>
@@ -234,7 +243,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Partner attribution in webhooks
+                    Match orders to customers
                   </NavLink>
                 </li>
               </ul>

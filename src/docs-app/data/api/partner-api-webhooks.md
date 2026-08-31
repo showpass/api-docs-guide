@@ -1,38 +1,45 @@
-# Partner attribution in webhooks
+# Match orders to your customers
 
-Partner attribution adds two optional fields to an existing Showpass webhook:
+Showpass webhooks report purchases and post-purchase changes. For an attributed checkout, the payload can include the stable customer ID from your system:
 
 ```json
 {
-  "partner_slug": "partner-name",
-  "partner_user_id": "customer-42"
+  "event_type": "invoice.purchase",
+  "data": {
+    "partner_slug": "your-partner",
+    "partner_user_id": "customer-42"
+  }
 }
 ```
 
-This helps your partner application match a purchase, refund, void, or transfer
-to the customer in its own system.
+Use `partner_user_id` to find the customer in your system. Use the webhook’s Showpass transaction identifier to find or create the corresponding order record.
 
-Partner attribution can be included on these existing webhook events:
+The Partner fields extend the existing event-specific `data` object. They do not replace the normal invoice, customer, ticket, or transaction fields documented for that webhook.
 
-- `invoice.purchase`: a completed purchase.
-- `invoice.refund`: a refund.
-- `invoice.void`: a voided transaction.
-- `invoice.transfer`: the recipient-side invoice and ticket records created by
-  a ticket transfer.
-- `invoice.transferred`: the original purchaser’s invoice and ticket records
-  updated by a ticket transfer.
+## Supported order activity
 
-## Important
+Partner attribution can be included on these existing events:
 
-This is not a new webhook or a new webhook URL. You use the same webhook setup,
-events, signatures, and delivery process described in the [Webhooks
-introduction](/webhooks/webhooks-introduction).
+| Event | Use it to |
+| --- | --- |
+| `invoice.purchase` | Record a completed purchase. |
+| `invoice.refund` | Reconcile a refund. |
+| `invoice.void` | Mark a transaction as voided. |
+| `invoice.transfer` | Record the recipient-side order and tickets created by a transfer. |
+| `invoice.transferred` | Update the original purchaser’s order and tickets after a transfer. |
 
-For supported Partner integrations, Showpass adds the fields when it finds one
-clear partner customer match. If there is no match or more than one possible
-match, Showpass sends the normal webhook payload without these fields. The
-webhook is still delivered.
+Choose the events required by your product. Most integrations begin with `invoice.purchase` and add refund, void, and transfer events when they display post-purchase order state.
 
-For the supported event list and signature verification, see [webhook event
-types](/webhooks/webhooks-event-types) and [webhook
-security](/webhooks/webhooks-security).
+## Delivery and verification
+
+Partner attribution does not create a separate webhook or receiver. Configure the normal Showpass webhook events and URL, then verify every delivery using the documented `X-SHOWPASS-SIGNATURE` header before processing it.
+
+See [Webhook setup and management](/webhooks/webhooks-setup-and-management), [webhook security](/webhooks/webhooks-security), and the [invoice payload reference](/webhooks/webhooks-payload-invoice-object).
+
+Process deliveries idempotently using the webhook event identifier or the equivalent event-specific identifier. Expect retries and events that arrive after the initial purchase.
+
+## When Partner fields are absent
+
+Showpass includes Partner fields only when it can resolve one clear Partner customer for the order. If no attribution exists—or the match is ambiguous—the normal webhook is still delivered without `partner_slug` and `partner_user_id`.
+
+Treat missing Partner fields as an unattributed Showpass order. Do not infer the Partner customer from buyer email alone.

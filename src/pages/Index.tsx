@@ -398,11 +398,11 @@ const additionalIntegrationPaths: IntegrationPath[] = [
 const allIntegrationPaths = [...integrationPaths, ...additionalIntegrationPaths];
 
 const indexMenuOrder: IntegrationId[] = [
+  "javascript-sdk",
   "public-api",
   "organizer-api",
   "partner-api",
   "webhooks",
-  "javascript-sdk",
   "cli",
   "wordpress",
   "google-tag-manager",
@@ -417,7 +417,7 @@ const orderedIntegrationPaths = indexMenuOrder.map(
 const Index = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/"];
-  const [selectedId, setSelectedId] = useState<IntegrationId>("public-api");
+  const [selectedId, setSelectedId] = useState<IntegrationId>("javascript-sdk");
   const selectedPath =
     orderedIntegrationPaths.find(({ id }) => id === selectedId) ??
     orderedIntegrationPaths[0];
@@ -443,7 +443,7 @@ const Index = () => {
       <div className="not-prose pb-10 pt-7 sm:pt-8 2xl:pb-4 2xl:pt-6">
         <header className="max-w-[48rem]">
           <h1 className="m-0 text-[2.4rem] font-bold leading-[1.05] tracking-[-0.045em] text-foreground sm:text-[2.8rem]">
-            Build your event ticketing platform with <span className="text-primary">Showpass</span> infrastructure.
+            Build with <span className="text-primary">Showpass</span>
           </h1>
           <p className="mb-0 mt-2.5 text-base leading-7 text-muted-foreground sm:text-lg">
             Choose the capability your application needs.

@@ -46,28 +46,33 @@ export const seoDataMap: Record<string, SEOData> = {
   },
   "/api/partner-api-overview": {
     title: "Showpass Partner API Overview - Developer Documentation",
-    description: "Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution.",
-    keywords: "showpass partner api, server-to-server api, event app api, partner authentication, organization scoping"
+    description: "Connect customers in your application to Showpass checkout, order webhooks, and order management with the Showpass Partner API.",
+    keywords: "showpass partner api, customer identity, checkout attribution, partner authentication, order integration"
+  },
+  "/api/partner-api-integration-flow": {
+    title: "Build a Partner Ticketing Flow - Showpass Developer Documentation",
+    description: "Connect Showpass event discovery, embedded checkout, customer attribution, webhooks, and order management in one partner integration.",
+    keywords: "showpass partner integration, embedded ticket checkout, event discovery api, partner webhooks, manage order"
   },
   "/api/partner-api-users": {
-    title: "Create or Reuse a Partner User - Showpass Partner API",
-    description: "Create or reuse a partner user identity with the Showpass Partner API and HMAC authentication.",
-    keywords: "showpass partner users api, partner identity, hmac api authentication"
+    title: "Sync a Customer - Showpass Partner API",
+    description: "Connect a customer in your application to Showpass using a stable partner customer ID.",
+    keywords: "showpass partner customer api, customer identity sync, partner user id, hmac api authentication"
   },
   "/api/partner-api-customer-attribution-token": {
-    title: "Customer Attribution Token - Showpass Partner API",
-    description: "Issue a short-lived customer attribution token for an existing partner user.",
-    keywords: "showpass customer attribution token, partner api attribution, hmac api authentication"
+    title: "Create Checkout Attribution - Showpass Partner API",
+    description: "Create a short-lived token that connects a Showpass checkout and resulting order to a customer in your application.",
+    keywords: "showpass checkout attribution, customer attribution token, partner api checkout, purchase widget"
   },
   "/api/partner-api-order-manage-link": {
-    title: "Order Management Link - Showpass Partner API",
-    description: "Create a short-lived order-management handoff link for an attributed order.",
-    keywords: "showpass order management link, partner api, hmac api authentication"
+    title: "Send a Customer to Their Order - Showpass Partner API",
+    description: "Create a secure one-time link that opens a partner customer's completed order in Showpass.",
+    keywords: "showpass manage order link, partner order access, view tickets, order handoff"
   },
   "/api/partner-api-webhooks": {
-    title: "Partner Attribution in Showpass Webhooks",
-    description: "Learn how existing Showpass webhook payloads can include partner customer attribution fields.",
-    keywords: "showpass partner webhooks, partner attribution, webhook enrichment"
+    title: "Match Orders to Customers - Showpass Partner Webhooks",
+    description: "Use partner customer attribution in Showpass webhooks to reconcile purchases, refunds, voids, and transfers.",
+    keywords: "showpass partner webhooks, order reconciliation, partner attribution, purchase webhook"
   },
 
   // JavaScript SDK

@@ -1,25 +1,29 @@
-# Create an order-management link
+# Send a customer to their order
 
-Create a short-lived order-management handoff link for an attributed order.
+Create a short-lived link that opens a customer’s completed order in Showpass. Use it for **View tickets**, **View receipt**, or **Manage order** actions in your application.
 
 ```http
 POST /api/partner/orders/manage-link/
 ```
 
-The request must be authenticated with the Partner API HMAC scheme described in
-the [Partner API overview](/api/partner-api-overview).
+Call this endpoint from your backend only. Showpass verifies that the transaction belongs to the supplied Partner customer and is within the integration’s organization scope.
+
+Authenticate the request with the HMAC scheme in the [Partner API overview](/api/partner-api-overview).
 
 ## Request body
 
 ```json
 {
   "partner_user_id": "customer-42",
-  "transaction_id": "transaction-id"
+  "transaction_id": "showpass-transaction-id"
 }
 ```
 
-The transaction must belong to the partner user and satisfy the partner’s venue
-scope. The endpoint returns `201`:
+Use the same `partner_user_id` used for checkout attribution. Store the Showpass `transaction_id` from the purchase webhook with your order record.
+
+## Response
+
+The endpoint returns `201`:
 
 ```json
 {
@@ -28,29 +32,21 @@ scope. The endpoint returns `201`:
 }
 ```
 
-The link expires after 120 seconds. It can be used once. The code is stored as
-a hash and cannot be reused after it is consumed or expires.
+Navigate the customer’s browser to `manage_url` as a top-level page. The link expires after 120 seconds and can be used once, so request it when the customer clicks the action rather than generating it in advance.
 
-## Using the link
+## What happens in Showpass
 
-The `manage_url` is a browser handoff route:
+1. Showpass consumes the one-time code.
+2. Showpass creates access scoped to the requested order—not a full Showpass account session.
+3. The customer is redirected to the standard Showpass order page.
+4. The final browser URL does not contain the one-time code.
 
-```http
-GET /account/partner-login/<code>/
-```
+Do not embed `manage_url` in an iframe, store it as a permanent order URL, or send it to another customer.
 
-When the code is valid, Showpass consumes it, creates a short-lived
-order-scoped session, and redirects the customer to the order page. The route
-does not return the order data directly.
+Invalid, expired, used, or out-of-scope links do not create access. A direct visit with an invalid code returns the customer to the Showpass login flow.
 
-An invalid, expired, already-used, or out-of-scope link redirects the customer
-to the Showpass login page:
+## Errors
 
-```text
-/accounts/login/?next=/account/my-orders/
-```
-
-The request returns `403` when the order is outside the partner’s venue scope,
-and `409` when the partner user or order cannot be found or the partner user is
-inactive. Validation errors return `400` and authentication failures return
-`403`.
+- `400 Bad Request`: a customer or transaction ID is missing or invalid.
+- `403 Forbidden`: authentication failed or the order is outside the Partner integration’s organization scope.
+- `409 Conflict`: the customer or order cannot be found, the customer is inactive, or the order does not belong to that customer.

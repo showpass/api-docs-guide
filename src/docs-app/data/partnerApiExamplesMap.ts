@@ -8,7 +8,7 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
   "/api/partner-api-users": {
     endpoint: "https://www.showpass.com/api/partner/users/",
     method: "POST",
-    description: `Create or reuse a partner user identity. ${partnerHmacSigningNote}`,
+    description: `Connect a customer in your system to Showpass. ${partnerHmacSigningNote}`,
     examples: partnerHmacExamples(
       "/api/partner/users/",
       '{"partner_user_id":"customer-42","email":"customer@example.com","email_verified":true}',
@@ -27,7 +27,7 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
   "/api/partner-api-customer-attribution-token": {
     endpoint: "https://www.showpass.com/api/partner/customer-attribution-token/",
     method: "POST",
-    description: "Issue a customer attribution token",
+    description: "Create checkout attribution for a connected customer",
     examples: partnerHmacExamples(
       "/api/partner/customer-attribution-token/",
       '{"partner_user_id":"customer-42"}',
@@ -43,7 +43,7 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
   "/api/partner-api-order-manage-link": {
     endpoint: "https://www.showpass.com/api/partner/orders/manage-link/",
     method: "POST",
-    description: "Create an order-management handoff link",
+    description: "Send a customer to their completed Showpass order",
     examples: partnerHmacExamples(
       "/api/partner/orders/manage-link/",
       '{"partner_user_id":"customer-42","transaction_id":"transaction-id"}',

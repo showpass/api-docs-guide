@@ -38,7 +38,24 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
 | **params['tracking-id']** | String | Optional | Tracking link ID for affiliate tracking, password bypass, or hidden ticket access |
 | **params['show-description']** | Boolean | Optional | Control event description visibility. Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
+| **params['customer_attribution_token']** | String | Partner integrations | Short-lived token that associates checkout with a customer connected through the Partner API. |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML `<div>` element where the widget will mount |
+
+---
+
+## Partner customer attribution
+
+If your backend uses the Showpass Partner API, request a fresh customer attribution token before opening checkout and pass it in `params`:
+
+```javascript
+showpass.tickets.eventPurchaseWidget(event.slug, {
+  "customer_attribution_token": customerAttributionToken
+});
+```
+
+The token associates the resulting Showpass basket and order with the stable customer ID in your system. It does not sign the customer in or replace the buyer information collected during checkout.
+
+See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the server-to-server customer sync, token issuance, webhook, and order-management steps.
 
 ---
 
