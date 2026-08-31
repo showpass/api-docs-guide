@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Build a Partner Ticketing Flow - Showpass Developer Documentation</title>
+    <meta name="description" content="Connect Showpass event discovery, embedded checkout, customer attribution, webhooks, and order management in one partner integration." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Build a Partner Ticketing Flow - Showpass Developer Documentation" />
+    <meta property="og:description" content="Connect Showpass event discovery, embedded checkout, customer attribution, webhooks, and order management in one partner integration." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Build a Partner Ticketing Flow - Showpass Developer Documentation" />
+    <meta name="twitter:description" content="Connect Showpass event discovery, embedded checkout, customer attribution, webhooks, and order management in one partner integration." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Build a partner ticketing flow</h1>
+<p>This guide connects the Showpass event catalog, purchase widget, Partner API, and webhooks into one customer journey.</p>
+<h2>Before you begin</h2>
+<p>You need:</p>
+<ul>
+<li>Partner API credentials provided by Showpass.</li>
+<li>The Showpass organization ID whose events you want to display.</li>
+<li>The Showpass JavaScript SDK installed in your frontend.</li>
+<li>A public HTTPS endpoint that can receive Showpass webhooks.</li>
+</ul>
+<p>All <code>/api/partner/</code> requests belong in your backend. Event discovery and the purchase widget use their existing public integration paths.</p>
+<h2>1. Connect your customer to Showpass</h2>
+<p>When a customer registers—or before their first Showpass checkout—send their stable ID and verified identity information to Showpass:</p>
+<pre><code class="language-http">POST /api/partner/users/
+</code></pre>
+<pre><code class="language-json">{
+  &quot;partner_user_id&quot;: &quot;customer-42&quot;,
+  &quot;email&quot;: &quot;buyer@example.com&quot;,
+  &quot;email_verified&quot;: true,
+  &quot;first_name&quot;: &quot;Taylor&quot;,
+  &quot;last_name&quot;: &quot;Buyer&quot;
+}
+</code></pre>
+<p>Use an immutable ID from your database for <code>partner_user_id</code>, not an email address. You will use the same ID to request checkout tokens and manage-order links. See <a href="/api/partner-api-users">Sync a customer with Showpass</a>.</p>
+<h2>2. Display the organization’s events</h2>
+<p>Query the Discovery API from your backend and render the results in your application:</p>
+<pre><code class="language-http">GET https://www.showpass.com/api/public/discovery/?venue=ORGANIZATION_ID
+</code></pre>
+<p>Keep the <code>slug</code> returned for each event. The purchase widget uses it to identify what the customer is buying.</p>
+<p>For upcoming-only results, multiple organizations, recurring instances, pagination, and filters, see <a href="/api/public-api-event-list-by-organization">List events by organization</a>.</p>
+<h2>3. Create fresh checkout attribution</h2>
+<p>Immediately before opening checkout, ask your backend for a fresh token:</p>
+<pre><code class="language-http">POST /api/partner/customer-attribution-token/
+</code></pre>
+<pre><code class="language-json">{
+  &quot;partner_user_id&quot;: &quot;customer-42&quot;
+}
+</code></pre>
+<p>Return the <code>customer_attribution_token</code> to the frontend that is about to launch the widget. The token expires after one hour and should not be cached as a long-lived customer credential.</p>
+<h2>4. Open Showpass checkout</h2>
+<p>Pass the selected event <code>slug</code> and attribution token in the widget parameters:</p>
+<pre><code class="language-javascript">showpass.tickets.eventPurchaseWidget(selectedEvent.slug, {
+  &quot;customer_attribution_token&quot;: customerAttributionToken
+});
+</code></pre>
+<p>To embed checkout in a page instead of opening a modal, pass a container ID as the third argument. See the <a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a> for both modes.</p>
+<p>Showpass validates the token server-side and records the partner customer on the checkout basket and resulting order. The customer still enters their buyer details through normal Showpass checkout.</p>
+<p>The widget does not need or accept the Partner API secret, <code>partner_user_id</code>, a Showpass bearer token, or a checkout handoff code.</p>
+<h2>5. Reconcile order activity</h2>
+<p>Subscribe to the invoice events your application needs. When an order has one clear Partner attribution, Showpass includes your stable customer ID:</p>
+<pre><code class="language-json">{
+  &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;data&quot;: {
+    &quot;partner_slug&quot;: &quot;your-partner&quot;,
+    &quot;partner_user_id&quot;: &quot;customer-42&quot;
+  }
+}
+</code></pre>
+<p>Use <code>partner_user_id</code> to locate the customer and the webhook’s Showpass transaction identifier to update the correct order. Always verify <code>X-SHOWPASS-SIGNATURE</code> before processing a delivery. See <a href="/api/partner-api-webhooks">Match orders to your customers</a>.</p>
+<h2>6. Let the customer manage an order</h2>
+<p>When the customer selects <strong>Manage order</strong>, your backend requests a one-time link using the customer and transaction IDs:</p>
+<pre><code class="language-http">POST /api/partner/orders/manage-link/
+</code></pre>
+<pre><code class="language-json">{
+  &quot;partner_user_id&quot;: &quot;customer-42&quot;,
+  &quot;transaction_id&quot;: &quot;showpass-transaction-id&quot;
+}
+</code></pre>
+<p>Navigate the browser to the returned <code>manage_url</code> as a top-level page. Do not embed it in an iframe. Showpass verifies ownership, consumes the link, and opens the standard order page with access limited to that order.</p>
+<h2>Integration boundary</h2>
+<table>
+<thead>
+<tr>
+<th>Keep on your backend</th>
+<th>Safe in the browser</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Partner Key ID and Secret</td>
+<td>Public event data</td>
+</tr>
+<tr>
+<td>HMAC signing</td>
+<td>Selected event slug</td>
+</tr>
+<tr>
+<td>Customer sync and token issuance</td>
+<td>Short-lived <code>customer_attribution_token</code> passed directly to checkout</td>
+</tr>
+<tr>
+<td>Manage-order link request</td>
+<td>Returned <code>manage_url</code> used for top-level navigation</td>
+</tr>
+<tr>
+<td>Webhook signature verification</td>
+<td>Showpass JavaScript SDK</td>
+</tr>
+</tbody></table>
+<p>Do not log Partner secrets, raw attribution tokens, one-time manage-order URLs, or unnecessary customer data.</p>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>

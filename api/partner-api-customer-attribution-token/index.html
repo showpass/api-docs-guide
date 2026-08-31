@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Customer Attribution Token - Showpass Partner API</title>
-    <meta name="description" content="Issue a short-lived customer attribution token for an existing partner user." />
+    <title>Create Checkout Attribution - Showpass Partner API</title>
+    <meta name="description" content="Create a short-lived token that connects a Showpass checkout and resulting order to a customer in your application." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Customer Attribution Token - Showpass Partner API" />
-    <meta property="og:description" content="Issue a short-lived customer attribution token for an existing partner user." />
+    <meta property="og:title" content="Create Checkout Attribution - Showpass Partner API" />
+    <meta property="og:description" content="Create a short-lived token that connects a Showpass checkout and resulting order to a customer in your application." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Customer Attribution Token - Showpass Partner API" />
-    <meta name="twitter:description" content="Issue a short-lived customer attribution token for an existing partner user." />
+    <meta name="twitter:title" content="Create Checkout Attribution - Showpass Partner API" />
+    <meta name="twitter:description" content="Create a short-lived token that connects a Showpass checkout and resulting order to a customer in your application." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -87,33 +87,45 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Create a customer attribution token</h1>
-<p>Issue a short-lived customer attribution token for an existing partner user.</p>
+  <article><h1>Create checkout attribution</h1>
+<p>Create a short-lived token that connects a Showpass checkout to a customer in your system.</p>
 <pre><code class="language-http">POST /api/partner/customer-attribution-token/
 </code></pre>
-<p>The request must be authenticated with the Partner API HMAC scheme described in
-the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
+<p>Call this endpoint from your backend immediately before opening the Ticket Purchase Widget. The customer must first be connected with <a href="/api/partner-api-users">Sync a customer with Showpass</a>.</p>
+<p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
 <h2>Request body</h2>
 <pre><code class="language-json">{
   &quot;partner_user_id&quot;: &quot;customer-42&quot;
 }
 </code></pre>
-<p>The identity must already exist for the authenticated partner. The endpoint
-returns <code>201</code>:</p>
+<h2>Response</h2>
+<p>The endpoint returns <code>201</code>:</p>
 <pre><code class="language-json">{
   &quot;customer_attribution_token&quot;: &quot;opaque-token&quot;,
   &quot;customer_attribution_token_expires_in_seconds&quot;: 3600
 }
 </code></pre>
-<p>The token is valid for one hour. Pass it as <code>customer_attribution_token</code> when
-creating a supported Showpass checkout basket. This lets Showpass associate the
-resulting order with the partner customer.</p>
-<p>The raw token is returned only in this response. Showpass stores a hash of the
-token, so treat the raw value as a secret and do not log it.</p>
-<p>The request returns <code>403</code> when customer attribution is not available for the
-partner or venue. It returns <code>409</code> when the partner user does not exist or is
-inactive. Validation errors return <code>400</code> and authentication failures return
-<code>403</code>.</p>
+<p>Pass the token directly to the purchase widget:</p>
+<pre><code class="language-javascript">showpass.tickets.eventPurchaseWidget(selectedEvent.slug, {
+  &quot;customer_attribution_token&quot;: customerAttributionToken
+});
+</code></pre>
+<p>Showpass validates the token when it creates the checkout basket, then carries the resolved Partner customer relationship onto the completed order.</p>
+<h2>What the token is—and is not</h2>
+<ul>
+<li>It is short-lived checkout context for one Partner customer.</li>
+<li>It is valid for one hour and can be used by supported checkout flows during that period.</li>
+<li>It does not authenticate the customer or create a logged-in Showpass session.</li>
+<li>It does not replace the buyer information collected during checkout.</li>
+<li>It is not a Partner API credential, bearer token, or refresh token.</li>
+</ul>
+<p>The raw value is returned only in this response; Showpass stores its SHA-256 hash. Do not persist it as a long-lived customer credential or include it in logs.</p>
+<h2>Errors</h2>
+<ul>
+<li><code>400 Bad Request</code>: <code>partner_user_id</code> is missing or invalid.</li>
+<li><code>403 Forbidden</code>: authentication failed or checkout attribution is not enabled for this Partner integration.</li>
+<li><code>409 Conflict</code>: the Partner customer does not exist or is inactive.</li>
+</ul>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Partner Attribution in Showpass Webhooks</title>
-    <meta name="description" content="Learn how existing Showpass webhook payloads can include partner customer attribution fields." />
+    <title>Match Orders to Customers - Showpass Partner Webhooks</title>
+    <meta name="description" content="Use partner customer attribution in Showpass webhooks to reconcile purchases, refunds, voids, and transfers." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Partner Attribution in Showpass Webhooks" />
-    <meta property="og:description" content="Learn how existing Showpass webhook payloads can include partner customer attribution fields." />
+    <meta property="og:title" content="Match Orders to Customers - Showpass Partner Webhooks" />
+    <meta property="og:description" content="Use partner customer attribution in Showpass webhooks to reconcile purchases, refunds, voids, and transfers." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Partner Attribution in Showpass Webhooks" />
-    <meta name="twitter:description" content="Learn how existing Showpass webhook payloads can include partner customer attribution fields." />
+    <meta name="twitter:title" content="Match Orders to Customers - Showpass Partner Webhooks" />
+    <meta name="twitter:description" content="Use partner customer attribution in Showpass webhooks to reconcile purchases, refunds, voids, and transfers." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -87,36 +87,56 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Partner attribution in webhooks</h1>
-<p>Partner attribution adds two optional fields to an existing Showpass webhook:</p>
+  <article><h1>Match orders to your customers</h1>
+<p>Showpass webhooks report purchases and post-purchase changes. For an attributed checkout, the payload can include the stable customer ID from your system:</p>
 <pre><code class="language-json">{
-  &quot;partner_slug&quot;: &quot;partner-name&quot;,
-  &quot;partner_user_id&quot;: &quot;customer-42&quot;
+  &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;data&quot;: {
+    &quot;partner_slug&quot;: &quot;your-partner&quot;,
+    &quot;partner_user_id&quot;: &quot;customer-42&quot;
+  }
 }
 </code></pre>
-<p>This helps your partner application match a purchase, refund, void, or transfer
-to the customer in its own system.</p>
-<p>Partner attribution can be included on these existing webhook events:</p>
-<ul>
-<li><code>invoice.purchase</code>: a completed purchase.</li>
-<li><code>invoice.refund</code>: a refund.</li>
-<li><code>invoice.void</code>: a voided transaction.</li>
-<li><code>invoice.transfer</code>: the recipient-side invoice and ticket records created by
-a ticket transfer.</li>
-<li><code>invoice.transferred</code>: the original purchaser’s invoice and ticket records
-updated by a ticket transfer.</li>
-</ul>
-<h2>Important</h2>
-<p>This is not a new webhook or a new webhook URL. You use the same webhook setup,
-events, signatures, and delivery process described in the <a href="/webhooks/webhooks-introduction">Webhooks
-introduction</a>.</p>
-<p>For supported Partner integrations, Showpass adds the fields when it finds one
-clear partner customer match. If there is no match or more than one possible
-match, Showpass sends the normal webhook payload without these fields. The
-webhook is still delivered.</p>
-<p>For the supported event list and signature verification, see <a href="/webhooks/webhooks-event-types">webhook event
-types</a> and <a href="/webhooks/webhooks-security">webhook
-security</a>.</p>
+<p>Use <code>partner_user_id</code> to find the customer in your system. Use the webhook’s Showpass transaction identifier to find or create the corresponding order record.</p>
+<p>The Partner fields extend the existing event-specific <code>data</code> object. They do not replace the normal invoice, customer, ticket, or transaction fields documented for that webhook.</p>
+<h2>Supported order activity</h2>
+<p>Partner attribution can be included on these existing events:</p>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Use it to</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>invoice.purchase</code></td>
+<td>Record a completed purchase.</td>
+</tr>
+<tr>
+<td><code>invoice.refund</code></td>
+<td>Reconcile a refund.</td>
+</tr>
+<tr>
+<td><code>invoice.void</code></td>
+<td>Mark a transaction as voided.</td>
+</tr>
+<tr>
+<td><code>invoice.transfer</code></td>
+<td>Record the recipient-side order and tickets created by a transfer.</td>
+</tr>
+<tr>
+<td><code>invoice.transferred</code></td>
+<td>Update the original purchaser’s order and tickets after a transfer.</td>
+</tr>
+</tbody></table>
+<p>Choose the events required by your product. Most integrations begin with <code>invoice.purchase</code> and add refund, void, and transfer events when they display post-purchase order state.</p>
+<h2>Delivery and verification</h2>
+<p>Partner attribution does not create a separate webhook or receiver. Configure the normal Showpass webhook events and URL, then verify every delivery using the documented <code>X-SHOWPASS-SIGNATURE</code> header before processing it.</p>
+<p>See <a href="/webhooks/webhooks-setup-and-management">Webhook setup and management</a>, <a href="/webhooks/webhooks-security">webhook security</a>, and the <a href="/webhooks/webhooks-payload-invoice-object">invoice payload reference</a>.</p>
+<p>Process deliveries idempotently using the webhook event identifier or the equivalent event-specific identifier. Expect retries and events that arrive after the initial purchase.</p>
+<h2>When Partner fields are absent</h2>
+<p>Showpass includes Partner fields only when it can resolve one clear Partner customer for the order. If no attribution exists—or the match is ambiguous—the normal webhook is still delivered without <code>partner_slug</code> and <code>partner_user_id</code>.</p>
+<p>Treat missing Partner fields as an unattributed Showpass order. Do not infer the Partner customer from buyer email alone.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

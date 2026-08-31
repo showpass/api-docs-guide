@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Order Management Link - Showpass Partner API</title>
-    <meta name="description" content="Create a short-lived order-management handoff link for an attributed order." />
+    <title>Send a Customer to Their Order - Showpass Partner API</title>
+    <meta name="description" content="Create a secure one-time link that opens a partner customer" />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Order Management Link - Showpass Partner API" />
-    <meta property="og:description" content="Create a short-lived order-management handoff link for an attributed order." />
+    <meta property="og:title" content="Send a Customer to Their Order - Showpass Partner API" />
+    <meta property="og:description" content="Create a secure one-time link that opens a partner customer" />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Order Management Link - Showpass Partner API" />
-    <meta name="twitter:description" content="Create a short-lived order-management handoff link for an attributed order." />
+    <meta name="twitter:title" content="Send a Customer to Their Order - Showpass Partner API" />
+    <meta name="twitter:description" content="Create a secure one-time link that opens a partner customer" />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -87,42 +87,42 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Create an order-management link</h1>
-<p>Create a short-lived order-management handoff link for an attributed order.</p>
+  <article><h1>Send a customer to their order</h1>
+<p>Create a short-lived link that opens a customer’s completed order in Showpass. Use it for <strong>View tickets</strong>, <strong>View receipt</strong>, or <strong>Manage order</strong> actions in your application.</p>
 <pre><code class="language-http">POST /api/partner/orders/manage-link/
 </code></pre>
-<p>The request must be authenticated with the Partner API HMAC scheme described in
-the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
+<p>Call this endpoint from your backend only. Showpass verifies that the transaction belongs to the supplied Partner customer and is within the integration’s organization scope.</p>
+<p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
 <h2>Request body</h2>
 <pre><code class="language-json">{
   &quot;partner_user_id&quot;: &quot;customer-42&quot;,
-  &quot;transaction_id&quot;: &quot;transaction-id&quot;
+  &quot;transaction_id&quot;: &quot;showpass-transaction-id&quot;
 }
 </code></pre>
-<p>The transaction must belong to the partner user and satisfy the partner’s venue
-scope. The endpoint returns <code>201</code>:</p>
+<p>Use the same <code>partner_user_id</code> used for checkout attribution. Store the Showpass <code>transaction_id</code> from the purchase webhook with your order record.</p>
+<h2>Response</h2>
+<p>The endpoint returns <code>201</code>:</p>
 <pre><code class="language-json">{
   &quot;manage_url&quot;: &quot;https://www.showpass.com/account/partner-login/opaque-code/&quot;,
   &quot;expires_in_seconds&quot;: 120
 }
 </code></pre>
-<p>The link expires after 120 seconds. It can be used once. The code is stored as
-a hash and cannot be reused after it is consumed or expires.</p>
-<h2>Using the link</h2>
-<p>The <code>manage_url</code> is a browser handoff route:</p>
-<pre><code class="language-http">GET /account/partner-login/&lt;code&gt;/
-</code></pre>
-<p>When the code is valid, Showpass consumes it, creates a short-lived
-order-scoped session, and redirects the customer to the order page. The route
-does not return the order data directly.</p>
-<p>An invalid, expired, already-used, or out-of-scope link redirects the customer
-to the Showpass login page:</p>
-<pre><code class="language-text">/accounts/login/?next=/account/my-orders/
-</code></pre>
-<p>The request returns <code>403</code> when the order is outside the partner’s venue scope,
-and <code>409</code> when the partner user or order cannot be found or the partner user is
-inactive. Validation errors return <code>400</code> and authentication failures return
-<code>403</code>.</p>
+<p>Navigate the customer’s browser to <code>manage_url</code> as a top-level page. The link expires after 120 seconds and can be used once, so request it when the customer clicks the action rather than generating it in advance.</p>
+<h2>What happens in Showpass</h2>
+<ol>
+<li>Showpass consumes the one-time code.</li>
+<li>Showpass creates access scoped to the requested order—not a full Showpass account session.</li>
+<li>The customer is redirected to the standard Showpass order page.</li>
+<li>The final browser URL does not contain the one-time code.</li>
+</ol>
+<p>Do not embed <code>manage_url</code> in an iframe, store it as a permanent order URL, or send it to another customer.</p>
+<p>Invalid, expired, used, or out-of-scope links do not create access. A direct visit with an invalid code returns the customer to the Showpass login flow.</p>
+<h2>Errors</h2>
+<ul>
+<li><code>400 Bad Request</code>: a customer or transaction ID is missing or invalid.</li>
+<li><code>403 Forbidden</code>: authentication failed or the order is outside the Partner integration’s organization scope.</li>
+<li><code>409 Conflict</code>: the customer or order cannot be found, the customer is inactive, or the order does not belong to that customer.</li>
+</ul>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

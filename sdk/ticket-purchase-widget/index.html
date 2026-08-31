@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -165,12 +165,27 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
 <td>Language code for widget interface. Use <code>&#39;fr&#39;</code> for French (defaults to English)</td>
 </tr>
 <tr>
+<td><strong>params[&#39;customer_attribution_token&#39;]</strong></td>
+<td>String</td>
+<td>Partner integrations</td>
+<td>Short-lived token that associates checkout with a customer connected through the Partner API.</td>
+</tr>
+<tr>
 <td><strong>containerId</strong></td>
 <td>String</td>
 <td>Optional</td>
 <td><strong>For Embedded Mode:</strong> The ID of the HTML <code>&lt;div&gt;</code> element where the widget will mount</td>
 </tr>
 </tbody></table>
+<hr>
+<h2>Partner customer attribution</h2>
+<p>If your backend uses the Showpass Partner API, request a fresh customer attribution token before opening checkout and pass it in <code>params</code>:</p>
+<pre><code class="language-javascript">showpass.tickets.eventPurchaseWidget(event.slug, {
+  &quot;customer_attribution_token&quot;: customerAttributionToken
+});
+</code></pre>
+<p>The token associates the resulting Showpass basket and order with the stable customer ID in your system. It does not sign the customer in or replace the buyer information collected during checkout.</p>
+<p>See <a href="/api/partner-api-integration-flow">Build a partner ticketing flow</a> for the server-to-server customer sync, token issuance, webhook, and order-management steps.</p>
 <hr>
 <h2>Basic Usage Examples</h2>
 <p>These examples assume the Showpass SDK is already loaded. For production-ready code that handles SDK loading, see &quot;Robust Implementation Examples&quot; below.</p>

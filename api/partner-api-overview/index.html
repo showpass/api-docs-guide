@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Showpass Partner API Overview - Developer Documentation</title>
-    <meta name="description" content="Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution." />
+    <meta name="description" content="Connect customers in your application to Showpass checkout, order webhooks, and order management with the Showpass Partner API." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -28,7 +28,7 @@
 
     <!-- Open Graph / Facebook -->
     <meta property="og:title" content="Showpass Partner API Overview - Developer Documentation" />
-    <meta property="og:description" content="Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution." />
+    <meta property="og:description" content="Connect customers in your application to Showpass checkout, order webhooks, and order management with the Showpass Partner API." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -38,7 +38,7 @@
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
     <meta name="twitter:title" content="Showpass Partner API Overview - Developer Documentation" />
-    <meta name="twitter:description" content="Build server-to-server event applications with the Showpass Partner API, scoped credentials, organization isolation, and application attribution." />
+    <meta name="twitter:description" content="Connect customers in your application to Showpass checkout, order webhooks, and order management with the Showpass Partner API." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BPjoI4-o.js"></script>
+    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -88,25 +88,57 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Partner API overview</h1>
-<p>The Partner API is for server-to-server integrations between Showpass and a
-trusted partner application. It lets a partner:</p>
-<ul>
-<li>Create or reuse a Showpass customer identity.</li>
-<li>Generate a short-lived customer attribution token.</li>
-<li>Create a short-lived order-management link for a customer’s order.</li>
-<li>Receive partner customer information in supported webhook events.</li>
-</ul>
-<p>Use this API when your backend needs to connect customers and orders in your
-system with Showpass. Keep the partner secret on your server. Do not expose it
-in browser code or mobile applications.</p>
-<p>The API base URL is:</p>
+<p>Use the Partner API when your application owns the customer experience and Showpass provides event discovery, checkout, tickets, and order management.</p>
+<p>The Partner API connects a customer in your system to their Showpass purchase. It complements the <a href="/api/public-api-introduction">Public Discovery API</a>, the <a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a>, and <a href="/webhooks/webhooks-introduction">Showpass webhooks</a>.</p>
+<h2>What the integration does</h2>
+<table>
+<thead>
+<tr>
+<th>Your application</th>
+<th>Showpass</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Owns the customer record and stable customer ID.</td>
+<td>Links that ID to a Showpass customer.</td>
+</tr>
+<tr>
+<td>Displays events returned by the Discovery API.</td>
+<td>Owns event inventory and availability.</td>
+</tr>
+<tr>
+<td>Opens the Showpass purchase widget.</td>
+<td>Runs ticket selection, checkout, and payment.</td>
+</tr>
+<tr>
+<td>Receives and reconciles order webhooks.</td>
+<td>Owns orders, tickets, refunds, and transfers.</td>
+</tr>
+<tr>
+<td>Requests an order-management link.</td>
+<td>Gives the customer scoped access to the Showpass order page.</td>
+</tr>
+</tbody></table>
+<h2>How a purchase is connected</h2>
+<ol>
+<li>Your backend <a href="/api/partner-api-users">syncs the customer</a> using the stable ID from your system as <code>partner_user_id</code>.</li>
+<li>Your application <a href="/api/public-api-event-list-by-organization">discovers Showpass events by organization</a> and keeps the selected event <code>slug</code>.</li>
+<li>Immediately before checkout, your backend <a href="/api/partner-api-customer-attribution-token">creates a customer attribution token</a>.</li>
+<li>Your frontend passes the event slug and token to the <a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a>.</li>
+<li>Showpass validates the token and records the partner customer on the basket and completed order.</li>
+<li><a href="/api/partner-api-webhooks">Webhook payloads identify the partner customer</a>, so your system can reconcile order activity.</li>
+<li>When the customer needs their tickets or receipt, your backend <a href="/api/partner-api-order-manage-link">creates a manage-order link</a>.</li>
+</ol>
+<p>See <a href="/api/partner-api-integration-flow">Build a partner ticketing flow</a> for the complete sequence and implementation examples.</p>
+<h2>Identity and authentication are separate</h2>
+<p><code>partner_user_id</code> is your stable identifier for a customer. A <code>customer_attribution_token</code> carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.</p>
+<p>Partner credentials authenticate your backend. Never send the partner secret, <code>partner_user_id</code>, bearer tokens, or refresh tokens to the purchase widget.</p>
+<h2>Base URL and access</h2>
 <pre><code class="language-text">https://www.showpass.com/api/partner/
 </code></pre>
-<h2>Authentication</h2>
-<p>Partner credentials are provided by Showpass during Partner onboarding. Contact
-your CSM to receive your Key ID and Secret. Store the Secret securely on your
-server and never commit or expose it in client-side code.</p>
-<p>Partner requests use HMAC authentication. Send these headers on every request:</p>
+<p>Showpass provides Partner API credentials and enables the required capabilities during partner onboarding. Contact your Showpass representative for a Key ID and Secret.</p>
+<h2>HMAC authentication</h2>
+<p>Every Partner API request is server-to-server and includes these headers:</p>
 <table>
 <thead>
 <tr>
@@ -120,7 +152,7 @@ server and never commit or expose it in client-side code.</p>
 </tr>
 <tr>
 <td><code>X-Showpass-Partner-Timestamp</code></td>
-<td>Unix timestamp in seconds. Requests older than five minutes or too far in the future are rejected.</td>
+<td>Unix timestamp in seconds. Requests outside the five-minute acceptance window are rejected.</td>
 </tr>
 <tr>
 <td><code>X-Showpass-Partner-Nonce</code></td>
@@ -131,8 +163,7 @@ server and never commit or expose it in client-side code.</p>
 <td><code>sha256=</code> followed by the HMAC-SHA256 digest.</td>
 </tr>
 </tbody></table>
-<p>Calculate the signature with the partner secret over this newline-separated
-canonical value:</p>
+<p>Calculate the signature with the partner secret over this newline-separated canonical value:</p>
 <pre><code class="language-text">v1
 TIMESTAMP
 NONCE
@@ -140,11 +171,7 @@ HTTP_METHOD
 PATH_AND_QUERY
 SHA256_OF_RAW_REQUEST_BODY
 </code></pre>
-<p>The value in <code>X-Showpass-Partner-Signature</code> is <code>sha256=</code> followed by the
-lowercase hexadecimal HMAC-SHA256 digest. Sign the exact path and query string
-sent to Showpass. For an empty request body, hash the empty byte string.</p>
-<p>For example, this Python code creates the signature for a <code>POST</code> request. The
-<code>body</code> value must be exactly the same bytes sent in the request:</p>
+<p>Sign the exact method, path and query string, and body bytes sent to Showpass. For an empty body, hash the empty byte string.</p>
 <pre><code class="language-python">import hashlib
 import hmac
 import time
@@ -171,40 +198,33 @@ signature = &quot;sha256=&quot; + hmac.new(
     hashlib.sha256,
 ).hexdigest()
 </code></pre>
-<h2>Organization and venue scope</h2>
-<p>The credential identifies the partner integration and may be restricted to one
-venue. A request cannot use a different venue from the credential’s venue
-restriction. If no venue restriction exists, a supplied <code>venue_id</code> must refer
-to an existing venue.</p>
-<p>Partner user IDs are trimmed, normalized to lowercase, and unique within a
-partner. The request is rejected when the credential is invalid or the partner
-integration is inactive.</p>
-<p>Missing or invalid authentication headers and signatures return <code>403</code>. Send
-all four headers on every request, and generate a new timestamp, nonce, and
-signature for each request.</p>
+<p>Missing or invalid authentication returns <code>403</code>. Generate a new timestamp, nonce, and signature for every request.</p>
+<h2>Organization scope</h2>
+<p>A Partner integration can be restricted to one Showpass organization. When a credential has this restriction, a request cannot operate outside it. The Partner API currently represents this scope with the <code>venue_id</code> request and response field.</p>
+<p>Partner customer IDs are trimmed, normalized to lowercase, and unique within a Partner integration.</p>
 <h2>Endpoint catalog</h2>
 <table>
 <thead>
 <tr>
 <th>Method</th>
 <th>Endpoint</th>
-<th>Purpose</th>
+<th>Use it to</th>
 </tr>
 </thead>
 <tbody><tr>
 <td><code>POST</code></td>
 <td><a href="/api/partner-api-users"><code>/api/partner/users/</code></a></td>
-<td>Create or reuse a partner user identity.</td>
+<td>Connect a customer in your system to Showpass.</td>
 </tr>
 <tr>
 <td><code>POST</code></td>
 <td><a href="/api/partner-api-customer-attribution-token"><code>/api/partner/customer-attribution-token/</code></a></td>
-<td>Issue a short-lived customer attribution token for an existing partner identity.</td>
+<td>Carry that customer relationship into checkout.</td>
 </tr>
 <tr>
 <td><code>POST</code></td>
 <td><a href="/api/partner-api-order-manage-link"><code>/api/partner/orders/manage-link/</code></a></td>
-<td>Create a short-lived order-management handoff link for an order.</td>
+<td>Send the customer to a specific Showpass order.</td>
 </tr>
 </tbody></table>
 </article>
