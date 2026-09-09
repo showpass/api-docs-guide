@@ -47,7 +47,7 @@ Showpass maintains delivery logs showing success/failure status for each webhook
 ## Partner attribution
 
 Supported Partner integrations can optionally receive `partner_slug` and
-`partner_user_id` in webhook payloads. This uses the existing webhook events and
+`partner_external_user_id` in webhook payloads. This uses the existing webhook events and
 URL.
 See [Partner attribution in webhooks](/api/partner-api-webhooks) for details.
 

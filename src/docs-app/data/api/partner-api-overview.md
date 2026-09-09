@@ -16,7 +16,7 @@ The Partner API connects a customer in your system to their Showpass purchase. I
 
 ## How a purchase is connected
 
-1. Your backend [syncs the customer](/api/partner-api-users) using the stable ID from your system as `partner_user_id`.
+1. Your backend [syncs the customer](/api/partner-api-users) using the stable ID from your system as `partner_external_user_id`.
 2. Your application [discovers Showpass events by organization](/api/public-api-event-list-by-organization) and keeps the selected event `slug`.
 3. Immediately before checkout, your backend [creates a customer attribution token](/api/partner-api-customer-attribution-token).
 4. Your frontend passes the event slug and token to the [Ticket Purchase Widget](/sdk/ticket-purchase-widget).
@@ -28,9 +28,9 @@ See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the 
 
 ## Identity and authentication are separate
 
-`partner_user_id` is your stable identifier for a customer. A `customer_attribution_token` carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.
+`partner_external_user_id` is your stable identifier for a customer. A `customer_attribution_token` carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.
 
-Partner credentials authenticate your backend. Never send the partner secret, `partner_user_id`, bearer tokens, or refresh tokens to the purchase widget.
+Partner credentials authenticate your backend. Never send the partner secret, `partner_external_user_id`, bearer tokens, or refresh tokens to the purchase widget.
 
 ## Base URL and access
 
@@ -71,7 +71,7 @@ import time
 import uuid
 
 partner_secret = "your-partner-secret"
-body = '{"partner_user_id":"customer-42"}'
+body = '{"partner_external_user_id":"customer-42"}'
 timestamp = str(int(time.time()))
 nonce = str(uuid.uuid4())
 path_and_query = "/api/partner/customer-attribution-token/"

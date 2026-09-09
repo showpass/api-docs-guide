@@ -14,12 +14,12 @@ Authenticate the request with the HMAC scheme in the [Partner API overview](/api
 
 ```json
 {
-  "partner_user_id": "customer-42",
+  "partner_external_user_id": "customer-42",
   "transaction_id": "showpass-transaction-id"
 }
 ```
 
-Use the same `partner_user_id` used for checkout attribution. Store the Showpass `transaction_id` from the purchase webhook with your order record.
+Use the same `partner_external_user_id` used for checkout attribution. Store the Showpass `transaction_id` from the purchase webhook with your order record.
 
 ## Response
 

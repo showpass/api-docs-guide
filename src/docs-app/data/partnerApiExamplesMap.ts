@@ -11,13 +11,13 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
     description: `Connect a customer in your system to Showpass. ${partnerHmacSigningNote}`,
     examples: partnerHmacExamples(
       "/api/partner/users/",
-      '{"partner_user_id":"customer-42","email":"customer@example.com","email_verified":true}',
+      '{"partner_external_user_id":"customer-42","email":"customer@example.com","email_verified":true}',
     ),
     response: {
       status: 201,
       body: {
         partner_identity_id: 123,
-        partner_user_id: "customer-42",
+        partner_external_user_id: "customer-42",
         status: "active",
         link_reason: "created_user",
         venue_id: 456,
@@ -30,7 +30,7 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
     description: "Create checkout attribution for a connected customer",
     examples: partnerHmacExamples(
       "/api/partner/customer-attribution-token/",
-      '{"partner_user_id":"customer-42"}',
+      '{"partner_external_user_id":"customer-42"}',
     ),
     response: {
       status: 201,
@@ -46,7 +46,7 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
     description: "Send a customer to their completed Showpass order",
     examples: partnerHmacExamples(
       "/api/partner/orders/manage-link/",
-      '{"partner_user_id":"customer-42","transaction_id":"transaction-id"}',
+      '{"partner_external_user_id":"customer-42","transaction_id":"transaction-id"}',
     ),
     response: {
       status: 201,
