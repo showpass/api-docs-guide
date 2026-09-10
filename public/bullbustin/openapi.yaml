@@ -1,0 +1,5914 @@
+openapi: 3.0.3
+info:
+  title: Bullbustin + Showpass account integration API
+  version: 1.3.0
+  contact:
+    name: Showpass integrations team
+  description: >-
+    Integration reference for Bullbustin: public discovery, organization orders and tickets, patron accounts,
+    ticket scanning, tracking links, discounts, access passwords, held baskets and hold links, and webhooks.
+
+
+    ### Authentication by API group
+
+
+    * Public catalog and discovery: no API token. Browser origins must be allowlisted in Showpass.
+
+    * Private organization, ticket scanning, tracking links, discounts, and access passwords: send
+    `Authorization: Token <organization-api-key>` for the venue in the URL.
+
+    * Patron account operations: send `Authorization: JWT <access-token>` after patron authentication.
+
+    The selected server is the demo environment. Use credentials and IDs for that environment. Optional
+    capabilities require the corresponding Showpass venue configuration.
+
+
+    ### Webhooks
+
+
+    Showpass sends HTTP POST notifications to the HTTPS receiver configured by Bullbustin. Configure it in
+    **Organization Settings > Webhooks > Add Endpoint**, select the events, save, and retrieve the endpoint
+    Secret Key. Use **Send Test** to verify delivery. The endpoint can be edited, paused, resumed, or deleted
+    in the same dashboard.
+
+
+    | Event | Meaning |
+
+    | --- | --- |
+
+    | `invoice.purchase` | A successful purchase. |
+
+    | `invoice.refund` | A refund. |
+
+    | `invoice.void` | A voided transaction. |
+
+    | `invoice.transfer` | New invoice and ticket records for the transfer recipient. |
+
+    | `invoice.transferred` | Updated invoice and ticket records for the original purchaser. |
+
+    | `webhook.test` | A dashboard test delivery. |
+
+
+    #### Verify the webhook signature
+
+
+    Read `X-SHOWPASS-SIGNATURE` and compare it in constant time to the hexadecimal HMAC SHA1 of the **root
+    payload `id`, converted to a UTF-8 string**, using the webhook endpoint Secret Key. The signed input is
+    the root ID; the signature does not cover the full JSON body, `data`, or `webhook_event_uuid`.
+
+
+    ```python
+
+    import hashlib
+
+    import hmac
+
+
+    def verify_showpass_webhook(payload, received_signature, secret):
+        if not isinstance(payload, dict) or payload.get("id") is None:
+            return False
+        if not isinstance(received_signature, str):
+            return False
+        if len(received_signature) != 40 or any(
+            ch not in "0123456789abcdef" for ch in received_signature
+        ):
+            return False
+        expected = hmac.new(
+            secret.encode("utf-8"),
+            str(payload["id"]).encode("utf-8"),
+            hashlib.sha1,
+        ).hexdigest()
+        return hmac.compare_digest(expected, received_signature)
+    ```
+
+
+    #### Delivery, deduplication, and recovery
+
+
+    After signature verification, durably persist the event before acknowledging it with a 2xx response.
+    Deduplicate by `webhook_event_uuid`, not the transaction ID: different events can concern the same order.
+    A repeated event should be acknowledged without repeating its business effects. Process longer work
+    asynchronously; the sender has a 10 second timeout.
+
+
+    Inspect **Organization Settings > Webhooks > Events** for payloads and attempts, and the **Logs** views
+    for HTTP responses and failures. Resend failed events after correcting receiver issues. Reconcile any
+    delivery gaps with the private organization invoice and ticket endpoints. Secret regeneration invalidates
+    the previous key; coordinate updating the receiver. Resends use the current endpoint secret.
+
+
+    #### Payload
+
+
+    The envelope contains `id`, `event_type`, `webhook_event_uuid`, and `data`. Invoice notifications include
+    transaction and organization identifiers, customer and payment details, totals, `ticket_items`, and
+    `invoice_items`. See the **WebhookEnvelope**, **WebhookInvoice**, **WebhookTicketItem**, and
+    **WebhookInvoiceItem** schemas below. Test deliveries can have a different `data` shape.
+
+
+    For the complete field table and dashboard instructions, see [invoice
+    payloads](https://dev.showpass.com/webhooks/webhooks-payload-invoice-object),
+    [setup](https://dev.showpass.com/webhooks/webhooks-setup-and-management), and [delivery
+    logs](https://dev.showpass.com/webhooks/webhooks-logging-and-troubleshooting).
+servers:
+  - url: https://demo.showpass.com
+    description: Demo
+externalDocs:
+  description: Showpass embedded purchase SDK documentation
+  url: https://dev.showpass.com/sdk/02-ticket-purchase-widget
+tags:
+  - name: Authentication
+  - name: Public catalog
+  - name: Private organization API
+  - name: Historical account
+  - name: Memberships
+  - name: Order actions
+  - name: Ticket scanning
+    description: >-
+      Verify a ticket code, then create a pickup, return, or void scan history. Returning a scan restores
+      entry eligibility; it does not refund the order.
+  - name: Tracking links
+    description: >-
+      Manage campaign, employee, affiliate, venue, and quick purchase links. Only quick purchase links can be
+      updated; links with completed purchases cannot be deleted.
+  - name: Discounts
+    description: >-
+      Create checkout discount codes and eligible auto discounts. Codes are unique per venue,
+      case-insensitively. Used discounts lock their code, amount, and percentage. DELETE soft-deletes the
+      discount.
+  - name: Access passwords
+    description: >-
+      Manage event and ticket type access codes. Set an active start time for immediate use. Purchase limits
+      count ticket quantity. Matching is case-insensitive; password_use_count is an event attachment count,
+      not a redemption count.
+  - name: Held baskets and hold links
+    description: >-
+      Create hold links, edit baskets and holds, split held inventory, send individual or bulk emails, and
+      manage dynamic hold settings, expiry, or release. Expand Create a basket for a hold for the creation
+      workflow. Access is scoped to the venue and caller permissions.
+x-organization-integration:
+  description: >-
+    Use the private venue API for an organization-owned Bullbustin integration. The organization API token is
+    sent as `Authorization: Token <organization-api-key>` and is scoped to the venue in the URL. This flow
+    does not require a patron JWT or patron login.
+  base_url: https://demo.showpass.com
+  event_list: /api/venue/{venue_id}/events/
+  invoice_list: /api/venue/{venue_id}/financials/invoices/
+x-embedded-purchase:
+  description: Use the hosted Showpass SDK/widget for ticket selection, assigned seating, payment, and issuance.
+  sdk_example: showpass.tickets.eventPurchaseWidget("bullbustin-event-slug");
+  widget_urls:
+    - /widget/tickets/events/purchase/{event-slug}/
+    - /widget/tickets/events/calendar/{venue-id}/
+    - /widget/calendar/venue/{venue-id}/
+    - /widget/tickets/products/purchase/{product-id}/
+    - /widget/tickets/memberships/{membership-id}/
+x-webhook-integration:
+  description: >-
+    Bullbustin supplies an HTTPS receiver and configures purchase, refund, void, transfer, and transferred
+    notifications in Showpass. See the visible Webhooks guide and WebhookEnvelope schema.
+  requirements:
+    - >-
+      Verify X-SHOWPASS-SIGNATURE as a hexadecimal HMAC SHA1 of the root payload id converted to a UTF-8
+      string, using the endpoint Secret Key.
+    - Persist and deduplicate each delivery before acknowledging it.
+    - Reconcile with private organization order and ticket reads after downtime.
+    - Do not use webhook delivery as a replacement for private historical order reads.
+x-recommended-flow:
+  - Use the private organization event endpoint to find the Showpass event ID.
+  - Open the hosted purchase widget through the Showpass SDK when Bullbustin needs to sell tickets.
+  - Read organization orders with the private invoice endpoint, filtered by email, user ID, or event ID.
+  - Follow `next` on every paginated response.
+  - Subscribe to venue-configured notifications and reconcile after any delivery gap.
+security: []
+paths:
+  /api/auth/login/:
+    post:
+      tags:
+        - Authentication
+      operationId: login
+      summary: Authenticate a Showpass patron
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Authenticated patron and tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+  /api/auth/registration/:
+    post:
+      tags:
+        - Authentication
+      operationId: register
+      summary: Register a Showpass patron account
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegistrationRequest'
+      responses:
+        '200':
+          description: Registered patron and tokens
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+  /api/auth/jwt/refresh/:
+    post:
+      tags:
+        - Authentication
+      operationId: refreshJwt
+      summary: Refresh an access token
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshRequest'
+      responses:
+        '200':
+          description: Refreshed access token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/JwtResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/auth/profile/:
+    get:
+      tags:
+        - Authentication
+      operationId: getProfile
+      summary: Get the authenticated patron profile
+      security:
+        - JwtAuth: []
+      responses:
+        '200':
+          description: Patron profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/public/events/:
+    get:
+      tags:
+        - Public catalog
+      operationId: listPublicEvents
+      summary: List public events
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: q
+          in: query
+          schema:
+            type: string
+        - name: starts_on__gte
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: ends_on__lte
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Public event page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedEvents'
+  /api/public/events/{slugOrId}/:
+    get:
+      tags:
+        - Public catalog
+      operationId: getPublicEvent
+      summary: Get one public event
+      parameters:
+        - $ref: '#/components/parameters/SlugOrId'
+      responses:
+        '200':
+          description: Public event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/venue/{venueId}/events/:
+    get:
+      tags:
+        - Private organization API
+      operationId: listOrganizationEvents
+      summary: List events for the organization
+      description: >-
+        Lists events owned by the organization identified by `venueId`. Use the numeric event `id` as
+        Bullbustin's primary external event key; `slug` is an additional URL-friendly reference. The
+        organization token cannot access another organization's events.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: id
+          in: query
+          description: Return one event by numeric Showpass event ID.
+          schema:
+            type: integer
+            minimum: 1
+        - name: id__in
+          in: query
+          description: Return events by comma-separated numeric IDs.
+          schema:
+            type: string
+        - name: search
+          in: query
+          description: Search event names.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated organization event page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationEvents'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/venue/{venueId}/events/{slugOrId}/:
+    get:
+      tags:
+        - Private organization API
+      operationId: getOrganizationEvent
+      summary: Get one organization event
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/SlugOrId'
+      responses:
+        '200':
+          description: Organization event
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/venue/{venueId}/financials/invoices/:
+    get:
+      tags:
+        - Private organization API
+      operationId: listOrganizationInvoices
+      summary: List organization orders
+      description: >-
+        Lists organization-scoped orders. This endpoint can be used to find all organization orders for a
+        patron by email without authenticating the patron with Showpass. Historical, refunded, voided, and
+        transferred records are returned when they remain visible to the organization. The response contains
+        invoice-level fields only; it does not embed `invoice_items` or `ticket_items`. Use the invoice-items
+        endpoint and the invoice tickets endpoint when those records are required.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: email
+          in: query
+          description: Patron email associated with the order. URL-encode the value.
+          schema:
+            type: string
+            format: email
+          example: patron%40example.com
+        - name: user_id
+          in: query
+          description: Showpass user ID associated with the order.
+          schema:
+            type: integer
+            minimum: 1
+        - name: invoice_items__event_for_filtering
+          in: query
+          description: Restrict results to orders containing this Showpass event ID.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Paginated organization invoice page
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationInvoices'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/venue/{venueId}/financials/invoices/items/:
+    get:
+      tags:
+        - Private organization API
+      operationId: listOrganizationInvoiceItems
+      summary: List invoice line items
+      description: >-
+        Lists the accounting line items for organization invoices. Pass the numeric invoice `id` returned by
+        the organization invoice endpoint in the `invoice` query parameter. These are invoice lines, not
+        individual ticket records.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID from the organization invoice response.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Paginated invoice line items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationInvoiceItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/venue/{venueId}/financials/invoices/{transactionId}/:
+    get:
+      tags:
+        - Private organization API
+      operationId: getOrganizationInvoice
+      summary: Get one organization order
+      description: >-
+        Returns the same invoice-level shape as the organization invoice list. `invoice_items` and
+        `ticket_items` are not embedded in this response.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Organization order detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoice'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/venue/{venueId}/financials/invoices/{transactionId}/tickets/:
+    get:
+      tags:
+        - Private organization API
+      operationId: listOrganizationInvoiceTickets
+      summary: List ticket barcodes for an organization order
+      description: >-
+        Returns the ticket barcode data for an organization order. The `barcode_string` value is the ticket
+        barcode/QR payload used for scanning; it is not the ticket database ID. The response is ready only
+        after post-purchase ticket generation has completed.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transactionId
+          in: path
+          required: true
+          description: Showpass invoice transaction ID.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ticket barcode data is ready
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoiceTickets'
+        '202':
+          description: Ticket generation is not complete yet
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationInvoiceTickets'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/venue/{venueId}/tickets/items/:
+    get:
+      tags:
+        - Private organization API
+      operationId: listOrganizationTicketItems
+      summary: List organization ticket items
+      description: >-
+        Lists the detailed ticket records for the organization. Use the numeric `invoice` query parameter to
+        retrieve holder, assigned-seat, status, transfer, and barcode fields for one order. This endpoint is
+        read-only. A transferred original ticket remains visible with its transferred status; the recipient's
+        replacement ticket is a separate ticket record.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID from the organization invoice response.
+          schema:
+            type: integer
+            minimum: 1
+        - name: event
+          in: query
+          description: Showpass event ID.
+          schema:
+            type: integer
+            minimum: 1
+        - name: type
+          in: query
+          description: Showpass ticket type ID.
+          schema:
+            type: integer
+            minimum: 1
+        - name: status
+          in: query
+          description: Numeric ticket status. Paid tickets use status `2`; transferred tickets use status `7`.
+          schema:
+            type: integer
+        - name: barcode_string
+          in: query
+          description: Ticket barcode or scan-code value.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated detailed ticket items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationTicketItems'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/venue/{venueId}/tickets/items/{ticketId}/:
+    get:
+      tags:
+        - Private organization API
+      operationId: getOrganizationTicketItem
+      summary: Get one organization ticket item
+      description: >-
+        Returns one detailed ticket record, including `name_on_ticket`, `seat`, `status`,
+        `transfer_in_progress`, and `barcode_string`. The `seat` object is null for general-admission tickets.
+        When present, `segment_identifier` is the section, `location_identifier` is the row, and `identifier`
+        is the seat number.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: ticketId
+          in: path
+          required: true
+          description: Numeric Showpass ticket-item ID.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Detailed organization ticket item
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTicketItem'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/venue/{venueId}/tickets/transfers/:
+    get:
+      tags:
+        - Private organization API
+      operationId: listOrganizationTicketTransfers
+      summary: List organization ticket transfers
+      description: >-
+        Lists read-only ticket-transfer history for the organization. Use the `state` filter to inspect
+        pending, cancelled, completed, or returned transfers. A completed transfer has a separate recipient
+        invoice and replacement ticket records.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: state
+          in: query
+          description: Transfer state.
+          schema:
+            type: string
+            enum:
+              - pending
+              - cancelled
+              - complete
+              - returned
+      responses:
+        '200':
+          description: Paginated organization ticket transfers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationTicketTransfers'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/venue/{venueId}/tickets/transfers/{transferId}/:
+    get:
+      tags:
+        - Private organization API
+      operationId: getOrganizationTicketTransfer
+      summary: Get one organization ticket transfer
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: transferId
+          in: path
+          required: true
+          description: Numeric Showpass ticket-transfer ID.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Organization ticket transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationTicketTransfer'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/venue/{venueId}/tickets/transfers/search-histories/:
+    get:
+      tags:
+        - Private organization API
+      operationId: searchOrganizationTicketTransferHistories
+      summary: Search organization ticket-transfer histories
+      description: >-
+        Searches transfer history by sender or recipient email, or by customer-group ID. This endpoint is
+        read-only and returns compact item summaries in addition to the transfer metadata.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/VenuePage'
+        - $ref: '#/components/parameters/VenuePageSize'
+        - name: email
+          in: query
+          description: Sender or recipient email. URL-encode the value.
+          schema:
+            type: string
+            format: email
+        - name: customer_group_id
+          in: query
+          description: Showpass customer-group ID.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: Paginated transfer-history search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedOrganizationTicketTransferHistories'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+  /api/user/financials/invoices/v2/:
+    get:
+      tags:
+        - Historical account
+      operationId: listPatronOrders
+      summary: List orders for the authenticated patron
+      description: >-
+        This is an account-scoped list and does not accept an event_id filter. Follow the next link for every
+        page, then retrieve each transaction detail and filter its ticket_items.event or
+        invoice_items.event.id.
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: is_group_sale__isnull
+          in: query
+          description: Use true to omit group-sale invoices from the list.
+          schema:
+            type: boolean
+        - name: type__in
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated patron orders
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedInvoices'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/user/financials/invoices/{transactionId}/transaction/:
+    get:
+      tags:
+        - Historical account
+      operationId: getPatronOrder
+      summary: Get one patron order by transaction ID
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: transactionId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Order detail with event and ticket information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/InvoiceDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/user/tickets/items/:
+    get:
+      tags:
+        - Historical account
+      operationId: listPatronTickets
+      summary: List tickets owned by the authenticated patron
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: invoice
+          in: query
+          description: Numeric invoice ID.
+          schema:
+            type: integer
+        - name: status
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Paginated ticket items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTickets'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/user/tickets/events/{eventId}/:
+    get:
+      tags:
+        - Historical account
+      operationId: getPatronEventSummary
+      summary: Get an event summary for the authenticated patron
+      description: Returns the event and the patron's ticket count for it; use order detail reads to identify orders.
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Event summary with the patron ticket count
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PatronEvent'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/user/memberships/member-activity-histories/:
+    get:
+      tags:
+        - Memberships
+      operationId: listMembershipActivity
+      summary: List authenticated patron membership activity
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+      responses:
+        '200':
+          description: Paginated membership activity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMembershipActivity'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/user/memberships/members/:
+    get:
+      tags:
+        - Memberships
+      operationId: listPatronMemberships
+      summary: List memberships for the authenticated patron
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: status
+          in: query
+          schema:
+            type: string
+        - name: membership_group
+          in: query
+          schema:
+            type: integer
+        - name: membership_level
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Paginated memberships
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMemberships'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/user/memberships/members/{memberId}/event-schedule/:
+    get:
+      tags:
+        - Memberships
+      operationId: getMembershipEventSchedule
+      summary: Get events and issued tickets for a membership
+      security:
+        - JwtAuth: []
+      parameters:
+        - name: memberId
+          in: path
+          required: true
+          schema:
+            type: integer
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: past_events
+          in: query
+          description: Set true to return past events instead of upcoming events.
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Paginated membership event schedule with ticket items
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedMembershipEvents'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /api/user/memberships/membership-benefit-accesses/:
+    get:
+      tags:
+        - Memberships
+      operationId: listMembershipBenefitAccess
+      summary: List membership benefits and event access
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/Page'
+        - $ref: '#/components/parameters/PageSize'
+        - name: member
+          in: query
+          required: true
+          description: Membership member ID.
+          schema:
+            type: integer
+        - name: unused
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Paginated membership benefit access records
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedBenefitAccess'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/user/financials/invoices/{invoiceId}/get-return-amounts/:
+    get:
+      tags:
+        - Order actions
+      operationId: getReturnAmounts
+      summary: Calculate return amounts for selected tickets
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+        - name: tickets
+          in: query
+          description: Comma-separated ticket item IDs.
+          schema:
+            type: string
+        - name: is_resale
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Return calculation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReturnAmounts'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/user/financials/invoices/{invoiceId}/return/:
+    post:
+      tags:
+        - Order actions
+      operationId: returnTickets
+      summary: Return selected tickets from an order
+      security:
+        - JwtAuth: []
+      parameters:
+        - $ref: '#/components/parameters/InvoiceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - tickets
+              properties:
+                tickets:
+                  type: array
+                  items:
+                    type: integer
+      responses:
+        '200':
+          description: Return accepted
+        '400':
+          $ref: '#/components/responses/ValidationError'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+  /api/public/discovery/:
+    get:
+      tags:
+        - Public catalog
+      operationId: listDiscoveryExperiences
+      summary: Search public experiences
+      description: >-
+        Public experience listing for calendars, search pages, and event cards. Filter by venue or venue__in
+        for Bullbustin. Browser origins must be allowlisted under organization settings. Use each result slug
+        with the public event detail endpoint.
+      security: []
+      parameters:
+        - name: search_string
+          in: query
+          required: false
+          description: Search experience name, venue, and tags.
+          schema:
+            type: string
+        - name: name__icontains
+          in: query
+          required: false
+          description: Case-insensitive experience name search.
+          schema:
+            type: string
+        - name: point_location
+          in: query
+          required: false
+          description: Latitude, longitude, radius in kilometres.
+          schema:
+            type: string
+            example: 51.0276233,-114.087835,15
+        - name: venue
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: venue__in
+          in: query
+          required: false
+          description: Comma-separated IDs or values.
+          schema:
+            type: string
+        - name: categories
+          in: query
+          required: false
+          description: Comma-separated IDs or values.
+          schema:
+            type: string
+        - name: tags
+          in: query
+          required: false
+          description: Comma-separated IDs or values.
+          schema:
+            type: string
+        - name: id__in
+          in: query
+          required: false
+          description: Comma-separated IDs or values.
+          schema:
+            type: string
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: voucher_code
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: is_featured
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: is_sponsored
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: is_protected_by_queue
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: showpass_gift_card
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: only_parents
+          in: query
+          required: false
+          description: Use false to include recurring child experiences.
+          schema:
+            type: string
+            enum:
+              - 'true'
+              - 'false'
+        - $ref: '#/components/parameters/Page'
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Results per page.
+            minimum: 1
+            default: 20
+        - name: starts_on__gte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: starts_on__lte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: starts_on__gt
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: starts_on__lt
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: ends_on__gte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: ends_on__lte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: ends_on__gt
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: ends_on__lt
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: ordering
+          in: query
+          required: false
+          description: >-
+            Comma-separated is_sponsored, ranking_factor, starts_on, ends_on, id, or name. Prefix a field with
+            - for descending order.
+          schema:
+            type: string
+            default: '-is_sponsored,-ranking_factor,starts_on'
+      responses:
+        '200':
+          description: Search public experiences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDiscoveryExperiences'
+        '400':
+          description: Invalid query parameters.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Browser origin is not permitted.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/items/scan/:
+    get:
+      tags:
+        - Ticket scanning
+      operationId: verifyTicketByCode
+      summary: Verify a ticket by code
+      description: >-
+        Look up a ticket and its current state. Use the returned ticket item ID for scan history actions. This
+        lookup does not perform entry pickup.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - name: code
+          in: query
+          required: true
+          description: Barcode or code to verify.
+          schema:
+            type: string
+        - name: permittedTypeIDs
+          in: query
+          required: false
+          description: Comma-separated permitted ticket type IDs; omit instead of sending an empty string.
+          schema:
+            type: string
+        - name: scannerTypeID
+          in: query
+          required: false
+          description: Registered scanner device type ID.
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Verify a ticket by code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifiedTicket'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Ticket scanning
+      operationId: verifyTicketByCodePost
+      summary: Verify a ticket with a request body
+      description: >-
+        Same verification as GET; accepts the code and permitted type IDs in JSON. Useful for a large
+        permitted type list.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanTicketRequest'
+            examples:
+              code:
+                value:
+                  code: EXAMPLE-BARCODE
+                  permittedTypeIDs: 3002,3003
+      responses:
+        '200':
+          description: Verify a ticket with a request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VerifiedTicket'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/items/histories/:
+    post:
+      tags:
+        - Ticket scanning
+      operationId: createTicketScanHistory
+      summary: Scan, undo a scan, or void a ticket
+      description: >-
+        First verify the ticket to obtain item and barcode_string. pickup marks it used subject to its
+        multiscan limit; return undoes a previous scan; void invalidates an unused ticket. A scan return does
+        not issue a financial refund. Invalid state transitions return a validation error.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ScanHistoryRequest'
+            examples:
+              pickup:
+                summary: Scan for entry
+                value:
+                  item: 123
+                  action: pickup
+                  scanner_device: web_app
+                  barcode_string: EXAMPLE-BARCODE
+                  barcode_type: static
+              return:
+                summary: Undo a scan
+                value:
+                  item: 123
+                  action: return
+              void:
+                summary: Invalidate an unused ticket
+                value:
+                  item: 123
+                  action: void
+      responses:
+        '201':
+          description: Scan, undo a scan, or void a ticket
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ScanHistory'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/analytics/tracking/links/:
+    get:
+      tags:
+        - Tracking links
+      operationId: listTrackingLink
+      summary: List tracking links
+      description: >-
+        Only user-generated employee, venue, affiliate, and quick purchase links are returned. Results include
+        selling or owning venue links. Quick purchase (via=4) requires a nonempty extra array; include event
+        with ticket_type, or product with product_attribute. All items must belong to one venue. Assigned
+        seating is not supported by quick purchase links.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Results per page.
+            minimum: 1
+            default: 20
+        - name: search
+          in: query
+          required: false
+          description: Description, referrer username, or slug.
+          schema:
+            type: string
+        - name: via
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
+        - name: event
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: event__in
+          in: query
+          required: false
+          description: Comma-separated event IDs.
+          schema:
+            type: string
+        - name: event__ends_on__gte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: event__ends_on__lte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: List tracking links
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTrackingLink'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Tracking links
+      operationId: createTrackingLink
+      summary: Create tracking link
+      description: >-
+        Only user-generated employee, venue, affiliate, and quick purchase links are returned. Results include
+        selling or owning venue links. Quick purchase (via=4) requires a nonempty extra array; include event
+        with ticket_type, or product with product_attribute. All items must belong to one venue. Assigned
+        seating is not supported by quick purchase links.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackingLinkRequest'
+            examples:
+              affiliate:
+                value:
+                  venue: 123
+                  event: 456
+                  via: 3
+                  description: Bullbustin campaign
+              quickPurchase:
+                value:
+                  venue: 123
+                  event: 456
+                  via: 4
+                  extra:
+                    - event: 456
+                      ticket_type: 3002
+                      quantity: 2
+      responses:
+        '201':
+          description: Create tracking link
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLink'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/analytics/tracking/links/{id}/:
+    get:
+      tags:
+        - Tracking links
+      operationId: getTrackingLink
+      summary: Get one tracking link
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Get one tracking link
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLink'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Tracking links
+      operationId: updateTrackingLink
+      summary: Update tracking link
+      description: >-
+        Only quick purchase links (via=4) can be updated. Other link types return 405. Include the required
+        venue and via fields.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrackingLinkRequest'
+            examples:
+              affiliate:
+                value:
+                  venue: 123
+                  event: 456
+                  via: 3
+                  description: Bullbustin campaign
+              quickPurchase:
+                value:
+                  venue: 123
+                  event: 456
+                  via: 4
+                  extra:
+                    - event: 456
+                      ticket_type: 3002
+                      quantity: 2
+      responses:
+        '200':
+          description: Update tracking link
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrackingLink'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Updating a non-quick-purchase link or deleting a link with completed purchases is not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Tracking links
+      operationId: deleteTrackingLink
+      summary: Delete or deactivate tracking link
+      description: Delete a link only if it has no completed referred purchases; otherwise returns 405.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Delete or deactivate tracking link
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '405':
+          description: Updating a non-quick-purchase link or deleting a link with completed purchases is not allowed.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/analytics/tracking/links/me/:
+    get:
+      tags:
+        - Tracking links
+      operationId: listMyTrackingLinks
+      summary: List my tracking links
+      description: >-
+        Filters to links where referred_by matches the authenticated user; returns the same paginated shape as
+        the main list.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Results per page.
+            minimum: 1
+            default: 20
+        - name: search
+          in: query
+          required: false
+          description: Description, referrer username, or slug.
+          schema:
+            type: string
+        - name: via
+          in: query
+          required: false
+          schema:
+            type: integer
+            enum:
+              - 1
+              - 2
+              - 3
+              - 4
+        - name: event
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: event__in
+          in: query
+          required: false
+          description: Comma-separated event IDs.
+          schema:
+            type: string
+        - name: event__ends_on__gte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+        - name: event__ends_on__lte
+          in: query
+          required: false
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: List my tracking links
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedTrackingLink'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/financials/discounts/:
+    get:
+      tags:
+        - Discounts
+      operationId: listDiscount
+      summary: List discounts
+      description: >-
+        Submitted codes are uppercased and unique per venue, case-insensitively. Standard codes use type=1 and
+        a percentage or amount. Both checkout surfaces are allowed when allowed_checkouts is omitted. Use
+        explicit venue or item permissions for the intended scope. Auto discounts require venue eligibility
+        and discount_rules; non-auto discounts cannot include rules. Rules must use one limit_type with
+        non-overlapping ranges and one nonzero discount value; provide both amount and percentage, setting the
+        unused value to 0.00.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - name: page_size
+          in: query
+          required: false
+          schema:
+            type: integer
+            description: Results per page.
+            minimum: 1
+            default: 20
+        - name: search
+          in: query
+          required: false
+          description: Search code or description.
+          schema:
+            type: string
+        - name: ordering
+          in: query
+          required: false
+          description: updated, created, id, or is_public; prefix with - for descending order.
+          schema:
+            type: string
+            default: '-id'
+        - name: id
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: id__in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: code
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: code__in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: type
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: type__in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: is_public
+          in: query
+          required: false
+          schema:
+            type: boolean
+        - name: events
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: event_discount_permissions__event
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: event_discount_permissions__event__in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: tt_discount_permissions__ticket_type
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: tt_discount_permissions__ticket_type__in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: reference
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: reference__in
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: possessor__email
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: invoice__email
+          in: query
+          required: false
+          schema:
+            type: string
+        - name: bulk_order
+          in: query
+          required: false
+          schema:
+            type: integer
+        - name: bulk_order__isnull
+          in: query
+          required: false
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: List discounts
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDiscount'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Discounts
+      operationId: createDiscount
+      summary: Create discount
+      description: >-
+        Submitted codes are uppercased and unique per venue, case-insensitively. Standard codes use type=1 and
+        a percentage or amount. Both checkout surfaces are allowed when allowed_checkouts is omitted. Use
+        explicit venue or item permissions for the intended scope. Auto discounts require venue eligibility
+        and discount_rules; non-auto discounts cannot include rules. Rules must use one limit_type with
+        non-overlapping ranges and one nonzero discount value; provide both amount and percentage, setting the
+        unused value to 0.00.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountRequest'
+            examples:
+              eventPromotion:
+                value:
+                  code: BULLBUSTIN25
+                  type: 1
+                  percentage: '25.00'
+                  amount: '0.00'
+                  limit: 100
+                  is_public: true
+                  permission_type: disc_level_ticket_type
+                  event_discount_permissions:
+                    - event: 456
+                      tt_discount_permissions:
+                        - ticket_type: 3002
+              autoDiscount:
+                value:
+                  type: 8
+                  permission_type: disc_level_venue
+                  discount_rules:
+                    - venue: 123
+                      limit_type: 2
+                      minimum_limit: '4.00'
+                      maximum_limit: null
+                      amount: '0.00'
+                      percentage: '10.00'
+      responses:
+        '201':
+          description: Create discount
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discount'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/financials/discounts/{id}/:
+    get:
+      tags:
+        - Discounts
+      operationId: getDiscount
+      summary: Get one discount
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Get one discount
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discount'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Discounts
+      operationId: updateDiscount
+      summary: Update discount
+      description: >-
+        The discount type cannot change. After a discount has been used, its code, amount, and percentage
+        cannot change. Set is_public=false to stop redemption while retaining the record.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DiscountRequest'
+            examples:
+              eventPromotion:
+                value:
+                  code: BULLBUSTIN25
+                  type: 1
+                  percentage: '25.00'
+                  amount: '0.00'
+                  limit: 100
+                  is_public: true
+                  permission_type: disc_level_ticket_type
+                  event_discount_permissions:
+                    - event: 456
+                      tt_discount_permissions:
+                        - ticket_type: 3002
+              autoDiscount:
+                value:
+                  type: 8
+                  permission_type: disc_level_venue
+                  discount_rules:
+                    - venue: 123
+                      limit_type: 2
+                      minimum_limit: '4.00'
+                      maximum_limit: null
+                      amount: '0.00'
+                      percentage: '10.00'
+      responses:
+        '200':
+          description: Update discount
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Discount'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Discounts
+      operationId: deleteDiscount
+      summary: Delete or deactivate discount
+      description: Soft-delete the discount and set is_public=false. It is removed from normal list and detail responses.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '204':
+          description: Delete or deactivate discount
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/passwords/:
+    get:
+      tags:
+        - Access passwords
+      operationId: listAccessPassword
+      summary: List access passwords
+      description: >-
+        Create one password per request. Choose ticket_type or event_id, never both. ticket_type_ids restricts
+        event-scoped access to selected ticket types. Configure start_time and is_active for activation.
+        Event-scoped passwords on recurring parents propagate bindings to child events. event_id is accepted
+        on writes but not returned. List responses are arrays unless page_size is supplied.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - name: page_size
+          in: query
+          required: false
+          description: Omit for an array; provide for a paginated response.
+          schema:
+            type: integer
+            minimum: 1
+      responses:
+        '200':
+          description: List access passwords
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: array
+                    items:
+                      $ref: '#/components/schemas/AccessPassword'
+                  - $ref: '#/components/schemas/PaginatedAccessPassword'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      tags:
+        - Access passwords
+      operationId: createAccessPassword
+      summary: Create access password
+      description: >-
+        Create one password per request. Choose ticket_type or event_id, never both. ticket_type_ids restricts
+        event-scoped access to selected ticket types. Configure start_time and is_active for activation.
+        Event-scoped passwords on recurring parents propagate bindings to child events. event_id is accepted
+        on writes but not returned. List responses are arrays unless page_size is supplied.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessPasswordRequest'
+            examples:
+              ticketType:
+                value:
+                  password: BULLBUSTIN-ACCESS
+                  ticket_type: 3002
+                  is_active: true
+                  start_time: '2026-09-09T00:00:00Z'
+                  max_item_purchase_limit: 1
+              selectedEventTypes:
+                value:
+                  password: BULLBUSTIN-PRESALE
+                  event_id: 456
+                  ticket_type_ids:
+                    - 3002
+                    - 3003
+                  is_active: true
+                  start_time: '2026-09-09T00:00:00Z'
+                  end_time: null
+      responses:
+        '201':
+          description: Create access password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPassword'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/passwords/{id}/:
+    get:
+      tags:
+        - Access passwords
+      operationId: getAccessPassword
+      summary: Get one access password
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      responses:
+        '200':
+          description: Get one access password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPassword'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Access passwords
+      operationId: updateAccessPassword
+      summary: Update access password
+      description: >-
+        Update the access code or its activation window. Set is_active=false to retain the record while
+        disabling access. Send password in PUT requests. Do not combine ticket_type and event_id.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessPasswordRequest'
+            examples:
+              ticketType:
+                value:
+                  password: BULLBUSTIN-ACCESS
+                  ticket_type: 3002
+                  is_active: true
+                  start_time: '2026-09-09T00:00:00Z'
+                  max_item_purchase_limit: 1
+              selectedEventTypes:
+                value:
+                  password: BULLBUSTIN-PRESALE
+                  event_id: 456
+                  ticket_type_ids:
+                    - 3002
+                    - 3003
+                  is_active: true
+                  start_time: '2026-09-09T00:00:00Z'
+                  end_time: null
+      responses:
+        '200':
+          description: Update access password
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessPassword'
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      tags:
+        - Access passwords
+      operationId: deleteAccessPassword
+      summary: Delete or deactivate access password
+      description: >-
+        For an event-scoped password, include event_id to remove the intended event binding and refresh
+        password protection. Direct ticket type deletion deactivates the ticket type relation.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/ResourceId'
+        - name: event_id
+          in: query
+          required: false
+          description: Required for deleting the intended event-scoped binding; omit for direct ticket type passwords.
+          schema:
+            type: integer
+      responses:
+        '201':
+          description: Password binding removed or deactivated.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        '400':
+          description: Invalid request fields or operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Invalid credentials or insufficient scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Resource not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/:
+    post:
+      tags:
+        - Held baskets and hold links
+      operationId: createBasketForHold
+      summary: Create a basket for a hold
+      description: >-
+        ### Create and share a hold link
+
+
+        1. Create a basket with the desired ticket type IDs and quantities. Save the returned numeric `id`.
+
+        2. POST to `/api/venue/{venueId}/tickets/baskets/{basketId}/hold/` with `{"hold_type":"basic_hold"}`.
+
+        3. A `200` response with `{}` means synchronous completion. A `201` response with `job_id`
+        acknowledges queued work, not a completed hold. Retrieve the basket with bounded retries and backoff
+        until its hold status and link are ready. If it does not become ready, stop and check the hold in the
+        organizer dashboard.
+
+
+        4. Retrieve the basket. Confirm `status: 10` and read `on_hold_detail.tracking_link_url`, falling back
+        to `hold_url`. If neither is present, the link is not ready; do not construct a URL from the basket
+        ID. A hold response does not itself contain the link.
+
+        5. Open or share the returned URL for the customer to complete hosted checkout. Creating a hold does
+        not charge the customer or issue purchased tickets. Optionally use the separate hold link email
+        action.
+
+        6. Manage scheduled expiry with the held basket expiry endpoint, or release the hold with the release
+        endpoint. Release also returns a background job. Confirm release in the organizer dashboard before
+        treating the inventory as available again.
+
+
+        Use the same authenticated server-side client through the workflow. Basket access is limited to the
+        active session or baskets sold by the caller. Held basket access also applies hold-management and
+        seller visibility rules. Box office permission is required for basket creation; hold management is
+        required for hold actions. A token must be authorized for the venue and operation.
+
+
+        The example below is a general admission ticket hold. Replace the example IDs with the desired venue
+        and ticket type. Event-required customer fields, inventory limits, and allocation rules still apply.
+        Hold expiry and complimentary hold links depend on venue/environment enablement; their availability
+        has not been verified for Bullbustin.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldBasketCreateRequest'
+            examples:
+              tickets:
+                summary: Reserve two general admission tickets for a customer
+                value:
+                  item_groups:
+                    - item_type: ticket
+                      type: 3002
+                      quantity: 2
+                  info_first_name: Example
+                  info_last_name: Customer
+                  info_email: customer@example.com
+                  email: customer@example.com
+      responses:
+        '201':
+          description: Basket created. Use its id in the hold action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/{basketId}/:
+    get:
+      tags:
+        - Held baskets and hold links
+      operationId: getBasketForHold
+      summary: Retrieve a basket and its hold link
+      description: >-
+        Retrieve the current basket after requesting hold creation. Confirm status=10 before sharing
+        on_hold_detail.tracking_link_url or the legacy hold_url. Existing basket visibility restrictions
+        apply.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      responses:
+        '200':
+          description: Current basket, including hold metadata when available.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Held baskets and hold links
+      operationId: updateBasketForHold
+      summary: Edit a basket before placing it on hold
+      description: >-
+        Read the basket first, then send its complete desired item_groups list with existing group IDs and the
+        customer, seller, and allocation settings you need to retain. Omitted groups are removed. Inventory,
+        sale windows, event requirements, and hold restrictions are validated again. The example covers
+        general admission tickets. Use the dedicated expiry action to change scheduled hold expiry. Echo the
+        latest checkout_idempotency_key from GET; keep the updated key returned by a successful PUT. A stale
+        key or concurrent update can return 400 when idempotency checks are enabled. Regular basket PATCH
+        returns 405. Caller session and seller scope apply.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldBasketEditRequest'
+            examples:
+              tickets:
+                summary: Update a two-ticket general admission basket; replace IDs and version key with GET values
+                value:
+                  item_groups:
+                    - id: 41001
+                      item_type: ticket
+                      type: 3002
+                      quantity: 2
+                  email: customer@example.com
+                  name_on_ticket: Example Customer
+                  sold_by: 2001
+                  payment_type: 2
+                  checkout_idempotency_key: 3923b297-bb15-422e-94b6-e26af9d6d6ba
+      responses:
+        '200':
+          description: Updated basket and current version key.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/{basketId}/hold/:
+    post:
+      tags:
+        - Held baskets and hold links
+      operationId: placeBasketOnHold
+      summary: Place a basket on hold
+      description: >-
+        Call after creating the basket. basic_hold is the default. The synchronous response is an empty
+        object; retrieve the basket for its link. The asynchronous response contains job_id; retrieve the
+        basket with bounded retries and backoff, and confirm status=10 and a returned hold link before sharing
+        it. If it does not become ready, check the organizer dashboard. An invalid status, hold type,
+        insufficient inventory, or unavailable optional feature returns 400. Expiry must be in the future when
+        provided.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PlaceBasketOnHoldRequest'
+            examples:
+              basic:
+                value:
+                  hold_type: basic_hold
+              expiry:
+                summary: Optional scheduled expiry; replace with your future timestamp
+                value:
+                  hold_type: basic_hold
+                  hold_expiry_date: '2027-01-01T00:00:00Z'
+              dynamic:
+                summary: Shared allocation hold, subject to eligibility
+                value:
+                  hold_type: dynamic_hold
+      responses:
+        '200':
+          description: Hold created synchronously.
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {}
+        '201':
+          description: Hold creation queued; retrieve the basket to confirm hold status and link readiness.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBackgroundJob'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/:
+    get:
+      tags:
+        - Held baskets and hold links
+      operationId: listHeldBaskets
+      summary: List held baskets
+      description: >-
+        Returns only baskets currently on hold, with pagination defaulting to 20. Unless the caller has
+        unrestricted or manage-all-holds access, results are restricted to holds created by that seller.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - in: query
+          name: page_size
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+        - in: query
+          name: search
+          schema:
+            type: string
+          description: Search email or name.
+        - in: query
+          name: name_on_ticket
+          schema:
+            type: string
+          description: Case-insensitive name match.
+        - in: query
+          name: email
+          schema:
+            type: string
+          description: Case-insensitive email match.
+        - in: query
+          name: event_id
+          schema:
+            type: string
+          description: Comma-separated event IDs.
+        - in: query
+          name: id
+          schema:
+            type: integer
+        - in: query
+          name: id__in
+          schema:
+            type: string
+          description: Comma-separated basket IDs.
+      responses:
+        '200':
+          description: Paginated held baskets.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedHeldBaskets'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/{basketId}/:
+    get:
+      tags:
+        - Held baskets and hold links
+      operationId: getHeldBasket
+      summary: Retrieve a held basket
+      description: >-
+        Retrieve a currently held basket using the held-basket visibility and permission rules. A basket that
+        has left hold status will no longer appear here.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      responses:
+        '200':
+          description: Held basket and customer checkout link.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Held baskets and hold links
+      operationId: updateHeldBasket
+      summary: Edit a held basket
+      description: >-
+        Read the basket first, then send its complete desired item_groups list with existing group IDs and the
+        customer, seller, and allocation settings you need to retain. Omitted groups are removed. Inventory,
+        sale windows, event requirements, and hold restrictions are validated again. The example covers
+        general admission tickets. Use the dedicated expiry action to change scheduled hold expiry. Requires
+        box office and manage-holds permissions. Seller visibility restrictions still apply. This route
+        serializes edits but does not enforce the regular basket version-key check.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldBasketEditRequest'
+            examples:
+              tickets:
+                summary: Update a two-ticket general admission basket; replace IDs and version key with GET values
+                value:
+                  item_groups:
+                    - id: 41001
+                      item_type: ticket
+                      type: 3002
+                      quantity: 2
+                  email: customer@example.com
+                  name_on_ticket: Example Customer
+                  sold_by: 2001
+                  payment_type: 2
+      responses:
+        '200':
+          description: Updated held basket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Held baskets and hold links
+      operationId: patchHeldBasket
+      summary: Edit held basket fields with the full item list
+      description: >-
+        Read the basket first, then send its complete desired item_groups list with existing group IDs and the
+        customer, seller, and allocation settings you need to retain. Omitted groups are removed. Inventory,
+        sale windows, event requirements, and hold restrictions are validated again. The example covers
+        general admission tickets. Use the dedicated expiry action to change scheduled hold expiry. Requires
+        box office and manage-holds permissions. Seller visibility restrictions still apply. This route
+        serializes edits but does not enforce the regular basket version-key check. Include the complete
+        item_groups list and current payment_type even for PATCH; a customer-only partial payload is not
+        supported by the shared basket validation.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HeldBasketPatchRequest'
+            examples:
+              tickets:
+                summary: Update a two-ticket general admission basket; replace IDs and version key with GET values
+                value:
+                  item_groups:
+                    - id: 41001
+                      item_type: ticket
+                      type: 3002
+                      quantity: 2
+                  email: customer@example.com
+                  name_on_ticket: Example Customer
+                  sold_by: 2001
+                  payment_type: 2
+      responses:
+        '200':
+          description: Updated held basket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/{basketId}/expiry/:
+    patch:
+      tags:
+        - Held baskets and hold links
+      operationId: updateHeldBasketExpiry
+      summary: Set or clear hold expiry
+      description: >-
+        Requires hold expiry to be enabled. Send a future timestamp to schedule expiry, or null to remove it.
+        The hold_expiry_date key is required. Returns the updated held basket.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldExpiryUpdateRequest'
+            examples:
+              scheduled:
+                summary: Replace with the desired future expiry
+                value:
+                  hold_expiry_date: '2027-01-01T00:00:00Z'
+              noExpiry:
+                value:
+                  hold_expiry_date: null
+      responses:
+        '200':
+          description: Updated basket.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBasket'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/{basketId}/release/:
+    post:
+      tags:
+        - Held baskets and hold links
+      operationId: releaseHeldBasket
+      summary: Release a held basket
+      description: >-
+        Queues release of the held inventory. No request body is required. The 201 response acknowledges
+        queued work, not completed release. Stop sharing the hold link when requesting release, and confirm
+        release in the organizer dashboard before treating the inventory as available again.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      responses:
+        '201':
+          description: Release queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBackgroundJob'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/{basketId}/send-hold-link-email/:
+    post:
+      tags:
+        - Held baskets and hold links
+      operationId: sendHeldBasketLinkEmail
+      summary: Email the hold link to the customer
+      description: >-
+        Optional delivery action. Requires an email address already saved on the basket and an available hold
+        link. Recipient is taken from the basket, not a request email field. An empty JSON object uses
+        existing settings. The response queues delivery; it does not confirm that the email has reached the
+        customer.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldLinkEmailRequest'
+            examples:
+              existingSettings:
+                value: {}
+              message:
+                value:
+                  message_to_customer: Your Bullbustin tickets are reserved. Complete checkout using the link.
+                  language: en
+      responses:
+        '201':
+          description: Email delivery queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBackgroundJob'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Basket not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Hold link email rate limit exceeded; retry later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/{basketId}/split/:
+    post:
+      tags:
+        - Held baskets and hold links
+      operationId: splitHeldBasket
+      summary: Split a held basket
+      description: >-
+        Move selected quantities into a new held basket. Send unique existing item_group_id values and
+        positive quantities. The original retains the remainder and is released if emptied. Baskets with
+        assigned seating cannot be split. Provide email with name_on_ticket to assign a new customer;
+        otherwise the original customer details are copied. The response contains only the new basket ID.
+        Retrieve that basket and check its hold status and returned link before sharing it. This action does
+        not send a hold link email.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldBasketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldSplitRequest'
+            examples:
+              newCustomer:
+                value:
+                  ticket_item_groups_to_split:
+                    - item_group_id: 41001
+                      quantity: 1
+                  name_on_ticket: Another Customer
+                  email: another.customer@example.com
+      responses:
+        '200':
+          description: New held basket created.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldSplitResult'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/bulk-send-hold-link-email/:
+    post:
+      tags:
+        - Held baskets and hold links
+      operationId: bulkSendHeldBasketLinkEmails
+      summary: Email hold links for multiple baskets
+      description: >-
+        Each basket must belong to this venue and already have a customer email and hold link. Recipient
+        addresses come from the baskets. Optional message_to_customer and language are saved for each basket.
+        Validation and email rate limits apply per basket. The 201 response queues a bulk job, which then
+        queues individual email tasks. This response does not confirm that the emails were sent or delivered.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/HoldBulkEmailRequest'
+            examples:
+              existingSettings:
+                value:
+                  basket_ids:
+                    - 12001
+                    - 12002
+              message:
+                value:
+                  basket_ids:
+                    - 12001
+                    - 12002
+                  message_to_customer: Your Bullbustin tickets are reserved. Complete checkout using your hold link.
+                  language: en
+      responses:
+        '201':
+          description: Bulk email job queued.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HoldBackgroundJob'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: A basket has reached its hold link email rate limit; retry later.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/dynamic/:
+    get:
+      tags:
+        - Held baskets and hold links
+      operationId: listDynamicHoldSettings
+      summary: List dynamic hold settings
+      description: >-
+        Use the hold metadata ID from basket.on_hold_detail.id, not basket.id. This endpoint manages existing
+        hold details. Create a dynamic hold through the basket hold action with hold_type=dynamic_hold, then
+        retrieve the basket for its metadata ID and checkout link. Use the held-basket release action to
+        release inventory. Venue access and permissions apply. Returns venue-scoped hold metadata, which can
+        also include other hold types; the route does not filter by hold_type. Default page size is 20.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/Page'
+        - name: page_size
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 20
+      responses:
+        '200':
+          description: Paginated hold settings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedDynamicHoldSettings'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+  /api/venue/{venueId}/tickets/baskets/holds/dynamic/{holdDetailsId}/:
+    get:
+      tags:
+        - Held baskets and hold links
+      operationId: getDynamicHoldSettings
+      summary: Retrieve dynamic hold settings
+      description: >-
+        Use the hold metadata ID from basket.on_hold_detail.id, not basket.id. This endpoint manages existing
+        hold details. Create a dynamic hold through the basket hold action with hold_type=dynamic_hold, then
+        retrieve the basket for its metadata ID and checkout link. Use the held-basket release action to
+        release inventory. Venue access and permissions apply.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldDetailsId'
+      responses:
+        '200':
+          description: Hold details and linked basket expiry.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicHoldSettings'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      tags:
+        - Held baskets and hold links
+      operationId: updateDynamicHoldSettings
+      summary: Update dynamic hold settings
+      description: >-
+        Use the hold metadata ID from basket.on_hold_detail.id, not basket.id. This endpoint manages existing
+        hold details. Create a dynamic hold through the basket hold action with hold_type=dynamic_hold, then
+        retrieve the basket for its metadata ID and checkout link. Use the held-basket release action to
+        release inventory. Venue access and permissions apply. Edit description, purchase limits, banner, or
+        expiry. Send both purchase limits together to validate their relationship. Omitted expiry stays
+        unchanged; null removes it. is_comp_hold_link and items_sold are read-only. Use application/json for
+        text and numeric settings, or multipart/form-data to upload image_banner. Refresh settings after
+        saving.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldDetailsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicHoldSettingsUpdate'
+            examples:
+              limits:
+                value:
+                  description: Bullbustin group allocation
+                  purchase_limit_min: 1
+                  purchase_limit_max: 4
+              expiry:
+                summary: Requires expiry enablement; replace with a future timestamp
+                value:
+                  hold_expiry_date: '2027-01-01T00:00:00Z'
+              clearExpiry:
+                value:
+                  hold_expiry_date: null
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DynamicHoldSettingsUpload'
+      responses:
+        '200':
+          description: Updated hold settings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicHoldSettings'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    patch:
+      tags:
+        - Held baskets and hold links
+      operationId: patchDynamicHoldSettings
+      summary: Partially update dynamic hold settings
+      description: >-
+        Use the hold metadata ID from basket.on_hold_detail.id, not basket.id. This endpoint manages existing
+        hold details. Create a dynamic hold through the basket hold action with hold_type=dynamic_hold, then
+        retrieve the basket for its metadata ID and checkout link. Use the held-basket release action to
+        release inventory. Venue access and permissions apply. Edit description, purchase limits, banner, or
+        expiry. Send both purchase limits together to validate their relationship. Omitted expiry stays
+        unchanged; null removes it. is_comp_hold_link and items_sold are read-only. Use application/json for
+        text and numeric settings, or multipart/form-data to upload image_banner. Refresh settings after
+        saving.
+      security:
+        - OrganizationToken: []
+      parameters:
+        - $ref: '#/components/parameters/VenueId'
+        - $ref: '#/components/parameters/HoldDetailsId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DynamicHoldSettingsUpdate'
+            examples:
+              limits:
+                value:
+                  description: Bullbustin group allocation
+                  purchase_limit_min: 1
+                  purchase_limit_max: 4
+              expiry:
+                summary: Requires expiry enablement; replace with a future timestamp
+                value:
+                  hold_expiry_date: '2027-01-01T00:00:00Z'
+              clearExpiry:
+                value:
+                  hold_expiry_date: null
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/DynamicHoldSettingsUpload'
+      responses:
+        '200':
+          description: Updated hold settings.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DynamicHoldSettings'
+        '400':
+          description: Invalid input, basket state, inventory, or configuration.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Authentication required or invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient venue scope or permissions.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Requested basket or hold details not found or unavailable to the caller.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+components:
+  securitySchemes:
+    JwtAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Send `JWT <access-token>`.
+    OrganizationToken:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Send `Token <organization-api-key>`. This key is scoped to one organization.
+  parameters:
+    VenueId:
+      name: venueId
+      in: path
+      required: true
+      description: Numeric Showpass organization/venue ID.
+      schema:
+        type: integer
+        minimum: 1
+    Page:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    PageSize:
+      name: page_size
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 20
+    VenuePage:
+      name: page
+      in: query
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    VenuePageSize:
+      name: page_size
+      in: query
+      description: Organization API page size. The invoice and event list defaults to 10.
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 1000
+        default: 10
+    SlugOrId:
+      name: slugOrId
+      in: path
+      required: true
+      schema:
+        type: string
+    InvoiceId:
+      name: invoiceId
+      in: path
+      required: true
+      schema:
+        type: integer
+    ResourceId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: integer
+        minimum: 1
+      description: Resource ID returned by this API.
+    HoldBasketId:
+      name: basketId
+      in: path
+      required: true
+      description: Numeric basket id returned by basket creation, not a transaction ID or link slug.
+      schema:
+        type: integer
+        minimum: 1
+    HoldDetailsId:
+      name: holdDetailsId
+      in: path
+      required: true
+      description: >-
+        Hold metadata ID from basket.on_hold_detail.id or the dynamic settings list. This is not the basket
+        ID.
+      schema:
+        type: integer
+        minimum: 1
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Authentication required or invalid
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: The organization token is not permitted for this organization or operation.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Resource not found or outside the caller's permitted scope
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+  schemas:
+    Error:
+      type: object
+      additionalProperties: true
+      properties:
+        detail:
+          type: string
+        field:
+          type: string
+          nullable: true
+        error_list:
+          type: array
+          items:
+            type: string
+        error_code:
+          type: object
+          additionalProperties: true
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        remember:
+          type: boolean
+          default: true
+        otp_token:
+          type: string
+          nullable: true
+        captcha_token:
+          type: string
+          nullable: true
+    RegistrationRequest:
+      type: object
+      required:
+        - email
+        - first_name
+        - last_name
+        - password1
+        - password2
+        - remember
+      properties:
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        password1:
+          type: string
+          format: password
+        password2:
+          type: string
+          format: password
+        remember:
+          type: boolean
+          default: true
+        captcha_token:
+          type: string
+          nullable: true
+    LoginResponse:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        token:
+          type: string
+        jwt_token:
+          type: string
+        refresh:
+          type: string
+          nullable: true
+    RefreshRequest:
+      type: object
+      required:
+        - refresh
+      properties:
+        refresh:
+          type: string
+    JwtResponse:
+      type: object
+      properties:
+        access:
+          type: string
+        refresh:
+          type: string
+          nullable: true
+    User:
+      type: object
+      properties:
+        pk:
+          type: integer
+        username:
+          type: string
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+    Event:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        starts_on:
+          type: string
+          format: date-time
+        ends_on:
+          type: string
+          format: date-time
+        timezone:
+          type: string
+        ticket_types:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    PatronEvent:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            user_ticket_count:
+              type: integer
+              nullable: true
+    PaginatedEvents:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Event'
+    OrganizationEvent:
+      allOf:
+        - $ref: '#/components/schemas/Event'
+        - type: object
+          properties:
+            venue:
+              $ref: '#/components/schemas/Organization'
+    PaginatedOrganizationEvents:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        next_page_number:
+          type: integer
+          nullable: true
+        previous_page_number:
+          type: integer
+          nullable: true
+        page_number:
+          type: integer
+        num_pages:
+          type: integer
+        next_list:
+          type: array
+          items:
+            type: integer
+        previous_list:
+          type: array
+          items:
+            type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationEvent'
+    Organization:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        slug:
+          type: string
+    InvoiceSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        transaction_id:
+          type: string
+        created:
+          type: string
+          format: date-time
+        type:
+          type: integer
+        final_amount:
+          type: string
+        amount_refunded:
+          type: string
+        is_refunded:
+          type: boolean
+        ticket_items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+        invoice_items:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    PaginatedInvoices:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceSummary'
+    OrganizationInvoice:
+      type: object
+      additionalProperties: true
+      description: >-
+        Flat invoice-level organization response. Related invoice lines and ticket barcode data are returned
+        by separate endpoints.
+      properties:
+        id:
+          type: integer
+        transaction_id:
+          type: string
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        final_amount:
+          type: string
+        amount_paid:
+          type: string
+        amount_refunded:
+          type: string
+        is_refunded:
+          type: boolean
+        email:
+          type: string
+          format: email
+        phone_number:
+          type: string
+          nullable: true
+        name_on_ticket:
+          type: string
+          nullable: true
+        payment_type:
+          type: string
+        type:
+          type: integer
+        venue_id:
+          type: integer
+        venue:
+          $ref: '#/components/schemas/Organization'
+        user:
+          $ref: '#/components/schemas/User'
+        receipt_url:
+          type: string
+          format: uri
+          nullable: true
+    PaginatedOrganizationInvoices:
+      type: object
+      properties:
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        next_page_number:
+          type: integer
+          nullable: true
+        previous_page_number:
+          type: integer
+          nullable: true
+        page_number:
+          type: integer
+        next_list:
+          type: array
+          items:
+            type: integer
+        previous_list:
+          type: array
+          items:
+            type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationInvoice'
+    InvoiceItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        invoice:
+          type: integer
+        description:
+          type: string
+        quantity:
+          type: integer
+        price:
+          type: string
+        event:
+          $ref: '#/components/schemas/Event'
+    OrganizationInvoiceItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        description:
+          type: string
+        quantity:
+          type: integer
+        transfer_quantity:
+          type: integer
+        price:
+          type: string
+        amount_earned:
+          type: string
+        tax:
+          type: string
+        final_amount:
+          type: string
+        amount_refunded:
+          type: string
+        amount_paid:
+          type: string
+        type:
+          type: string
+        event:
+          $ref: '#/components/schemas/Event'
+          nullable: true
+        membership_group:
+          type: object
+          nullable: true
+          additionalProperties: true
+    PaginatedOrganizationInvoiceItems:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationInvoiceItem'
+    OrganizationInvoiceTicket:
+      type: object
+      additionalProperties: true
+      properties:
+        barcode_string:
+          type: string
+          description: Barcode/QR payload used to scan the ticket.
+        item_type:
+          type: string
+        type:
+          type: integer
+          nullable: true
+        product_attribute:
+          type: integer
+          nullable: true
+        type_name:
+          type: string
+          nullable: true
+        product_attribute_name:
+          type: string
+          nullable: true
+        event_name:
+          type: string
+          nullable: true
+        product_name:
+          type: string
+          nullable: true
+        event_starts_on:
+          type: string
+          format: date-time
+          nullable: true
+        event_ends_on:
+          type: string
+          format: date-time
+          nullable: true
+        event_timezone:
+          type: string
+          nullable: true
+        venue_timezone:
+          type: string
+          nullable: true
+    OrganizationInvoiceTickets:
+      type: object
+      required:
+        - ready
+        - items
+      properties:
+        ready:
+          type: boolean
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationInvoiceTicket'
+    OrganizationTicketSeat:
+      type: object
+      nullable: true
+      additionalProperties: true
+      description: >-
+        Assigned-seat identifiers. `segment_identifier` is the section, `location_identifier` is the row, and
+        `identifier` is the seat number.
+      properties:
+        identifier:
+          type: string
+        location_identifier:
+          type: string
+        segment_identifier:
+          type: string
+    OrganizationTicketItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        venue:
+          type: integer
+        group:
+          type: integer
+          nullable: true
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        status:
+          type: integer
+        name_on_ticket:
+          type: string
+          nullable: true
+        barcode_string:
+          type: string
+          description: Barcode/QR payload used to scan the ticket.
+        item_type:
+          type: string
+        type:
+          type: integer
+          nullable: true
+        event:
+          type: integer
+          nullable: true
+        product:
+          type: integer
+          nullable: true
+        product_attribute:
+          type: integer
+          nullable: true
+        price:
+          type: string
+          nullable: true
+        scan_code:
+          type: string
+          nullable: true
+        invoice_item:
+          type: integer
+          nullable: true
+        tt_seat_permission:
+          type: integer
+          nullable: true
+        shipping_fulfillment_status:
+          type: string
+          nullable: true
+        seat:
+          $ref: '#/components/schemas/OrganizationTicketSeat'
+        ticket_credit_string:
+          type: string
+          nullable: true
+        is_redeemable:
+          type: boolean
+        event_data:
+          type: object
+          nullable: true
+          additionalProperties: true
+        product_data:
+          type: object
+          nullable: true
+          additionalProperties: true
+        parent:
+          type: integer
+          nullable: true
+        type_name:
+          type: string
+          nullable: true
+        product_name:
+          type: string
+          nullable: true
+        product_attribute_name:
+          type: string
+          nullable: true
+        transfer_in_progress:
+          type: boolean
+    PaginatedOrganizationTicketItems:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        next_page_number:
+          type: integer
+          nullable: true
+        previous_page_number:
+          type: integer
+          nullable: true
+        page_number:
+          type: integer
+        num_pages:
+          type: integer
+        next_list:
+          type: array
+          items:
+            type: integer
+        previous_list:
+          type: array
+          items:
+            type: integer
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTicketItem'
+    OrganizationTicketTransfer:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        created:
+          type: string
+          format: date-time
+        updated:
+          type: string
+          format: date-time
+        tickets:
+          type: array
+          items:
+            type: integer
+        members:
+          type: array
+          items:
+            type: integer
+        venue:
+          $ref: '#/components/schemas/Organization'
+        state:
+          type: string
+          enum:
+            - pending
+            - cancelled
+            - complete
+            - returned
+        sender:
+          type: integer
+          nullable: true
+        receiver:
+          type: integer
+          nullable: true
+        receiver_email:
+          type: string
+          format: email
+        customer_group:
+          type: integer
+          nullable: true
+        invoice:
+          type: integer
+          nullable: true
+        basket:
+          type: integer
+          nullable: true
+        total_item_count:
+          type: integer
+        sender_email:
+          type: string
+          format: email
+    PaginatedOrganizationTicketTransfers:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTicketTransfer'
+    OrganizationTicketTransferItemSummary:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        item_type:
+          type: string
+        name:
+          type: string
+          nullable: true
+        context_name:
+          type: string
+          nullable: true
+        quantity:
+          type: integer
+        starts_on:
+          type: string
+          format: date-time
+          nullable: true
+        ends_on:
+          type: string
+          format: date-time
+          nullable: true
+        timezone:
+          type: string
+          nullable: true
+        date_time_to_be_determined:
+          type: boolean
+          nullable: true
+    OrganizationTicketTransferHistory:
+      allOf:
+        - $ref: '#/components/schemas/OrganizationTicketTransfer'
+        - type: object
+          properties:
+            item_summaries:
+              type: array
+              items:
+                $ref: '#/components/schemas/OrganizationTicketTransferItemSummary'
+    PaginatedOrganizationTicketTransferHistories:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationTicketTransferHistory'
+    TicketItem:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        event:
+          type: integer
+        invoice_item_id:
+          type: integer
+        status:
+          type: integer
+        is_activated:
+          type: boolean
+        name_on_ticket:
+          type: string
+          nullable: true
+        seat:
+          type: object
+          nullable: true
+          additionalProperties: true
+    InvoiceDetail:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        transaction_id:
+          type: string
+        created:
+          type: string
+          format: date-time
+        final_amount:
+          type: string
+        amount_refunded:
+          type: string
+        is_refunded:
+          type: boolean
+        venue:
+          type: object
+          additionalProperties: true
+        invoice_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/InvoiceItem'
+        ticket_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketItem'
+        memberships:
+          type: array
+          items:
+            type: object
+            additionalProperties: true
+    PaginatedTickets:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketItem'
+    MembershipActivity:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        member:
+          type: integer
+        created:
+          type: string
+          format: date-time
+    PaginatedMembershipActivity:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MembershipActivity'
+    Membership:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        status:
+          type: integer
+        expiry_date:
+          type: string
+          format: date
+        invoice_item_id:
+          type: integer
+          nullable: true
+        membership_group:
+          type: object
+          additionalProperties: true
+        membership_level:
+          type: object
+          additionalProperties: true
+        digital_passes:
+          type: object
+          additionalProperties: true
+    PaginatedMemberships:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Membership'
+    MembershipEvent:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        starts_on:
+          type: string
+          format: date-time
+        ends_on:
+          type: string
+          format: date-time
+        ticket_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketItem'
+        is_itemized:
+          type: boolean
+    PaginatedMembershipEvents:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/MembershipEvent'
+    BenefitAccess:
+      type: object
+      additionalProperties: true
+      properties:
+        id:
+          type: integer
+        scans_used:
+          type: integer
+        scans_allowed:
+          type: integer
+          nullable: true
+        related_events:
+          type: array
+          items:
+            type: integer
+        exclude_related_events:
+          type: boolean
+          nullable: true
+        ticket_type:
+          type: object
+          additionalProperties: true
+        membership_benefit:
+          type: object
+          additionalProperties: true
+    PaginatedBenefitAccess:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/BenefitAccess'
+    ReturnAmounts:
+      type: object
+      properties:
+        tax:
+          type: number
+        service_charges:
+          type: number
+        amount_refunded:
+          type: number
+        refund_amount:
+          type: number
+        items_total_amount:
+          type: number
+    DiscoveryExperience:
+      type: object
+      properties:
+        id:
+          type: integer
+        slug:
+          type: string
+        name:
+          type: string
+        starts_on:
+          type: string
+          format: date-time
+        ends_on:
+          type: string
+          format: date-time
+        timezone:
+          type: string
+        description_without_html:
+          type: string
+        frontend_details_url:
+          type: string
+        image:
+          type: string
+          nullable: true
+        image_banner:
+          type: string
+          nullable: true
+    PaginatedDiscoveryExperiences:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscoveryExperience'
+    ScanTicketRequest:
+      type: object
+      required:
+        - code
+      properties:
+        code:
+          type: string
+          description: Ticket barcode or scan code.
+          minLength: 1
+        permittedTypeIDs:
+          type: string
+          description: Optional comma-separated permitted ticket type IDs. Omit instead of sending an empty string.
+        scannerTypeID:
+          type: integer
+          description: Optional registered Showpass scanner device type ID.
+    VerifiedTicket:
+      allOf:
+        - $ref: '#/components/schemas/OrganizationTicketItem'
+        - type: object
+          properties:
+            quantity_multi_scan_limit:
+              type: integer
+            quantity_multi_scans_used:
+              type: integer
+            is_multiscan:
+              type: boolean
+      description: >-
+        The organization ticket serializer returns numeric status, event, and type IDs. event_data contains
+        nested event details; type_name contains the ticket type name.
+    ScanHistoryRequest:
+      oneOf:
+        - type: object
+          required:
+            - item
+            - action
+          properties:
+            item:
+              type: integer
+            action:
+              type: string
+              enum:
+                - pickup
+            scanner_device:
+              type: string
+              description: Recommended for pickup.
+              example: web_app
+            barcode_string:
+              type: string
+              description: Recommended for pickup; used to derive barcode metadata.
+            barcode_type:
+              type: string
+              description: Derived from barcode_string by the server.
+              example: static
+        - type: object
+          required:
+            - item
+            - action
+          properties:
+            item:
+              type: integer
+            action:
+              type: string
+              enum:
+                - return
+                - void
+    ScanHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        item:
+          type: integer
+        action:
+          type: string
+          enum:
+            - pickup
+            - return
+            - void
+        before:
+          type: integer
+          description: Numeric ticket status before the action.
+        after:
+          type: integer
+          description: Numeric ticket status after the action.
+        venue:
+          type: integer
+        created_by:
+          type: integer
+          nullable: true
+        scanner_device:
+          type: string
+        barcode_type:
+          type: string
+        barcode_source:
+          type: string
+        created:
+          type: string
+          format: date-time
+    QuickPurchaseItem:
+      type: object
+      required:
+        - quantity
+      properties:
+        event:
+          type: integer
+          description: Required with ticket_type.
+        ticket_type:
+          type: integer
+          description: Provide event and ticket_type for tickets.
+        product:
+          type: integer
+          description: Required with product_attribute.
+        product_attribute:
+          type: integer
+          description: Provide product and product_attribute for products.
+        quantity:
+          type: integer
+          minimum: 0
+      oneOf:
+        - required:
+            - event
+            - ticket_type
+        - required:
+            - product
+            - product_attribute
+    TrackingLinkRequest:
+      type: object
+      required:
+        - venue
+        - via
+      properties:
+        venue:
+          type: integer
+          description: Venue ID, scoped to the request.
+        event:
+          type: integer
+          nullable: true
+        referred_by:
+          type: integer
+          nullable: true
+        description:
+          type: string
+          maxLength: 512
+        via:
+          type: integer
+          description: 1 employee; 2 venue; 3 affiliate; 4 quick purchase.
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        ticket_types:
+          type: array
+          items:
+            type: integer
+        hide_public_ticket_types:
+          type: boolean
+        extra:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuickPurchaseItem'
+    TrackingLink:
+      type: object
+      properties:
+        venue:
+          type: integer
+          description: Venue ID, scoped to the request.
+        event:
+          type: integer
+          nullable: true
+        referred_by:
+          type: integer
+          nullable: true
+        description:
+          type: string
+          maxLength: 512
+        via:
+          type: integer
+          description: 1 employee; 2 venue; 3 affiliate; 4 quick purchase.
+          enum:
+            - 1
+            - 2
+            - 3
+            - 4
+        ticket_types:
+          type: array
+          items:
+            type: integer
+        hide_public_ticket_types:
+          type: boolean
+        extra:
+          type: array
+          items:
+            $ref: '#/components/schemas/QuickPurchaseItem'
+        id:
+          type: integer
+        owner_venue:
+          type: integer
+        long_url:
+          type: string
+        short_url:
+          type: string
+        tiny_url:
+          type: string
+        views:
+          type: integer
+        visitors:
+          type: integer
+        stats:
+          type: object
+          additionalProperties: true
+    PaginatedTrackingLink:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/TrackingLink'
+    DiscountItemPermission:
+      type: object
+      properties:
+        ticket_type:
+          type: integer
+        membership_level:
+          type: integer
+        product_attribute:
+          type: integer
+    DiscountEventPermission:
+      type: object
+      properties:
+        event:
+          type: integer
+        membership_group:
+          type: integer
+        product:
+          type: integer
+        tt_discount_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountItemPermission'
+    DiscountRule:
+      type: object
+      required:
+        - amount
+        - percentage
+      properties:
+        minimum_limit:
+          type: string
+          example: '10.00'
+          nullable: true
+        maximum_limit:
+          type: string
+          example: '10.00'
+          nullable: true
+        limit_type:
+          type: integer
+          description: 1 item quantity; 2 total basket quantity; 3 purchase amount.
+          enum:
+            - 1
+            - 2
+            - 3
+        amount:
+          type: string
+          description: Fixed amount; use 0.00 when percentage applies.
+          example: '10.00'
+        percentage:
+          type: string
+          description: Percentage; use 0.00 when amount applies.
+          example: '10.00'
+        venue:
+          type: integer
+    DiscountRequest:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Generated when omitted; submitted values are uppercased.
+        description:
+          type: string
+        type:
+          type: integer
+          description: Use 1 for a regular code or 8 for an eligible auto discount.
+          enum:
+            - 1
+            - 8
+        percentage:
+          type: string
+          description: Percentage reduction, e.g. 25.00.
+          example: '10.00'
+        amount:
+          type: string
+          description: Fixed amount reduction.
+          example: '10.00'
+        limit:
+          type: integer
+          nullable: true
+        per_user_limit:
+          type: integer
+          nullable: true
+        basket_limit:
+          type: integer
+          nullable: true
+        per_event_limit:
+          type: integer
+          nullable: true
+        minimum_quantity:
+          type: integer
+          nullable: true
+        maximum_quantity:
+          type: integer
+          nullable: true
+        is_public:
+          type: boolean
+        starts_on:
+          type: string
+          format: date-time
+          nullable: true
+        ends_on:
+          type: string
+          description: Must follow starts_on.
+          format: date-time
+          nullable: true
+        allowed_checkouts:
+          type: array
+          items:
+            type: string
+            enum:
+              - disc_allowed_box_office
+              - disc_allowed_public
+        apply_method:
+          type: integer
+          description: 1 each item; 2 entire basket.
+          enum:
+            - 1
+            - 2
+        permission_type:
+          type: string
+          description: Item restriction mode.
+          enum:
+            - disc_level_venue
+            - disc_level_ticket_type
+            - disc_level_excluded_ticket_type
+            - disc_level_all
+        event_discount_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountEventPermission'
+        reference:
+          type: string
+          nullable: true
+        discount_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountRule'
+    Discount:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Generated when omitted; submitted values are uppercased.
+        description:
+          type: string
+        type:
+          type: integer
+          description: Existing records may include additional system-managed types.
+        percentage:
+          type: string
+          description: Percentage reduction, e.g. 25.00.
+          example: '10.00'
+        amount:
+          type: string
+          description: Fixed amount reduction.
+          example: '10.00'
+        limit:
+          type: integer
+          nullable: true
+        per_user_limit:
+          type: integer
+          nullable: true
+        basket_limit:
+          type: integer
+          nullable: true
+        per_event_limit:
+          type: integer
+          nullable: true
+        minimum_quantity:
+          type: integer
+          nullable: true
+        maximum_quantity:
+          type: integer
+          nullable: true
+        is_public:
+          type: boolean
+        starts_on:
+          type: string
+          format: date-time
+          nullable: true
+        ends_on:
+          type: string
+          description: Must follow starts_on.
+          format: date-time
+          nullable: true
+        allowed_checkouts:
+          type: array
+          items:
+            type: string
+            enum:
+              - disc_allowed_box_office
+              - disc_allowed_public
+        apply_method:
+          type: integer
+          description: 1 each item; 2 entire basket.
+          enum:
+            - 1
+            - 2
+        permission_type:
+          type: string
+          description: Item restriction mode.
+          enum:
+            - disc_level_venue
+            - disc_level_ticket_type
+            - disc_level_excluded_ticket_type
+            - disc_level_all
+        event_discount_permissions:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountEventPermission'
+        reference:
+          type: string
+          nullable: true
+        discount_rules:
+          type: array
+          items:
+            $ref: '#/components/schemas/DiscountRule'
+        id:
+          type: integer
+        created_by:
+          type: integer
+          nullable: true
+        stats:
+          type: object
+          additionalProperties: true
+    PaginatedDiscount:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Discount'
+    AccessPasswordRequest:
+      type: object
+      required:
+        - password
+      properties:
+        password:
+          type: string
+          description: Caller-generated code or regex pattern.
+          maxLength: 256
+        ticket_type:
+          type: integer
+          description: Direct ticket type scope; do not combine with event_id.
+        event_id:
+          type: integer
+          description: Event scope; accepted on writes but not returned.
+        ticket_type_ids:
+          type: array
+          items:
+            type: integer
+        is_active:
+          type: boolean
+          default: true
+        start_time:
+          type: string
+          description: >-
+            Set now or a past time for immediate activation. Missing or future start times do not grant
+            access.
+          format: date-time
+          nullable: true
+        end_time:
+          type: string
+          description: Null means no scheduled end.
+          format: date-time
+          nullable: true
+        max_item_purchase_limit:
+          type: integer
+          description: Ticket quantity limit, not unlock or entry attempts. Null means reusable.
+          nullable: true
+          minimum: 1
+          maximum: 10000
+        is_regex_match:
+          type: boolean
+          description: Case-insensitive regex matching from the beginning of the entered value.
+          default: false
+    AccessPassword:
+      type: object
+      properties:
+        password:
+          type: string
+          description: Caller-generated code or regex pattern.
+          maxLength: 256
+        ticket_type:
+          type: integer
+          nullable: true
+        ticket_type_ids:
+          type: array
+          items:
+            type: integer
+        is_active:
+          type: boolean
+          default: true
+        start_time:
+          type: string
+          description: >-
+            Set now or a past time for immediate activation. Missing or future start times do not grant
+            access.
+          format: date-time
+          nullable: true
+        end_time:
+          type: string
+          description: Null means no scheduled end.
+          format: date-time
+          nullable: true
+        max_item_purchase_limit:
+          type: integer
+          description: Ticket quantity limit, not unlock or entry attempts. Null means reusable.
+          nullable: true
+          minimum: 1
+          maximum: 10000
+        is_regex_match:
+          type: boolean
+          description: Case-insensitive regex matching from the beginning of the entered value.
+          default: false
+        id:
+          type: integer
+        venue:
+          type: integer
+        password_use_count:
+          type: integer
+          description: Internal event attachment count; not a redemption count.
+    PaginatedAccessPassword:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AccessPassword'
+    WebhookTicketItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        event_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+          nullable: true
+        event_name:
+          type: string
+          nullable: true
+        event_starts_on:
+          type: string
+          format: date-time
+          nullable: true
+        event_ends_on:
+          type: string
+          format: date-time
+          nullable: true
+        first_name_on_ticket:
+          type: string
+          nullable: true
+        last_name_on_ticket:
+          type: string
+          nullable: true
+        phone_number_on_ticket:
+          type: string
+          nullable: true
+        email_on_ticket:
+          type: string
+          nullable: true
+        name_on_ticket:
+          type: string
+          nullable: true
+        product_id:
+          type: string
+          nullable: true
+        product_name:
+          type: string
+          nullable: true
+        product_attribute_id:
+          type: string
+          nullable: true
+        product_attribute_name:
+          type: string
+          nullable: true
+        ticket_status:
+          type: string
+          enum:
+            - pending
+            - issued
+            - voided
+            - transferred
+        barcode_string:
+          type: string
+          description: Barcode or QR payload.
+        ticket_type_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+          nullable: true
+        ticket_type_name:
+          type: string
+          nullable: true
+        ticket_item_type:
+          type: string
+          enum:
+            - ticket
+            - membership
+            - product
+        ticket_status_code:
+          type: string
+          description: Numeric status code serialized as a string.
+        created_by_transfer:
+          type: boolean
+    WebhookInvoiceItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        invoice_item_type:
+          type: string
+          enum:
+            - ticket
+            - membership
+            - product
+        quantity:
+          type: integer
+        discounts:
+          type: string
+          example: '10.00'
+        net_sales:
+          type: string
+          example: '10.00'
+        service_fees:
+          type: string
+          example: '10.00'
+        account_credit_applied:
+          type: string
+          example: '10.00'
+        gross_revenue:
+          type: string
+          example: '10.00'
+        organizer_fees:
+          type: string
+          example: '10.00'
+        total_tax:
+          type: string
+          example: '10.00'
+        event_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+          nullable: true
+        event_name:
+          type: string
+          nullable: true
+        ticket_type_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+          nullable: true
+        ticket_type_name:
+          type: string
+          nullable: true
+        event_facebook_id:
+          type: string
+          nullable: true
+        ticket_type_external_id:
+          type: string
+          nullable: true
+        product_id:
+          type: string
+          nullable: true
+        product_name:
+          type: string
+          nullable: true
+        product_attribute_id:
+          type: string
+          nullable: true
+        product_attribute_name:
+          type: string
+          nullable: true
+    WebhookInvoice:
+      type: object
+      properties:
+        transaction_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+        showpass_organization_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+        customer_name:
+          type: string
+        customer_email:
+          type: string
+          format: email
+        customer_phone_number:
+          type: string
+          nullable: true
+        subscribe_to_venue:
+          type: boolean
+        payment_type:
+          type: string
+          enum:
+            - cash
+            - credit
+            - interac
+            - complimentary
+            - free
+            - bundled
+            - transferred
+            - direct_deposit
+            - other
+            - payment_plan
+            - user_credit
+            - exchange_credit
+            - afterpay
+        other_payment_type:
+          type: string
+          nullable: true
+        currency:
+          type: string
+        discounts:
+          type: string
+          example: '10.00'
+        net_sales:
+          type: string
+          example: '10.00'
+        service_fees:
+          type: string
+          example: '10.00'
+        account_credit_applied:
+          type: string
+          example: '10.00'
+        gross_revenue:
+          type: string
+          example: '10.00'
+        organizer_fees:
+          type: string
+          example: '10.00'
+        total_tax:
+          type: string
+          example: '10.00'
+        account_credit_type:
+          type: string
+          nullable: true
+        invoice_type:
+          type: string
+          enum:
+            - sale
+            - refund
+        invoice_type_id:
+          type: string
+          description: Identifier serialized as a string in invoice webhook payloads.
+        ticket_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookTicketItem'
+        invoice_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebhookInvoiceItem'
+    WebhookEnvelope:
+      type: object
+      required:
+        - id
+        - event_type
+        - webhook_event_uuid
+        - data
+      properties:
+        id:
+          type: string
+          description: Root identifier signed with HMAC SHA1; invoice examples use the transaction ID.
+        event_type:
+          type: string
+          enum:
+            - invoice.purchase
+            - invoice.refund
+            - invoice.void
+            - invoice.transfer
+            - invoice.transferred
+            - webhook.test
+        webhook_event_uuid:
+          type: string
+          description: Deduplication key for this webhook event.
+          format: uuid
+        data:
+          anyOf:
+            - $ref: '#/components/schemas/WebhookInvoice'
+            - type: object
+              additionalProperties: true
+              description: Test event data or another configured payload structure.
+      description: >-
+        Outbound POST payload delivered to the configured Bullbustin HTTPS receiver. X-SHOWPASS-SIGNATURE is
+        the hex HMAC SHA1 of String(id). Invoice fields vary with transaction and event type; additional
+        fields may be present.
+      example:
+        id: f1-1068-4af6-be8f-1222417da0f2
+        data:
+          currency: CAD
+          discounts: '0.00'
+          net_sales: '5.84'
+          total_tax: '0.25'
+          invoice_type: sale
+          payment_type: credit
+          service_fees: '0.59'
+          ticket_items:
+            - id: 41349751
+              event_id: '474708'
+              event_name: Bullbustin example event
+              product_id: null
+              product_name: null
+              event_ends_on: '2026-12-03T04:00:00Z'
+              ticket_status: issued
+              barcode_string: EXAMPLE-BARCODE
+              name_on_ticket: null
+              ticket_type_id: '1657978'
+              email_on_ticket: null
+              event_starts_on: '2026-12-02T04:00:00Z'
+              ticket_item_type: ticket
+              ticket_type_name: A test ticket
+              ticket_status_code: '2'
+              created_by_transfer: false
+              last_name_on_ticket: null
+              first_name_on_ticket: null
+              product_attribute_id: null
+              phone_number_on_ticket: null
+              product_attribute_name: null
+          customer_name: Example Customer
+          gross_revenue: '5.20'
+          invoice_items:
+            - id: 21110231
+              event_id: '474708'
+              quantity: 1
+              discounts: '0.00'
+              net_sales: '5.84'
+              total_tax: '0.25'
+              event_name: Bullbustin example event
+              product_id: null
+              product_name: null
+              service_fees: '0.59'
+              gross_revenue: '5.20'
+              organizer_fees: '0.00'
+              ticket_type_id: '1657978'
+              ticket_type_name: A test ticket
+              event_facebook_id: null
+              invoice_item_type: ticket
+              product_attribute_id: null
+              account_credit_applied: '0.00'
+              product_attribute_name: null
+              ticket_type_external_id: null
+          customer_email: customer@example.com
+          organizer_fees: '0.00'
+          transaction_id: f1-1068-4af6-be8f-1222417da0f2
+          invoice_type_id: '101'
+          other_payment_type: null
+          subscribe_to_venue: false
+          account_credit_type: null
+          customer_phone_number: null
+          account_credit_applied: '0.00'
+          showpass_organization_id: '5796'
+        event_type: invoice.purchase
+        webhook_event_uuid: 09117c09-e1f8-4913-b2f5-52cc161cf5f7
+    HoldBasketItemRequest:
+      type: object
+      required:
+        - item_type
+        - type
+        - quantity
+      properties:
+        item_type:
+          type: string
+          description: This example creates ticket inventory.
+          enum:
+            - ticket
+        type:
+          type: integer
+          description: Ticket type ID belonging to an event available to the selling venue.
+          minimum: 1
+        quantity:
+          type: integer
+          description: Number of tickets to reserve, subject to inventory and purchase limits.
+          minimum: 1
+    HoldBasketCreateRequest:
+      type: object
+      required:
+        - item_groups
+      properties:
+        item_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/HoldBasketItemRequest'
+          minItems: 1
+        info_first_name:
+          type: string
+          description: Customer first name.
+        info_last_name:
+          type: string
+          description: Customer last name.
+        info_email:
+          type: string
+          description: Customer information email.
+          format: email
+        email:
+          type: string
+          description: Basket customer email; required before sending a hold link email.
+          format: email
+        name_on_ticket:
+          type: string
+          description: Customer display name; alternatively send info_first_name and info_last_name.
+        phone_number:
+          type: string
+        purchase_note:
+          type: string
+          description: Note associated with the basket.
+        language:
+          type: string
+          description: Supported Showpass language code.
+          example: en
+        discount_codes:
+          type: array
+          items:
+            type: string
+            description: An existing discount code.
+      description: >-
+        Focused ticket basket shape for general admission holds. Inventory, customer information, and
+        event-specific requirements are validated by the server. Assigned seating and other inventory types
+        need their corresponding allocation fields and permissions.
+    PlaceBasketOnHoldRequest:
+      type: object
+      properties:
+        hold_type:
+          type: string
+          description: >-
+            basic_hold creates a standard customer hold. dynamic_hold uses the shared allocation workflow and
+            its eligibility checks.
+          enum:
+            - basic_hold
+            - dynamic_hold
+          default: basic_hold
+        hold_expiry_date:
+          type: string
+          description: Optional future expiry. Requires hold expiry to be enabled. Null means no scheduled hold expiry.
+          format: date-time
+          nullable: true
+        is_comp_hold_link:
+          type: boolean
+          default: false
+          description: >-
+            Requires complimentary hold links to be enabled, complimentary ticket permission, and an eligible
+            basic hold. Not supported for dynamic or group holds or with discounts.
+        customer_group:
+          type: object
+          additionalProperties: true
+          nullable: true
+          description: Optional group-sale configuration. Omit for an ordinary customer hold.
+    HoldBasketItem:
+      type: object
+      properties:
+        id:
+          type: integer
+        item_type:
+          type: string
+        type:
+          type: integer
+          nullable: true
+        event:
+          type: integer
+          nullable: true
+        quantity:
+          type: integer
+        status:
+          type: integer
+        price:
+          type: string
+          description: Decimal value.
+    HoldLinkDetails:
+      type: object
+      properties:
+        id:
+          type: integer
+        hold_type:
+          type: string
+        is_comp_hold_link:
+          type: boolean
+        description:
+          type: string
+          nullable: true
+        purchase_limit_min:
+          type: integer
+          nullable: true
+        purchase_limit_max:
+          type: integer
+        image_banner:
+          type: string
+          nullable: true
+        tracking_link_slug:
+          type: string
+          nullable: true
+        tracking_link_url:
+          type: string
+          description: Customer-facing checkout link. Use the returned URL directly.
+          format: uri
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          nullable: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+        items_sold:
+          type: integer
+    HoldBasket:
+      type: object
+      properties:
+        id:
+          type: integer
+        uuid:
+          type: string
+          format: uuid
+        status:
+          type: integer
+          description: 1 pending; 10 on hold. Other numeric statuses can occur after checkout or release.
+        sold_by_venue:
+          type: integer
+        sold_by:
+          type: integer
+          nullable: true
+        email:
+          type: string
+          nullable: true
+        name_on_ticket:
+          type: string
+          nullable: true
+        item_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/HoldBasketItem'
+        currency:
+          type: string
+        total_price:
+          type: string
+          description: Decimal amount.
+        hold_url:
+          type: string
+          description: Legacy hold checkout URL; may be null when the URL is under on_hold_detail.
+          format: uri
+          nullable: true
+        hold_link_slug:
+          type: string
+          nullable: true
+        on_hold_detail:
+          allOf:
+            - $ref: '#/components/schemas/HoldLinkDetails'
+          description: Hold metadata, when present. It can be null before the hold is created.
+          nullable: true
+          type: object
+        hold_expiry_date:
+          type: string
+          description: Scheduled hold expiry, if configured.
+          format: date-time
+          nullable: true
+        expiry_date:
+          type: string
+          description: Basket expiry; separate from scheduled hold expiry.
+          format: date-time
+          nullable: true
+        checkout_idempotency_key:
+          type: string
+          description: Version token returned for subsequent basket edits.
+        post_purchase_completed:
+          type: boolean
+    PaginatedHeldBaskets:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/HoldBasket'
+    HoldBackgroundJob:
+      type: object
+      required:
+        - job_id
+      properties:
+        job_id:
+          type: string
+          description: >-
+            Background job identifier returned when work is queued. It is not confirmation of completion or
+            email delivery.
+          example: bfe3a0c2-4c10-4c27-b1f6-ffb9bdc20ad1
+    HoldExpiryUpdateRequest:
+      type: object
+      required:
+        - hold_expiry_date
+      properties:
+        hold_expiry_date:
+          type: string
+          description: Future ISO 8601 timestamp, or null to remove scheduled expiry.
+          format: date-time
+          nullable: true
+    HoldLinkEmailRequest:
+      type: object
+      properties:
+        message_to_customer:
+          type: string
+          description: Optional message saved on the basket.
+        language:
+          type: string
+          description: Supported Showpass language code.
+          example: en
+    HoldBasketEditItemRequest:
+      type: object
+      required:
+        - item_type
+        - type
+        - quantity
+      properties:
+        item_type:
+          type: string
+          description: This example creates ticket inventory.
+          enum:
+            - ticket
+        type:
+          type: integer
+          description: Ticket type ID belonging to an event available to the selling venue.
+          minimum: 1
+        quantity:
+          type: integer
+          description: Number of tickets to reserve, subject to inventory and purchase limits.
+          minimum: 1
+        id:
+          type: integer
+          description: >-
+            Existing item group ID from the retrieved basket. Preserve this ID for groups you keep; omit it
+            only for a new group.
+          minimum: 1
+    HoldBasketEditRequest:
+      type: object
+      required:
+        - item_groups
+      properties:
+        item_groups:
+          type: array
+          items:
+            $ref: '#/components/schemas/HoldBasketEditItemRequest'
+          description: >-
+            Complete desired item group list. Keep existing group IDs. Groups omitted from this list are
+            removed; this is not a list of only the changed groups.
+        info_first_name:
+          type: string
+          description: Customer first name.
+        info_last_name:
+          type: string
+          description: Customer last name.
+        info_email:
+          type: string
+          description: Customer information email.
+          format: email
+        email:
+          type: string
+          description: Basket customer email; required before sending a hold link email.
+          format: email
+        name_on_ticket:
+          type: string
+          description: Customer display name; alternatively send info_first_name and info_last_name.
+        phone_number:
+          type: string
+        purchase_note:
+          type: string
+          description: Note associated with the basket.
+        language:
+          type: string
+          description: Supported Showpass language code.
+          example: en
+        discount_codes:
+          type: array
+          items:
+            type: string
+            description: An existing discount code.
+        checkout_idempotency_key:
+          type: string
+          description: >-
+            For regular basket PUT, echo the latest key from GET and keep the new key from the response. Stale
+            keys are rejected when basket idempotency checks are enabled. Missing keys are currently
+            tolerated; clients should still send one. This version check is not enforced by the held-basket
+            view.
+        payment_type:
+          type: integer
+          description: >-
+            Current numeric payment type returned by GET. Preserve this value when editing; required in a
+            held-basket PATCH because basket validation uses it.
+        sold_by:
+          type: integer
+          description: Current seller ID. Preserve when editing another seller's hold with manage-all-holds access.
+          minimum: 1
+      description: >-
+        General admission ticket basket edit shape. Read the current basket first and preserve its customer,
+        seller, discount, and allocation settings. Send the complete desired item_groups list and current
+        payment_type even for held-basket PATCH; the shared basket validation expects them. Assigned seating
+        and other inventory types require their corresponding allocation fields.
+    HeldBasketPatchRequest:
+      allOf:
+        - $ref: '#/components/schemas/HoldBasketEditRequest'
+        - type: object
+          required:
+            - payment_type
+    HoldSplitItemRequest:
+      type: object
+      required:
+        - item_group_id
+        - quantity
+      properties:
+        item_group_id:
+          type: integer
+          description: Item group ID belonging to the original held basket, not a ticket type ID.
+          minimum: 1
+        quantity:
+          type: integer
+          description: Positive quantity to move, no greater than the quantity currently held in this group.
+          minimum: 1
+    HoldSplitRequest:
+      type: object
+      required:
+        - ticket_item_groups_to_split
+        - name_on_ticket
+      properties:
+        ticket_item_groups_to_split:
+          type: array
+          items:
+            $ref: '#/components/schemas/HoldSplitItemRequest'
+          minItems: 1
+        name_on_ticket:
+          type: string
+          description: Required customer name. It is applied to the new basket when a non-null email is provided.
+          maxLength: 128
+        email:
+          type: string
+          description: >-
+            Provide the new recipient email to replace the copied customer details. If omitted or null,
+            customer details are inherited from the original basket.
+          nullable: true
+          maxLength: 128
+        phone_number:
+          type: string
+          description: Optional replacement phone number, applied with a non-null email.
+          nullable: true
+          maxLength: 128
+    HoldSplitResult:
+      type: object
+      required:
+        - id
+      properties:
+        id:
+          type: integer
+          description: New held basket ID. Retrieve this basket to obtain its checkout link.
+          minimum: 1
+    HoldBulkEmailRequest:
+      type: object
+      required:
+        - basket_ids
+      properties:
+        basket_ids:
+          type: array
+          items:
+            type: integer
+            minimum: 1
+          minItems: 1
+          description: >-
+            IDs of baskets belonging to this venue, each with a saved customer email and an available hold
+            link.
+        message_to_customer:
+          type: string
+          description: Optional message saved on the basket.
+        language:
+          type: string
+          description: Supported Showpass language code.
+          example: en
+    DynamicHoldSettingsUpdate:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Customer-facing hold description.
+          nullable: true
+          maxLength: 1000
+        purchase_limit_min:
+          type: integer
+          description: Minimum per purchase. Null clears the configured minimum. A value of 0 is normalized to 1.
+          nullable: true
+          minimum: 0
+        purchase_limit_max:
+          type: integer
+          description: >-
+            Maximum per purchase. Keep it at least as large as the minimum; send both limits together when
+            changing them.
+          minimum: 0
+        hold_expiry_date:
+          type: string
+          description: >-
+            Optional future expiry for the linked basket, or null to remove it. Omit to leave expiry
+            unchanged. Changes require hold expiry to be enabled.
+          format: date-time
+          nullable: true
+    DynamicHoldSettings:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Hold metadata ID.
+        description:
+          type: string
+          description: Customer-facing hold description.
+          nullable: true
+          maxLength: 1000
+        purchase_limit_min:
+          type: integer
+          description: Minimum per purchase. Null clears the configured minimum. A value of 0 is normalized to 1.
+          nullable: true
+          minimum: 0
+        purchase_limit_max:
+          type: integer
+          description: >-
+            Maximum per purchase. Keep it at least as large as the minimum; send both limits together when
+            changing them.
+          minimum: 0
+        hold_expiry_date:
+          type: string
+          description: >-
+            Optional future expiry for the linked basket, or null to remove it. Omit to leave expiry
+            unchanged. Changes require hold expiry to be enabled.
+          format: date-time
+          nullable: true
+        is_comp_hold_link:
+          type: boolean
+          readOnly: true
+          description: Set during hold creation; not editable here.
+        image_banner:
+          type: string
+          description: Uploaded banner URL, when present.
+          nullable: true
+        created:
+          type: string
+          format: date-time
+          nullable: true
+        updated:
+          type: string
+          format: date-time
+          nullable: true
+        items_sold:
+          type: integer
+          description: Read-only count.
+          readOnly: true
+    DynamicHoldSettingsUpload:
+      type: object
+      properties:
+        description:
+          type: string
+          description: Customer-facing hold description.
+          nullable: true
+          maxLength: 1000
+        purchase_limit_min:
+          type: integer
+          description: Minimum per purchase. Null clears the configured minimum. A value of 0 is normalized to 1.
+          nullable: true
+          minimum: 0
+        purchase_limit_max:
+          type: integer
+          description: >-
+            Maximum per purchase. Keep it at least as large as the minimum; send both limits together when
+            changing them.
+          minimum: 0
+        hold_expiry_date:
+          type: string
+          description: >-
+            Optional future expiry for the linked basket, or null to remove it. Omit to leave expiry
+            unchanged. Changes require hold expiry to be enabled.
+          format: date-time
+          nullable: true
+        image_banner:
+          type: string
+          description: Upload the banner file using multipart/form-data; do not submit an image URL as a JSON value.
+          format: binary
+    PaginatedDynamicHoldSettings:
+      type: object
+      properties:
+        count:
+          type: integer
+        next:
+          type: string
+          nullable: true
+        previous:
+          type: string
+          nullable: true
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/DynamicHoldSettings'
