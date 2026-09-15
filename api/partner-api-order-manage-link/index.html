@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
+    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -95,11 +95,11 @@
 <p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
 <h2>Request body</h2>
 <pre><code class="language-json">{
-  &quot;partner_user_id&quot;: &quot;customer-42&quot;,
+  &quot;partner_external_user_id&quot;: &quot;customer-42&quot;,
   &quot;transaction_id&quot;: &quot;showpass-transaction-id&quot;
 }
 </code></pre>
-<p>Use the same <code>partner_user_id</code> used for checkout attribution. Store the Showpass <code>transaction_id</code> from the purchase webhook with your order record.</p>
+<p>Use the same <code>partner_external_user_id</code> used for checkout attribution. Store the Showpass <code>transaction_id</code> from the purchase webhook with your order record.</p>
 <h2>Response</h2>
 <p>The endpoint returns <code>201</code>:</p>
 <pre><code class="language-json">{

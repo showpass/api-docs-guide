@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
+    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -95,7 +95,7 @@
 <p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
 <h2>Request body</h2>
 <pre><code class="language-json">{
-  &quot;partner_user_id&quot;: &quot;customer-42&quot;
+  &quot;partner_external_user_id&quot;: &quot;customer-42&quot;
 }
 </code></pre>
 <h2>Response</h2>
@@ -122,7 +122,7 @@
 <p>The raw value is returned only in this response; Showpass stores its SHA-256 hash. Do not persist it as a long-lived customer credential or include it in logs.</p>
 <h2>Errors</h2>
 <ul>
-<li><code>400 Bad Request</code>: <code>partner_user_id</code> is missing or invalid.</li>
+<li><code>400 Bad Request</code>: <code>partner_external_user_id</code> is missing or invalid.</li>
 <li><code>403 Forbidden</code>: authentication failed or checkout attribution is not enabled for this Partner integration.</li>
 <li><code>409 Conflict</code>: the Partner customer does not exist or is inactive.</li>
 </ul>

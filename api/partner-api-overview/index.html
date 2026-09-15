@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-CFPNBukw.js"></script>
+    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
   </head>
 
@@ -121,7 +121,7 @@
 </tbody></table>
 <h2>How a purchase is connected</h2>
 <ol>
-<li>Your backend <a href="/api/partner-api-users">syncs the customer</a> using the stable ID from your system as <code>partner_user_id</code>.</li>
+<li>Your backend <a href="/api/partner-api-users">syncs the customer</a> using the stable ID from your system as <code>partner_external_user_id</code>.</li>
 <li>Your application <a href="/api/public-api-event-list-by-organization">discovers Showpass events by organization</a> and keeps the selected event <code>slug</code>.</li>
 <li>Immediately before checkout, your backend <a href="/api/partner-api-customer-attribution-token">creates a customer attribution token</a>.</li>
 <li>Your frontend passes the event slug and token to the <a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a>.</li>
@@ -131,8 +131,8 @@
 </ol>
 <p>See <a href="/api/partner-api-integration-flow">Build a partner ticketing flow</a> for the complete sequence and implementation examples.</p>
 <h2>Identity and authentication are separate</h2>
-<p><code>partner_user_id</code> is your stable identifier for a customer. A <code>customer_attribution_token</code> carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.</p>
-<p>Partner credentials authenticate your backend. Never send the partner secret, <code>partner_user_id</code>, bearer tokens, or refresh tokens to the purchase widget.</p>
+<p><code>partner_external_user_id</code> is your stable identifier for a customer. A <code>customer_attribution_token</code> carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.</p>
+<p>Partner credentials authenticate your backend. Never send the partner secret, <code>partner_external_user_id</code>, bearer tokens, or refresh tokens to the purchase widget.</p>
 <h2>Base URL and access</h2>
 <pre><code class="language-text">https://www.showpass.com/api/partner/
 </code></pre>
@@ -178,7 +178,7 @@ import time
 import uuid
 
 partner_secret = &quot;your-partner-secret&quot;
-body = &#39;{&quot;partner_user_id&quot;:&quot;customer-42&quot;}&#39;
+body = &#39;{&quot;partner_external_user_id&quot;:&quot;customer-42&quot;}&#39;
 timestamp = str(int(time.time()))
 nonce = str(uuid.uuid4())
 path_and_query = &quot;/api/partner/customer-attribution-token/&quot;
