@@ -8,7 +8,7 @@ POST /api/partner/users/
 
 This is an idempotent server-to-server operation for a `partner_external_user_id` that already exists: Showpass reuses the existing customer link instead of creating another one.
 
-The profile fields are used when Showpass creates or safely links the customer. Repeating the request for an existing `partner_external_user_id` confirms and returns the current link; it does not update that customer’s Showpass profile.
+The profile fields are used when Showpass creates or safely links the customer. Repeating the request for an existing `partner_external_user_id` updates only the supplied partner-owned profile fields (`first_name`, `last_name`, and `phone`) and leaves omitted fields unchanged. `email` is used for safe linking and is not updated by this request.
 
 Authenticate the request with the HMAC scheme in the [Partner API overview](/api/partner-api-overview).
 

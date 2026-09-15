@@ -13,6 +13,8 @@ You need:
 
 All `/api/partner/` requests belong in your backend. Event discovery and the purchase widget use their existing public integration paths.
 
+The interactive API Explorer is for Beta or Demo testing only. It holds credentials in memory for the current page and blocks authenticated requests to Showpass production; production Partner API calls must be signed and sent from your server.
+
 ## 1. Connect your customer to Showpass
 
 When a customer registers—or before their first Showpass checkout—send their stable ID and verified identity information to Showpass:
