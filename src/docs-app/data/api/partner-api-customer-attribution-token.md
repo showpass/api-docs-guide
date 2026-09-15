@@ -14,7 +14,7 @@ Authenticate the request with the HMAC scheme in the [Partner API overview](/api
 
 ```json
 {
-  "partner_user_id": "customer-42"
+  "partner_external_user_id": "customer-42"
 }
 ```
 
@@ -51,6 +51,6 @@ The raw value is returned only in this response; Showpass stores its SHA-256 has
 
 ## Errors
 
-- `400 Bad Request`: `partner_user_id` is missing or invalid.
+- `400 Bad Request`: `partner_external_user_id` is missing or invalid.
 - `403 Forbidden`: authentication failed or checkout attribution is not enabled for this Partner integration.
 - `409 Conflict`: the Partner customer does not exist or is inactive.

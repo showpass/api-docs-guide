@@ -57,7 +57,7 @@ export const seoDataMap: Record<string, SEOData> = {
   "/api/partner-api-users": {
     title: "Sync a Customer - Showpass Partner API",
     description: "Connect a customer in your application to Showpass using a stable partner customer ID.",
-    keywords: "showpass partner customer api, customer identity sync, partner user id, hmac api authentication"
+    keywords: "showpass partner customer api, customer identity sync, partner external user id, hmac api authentication"
   },
   "/api/partner-api-customer-attribution-token": {
     title: "Create Checkout Attribution - Showpass Partner API",

@@ -36,11 +36,14 @@ const isProductionShowpassHost = (hostname: string) =>
   hostname === "showpass.com" || hostname === "www.showpass.com";
 
 const EXPLORER_STORAGE_KEYS = {
-  authorization: "showpass-docs-explorer-authorization",
   baseUrl: "showpass-docs-explorer-base-url",
-  partnerKeyId: "showpass-docs-explorer-partner-key-id",
-  partnerSecret: "showpass-docs-explorer-partner-secret",
 };
+
+const LEGACY_CREDENTIAL_STORAGE_KEYS = [
+  "showpass-docs-explorer-authorization",
+  "showpass-docs-explorer-partner-key-id",
+  "showpass-docs-explorer-partner-secret",
+] as const;
 
 const getSessionValue = (key: string, fallback = "") => {
   if (typeof window === "undefined") return fallback;
@@ -63,8 +66,20 @@ const getPathParameterNames = (path: string) => [
 ];
 
 const setSessionValue = (key: string, value: string) => {
+  if (typeof window === "undefined") return;
+
   try {
     window.sessionStorage.setItem(key, value);
+  } catch {
+    // Session storage can be unavailable in privacy-restricted browser contexts.
+  }
+};
+
+const removeSessionValue = (key: string) => {
+  if (typeof window === "undefined") return;
+
+  try {
+    window.sessionStorage.removeItem(key);
   } catch {
     // Session storage can be unavailable in privacy-restricted browser contexts.
   }
@@ -141,8 +156,8 @@ const createPartnerSignature = async (
 
 /**
  * Executes a user-authored request directly from the documentation page.
- * Credentials are kept in component state and sessionStorage for this browser
- * session. Browser cookies are never attached to the request.
+ * Credentials are kept in component state only. Browser cookies are never
+ * attached to the request.
  */
 const ApiExplorer: React.FC<ApiExplorerProps> = ({
   description,
@@ -203,15 +218,9 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   );
   const [pathParameters, setPathParameters] = useState<Record<string, string>>({});
   const [queryParameterValues, setQueryParameterValues] = useState<Record<string, string>>({});
-  const [apiKey, setApiKey] = useState(() =>
-    getSessionValue(EXPLORER_STORAGE_KEYS.authorization),
-  );
-  const [partnerKeyId, setPartnerKeyId] = useState(() =>
-    getSessionValue(EXPLORER_STORAGE_KEYS.partnerKeyId),
-  );
-  const [partnerSecret, setPartnerSecret] = useState(() =>
-    getSessionValue(EXPLORER_STORAGE_KEYS.partnerSecret),
-  );
+  const [apiKey, setApiKey] = useState("");
+  const [partnerKeyId, setPartnerKeyId] = useState("");
+  const [partnerSecret, setPartnerSecret] = useState("");
   const [body, setBody] = useState(
     activeMethod === "GET" ? "" : activeRequestBodyTemplate ?? "{\n  \n}",
   );
@@ -234,6 +243,11 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   useEffect(() => {
     setSelectedOperationId(initialOperationId);
   }, [endpoint, initialOperationId]);
+
+  useEffect(() => {
+    // Remove credentials written by versions of the Explorer that persisted them.
+    LEGACY_CREDENTIAL_STORAGE_KEYS.forEach(removeSessionValue);
+  }, []);
 
   useEffect(() => {
     setEndpointPath(getEndpointPathTemplate(activeEndpoint));
@@ -308,6 +322,13 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       }
     });
 
+    if (isProductionShowpassHost(base.hostname) && !isPublicEndpoint) {
+      setError(
+        "For security, authenticated Explorer requests are blocked on Showpass production. Use beta.showpass.com or demo.showpass.com, or make the request from server-side code.",
+      );
+      return;
+    }
+
     if (isPartnerEndpoint && (!partnerKeyId || !partnerSecret)) {
       setError("Enter both your Partner Key ID and Partner Secret.");
       return;
@@ -316,16 +337,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
     if (!isPublicEndpoint && !isPartnerEndpoint && !apiKey.trim()) {
       setError("Enter your Showpass API key.");
       return;
-    }
-
-    if (activeMethod !== "GET" && isProductionShowpassHost(base.hostname)) {
-      const confirmed = window.confirm(
-        "This will send a write request to Showpass production and may change production data. Confirm the URL and request body before continuing.",
-      );
-      if (!confirmed) {
-        setError("Production request cancelled.");
-        return;
-      }
     }
 
     setIsSending(true);
@@ -379,7 +390,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       <p className="text-xs leading-relaxed text-muted-foreground">
         Send a live request from this page. {description ? `${description}. ` : ""}{isPublicEndpoint
           ? "This public endpoint does not require credentials."
-          : "Credentials remain in this browser session and are not sent with browser cookies."} Browser cookies are not sent.
+          : "Credentials are held in memory only and are not stored in browser storage."} Browser cookies are never sent.
       </p>
 
       <div
@@ -477,7 +488,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
               value={partnerKeyId}
               onChange={(event) => {
                 setPartnerKeyId(event.target.value);
-                setSessionValue(EXPLORER_STORAGE_KEYS.partnerKeyId, event.target.value);
               }}
               autoComplete="off"
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -488,7 +498,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
               Partner Secret
               <CredentialWarningTooltip
                 label="Partner credential security warning"
-                message="Partner secrets should stay in server-side code. Use this Explorer only with test credentials. Do not enter production Partner secrets in a browser because page scripts or an XSS vulnerability could access them."
+                message="Partner secrets should stay in server-side code. This value is held in memory only and is cleared when the page is reloaded. Use this Explorer only with test credentials; authenticated production requests are blocked."
               />
             </span>
             <input
@@ -496,7 +506,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
               value={partnerSecret}
               onChange={(event) => {
                 setPartnerSecret(event.target.value);
-                setSessionValue(EXPLORER_STORAGE_KEYS.partnerSecret, event.target.value);
               }}
               autoComplete="off"
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
@@ -510,7 +519,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
               API key
               <CredentialWarningTooltip
                 label="API key security warning"
-                message="API keys are sensitive credentials. Use a test key when possible, never share it, and avoid using production keys in a browser."
+                message="API keys are sensitive credentials. This value is held in memory only and is cleared when the page is reloaded. Use a test key; authenticated production requests are blocked."
               />
             </span>
             <input
@@ -518,7 +527,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
               value={apiKey}
               onChange={(event) => {
                 setApiKey(event.target.value);
-                setSessionValue(EXPLORER_STORAGE_KEYS.authorization, event.target.value);
               }}
               placeholder="Your Showpass API key"
               autoComplete="off"
@@ -544,7 +552,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       {activeMethod !== "GET" && (
         <div className="flex gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-xs leading-relaxed text-foreground">
           <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
-          This request can change data in the selected environment. Production write requests require an additional confirmation.
+          This request can change data in the selected environment. Use the Explorer with test credentials only; authenticated production requests are blocked.
         </div>
       )}
 

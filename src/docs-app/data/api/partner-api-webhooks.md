@@ -7,12 +7,12 @@ Showpass webhooks report purchases and post-purchase changes. For an attributed 
   "event_type": "invoice.purchase",
   "data": {
     "partner_slug": "your-partner",
-    "partner_user_id": "customer-42"
+    "partner_external_user_id": "customer-42"
   }
 }
 ```
 
-Use `partner_user_id` to find the customer in your system. Use the webhook’s Showpass transaction identifier to find or create the corresponding order record.
+Use `partner_external_user_id` to find the customer in your system. Use the webhook’s Showpass transaction identifier to find or create the corresponding order record.
 
 The Partner fields extend the existing event-specific `data` object. They do not replace the normal invoice, customer, ticket, or transaction fields documented for that webhook.
 
@@ -40,6 +40,6 @@ Process deliveries idempotently using the webhook event identifier or the equiva
 
 ## When Partner fields are absent
 
-Showpass includes Partner fields only when it can resolve one clear Partner customer for the order. If no attribution exists—or the match is ambiguous—the normal webhook is still delivered without `partner_slug` and `partner_user_id`.
+Showpass includes Partner fields only when it can resolve one clear Partner customer for the order. If no attribution exists—or the match is ambiguous—the normal webhook is still delivered without `partner_slug` and `partner_external_user_id`.
 
 Treat missing Partner fields as an unattributed Showpass order. Do not infer the Partner customer from buyer email alone.

@@ -6,15 +6,15 @@ Connect a customer record in your application to Showpass. Do this when the cust
 POST /api/partner/users/
 ```
 
-This is an idempotent server-to-server operation for a `partner_user_id` that already exists: Showpass reuses the existing customer link instead of creating another one.
+This is an idempotent server-to-server operation for a `partner_external_user_id` that already exists: Showpass reuses the existing customer link instead of creating another one.
 
-The profile fields are used when Showpass creates or safely links the customer. Repeating the request for an existing `partner_user_id` confirms and returns the current link; it does not update that customer’s Showpass profile.
+The profile fields are used when Showpass creates or safely links the customer. Repeating the request for an existing `partner_external_user_id` updates only the supplied partner-owned profile fields (`first_name`, `last_name`, and `phone`) and leaves omitted fields unchanged. `email` is used for safe linking and is not updated by this request.
 
 Authenticate the request with the HMAC scheme in the [Partner API overview](/api/partner-api-overview).
 
 ## Choose the customer ID
 
-`partner_user_id` is the durable connection between your customer and their Showpass activity. Use an immutable database ID from your system. Do not use an email address or another value that can change.
+`partner_external_user_id` is the durable connection between your customer and their Showpass activity. Use an immutable database ID from your system. Do not use an email address or another value that can change.
 
 The same ID is returned in attributed webhooks and is required when creating a fresh checkout token or manage-order link.
 
@@ -22,7 +22,7 @@ The same ID is returned in attributed webhooks and is required when creating a f
 
 ```json
 {
-  "partner_user_id": "customer-42",
+  "partner_external_user_id": "customer-42",
   "email": "buyer@example.com",
   "email_verified": true,
   "first_name": "Taylor",
@@ -33,7 +33,7 @@ The same ID is returned in attributed webhooks and is required when creating a f
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `partner_user_id` | string | Yes | Stable customer ID from your system, up to 255 characters. It is trimmed and lowercased. |
+| `partner_external_user_id` | string | Yes | Stable customer ID from your system, up to 255 characters. It is trimmed and lowercased. |
 | `email` | string | Yes | Customer email address, up to 128 characters. |
 | `email_verified` | boolean | Yes | Whether your application has verified the email. When `true`, Showpass may safely link an existing Showpass customer with the same email. |
 | `first_name` | string | No | First name, up to 32 characters. |
@@ -48,7 +48,7 @@ The endpoint returns `201` when it creates a customer link and `200` when it reu
 ```json
 {
   "partner_identity_id": 123,
-  "partner_user_id": "customer-42",
+  "partner_external_user_id": "customer-42",
   "status": "active",
   "link_reason": "created_user",
   "venue_id": 456,
@@ -62,7 +62,7 @@ The token fields are included only when checkout attribution is enabled for the 
 `link_reason` explains how Showpass resolved the customer:
 
 - `created_user`: Showpass created a customer and partner link.
-- `reused_existing`: this `partner_user_id` was already linked.
+- `reused_existing`: this `partner_external_user_id` was already linked.
 - `email_auto_linked`: the verified email was safely linked to an existing Showpass customer.
 
 Showpass returns a conflict instead of silently linking customers when the email, identity status, or organization scope is unsafe or ambiguous.

@@ -13,6 +13,8 @@ You need:
 
 All `/api/partner/` requests belong in your backend. Event discovery and the purchase widget use their existing public integration paths.
 
+The interactive API Explorer is for Beta or Demo testing only. It holds credentials in memory for the current page and blocks authenticated requests to Showpass production; production Partner API calls must be signed and sent from your server.
+
 ## 1. Connect your customer to Showpass
 
 When a customer registers—or before their first Showpass checkout—send their stable ID and verified identity information to Showpass:
@@ -23,7 +25,7 @@ POST /api/partner/users/
 
 ```json
 {
-  "partner_user_id": "customer-42",
+  "partner_external_user_id": "customer-42",
   "email": "buyer@example.com",
   "email_verified": true,
   "first_name": "Taylor",
@@ -31,7 +33,7 @@ POST /api/partner/users/
 }
 ```
 
-Use an immutable ID from your database for `partner_user_id`, not an email address. You will use the same ID to request checkout tokens and manage-order links. See [Sync a customer with Showpass](/api/partner-api-users).
+Use an immutable ID from your database for `partner_external_user_id`, not an email address. You will use the same ID to request checkout tokens and manage-order links. See [Sync a customer with Showpass](/api/partner-api-users).
 
 ## 2. Display the organization’s events
 
@@ -55,7 +57,7 @@ POST /api/partner/customer-attribution-token/
 
 ```json
 {
-  "partner_user_id": "customer-42"
+  "partner_external_user_id": "customer-42"
 }
 ```
 
@@ -75,7 +77,7 @@ To embed checkout in a page instead of opening a modal, pass a container ID as t
 
 Showpass validates the token server-side and records the partner customer on the checkout basket and resulting order. The customer still enters their buyer details through normal Showpass checkout.
 
-The widget does not need or accept the Partner API secret, `partner_user_id`, a Showpass bearer token, or a checkout handoff code.
+The widget does not need or accept the Partner API secret, `partner_external_user_id`, a Showpass bearer token, or a checkout handoff code.
 
 ## 5. Reconcile order activity
 
@@ -86,12 +88,12 @@ Subscribe to the invoice events your application needs. When an order has one cl
   "event_type": "invoice.purchase",
   "data": {
     "partner_slug": "your-partner",
-    "partner_user_id": "customer-42"
+    "partner_external_user_id": "customer-42"
   }
 }
 ```
 
-Use `partner_user_id` to locate the customer and the webhook’s Showpass transaction identifier to update the correct order. Always verify `X-SHOWPASS-SIGNATURE` before processing a delivery. See [Match orders to your customers](/api/partner-api-webhooks).
+Use `partner_external_user_id` to locate the customer and the webhook’s Showpass transaction identifier to update the correct order. Always verify `X-SHOWPASS-SIGNATURE` before processing a delivery. See [Match orders to your customers](/api/partner-api-webhooks).
 
 ## 6. Let the customer manage an order
 
@@ -103,7 +105,7 @@ POST /api/partner/orders/manage-link/
 
 ```json
 {
-  "partner_user_id": "customer-42",
+  "partner_external_user_id": "customer-42",
   "transaction_id": "showpass-transaction-id"
 }
 ```
