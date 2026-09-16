@@ -171,7 +171,7 @@ Use these paths when `showpass-frontend` is locally available:
 - build: `packages/core/scripts/build-sdk.ts`
 - widget pages: `packages/next-app/pages/widget/`
 
-Published documentation lives at `https://dev.showpass.com/sdk/01-sdk-getting-started` through `/sdk/08-basic-integration-example`. The live playground is `https://dev.showpass.com/widget-playground`.
+Published documentation lives at `https://dev.showpass.com/sdk/01-sdk-getting-started` through `/sdk/08-basic-integration-example`. The live playground is `https://dev.showpass.com/sdk/widget-playground`.
 
 ## Contract drift to check
 

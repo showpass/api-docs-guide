@@ -273,6 +273,10 @@
     overflow-wrap: break-word;
   }
 
+  .docs-content-wide {
+    max-width: none;
+  }
+
   .docs-workspace {
     --docs-reading-width: 53.75rem;
     --docs-workspace-gap: 1.5rem;
@@ -309,13 +313,6 @@
 
     .docs-workspace > .docs-workspace-main-wide {
       grid-column: 1 / -1;
-    }
-
-    .docs-content-wide {
-      max-width: calc(
-        var(--docs-reading-width) + var(--docs-workspace-gap) +
-          var(--docs-page-tools-width)
-      );
     }
 
     .docs-content-no-tools {

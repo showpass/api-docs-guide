@@ -57,6 +57,12 @@ The token binds the resulting Showpass basket and order to the linked Showpass c
 
 See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the server-to-server customer sync, token issuance, webhook, and order-management steps.
 
+### Try it in the playground
+
+Open the [Widget Playground](/sdk/widget-playground), select the same environment that issued your token, and enter an event slug from that environment. Choose **Event tickets**, expand **Partner customer**, and paste the API response's `customer_attribution_token`. Select **Apply token**, then try the **Popup** (modal) or **Embedded** (mounted) preview.
+
+The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
+
 ---
 
 ## Basic Usage Examples

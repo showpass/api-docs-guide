@@ -23,7 +23,6 @@ const ShowpassCalendarWidget = ({
     
     const defaultOptions = {
       'theme-primary': '#FF7F00',
-      'tags': 'featured',
       'keep-shopping': true
     };
     

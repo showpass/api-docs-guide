@@ -5,8 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "npm run test:links",
+    "test": "npm run test:links && npm run test:widgets",
     "test:links": "node scripts/validate-doc-links.mjs",
+    "test:widgets": "node --test scripts/widget-sdk-loader.test.mjs",
     "build:search": "node scripts/build-search-index.mjs",
     "build:seo": "node scripts/build-seo-enhancements.mjs",
     "build": "npm run test:links && npm run build:search && vite build && npm run build:seo && cp dist/index.html dist/404.html",

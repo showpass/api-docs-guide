@@ -276,7 +276,7 @@ export const seoDataMap: Record<string, SEOData> = {
   },
 
   // Widget Playground
-  "/widget-playground": {
+  "/sdk/widget-playground": {
     title: "Showpass Widget Playground - Test & Preview Widgets",
     description: "Interactive playground to test and preview Showpass widgets. Experiment with different configurations and see live examples.",
     keywords: "widget playground, widget testing, widget preview, interactive demo, widget examples, showpass widgets"

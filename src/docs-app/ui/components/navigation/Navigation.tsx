@@ -394,7 +394,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                 </li>
                 <li>
                   <NavLink
-                    to="/widget-playground"
+                    to="/sdk/widget-playground"
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
