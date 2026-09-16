@@ -35,10 +35,24 @@ Partner credentials authenticate your backend. Never send the partner secret, `p
 ## Base URL and access
 
 ```text
-https://www.showpass.com/api/partner/
+https://www.showpass.com/api/v1/partner/
 ```
 
-Showpass provides Partner API credentials and enables the required capabilities during partner onboarding. Contact your Showpass representative for a Key ID and Secret.
+Showpass provides one Partner credential and enables the required capabilities during partner onboarding. Contact your Showpass representative for the complete credential:
+
+```text
+sp_partner_<credential_uuid>.<random_secret>
+```
+
+Store this complete value in your backend's secret manager, for example as `PARTNER_CREDENTIAL`. Your signing client splits it at the first period: the part before the period is the key ID, and the part after it is the secret used for HMAC signing. Send only the key ID in `X-Showpass-Partner-Key-Id`; never send the secret or complete credential in a request header or body. The complete value is not an `Authorization: Token` or bearer token.
+
+For local, Beta, or Demo testing, paste the complete value into the Explorer's single **Partner credential** field. Use the corresponding HTTPS API base URL, such as `https://localhost.showpass.com` for a configured local backend. The Explorer separates the two parts internally, keeps the value in memory only, and blocks authenticated production requests.
+
+## API status and versioning
+
+The Partner API is prelaunch and has no current consumers. This documentation describes one current v1 contract. Breaking changes may be made before launch; no backward compatibility commitment or indefinite v1 support period is currently provided.
+
+Only `/api/v1/partner/` is available. The unversioned `/api/partner/` paths do not resolve and do not redirect. There is no public v2 endpoint or version negotiation. Use the documented request fields; retired names are not substitutes for required fields.
 
 ## HMAC authentication
 
@@ -62,19 +76,26 @@ PATH_AND_QUERY
 SHA256_OF_RAW_REQUEST_BODY
 ```
 
-Sign the exact method, path and query string, and body bytes sent to Showpass. For an empty body, hash the empty byte string.
+The first line, `v1`, identifies the HMAC signing protocol, independently of the API URL version. A future URL version would not automatically change this marker or the signing algorithm.
+
+Sign the uppercase HTTP method, exact path and query string, and body bytes sent to Showpass. Include the trailing slash. For an empty body, hash the empty byte string. If you change the path or JSON body, calculate a new signature over the changed request.
 
 ```python
 import hashlib
 import hmac
+import os
 import time
 import uuid
 
-partner_secret = "your-partner-secret"
+credential = os.environ["PARTNER_CREDENTIAL"].strip()
+partner_key_id, separator, partner_secret = credential.partition(".")
+if not separator or not partner_key_id or not partner_secret:
+    raise ValueError("Invalid Partner credential: expected key_id.secret")
+
 body = '{"partner_external_user_id":"customer-42"}'
 timestamp = str(int(time.time()))
 nonce = str(uuid.uuid4())
-path_and_query = "/api/partner/customer-attribution-token/"
+path_and_query = "/api/v1/partner/customer-attribution-token/"
 body_hash = hashlib.sha256(body.encode()).hexdigest()
 
 canonical = "\n".join([
@@ -96,7 +117,9 @@ Missing or invalid authentication returns `403`. Generate a new timestamp, nonce
 
 ## Organization scope
 
-A Partner integration can be restricted to one Showpass organization. When a credential has this restriction, a request cannot operate outside it. The Partner API currently represents this scope with the `venue_id` request and response field.
+A Partner integration must have explicit Showpass organization assignments. It can be assigned multiple organizations; an assignment may also include descendant organizations when Showpass enables that option. An organization without a matching assignment is not authorized.
+
+Customer sync requires a positive, non-null `venue_id` on every request, including requests that reuse a customer link. The response echoes that organization ID. Checkout validates the basket's payment organization, and manage-order access validates the order's organization against the integration's current assignments. Token issuance alone does not prove that a particular organization's checkout will accept the token.
 
 Partner customer IDs are trimmed, normalized to lowercase, and unique within a Partner integration.
 
@@ -104,6 +127,31 @@ Partner customer IDs are trimmed, normalized to lowercase, and unique within a P
 
 | Method | Endpoint | Use it to |
 | --- | --- | --- |
-| `POST` | [`/api/partner/users/`](/api/partner-api-users) | Connect a customer in your system to Showpass. |
-| `POST` | [`/api/partner/customer-attribution-token/`](/api/partner-api-customer-attribution-token) | Carry that customer relationship into checkout. |
-| `POST` | [`/api/partner/orders/manage-link/`](/api/partner-api-order-manage-link) | Send the customer to a specific Showpass order. |
+| `POST` | [`/api/v1/partner/users/`](/api/partner-api-users) | Connect a customer in your system to Showpass. |
+| `POST` | [`/api/v1/partner/customer-attribution-token/`](/api/partner-api-customer-attribution-token) | Carry that customer relationship into checkout. |
+| `POST` | [`/api/v1/partner/orders/manage-link/`](/api/partner-api-order-manage-link) | Send the customer to a specific Showpass order. |
+
+## Errors and retries
+
+| Status | Meaning | Next action |
+| --- | --- | --- |
+| `400` | Missing or invalid request data. | Correct the reported field before retrying. |
+| `403` | Authentication failed, a capability is disabled, or organization scope is denied. | Check signing, credentials, onboarding capabilities, and organization assignments. |
+| `409` | A customer or order is missing, inactive, conflicting, or otherwise unavailable for the operation. | Resolve the endpoint-specific conflict before retrying. |
+| `429` | Too many requests from the client IP. | Wait for `Retry-After` before sending another request. |
+
+Validation errors include `detail`, `field`, and `error_list`. For example, a customer sync request that supplies all other required fields but omits `venue_id` returns `400`:
+
+```json
+{
+  "detail": "Venue Id: This field is required.",
+  "field": "venue_id",
+  "error_list": ["Venue Id: This field is required."]
+}
+```
+
+Authentication and domain errors can instead return only `detail`. The attribution-token endpoint also supplies a string `error_code` for its documented capability and identity errors. Do not assume every error uses the same envelope or parse human-readable messages as stable codes.
+
+The current production limit is 6,000 requests per hour per client IP, shared across Partner API endpoints and applied before authentication. Failed authentication attempts count toward this limit. Beta and Demo use a higher limit and should not be used to infer production capacity.
+
+For transient server or network errors, use bounded retries with exponential backoff and jitter. Generate a fresh timestamp, nonce, and signature for every retry. Repeating customer sync reuses the identity but can issue a fresh attribution token; repeating token or manage-link issuance can create another short-lived value. These operations do not promise replay of an identical response.

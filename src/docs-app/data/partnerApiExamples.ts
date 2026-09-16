@@ -1,18 +1,27 @@
 import { ApiExampleSet } from "@/docs-app/data/types.ts";
 
 const signingNote = `
-The request body must be hashed exactly as sent. Set PARTNER_KEY_ID and
-PARTNER_SECRET in your environment before running the example.`;
+The request body must be hashed exactly as sent. Set PARTNER_CREDENTIAL to the
+complete credential provided by Showpass. The example splits it internally. The canonical
+v1 marker identifies the signing protocol, independently of the API URL version.`;
 
 export const partnerHmacExamples = (
   path: string,
   body: string,
 ): ApiExampleSet => {
   const escapedBody = body.replace(/'/g, "'\\''");
+  const bodyLiteral = JSON.stringify(body);
 
   return {
-    curl: `PARTNER_KEY_ID="your-key-id"
-PARTNER_SECRET="your-partner-secret"
+    curl: `(
+set -eu
+: "\${PARTNER_CREDENTIAL:?Set PARTNER_CREDENTIAL to your complete Showpass credential}"
+PARTNER_KEY_ID="\${PARTNER_CREDENTIAL%%.*}"
+PARTNER_SECRET="\${PARTNER_CREDENTIAL#*.}"
+if [ "$PARTNER_KEY_ID" = "$PARTNER_CREDENTIAL" ] || [ -z "$PARTNER_KEY_ID" ] || [ -z "$PARTNER_SECRET" ]; then
+  printf '%s\\n' 'Invalid Partner credential: expected key_id.secret' >&2
+  exit 1
+fi
 TIMESTAMP=$(date +%s)
 NONCE=$(uuidgen | tr '[:upper:]' '[:lower:]')
 BODY='${escapedBody}'
@@ -26,7 +35,8 @@ curl -X POST "https://www.showpass.com${path}" \\
   -H "X-Showpass-Partner-Timestamp: $TIMESTAMP" \\
   -H "X-Showpass-Partner-Nonce: $NONCE" \\
   -H "X-Showpass-Partner-Signature: $SIGNATURE" \\
-  --data "$BODY"`,
+  --data "$BODY"
+)`,
     python: `import hashlib
 import hmac
 import os
@@ -35,7 +45,12 @@ import uuid
 
 import requests
 
-body = '${body}'
+credential = os.environ["PARTNER_CREDENTIAL"].strip()
+partner_key_id, separator, partner_secret = credential.partition(".")
+if not separator or not partner_key_id or not partner_secret:
+    raise ValueError("Invalid Partner credential: expected key_id.secret")
+
+body = ${bodyLiteral}
 timestamp = str(int(time.time()))
 nonce = str(uuid.uuid4())
 canonical = "\\n".join([
@@ -43,7 +58,7 @@ canonical = "\\n".join([
     hashlib.sha256(body.encode()).hexdigest(),
 ])
 signature = hmac.new(
-    os.environ["PARTNER_SECRET"].encode(),
+    partner_secret.encode(),
     canonical.encode(),
     hashlib.sha256,
 ).hexdigest()
@@ -52,7 +67,7 @@ response = requests.post(
     "https://www.showpass.com${path}",
     headers={
         "Content-Type": "application/json",
-        "X-Showpass-Partner-Key-Id": os.environ["PARTNER_KEY_ID"],
+        "X-Showpass-Partner-Key-Id": partner_key_id,
         "X-Showpass-Partner-Timestamp": timestamp,
         "X-Showpass-Partner-Nonce": nonce,
         "X-Showpass-Partner-Signature": "sha256=" + signature,
@@ -63,19 +78,27 @@ print(response.status_code, response.json())`,
     node: `const crypto = require('crypto');
 const axios = require('axios');
 
-const body = '${body}';
+const credential = (process.env.PARTNER_CREDENTIAL || '').trim();
+const separatorIndex = credential.indexOf('.');
+const partnerKeyId = credential.slice(0, separatorIndex);
+const partnerSecret = credential.slice(separatorIndex + 1);
+if (separatorIndex < 1 || !partnerSecret) {
+  throw new Error('Invalid Partner credential: expected key_id.secret');
+}
+
+const body = ${bodyLiteral};
 const timestamp = Math.floor(Date.now() / 1000).toString();
 const nonce = crypto.randomUUID();
 const path = '${path}';
 const bodyHash = crypto.createHash('sha256').update(body).digest('hex');
 const canonical = ['v1', timestamp, nonce, 'POST', path, bodyHash].join('\\n');
-const signature = crypto.createHmac('sha256', process.env.PARTNER_SECRET)
+const signature = crypto.createHmac('sha256', partnerSecret)
   .update(canonical).digest('hex');
 
 axios.post('https://www.showpass.com' + path, body, {
   headers: {
     'Content-Type': 'application/json',
-    'X-Showpass-Partner-Key-Id': process.env.PARTNER_KEY_ID,
+    'X-Showpass-Partner-Key-Id': partnerKeyId,
     'X-Showpass-Partner-Timestamp': timestamp,
     'X-Showpass-Partner-Nonce': nonce,
     'X-Showpass-Partner-Signature': 'sha256=' + signature,

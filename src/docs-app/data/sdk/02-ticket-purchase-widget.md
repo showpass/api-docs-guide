@@ -53,7 +53,7 @@ showpass.tickets.eventPurchaseWidget(event.slug, {
 });
 ```
 
-The token associates the resulting Showpass basket and order with the stable customer ID in your system. It does not sign the customer in or replace the buyer information collected during checkout.
+The token binds the resulting Showpass basket and order to the linked Showpass customer. Checkout validates the payment organization against the Partner integration's current assignments and rejects a browser authenticated as a different customer. It does not create a full Showpass login session; additional buyer information and payment requirements still apply.
 
 See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the server-to-server customer sync, token issuance, webhook, and order-management steps.
 

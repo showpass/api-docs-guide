@@ -4,14 +4,33 @@ import {
   partnerHmacSigningNote,
 } from "@/docs-app/data/partnerApiExamples.ts";
 
+const customerRequestBody = JSON.stringify({
+  partner_external_user_id: "customer-42",
+  email: "buyer@example.com",
+  is_email_verified: true,
+  first_name: "Taylor",
+  last_name: "Buyer",
+  venue_id: 456,
+}, null, 2);
+
+const attributionRequestBody = JSON.stringify({
+  partner_external_user_id: "customer-42",
+}, null, 2);
+
+const manageOrderRequestBody = JSON.stringify({
+  partner_external_user_id: "customer-42",
+  transaction_id: "d9-1234-4abc-8def-123456789abc",
+}, null, 2);
+
 const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
   "/api/partner-api-users": {
-    endpoint: "https://www.showpass.com/api/partner/users/",
+    endpoint: "https://www.showpass.com/api/v1/partner/users/",
     method: "POST",
     description: `Connect a customer in your system to Showpass. ${partnerHmacSigningNote}`,
+    requestBodyTemplate: customerRequestBody,
     examples: partnerHmacExamples(
-      "/api/partner/users/",
-      '{"partner_external_user_id":"customer-42","email":"customer@example.com","email_verified":true}',
+      "/api/v1/partner/users/",
+      customerRequestBody,
     ),
     response: {
       status: 201,
@@ -25,12 +44,13 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
     },
   },
   "/api/partner-api-customer-attribution-token": {
-    endpoint: "https://www.showpass.com/api/partner/customer-attribution-token/",
+    endpoint: "https://www.showpass.com/api/v1/partner/customer-attribution-token/",
     method: "POST",
     description: "Create checkout attribution for a connected customer",
+    requestBodyTemplate: attributionRequestBody,
     examples: partnerHmacExamples(
-      "/api/partner/customer-attribution-token/",
-      '{"partner_external_user_id":"customer-42"}',
+      "/api/v1/partner/customer-attribution-token/",
+      attributionRequestBody,
     ),
     response: {
       status: 201,
@@ -41,12 +61,13 @@ const partnerApiExamplesMap: Record<string, ApiExamplesData> = {
     },
   },
   "/api/partner-api-order-manage-link": {
-    endpoint: "https://www.showpass.com/api/partner/orders/manage-link/",
+    endpoint: "https://www.showpass.com/api/v1/partner/orders/manage-link/",
     method: "POST",
-    description: "Send a customer to their completed Showpass order",
+    description: "Send a customer to their completed Showpass order. Replace the example transaction_id with the purchase webhook's data.transaction_id.",
+    requestBodyTemplate: manageOrderRequestBody,
     examples: partnerHmacExamples(
-      "/api/partner/orders/manage-link/",
-      '{"partner_external_user_id":"customer-42","transaction_id":"transaction-id"}',
+      "/api/v1/partner/orders/manage-link/",
+      manageOrderRequestBody,
     ),
     response: {
       status: 201,
