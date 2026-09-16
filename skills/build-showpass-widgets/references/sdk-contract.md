@@ -39,6 +39,7 @@ All widget factory methods below create and show their widget before resolving. 
 | `checkoutWidget`           | `(params, containerId?) => Promise<Widget>`                 | Requires the browser's current Showpass cart state.                                    |
 | `expressCheckoutWidget`    | `(params, containerId?) => Promise<Widget>`                 | Use only when the product flow explicitly requires it.                                 |
 | `addCartCountListener`     | `(listener) => cleanup`                                     | The callback receives a numeric cart count. Always call the cleanup function.          |
+| `startNewCheckout`         | `(options?: { signal?: AbortSignal }) => Promise<boolean>` | Added in the local checkout reset implementation. Requires deployment of both SDK and checkout; capability-check older bundles. Opens confirmation, expires and verifies the old basket, and returns true on success or false on cancellation. Closes existing widgets; remount embedded previews after either result. |
 
 ## Modal and embedded modes
 
