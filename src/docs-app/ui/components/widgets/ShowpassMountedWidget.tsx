@@ -41,8 +41,9 @@ const ShowpassMountedWidget = ({
           "keep-shopping": true,
           ...options,
         }, containerId);
-        if (disposed) widget.unmount?.();
-        else unmount = widget.unmount?.bind(widget);
+        const dispose = widget.dispose?.bind(widget) ?? widget.unmount?.bind(widget);
+        if (disposed) dispose?.();
+        else unmount = dispose;
       } catch {
         if (!disposed) setError("Unable to load the preview. Check the identifier and selected environment, then try again.");
       }

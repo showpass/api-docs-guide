@@ -63,6 +63,27 @@ Open the [Widget Playground](/sdk/widget-playground), select the same environmen
 
 The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
 
+### Changing customers or starting without attribution
+
+**Clear token** removes the playground's token. It keeps the existing basket and any customer attribution already saved on that basket.
+
+To test a different customer, apply their token and select **Start new checkout**. To test ordinary checkout, clear the token first, then select **Start new checkout**. Showpass opens a confirmation dialog before discarding the old basket and releasing its reservations. After confirmation succeeds, select your items again. The next basket uses the currently applied token, if any. Renewing a token for the same customer does not require discarding their basket.
+
+Integrations using the updated SDK can request the same confirmation:
+
+```js
+if (typeof window.showpass.tickets.startNewCheckout === "function") {
+  const restarted = await window.showpass.tickets.startNewCheckout();
+  if (restarted) {
+    await window.showpass.tickets.eventPurchaseWidget("event-slug", {
+      ...(customerAttributionToken ? { customer_attribution_token: customerAttributionToken } : {})
+    });
+  }
+}
+```
+
+`startNewCheckout()` closes existing widgets and resolves to `true` only after the reset is confirmed, or `false` when cancelled. Reload embedded previews after either result; cancellation retains the basket. Handle a rejected promise as a failed dialog launch. This method requires the updated SDK and checkout application in the selected environment; older SDKs do not expose it. It cannot discard a basket while a purchase is in progress.
+
 ---
 
 ## Basic Usage Examples

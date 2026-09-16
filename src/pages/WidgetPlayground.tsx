@@ -103,12 +103,47 @@ const WidgetPlayground: React.FC = () => {
 
   const [tokenInput, setTokenInput] = React.useState("");
   const [customerAttributionToken, setCustomerAttributionToken] = React.useState("");
+  const [checkoutStatus, setCheckoutStatus] = React.useState("");
+  const [isRestarting, setIsRestarting] = React.useState(false);
+  const [previewVersion, setPreviewVersion] = React.useState(0);
+  const restartController = React.useRef<AbortController>();
+  React.useEffect(() => () => restartController.current?.abort(), []);
   const [sdkReady, setSdkReady] = React.useState(false);
   const [sdkError, setSdkError] = React.useState("");
   const [eventError, setEventError] = React.useState("");
   const [isOpeningEvent, setIsOpeningEvent] = React.useState(false);
   const openingEvent = React.useRef(false);
   const onSdkReady = React.useCallback(() => setSdkReady(true), []);
+
+  const startNewCheckout = async () => {
+    if (restartController.current) return;
+    const restart = window.showpass?.tickets.startNewCheckout;
+    if (!restart) {
+      setCheckoutStatus("Start new checkout is not available in this environment yet. The updated Showpass SDK and checkout must be deployed together.");
+      return;
+    }
+    const controller = new AbortController();
+    restartController.current = controller;
+    setIsRestarting(true);
+    setCheckoutStatus("");
+    try {
+      const completed = await restart({ signal: controller.signal });
+      if (controller.signal.aborted) return;
+      if (completed) {
+        setPreviewVersion(value => value + 1);
+        setCheckoutStatus(customerAttributionToken
+          ? "Ready for a new checkout with your applied token. Select your items again. Showpass validates the token when creating the basket."
+          : "Ready for a new checkout without a partner token. Select your items again.");
+      } else {
+        setCheckoutStatus("Cancelled. Your existing basket has been kept.");
+      }
+    } catch {
+      setCheckoutStatus("Unable to start a new checkout. Please try again. Your basket has not been confirmed as reset.");
+    } finally {
+      restartController.current = undefined;
+      if (!controller.signal.aborted) setIsRestarting(false);
+    }
+  };
 
   const changeEnvironment = (value: string) => {
     // Reload before replacing the SDK so open widgets and tokens cannot cross environments.
@@ -271,13 +306,17 @@ const WidgetPlayground: React.FC = () => {
                     aria-invalid={!!tokenError} />
                   <div className="flex flex-wrap gap-2">
                     <Button size="sm" disabled={!tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
-                      onClick={() => setCustomerAttributionToken(tokenInput.trim())}>Apply token</Button>
+                      onClick={() => { setCustomerAttributionToken(tokenInput.trim()); setCheckoutStatus(""); }}>Apply token</Button>
                     <Button size="sm" variant="outline" disabled={!tokenInput && !customerAttributionToken}
-                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); }}>Clear token</Button>
+                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); setCheckoutStatus("Token cleared here. Your existing basket and its customer attribution are kept. Choose Start new checkout to begin without a partner token."); }}>Clear token</Button>
+                    <Button size="sm" variant="outline" disabled={!sdkReady || isRestarting || isOpeningEvent}
+                      onClick={startNewCheckout}>{isRestarting ? "Starting…" : "Start new checkout"}</Button>
                   </div>
                   {tokenError && <p role="alert" className="text-xs text-destructive">{tokenError}</p>}
                   {tokenInput.trim() !== customerAttributionToken && !tokenError && <p className="text-xs text-muted-foreground">Your changes have not been applied yet.</p>}
                   <p role="status" className="text-xs">{customerAttributionToken ? "Token applied to Event Tickets. Close and reopen an existing popup to use changes." : "No token applied. You can still try normal checkout."}</p>
+                  <p className="text-xs text-muted-foreground">Changing or clearing a token keeps the current basket. For a different customer, apply their token and choose Start new checkout. You will confirm before discarding any items.</p>
+                  {checkoutStatus && <p role="status" className="text-xs">{checkoutStatus}</p>}
                 </div>
               </details>
             )}
@@ -329,7 +368,7 @@ const WidgetPlayground: React.FC = () => {
       {!sdkReady && !sdkError && <p role="status" className="mb-4">Loading Showpass widgets…</p>}
 
       {/* Widget Content */}
-      {sdkReady && <div className="mb-10">
+      {sdkReady && !isRestarting && <div className="mb-10" key={previewVersion}>
         {/* Modal Widgets */}
         {activeTab === "popup" && (
           <div className="space-y-6">

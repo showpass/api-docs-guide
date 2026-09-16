@@ -19,6 +19,7 @@ export type ShowpassWidgetParams = Record<
 >;
 
 export interface ShowpassWidgetHandle {
+  dispose?: () => void;
   unmount?: () => void;
   remount?: () => void;
 }
@@ -26,6 +27,7 @@ export interface ShowpassWidgetHandle {
 type ShowpassIdentifier = string | number;
 
 export interface ShowpassTickets {
+  startNewCheckout?: (options?: { signal?: AbortSignal }) => Promise<boolean>;
   eventPurchaseWidget: (
     slug: string,
     params: ShowpassWidgetParams,
