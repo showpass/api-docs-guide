@@ -277,7 +277,7 @@ const WidgetPlayground: React.FC = () => {
                   </div>
                   {tokenError && <p role="alert" className="text-xs text-destructive">{tokenError}</p>}
                   {tokenInput.trim() !== customerAttributionToken && !tokenError && <p className="text-xs text-muted-foreground">Your changes have not been applied yet.</p>}
-                  <p role="status" className="text-xs">{customerAttributionToken ? "Token applied to Event Tickets. Close and reopen an existing popup to use changes." : "No token applied. You can still try normal checkout."}</p>
+                  <p role="status" className="text-xs">{customerAttributionToken ? "Token applied to Event Tickets." : "No token applied. You can still try normal checkout."}</p>
                 </div>
               </details>
             )}

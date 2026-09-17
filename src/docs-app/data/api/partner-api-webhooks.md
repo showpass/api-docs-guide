@@ -1,4 +1,4 @@
-# Match orders to your customers
+# Partner API: Match orders to your customers
 
 Showpass webhooks report purchases and post-purchase changes. For an attributed checkout, the payload can include the stable customer ID from your system. This abbreviated purchase example shows the fields needed for correlation:
 

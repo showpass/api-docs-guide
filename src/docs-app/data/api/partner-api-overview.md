@@ -1,8 +1,10 @@
-# Partner API overview
+# Partner API: Overview
 
-Use the Partner API when your application owns the customer experience and Showpass provides event discovery, checkout, tickets, and order management.
+The Partner API connects your application's customers to Showpass. Use it when you build your own website or mobile app and use Showpass for event discovery, checkout, tickets, and order management.
+In supported checkout and order management flows, customers can complete their purchase or access their order without a separate Showpass login. This does not create a full Showpass account session.
+It complements the [Public Discovery API](/api/public-api-introduction), the [Ticket Purchase Widget](/sdk/ticket-purchase-widget), and [Showpass webhooks](/webhooks/webhooks-introduction).
 
-The Partner API connects a customer in your system to their Showpass purchase. It complements the [Public Discovery API](/api/public-api-introduction), the [Ticket Purchase Widget](/sdk/ticket-purchase-widget), and [Showpass webhooks](/webhooks/webhooks-introduction).
+The Partner API is available for Showpass Partners. If you'd like to learn more or become a partner, please contact us.
 
 ## What the integration does
 
@@ -24,13 +26,9 @@ The Partner API connects a customer in your system to their Showpass purchase. I
 6. [Webhook payloads identify the partner customer](/api/partner-api-webhooks), so your system can reconcile order activity.
 7. When the customer needs their tickets or receipt, your backend [creates a manage-order link](/api/partner-api-order-manage-link).
 
-See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the complete sequence and implementation examples.
-
 ## Identity and authentication are separate
 
 `partner_external_user_id` is your stable identifier for a customer. A `customer_attribution_token` carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.
-
-Partner credentials authenticate your backend. Never send the partner secret, `partner_external_user_id`, bearer tokens, or refresh tokens to the purchase widget.
 
 ## Base URL and access
 
@@ -38,21 +36,13 @@ Partner credentials authenticate your backend. Never send the partner secret, `p
 https://www.showpass.com/api/v1/partner/
 ```
 
-Showpass provides one Partner credential and enables the required capabilities during partner onboarding. Contact your Showpass representative for the complete credential:
+Showpass provides a Partner credential and enables the required capabilities during partner onboarding. Contact your Showpass representative for the complete credential:
 
 ```text
 sp_partner_<credential_uuid>.<random_secret>
 ```
 
 Store this complete value in your backend's secret manager, for example as `PARTNER_CREDENTIAL`. Your signing client splits it at the first period: the part before the period is the key ID, and the part after it is the secret used for HMAC signing. Send only the key ID in `X-Showpass-Partner-Key-Id`; never send the secret or complete credential in a request header or body. The complete value is not an `Authorization: Token` or bearer token.
-
-For local, Beta, or Demo testing, paste the complete value into the Explorer's single **Partner credential** field. Use the corresponding HTTPS API base URL, such as `https://localhost.showpass.com` for a configured local backend. The Explorer separates the two parts internally, keeps the value in memory only, and blocks authenticated production requests.
-
-## API status and versioning
-
-The Partner API is prelaunch and has no current consumers. This documentation describes one current v1 contract. Breaking changes may be made before launch; no backward compatibility commitment or indefinite v1 support period is currently provided.
-
-Only `/api/v1/partner/` is available. The unversioned `/api/partner/` paths do not resolve and do not redirect. There is no public v2 endpoint or version negotiation. Use the documented request fields; retired names are not substitutes for required fields.
 
 ## HMAC authentication
 
@@ -61,7 +51,7 @@ Every Partner API request is server-to-server and includes these headers:
 | Header | Description |
 | --- | --- |
 | `X-Showpass-Partner-Key-Id` | Partner credential key ID. |
-| `X-Showpass-Partner-Timestamp` | Unix timestamp in seconds. Requests outside the five-minute acceptance window are rejected. |
+| `X-Showpass-Partner-Timestamp` | Unix timestamp in seconds. |
 | `X-Showpass-Partner-Nonce` | A unique value for this request. A nonce cannot be reused. |
 | `X-Showpass-Partner-Signature` | `sha256=` followed by the HMAC-SHA256 digest. |
 
@@ -117,11 +107,9 @@ Missing or invalid authentication returns `403`. Generate a new timestamp, nonce
 
 ## Organization scope
 
-A Partner integration must have explicit Showpass organization assignments. It can be assigned multiple organizations; an assignment may also include descendant organizations when Showpass enables that option. An organization without a matching assignment is not authorized.
+A Partner integration must have explicit Showpass organization assignments. It can be assigned multiple organizations; an assignment may also include child organizations when Showpass enables that option.
 
-Customer sync requires a positive, non-null `venue_id` on every request, including requests that reuse a customer link. The response echoes that organization ID. Checkout validates the basket's payment organization, and manage-order access validates the order's organization against the integration's current assignments. Token issuance alone does not prove that a particular organization's checkout will accept the token.
-
-Partner customer IDs are trimmed, normalized to lowercase, and unique within a Partner integration.
+Customer sync requires a `venue_id` on every request. The response echoes that organization ID. Checkout validates the basket's payment organization, and manage-order access validates the order's organization against the integration's current assignments.
 
 ## Endpoint catalog
 
@@ -150,8 +138,4 @@ Validation errors include `detail`, `field`, and `error_list`. For example, a cu
 }
 ```
 
-Authentication and domain errors can instead return only `detail`. The attribution-token endpoint also supplies a string `error_code` for its documented capability and identity errors. Do not assume every error uses the same envelope or parse human-readable messages as stable codes.
-
-The current production limit is 6,000 requests per hour per client IP, shared across Partner API endpoints and applied before authentication. Failed authentication attempts count toward this limit. Beta and Demo use a higher limit and should not be used to infer production capacity.
-
-For transient server or network errors, use bounded retries with exponential backoff and jitter. Generate a fresh timestamp, nonce, and signature for every retry. Repeating customer sync reuses the identity but can issue a fresh attribution token; repeating token or manage-link issuance can create another short-lived value. These operations do not promise replay of an identical response.
+Authentication and domain errors can instead return only `detail`. The attribution-token endpoint also supplies a string `error_code` for its documented capability and identity errors.

@@ -1,4 +1,4 @@
-# Build a partner ticketing flow
+# Partner API: Build a partner ticketing flow
 
 This guide connects the Showpass event catalog, purchase widget, Partner API, and webhooks into one customer journey.
 
@@ -11,7 +11,7 @@ You need:
 - The Showpass JavaScript SDK installed in your frontend.
 - A public HTTPS endpoint that can receive Showpass webhooks.
 
-All `/api/v1/partner/` requests belong in your backend. Event discovery and the purchase widget use their existing public integration paths. See the [current API contract and prelaunch status](/api/partner-api-overview#api-status-and-versioning).
+All `/api/v1/partner/` requests belong in your backend. Event discovery and the purchase widget use their existing public integration paths. See the [Partner API overview](/api/partner-api-overview) for authentication, organization scope, and available endpoints.
 
 The interactive API Explorer is for local, Beta, or Demo testing only. It holds credentials in memory for the current page and blocks authenticated requests to Showpass production; production Partner API calls must be signed and sent from your server.
 

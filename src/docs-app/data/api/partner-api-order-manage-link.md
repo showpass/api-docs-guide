@@ -1,4 +1,4 @@
-# Send a customer to their order
+# Partner API: Send a customer to their order
 
 Create a short-lived link that opens a customer’s completed order in Showpass. Use it for **View tickets**, **View receipt**, or **Manage order** actions in your application.
 

@@ -1,4 +1,4 @@
-# Create checkout attribution
+# Partner API: Create checkout attribution
 
 Create a short-lived token that connects a Showpass checkout to a customer in your system.
 

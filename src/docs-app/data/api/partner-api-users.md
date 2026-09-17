@@ -1,4 +1,4 @@
-# Sync a customer with Showpass
+# Partner API: Sync a customer with Showpass
 
 Connect a customer record in your application to Showpass. Do this when the customer registers or before their first attributed checkout.
 
