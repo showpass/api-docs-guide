@@ -1,30 +1,17 @@
-# Partner API: Sync a customer with Showpass
+# Partner API: Register and update a customer
 
-Connect a customer record in your application to Showpass. Do this when the customer registers or before their first attributed checkout.
+Connect a customer in your application to Showpass using signed server-to-server requests. Customer registration requires a valid email, first name, and last name. Phone is optional, matching regular Showpass registration.
+
+## Register or update a customer
 
 ```http
 POST /api/v1/partner/users/
 ```
 
-This is an idempotent server-to-server operation for a `partner_external_user_id` that already exists: Showpass reuses the existing customer link instead of creating another one.
-
-The profile fields are used when Showpass creates or safely links the customer. Repeating the request for an existing `partner_external_user_id` updates only the supplied partner-owned profile fields (`first_name`, `last_name`, and `phone`) and leaves omitted fields unchanged. `email` is used for safe linking and is not updated by this request.
-
-Authenticate the request with the HMAC scheme in the [Partner API overview](/api/partner-api-overview).
-
-## Choose the customer ID
-
-`partner_external_user_id` is the durable connection between your customer and their Showpass activity. Use an immutable database ID from your system. Do not use an email address or another value that can change.
-
-The same ID is returned in attributed webhooks and is required when creating a fresh checkout token or manage-order link.
-
-## Request body
-
 ```json
 {
   "partner_external_user_id": "customer-42",
   "email": "buyer@example.com",
-  "is_email_verified": true,
   "first_name": "Taylor",
   "last_name": "Buyer",
   "venue_id": 456
@@ -33,66 +20,56 @@ The same ID is returned in attributed webhooks and is required when creating a f
 
 | Field | Type | Required | Description |
 | --- | --- | --- | --- |
-| `partner_external_user_id` | string | Yes | Stable customer ID from your system, up to 255 characters. It is trimmed and lowercased. |
-| `email` | string | Yes | Customer email address, up to 128 characters. |
-| `is_email_verified` | boolean | Yes | Whether the partner has verified the customer's email address. |
-| `first_name` | string | No | First name, up to 32 characters. An empty string clears it; null is not accepted. |
-| `last_name` | string or null | No | Last name, up to 32 characters. An empty string or null clears it. |
-| `phone` | string or null | No | Phone number, up to 32 characters before normalization. Blank or null clears it. |
-| `venue_id` | integer, minimum 1 | Yes | Showpass organization authorized for this Partner integration. Cannot be null and is required even when reusing an existing customer link. |
+| `partner_external_user_id` | string | Yes | Stable customer ID within your Partner integration and venue, up to 255 characters. Trimmed and lowercased. |
+| `email` | string | Yes | Valid customer email, up to 128 characters. Trusted as verified for Partner account linking. |
+| `first_name` | string | Yes | Nonblank first name, up to 32 characters. |
+| `last_name` | string | Yes | Nonblank last name, up to 32 characters. |
+| `phone` | string or null | No | Up to 32 characters before normalization. Omit to preserve an existing phone; blank or null clears it. |
+| `venue_id` | integer | Yes | Positive Showpass organization ID within the Partner's authorized scope. |
 
-Omit profile fields that you do not want to change. Phone numbers are normalized; changing or clearing a phone number resets its Showpass phone verification. Formatting an equivalent number differently does not reset verification.
+No password or `is_email_verified` field is required. Showpass trusts the email asserted by the authenticated Partner for account linking. Partners must establish the customer's identity in their own backend before signing a request. A matching existing email can therefore link to an existing Showpass customer.
 
-## Email verification and linking
+The venue owns the customer record. Each Partner has its own external-ID mapping to that venue customer. Different Partners can use different external IDs for the same venue customer, and a customer's mappings at different venues are separate.
 
-For a new `partner_external_user_id`:
+POST checks the email and external ID within the authenticated Partner and requested venue:
 
-- If no Showpass customer uses the email, Showpass can create a customer whether `is_email_verified` is `true` or `false`.
-- If the email already belongs to a Showpass customer, `true` permits linking to that customer; `false` returns `409`.
+| Existing mapping | Result |
+| --- | --- |
+| Email and external ID match the same identity | Update that venue customer's names and supplied phone; return `200`. |
+| Email is already linked under a different external ID | Return `409`; the email already has a mapping for this Partner and venue. |
+| External ID is already linked to a different email | Return `409`; the ID already belongs to another customer for this Partner and venue. |
+| Neither email nor external ID has a mapping | Create the mapping and return `201`. Reuse the existing Showpass account and venue customer when available; otherwise create them. |
 
-For an already linked ID, Showpass reuses the established identity and updates only supplied profile fields. A different email does not relink the ID or update the customer's email. All required fields must still be supplied.
+Send the same required fields for updates. Omitting `phone` preserves the venue customer's current phone. Sending blank or null clears it. POST does not change the linked email or external ID. Existing shared Showpass account details, phone verification, and other venues stay unchanged. Different authorized Partners linked to the same venue customer update that same venue record.
 
-Send a JSON boolean for `is_email_verified`. Missing or invalid values return `400`. Sending only the retired `email_verified` field leaves `is_email_verified` missing and returns `400`; there is no alias. Likewise, `partner_user_id` does not substitute for `partner_external_user_id`.
+Use an immutable external ID from your system, not an email address or event ID. `partner_user_id` is not an alias for `partner_external_user_id`.
 
-## Response
-
-The endpoint returns `201` when it creates a customer link and `200` when it reuses one:
+## Response and checkout attribution
 
 ```json
 {
-  "partner_identity_id": 123,
   "partner_external_user_id": "customer-42",
   "status": "active",
   "link_reason": "created_user",
-  "venue_id": 456,
-  "customer_attribution_token": "opaque-token",
-  "customer_attribution_token_expires_in_seconds": 3600
+  "venue_id": 456
 }
 ```
 
-The token fields are included only when checkout attribution is enabled for the request, including its `venue_id`. You can use that token immediately or [request a fresh token before checkout](/api/partner-api-customer-attribution-token).
+`link_reason` is `created_user` for a newly created customer, `email_auto_linked` for a new link to an existing email, and `reused_existing` for an existing link or profile update.
 
-`link_reason` explains how Showpass resolved the customer:
+When checkout attribution is enabled for the venue, every successful POST, including updates and retries, also returns `customer_attribution_token` and `token_expires_in_seconds`.
 
-- `created_user`: Showpass created a customer and partner link.
-- `reused_existing`: this `partner_external_user_id` was already linked.
-- `email_auto_linked`: the verified email was safely linked to an existing Showpass customer.
+Phone is optional for registration, token issuance, and Partner checkout. Successful POST requests return a token when attribution is enabled, including when phone is omitted, blank, or null. The token is valid only for the mapped venue. Use the returned token or [request a fresh attribution token](/api/partner-api-customer-attribution-token). During token issuance, a missing required name or email on a previously linked profile can still return `409` with `partner_customer_attribution_profile_incomplete`.
 
-Showpass rejects the request instead of silently linking customers when the email, identity status, or organization scope is unsafe or ambiguous. Email and identity conflicts return `409`; denied organization scope returns `403`.
+Checkout keeps its normal purchaser fields and account defaults. Normal account synchronization, customer refresh, and checkout profile enrichment still apply and may later update these details. Partner POST itself only updates the linked venue customer.
 
-## Errors
+## Authentication and errors
 
-- `400 Bad Request`: a field is missing or invalid.
-- `403 Forbidden`: authentication failed, Partner APIs are disabled, or `venue_id` is outside the integration's organization scope.
-- `409 Conflict`: the email conflicts with existing data, the partner customer is inactive, or `venue_id` does not identify an existing Showpass organization.
-- `429 Too Many Requests`: the client IP has exceeded the shared Partner API limit.
+Use the [Partner HMAC headers](/api/partner-api-overview). Sign `POST` and the full request path `/api/v1/partner/users/`.
 
-For example, attempting to link a new Partner customer ID to an existing email with `is_email_verified: false` returns `409`:
+- `400`: required fields are missing, blank, null, or invalid.
+- `403`: authentication failed, Partner APIs are disabled, or the venue is outside the Partner scope.
+- `409`: the customer identity is inactive, the venue does not exist, or the email or external ID conflicts with an existing identity for this Partner and venue.
+- `429`: the shared Partner request limit was exceeded.
 
-```json
-{
-  "detail": "A Showpass user already exists for this email."
-}
-```
-
-See [Errors and retries](/api/partner-api-overview#errors-and-retries) for validation response examples and retry guidance. Inactive identities and conflicting data require resolution before retrying.
+A different external ID cannot create a second mapping to the same venue customer within one Partner. Resolve that conflict before retrying. See [Errors and retries](/api/partner-api-overview#errors-and-retries).

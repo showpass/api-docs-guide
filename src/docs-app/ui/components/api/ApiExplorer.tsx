@@ -161,7 +161,6 @@ const createPartnerSignature = async (
  * attached to the request.
  */
 const ApiExplorer: React.FC<ApiExplorerProps> = ({
-  description,
   endpoint,
   method,
   operations,
@@ -220,7 +219,8 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   const [pathParameters, setPathParameters] = useState<Record<string, string>>({});
   const [queryParameterValues, setQueryParameterValues] = useState<Record<string, string>>({});
   const [apiKey, setApiKey] = useState("");
-  const [partnerCredential, setPartnerCredential] = useState("");
+  const [partnerKeyId, setPartnerKeyId] = useState("");
+  const [partnerSecret, setPartnerSecret] = useState("");
   const [body, setBody] = useState(
     activeMethod === "GET" ? "" : activeRequestBodyTemplate ?? "{\n  \n}",
   );
@@ -329,12 +329,9 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       return;
     }
 
-    const credential = partnerCredential.trim();
-    const separatorIndex = credential.indexOf(".");
-    const partnerKeyId = credential.slice(0, separatorIndex);
-    const partnerSecret = credential.slice(separatorIndex + 1);
-    if (isPartnerEndpoint && (separatorIndex < 1 || !partnerSecret || /\s/.test(credential))) {
-      setError("Enter your complete Partner credential: sp_partner_<credential_uuid>.<secret>.");
+    const keyId = partnerKeyId.trim();
+    if (isPartnerEndpoint && (!keyId || !partnerSecret || /\s/.test(keyId))) {
+      setError("Enter your Partner key ID and Partner secret separately.");
       return;
     }
 
@@ -359,7 +356,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
           timestamp,
           nonce,
         );
-        headers.set("X-Showpass-Partner-Key-Id", partnerKeyId);
+        headers.set("X-Showpass-Partner-Key-Id", keyId);
         headers.set("X-Showpass-Partner-Timestamp", timestamp);
         headers.set("X-Showpass-Partner-Nonce", nonce);
         headers.set("X-Showpass-Partner-Signature", signature);
@@ -391,12 +388,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
 
   return (
     <div className="space-y-4 px-1 text-sm">
-      <p className="text-xs leading-relaxed text-muted-foreground">
-        Send a live request from this page. {description ? `${description.trim().replace(/[.!?]$/, "")}. ` : ""}{isPublicEndpoint
-          ? "This public endpoint does not require credentials."
-          : "Credentials are held in memory only and are not stored in browser storage."} Browser cookies are never sent.
-      </p>
-
       <div
         className={
           availableOperations.length > 1
@@ -485,25 +476,37 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       ))}
 
       {isPartnerEndpoint ? (
+        <>
+          <label className="block space-y-1.5">
+            <span className="text-xs font-medium text-foreground">Partner key ID</span>
+            <input
+              type="text"
+              value={partnerKeyId}
+              onChange={(event) => setPartnerKeyId(event.target.value)}
+              placeholder="<credential_uuid>"
+              autoComplete="off"
+              spellCheck={false}
+              className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            />
+          </label>
           <label className="block space-y-1.5">
             <span className="inline-flex items-center gap-1 text-xs font-medium text-foreground">
-              Partner credential
+              Partner secret
               <CredentialWarningTooltip
-                label="Partner credential security warning"
-                message="Paste the complete credential provided by Showpass. The Explorer separates its key ID and secret internally for HMAC signing. This value is held in memory only and is cleared when the page is reloaded. Use test credentials only; authenticated production requests are blocked."
+                label="Partner secret security warning"
+                message="Enter the separate secret provided by Showpass. The Explorer uses it for HMAC signing and sends only the key ID and signature. Both values are held in memory only and are cleared when the page is reloaded. Use test credentials only; authenticated production requests are blocked."
               />
             </span>
             <input
               type="password"
-              value={partnerCredential}
-              onChange={(event) => {
-                setPartnerCredential(event.target.value);
-              }}
-              placeholder="sp_partner_<credential_uuid>.<secret>"
+              value={partnerSecret}
+              onChange={(event) => setPartnerSecret(event.target.value)}
+              placeholder="Your Partner secret"
               autoComplete="off"
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
           </label>
+        </>
       ) : !isPublicEndpoint ? (
         <>
           <label className="block space-y-1.5">
@@ -539,13 +542,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
             aria-label="Request body"
           />
         </label>
-      )}
-
-      {activeMethod !== "GET" && (
-        <div className="flex gap-2 rounded-md border border-amber-500/30 bg-amber-500/10 p-2 text-xs leading-relaxed text-foreground">
-          <AlertCircle className="mt-0.5 h-3.5 w-3.5 shrink-0 text-amber-600 dark:text-amber-400" />
-          This request can change data in the selected environment. Use the Explorer with test credentials only; authenticated production requests are blocked.
-        </div>
       )}
 
       {error && (

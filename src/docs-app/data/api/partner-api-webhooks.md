@@ -15,7 +15,7 @@ Showpass webhooks report purchases and post-purchase changes. For an attributed 
 }
 ```
 
-Check that `data.partner_slug` identifies your integration before looking up `data.partner_external_user_id`. Customer IDs are unique within a Partner integration, not across integrations. Use `data.transaction_id` to correlate the event's transaction and `webhook_event_uuid` to deduplicate deliveries.
+Check that `data.partner_slug` identifies your integration before looking up `data.partner_external_user_id`. Customer IDs are scoped to a Partner integration and venue. Use `data.showpass_organization_id` together with the Partner slug and external ID to resolve the venue customer mapping. Use `data.transaction_id` to correlate the event's transaction and `webhook_event_uuid` to deduplicate deliveries.
 
 For invoice events, the top-level `id` identifies the invoice transaction and is used for signature verification. It is not the unique webhook event ID. Different events can refer to the same transaction.
 

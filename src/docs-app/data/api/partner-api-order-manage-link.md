@@ -6,7 +6,7 @@ Create a short-lived link that opens a customer’s completed order in Showpass.
 POST /api/v1/partner/orders/manage-link/
 ```
 
-Call this endpoint from your backend only. Showpass verifies that the transaction belongs to the supplied Partner customer and is within the integration’s organization scope.
+Call this endpoint from your backend only. Showpass derives the venue from the transaction, resolves your external ID for that venue, and verifies that the order belongs to the linked customer and is within the integration’s organization scope. Do not send a separate `venue_id`.
 
 Authenticate the request with the HMAC scheme in the [Partner API overview](/api/partner-api-overview).
 

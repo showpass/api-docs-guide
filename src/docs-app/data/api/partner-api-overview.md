@@ -36,13 +36,16 @@ The Partner API is available for Showpass Partners. If you'd like to learn more 
 https://www.showpass.com/api/v1/partner/
 ```
 
-Showpass provides a Partner credential and enables the required capabilities during partner onboarding. Contact your Showpass representative for the complete credential:
+Showpass provides two separate values and enables the required capabilities during partner onboarding. Contact your Showpass representative for your **Partner key ID** and **Partner secret**:
 
 ```text
-sp_partner_<credential_uuid>.<random_secret>
+PARTNER_KEY_ID=<credential_uuid>
+PARTNER_SECRET=<random_secret>
 ```
 
-Store this complete value in your backend's secret manager, for example as `PARTNER_CREDENTIAL`. Your signing client splits it at the first period: the part before the period is the key ID, and the part after it is the secret used for HMAC signing. Send only the key ID in `X-Showpass-Partner-Key-Id`; never send the secret or complete credential in a request header or body. The complete value is not an `Authorization: Token` or bearer token.
+Configure these separately in your backend. Keep `PARTNER_SECRET` in your secret manager. Send the key ID in `X-Showpass-Partner-Key-Id` and use the secret only to compute the HMAC signature. Never send the secret in a request header or body, or expose it in frontend code. These values are not an `Authorization: Token` or bearer token.
+
+If you previously received a combined credential, separate it at the first period into the key ID and secret. The values and signing protocol are unchanged, so this does not require rotation.
 
 ## HMAC authentication
 
@@ -77,12 +80,12 @@ import os
 import time
 import uuid
 
-credential = os.environ["PARTNER_CREDENTIAL"].strip()
-partner_key_id, separator, partner_secret = credential.partition(".")
-if not separator or not partner_key_id or not partner_secret:
-    raise ValueError("Invalid Partner credential: expected key_id.secret")
+partner_key_id = os.environ["PARTNER_KEY_ID"]
+partner_secret = os.environ["PARTNER_SECRET"]
+if not partner_key_id or not partner_secret:
+    raise ValueError("Set both PARTNER_KEY_ID and PARTNER_SECRET")
 
-body = '{"partner_external_user_id":"customer-42"}'
+body = '{"partner_external_user_id":"customer-42","venue_id":456}'
 timestamp = str(int(time.time()))
 nonce = str(uuid.uuid4())
 path_and_query = "/api/v1/partner/customer-attribution-token/"
@@ -109,13 +112,13 @@ Missing or invalid authentication returns `403`. Generate a new timestamp, nonce
 
 A Partner integration must have explicit Showpass organization assignments. It can be assigned multiple organizations; an assignment may also include child organizations when Showpass enables that option.
 
-Customer sync requires a `venue_id` on every request. The response echoes that organization ID. Checkout validates the basket's payment organization, and manage-order access validates the order's organization against the integration's current assignments.
+Customer sync and token issuance require `venue_id` on every request. Each Partner external-ID mapping belongs to one venue customer. Different Partners can map their own IDs to the same venue customer. Checkout requires the token’s venue to match the basket’s payment organization. Manage-order access resolves the mapping using the order’s venue. Both operations also enforce the integration’s current organization assignments.
 
 ## Endpoint catalog
 
 | Method | Endpoint | Use it to |
 | --- | --- | --- |
-| `POST` | [`/api/v1/partner/users/`](/api/partner-api-users) | Connect a customer in your system to Showpass. |
+| `POST` | [`/api/v1/partner/users/`](/api/partner-api-users) | Register or update a venue customer using your external ID. |
 | `POST` | [`/api/v1/partner/customer-attribution-token/`](/api/partner-api-customer-attribution-token) | Carry that customer relationship into checkout. |
 | `POST` | [`/api/v1/partner/orders/manage-link/`](/api/partner-api-order-manage-link) | Send the customer to a specific Showpass order. |
 
