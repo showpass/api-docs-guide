@@ -96,7 +96,7 @@ const DocLayout = () => {
   const normalizedPath =
     currentPath === "/" ? currentPath : currentPath.replace(/\/+$/, "");
   const isHomepage = normalizedPath === "/";
-  const isWideCanvas = normalizedPath === "/widget-playground";
+  const isWideCanvas = normalizedPath === "/sdk/widget-playground";
 
   const {
     tocItems,

@@ -174,7 +174,7 @@ async function createStaticPages(routes, seoByRoute) {
       pageHtml = buildPageHtml(baseHtml, seoData, prerendered);
       pagesPrerendered++;
     } else {
-      // Non-doc routes (e.g. /widget-playground) – just update meta
+      // Non-doc routes (e.g. /sdk/widget-playground) only need metadata.
       pageHtml = buildPageHtml(baseHtml, seoData, '');
     }
 
@@ -184,6 +184,11 @@ async function createStaticPages(routes, seoByRoute) {
     fs.writeFileSync(path.join(dirPath, 'index.html'), pageHtml);
     pagesCreated++;
   }
+
+  // Keep a static entry point for old bookmarks; React preserves query and hash on redirect.
+  const legacyPlaygroundDir = path.join(DIST_DIR, 'widget-playground');
+  fs.mkdirSync(legacyPlaygroundDir, { recursive: true });
+  fs.writeFileSync(path.join(legacyPlaygroundDir, 'index.html'), baseHtml);
 
   console.log(
     `✅ Static pages created: ${pagesCreated} total, ${pagesPrerendered} with pre-rendered content`
@@ -214,18 +219,10 @@ async function generateEnhancedSitemap(routes) {
   </url>`;
   }
 
-  sitemap += `
-  <url>
-    <loc>https://dev.showpass.com/widget-playground</loc>
-    <lastmod>${now}</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.7</priority>
-  </url>`;
-
   sitemap += `\n</urlset>`;
 
   fs.writeFileSync(sitemapPath, sitemap);
-  console.log(`✅ Sitemap generated with ${routes.length + 1} URLs`);
+  console.log(`✅ Sitemap generated with ${routes.length} URLs`);
 }
 
 // ---------------------------------------------------------------------------

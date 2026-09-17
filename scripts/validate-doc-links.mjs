@@ -5,7 +5,7 @@ import { marked } from "marked";
 const docsRoot = path.resolve("src/docs-app/data");
 const publicRoot = path.resolve("public");
 
-const extraInternalRoutes = new Set(["/", "/widget-playground"]);
+const extraInternalRoutes = new Set(["/", "/sdk/widget-playground", "/widget-playground"]);
 
 const isExternalHref = (href) =>
   /^[a-z][a-z0-9+.-]*:/i.test(href) || href.startsWith("//");

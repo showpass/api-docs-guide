@@ -3,7 +3,7 @@ import { Toaster } from "./shared/components/toaster";
 import { Toaster as Sonner } from "./shared/components/sonner";
 import { TooltipProvider } from "./shared/components/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { ThemeStyles } from "./shared/themes/ThemeStyles.tsx";
 
 // Layout and Pages
@@ -18,6 +18,11 @@ import WidgetPlayground from "./pages/WidgetPlayground";
 
 const queryClient = new QueryClient();
 const basename = "/";
+
+const LegacyWidgetPlaygroundRedirect = () => {
+  const { search, hash } = useLocation();
+  return <Navigate replace to={{ pathname: "/sdk/widget-playground", search, hash }} />;
+};
 
 const App = () => (
   <ThemeProvider 
@@ -77,7 +82,8 @@ const App = () => (
                 path="/security/:slug"
                 element={<DynamicDocPage section="security" />}
               />
-              <Route path="/widget-playground" element={<WidgetPlayground />} />
+              <Route path="/sdk/widget-playground" element={<WidgetPlayground />} />
+              <Route path="/widget-playground" element={<LegacyWidgetPlaygroundRedirect />} />
               <Route
                 path="/wordpress/:slug"
                 element={<DynamicDocPage section="wordpress" />}

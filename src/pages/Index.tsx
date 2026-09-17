@@ -328,13 +328,13 @@ const additionalIntegrationPaths: IntegrationPath[] = [
     outcome: "Connect partner experiences",
     title: "Build partner-facing Showpass experiences.",
     description:
-      "Create partner users, work with partner resources, and connect customer attribution and order-management workflows.",
+      "Sync customers, attribute Showpass checkout, and open scoped order-management links.",
     facts: ["REST API", "HMAC signing", "Partner workflows"],
     codeLabel: "Request",
     codeLines: [
       <span key="partner-1">
-        <SyntaxToken type="keyword">GET</SyntaxToken>{" "}
-        <SyntaxToken type="string">/api/partner/</SyntaxToken>
+        <SyntaxToken type="keyword">POST</SyntaxToken>{" "}
+        <SyntaxToken type="string">/api/v1/partner/users/</SyntaxToken>
       </span>,
     ],
     action: "Read the Partner API",
