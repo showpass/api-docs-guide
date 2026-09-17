@@ -15,6 +15,8 @@ All `/api/v1/partner/` requests belong in your backend. Event discovery and the 
 
 The interactive API Explorer is for local, Beta, or Demo testing only. It holds credentials in memory for the current page and blocks authenticated requests to Showpass production; production Partner API calls must be signed and sent from your server.
 
+If Explorer reports that the request could not be completed without an HTTP response, check that the selected HTTPS backend is reachable and that its CORS configuration permits the documentation origin, `Content-Type`, and the four Partner HMAC headers. Local testing also requires a trusted HTTPS certificate. A normal `400`, `403`, or `409` response is an API error; inspect its response body.
+
 ## 1. Connect your customer to Showpass
 
 When a customer registers or before their first Showpass checkout, send their stable ID, email, both names, and an authorized organization ID to Showpass:
@@ -54,7 +56,7 @@ For upcoming-only results, multiple organizations, recurring instances, paginati
 
 ## 3. Create fresh checkout attribution
 
-Immediately before opening checkout, ask your backend for a fresh token:
+If customer registration just returned a token for the selected venue, you can use it directly. Otherwise, immediately before opening checkout, ask your backend for a fresh token:
 
 ```http
 POST /api/v1/partner/customer-attribution-token/
@@ -95,6 +97,7 @@ Subscribe to the invoice events your application needs. When enrichment is enabl
   "event_type": "invoice.purchase",
   "webhook_event_uuid": "09117c09-e1f8-4913-b2f5-52cc161cf5f7",
   "data": {
+    "showpass_organization_id": 456,
     "transaction_id": "d9-1234-4abc-8def-123456789abc",
     "partner_slug": "your-partner",
     "partner_external_user_id": "customer-42"

@@ -39,7 +39,7 @@ https://www.showpass.com/api/v1/partner/
 Showpass provides two separate values and enables the required capabilities during partner onboarding. Contact your Showpass representative for your **Partner key ID** and **Partner secret**:
 
 ```text
-PARTNER_KEY_ID=<credential_uuid>
+PARTNER_KEY_ID=<partner_key_id>
 PARTNER_SECRET=<random_secret>
 ```
 

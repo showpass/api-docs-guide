@@ -263,7 +263,7 @@ const WidgetPlayground: React.FC = () => {
                 </summary>
                 <div className="space-y-3 border-t p-4">
                   <p className="text-xs leading-relaxed text-muted-foreground">
-                    Get a fresh token from your backend or the <Link className="text-primary underline" to="/api/partner-api-customer-attribution-token">Partner API Explorer</Link>.
+                    Use a token for the event’s organization in the selected environment. Get it from your backend or the <Link className="text-primary underline" to="/api/partner-api-customer-attribution-token">Partner API Explorer</Link>.
                   </p>
                   <label htmlFor="playground-attribution-token" className="block text-sm font-medium">Customer attribution token</label>
                   <Input id="playground-attribution-token" type="password" autoComplete="off" spellCheck={false} maxLength={128}

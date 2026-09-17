@@ -483,7 +483,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
               type="text"
               value={partnerKeyId}
               onChange={(event) => setPartnerKeyId(event.target.value)}
-              placeholder="<credential_uuid>"
+              placeholder="<partner_key_id>"
               autoComplete="off"
               spellCheck={false}
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"

@@ -27,7 +27,7 @@ POST /api/v1/partner/users/
 | `phone` | string or null | No | Up to 32 characters before normalization. Omit to preserve an existing phone; blank or null clears it. |
 | `venue_id` | integer | Yes | Positive Showpass organization ID within the Partner's authorized scope. |
 
-No password or `is_email_verified` field is required. Showpass trusts the email asserted by the authenticated Partner for account linking. Partners must establish the customer's identity in their own backend before signing a request. A matching existing email can therefore link to an existing Showpass customer.
+`is_email_verified` is not part of this API. Do not send a password or verification flag. Showpass trusts the email asserted by the authenticated Partner for account linking. Partners must establish the customer's identity in their own backend before signing a request. A matching existing email can therefore link to an existing Showpass customer.
 
 The venue owns the customer record. Each Partner has its own external-ID mapping to that venue customer. Different Partners can use different external IDs for the same venue customer, and a customer's mappings at different venues are separate.
 
@@ -42,6 +42,8 @@ POST checks the email and external ID within the authenticated Partner and reque
 
 Send the same required fields for updates. Omitting `phone` preserves the venue customer's current phone. Sending blank or null clears it. POST does not change the linked email or external ID. Existing shared Showpass account details, phone verification, and other venues stay unchanged. Different authorized Partners linked to the same venue customer update that same venue record.
 
+There is no PUT customer endpoint. Use POST for both registration and profile updates.
+
 Use an immutable external ID from your system, not an email address or event ID. `partner_user_id` is not an alias for `partner_external_user_id`.
 
 ## Response and checkout attribution
@@ -55,7 +57,7 @@ Use an immutable external ID from your system, not an email address or event ID.
 }
 ```
 
-`link_reason` is `created_user` for a newly created customer, `email_auto_linked` for a new link to an existing email, and `reused_existing` for an existing link or profile update.
+`link_reason` is `created_user` when a new Showpass account is created, `email_auto_linked` for a new mapping to an existing account, and `reused_existing` for an existing mapping or profile update.
 
 When checkout attribution is enabled for the venue, every successful POST, including updates and retries, also returns `customer_attribution_token` and `token_expires_in_seconds`.
 
@@ -72,4 +74,4 @@ Use the [Partner HMAC headers](/api/partner-api-overview). Sign `POST` and the f
 - `409`: the customer identity is inactive, the venue does not exist, or the email or external ID conflicts with an existing identity for this Partner and venue.
 - `429`: the shared Partner request limit was exceeded.
 
-A different external ID cannot create a second mapping to the same venue customer within one Partner. Resolve that conflict before retrying. See [Errors and retries](/api/partner-api-overview#errors-and-retries).
+A venue customer already linked to a different account or email also returns `409`; POST does not relink that record. A different external ID cannot create a second mapping to the same venue customer within one Partner. Resolve that conflict before retrying. See [Errors and retries](/api/partner-api-overview#errors-and-retries).

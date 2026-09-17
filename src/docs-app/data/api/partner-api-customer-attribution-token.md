@@ -56,13 +56,13 @@ The token does not create a full Showpass login session. Normal checkout and pay
 - It establishes the linked customer for the basket; any additional buyer information is collected by Showpass checkout.
 - It is not a Partner API credential, bearer token, or refresh token.
 
-The raw value is returned only in this response; Showpass stores its SHA-256 hash. Do not persist it as a long-lived customer credential or include it in logs.
+The raw value is returned when issued, either by customer registration or this endpoint; Showpass stores its SHA-256 hash. Do not persist it as a long-lived customer credential or include it in logs.
 
 ## Errors
 
 - `400 Bad Request`: `partner_external_user_id` or `venue_id` is missing or invalid.
-- `403 Forbidden`: authentication failed or checkout attribution is disabled, or the venue is outside this Partner integration's scope.
-- `409 Conflict`: the Partner customer does not exist, is inactive, or has an incomplete profile.
+- `403 Forbidden`: authentication failed, Partner APIs are disabled, or checkout attribution is disabled.
+- `409 Conflict`: the Partner customer does not exist at the requested venue, is inactive, has an incomplete profile, or the venue is outside the Partner integration's current scope.
 - `429 Too Many Requests`: the client IP has exceeded the shared Partner API limit.
 
 For example, requesting a token for a customer with an incomplete profile returns `409`:
@@ -79,6 +79,7 @@ This endpoint can return these string error codes:
 | Status | `error_code` | Meaning |
 | --- | --- | --- |
 | `403` | `partner_customer_attribution_disabled` | Customer attribution is not enabled for the request. |
+| `409` | `partner_customer_attribution_venue_scope` | The mapped venue is no longer within the Partner integration's authorized scope. |
 | `409` | `partner_customer_attribution_identity_not_found` | The Partner customer has not been linked at the requested venue. |
 | `409` | `partner_customer_attribution_identity_inactive` | The linked identity is inactive. |
 | `409` | `partner_customer_attribution_profile_incomplete` | The linked profile is missing a required name or email. Repeat POST customer registration with the same email, external ID, and venue to update the names; it does not change the linked email. |

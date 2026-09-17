@@ -8,6 +8,7 @@ Showpass webhooks report purchases and post-purchase changes. For an attributed 
   "event_type": "invoice.purchase",
   "webhook_event_uuid": "09117c09-e1f8-4913-b2f5-52cc161cf5f7",
   "data": {
+    "showpass_organization_id": 456,
     "transaction_id": "d9-1234-4abc-8def-123456789abc",
     "partner_slug": "your-partner",
     "partner_external_user_id": "customer-42"
