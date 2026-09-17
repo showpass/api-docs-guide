@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -87,22 +87,24 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Create checkout attribution</h1>
+  <article><h1>Partner API: Create checkout attribution</h1>
 <p>Create a short-lived token that connects a Showpass checkout to a customer in your system.</p>
-<pre><code class="language-http">POST /api/partner/customer-attribution-token/
+<pre><code class="language-http">POST /api/v1/partner/customer-attribution-token/
 </code></pre>
 <p>Call this endpoint from your backend immediately before opening the Ticket Purchase Widget. The customer must first be connected with <a href="/api/partner-api-users">Sync a customer with Showpass</a>.</p>
+<p>The linked venue customer profile must have a nonblank first name, last name, and email. Phone is optional and does not affect token issuance or Partner checkout. This endpoint requires the external customer ID and <code>venue_id</code>; adding profile fields here does not update the customer.</p>
 <p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
 <h2>Request body</h2>
 <pre><code class="language-json">{
-  &quot;partner_external_user_id&quot;: &quot;customer-42&quot;
+  &quot;partner_external_user_id&quot;: &quot;customer-42&quot;,
+  &quot;venue_id&quot;: 456
 }
 </code></pre>
 <h2>Response</h2>
 <p>The endpoint returns <code>201</code>:</p>
 <pre><code class="language-json">{
   &quot;customer_attribution_token&quot;: &quot;opaque-token&quot;,
-  &quot;customer_attribution_token_expires_in_seconds&quot;: 3600
+  &quot;token_expires_in_seconds&quot;: 3600
 }
 </code></pre>
 <p>Pass the token directly to the purchase widget:</p>
@@ -111,21 +113,77 @@
 });
 </code></pre>
 <p>Showpass validates the token when it creates the checkout basket, then carries the resolved Partner customer relationship onto the completed order.</p>
-<h2>What the token is—and is not</h2>
+<h2>Checkout identity and organization scope</h2>
+<p>The token binds the basket and resulting order to the linked Showpass customer. The required <code>venue_id</code> selects the Partner&#39;s customer mapping. Checkout requires that same payment venue and also checks the Partner integration&#39;s current assignments. A token for one venue cannot be used at another venue, even when the Partner has access to both. A browser authenticated as a different Showpass customer cannot use the token for that checkout.</p>
+<p>The token does not create a full Showpass login session. Normal checkout and payment requirements still apply. Do not use successful token issuance as proof that checkout will succeed: an expired token, revoked identity, unauthorized organization, or conflicting customer can prevent its use.</p>
+<h2>Token lifetime and handling</h2>
 <ul>
-<li>It is short-lived checkout context for one Partner customer.</li>
+<li>It is short-lived checkout context for one Partner customer mapping at one venue.</li>
 <li>It is valid for one hour and can be used by supported checkout flows during that period.</li>
 <li>It does not authenticate the customer or create a logged-in Showpass session.</li>
-<li>It does not replace the buyer information collected during checkout.</li>
+<li>It establishes the linked customer for the basket; any additional buyer information is collected by Showpass checkout.</li>
 <li>It is not a Partner API credential, bearer token, or refresh token.</li>
 </ul>
-<p>The raw value is returned only in this response; Showpass stores its SHA-256 hash. Do not persist it as a long-lived customer credential or include it in logs.</p>
+<p>The raw value is returned when issued, either by customer registration or this endpoint; Showpass stores its SHA-256 hash. Do not persist it as a long-lived customer credential or include it in logs.</p>
 <h2>Errors</h2>
 <ul>
-<li><code>400 Bad Request</code>: <code>partner_external_user_id</code> is missing or invalid.</li>
-<li><code>403 Forbidden</code>: authentication failed or checkout attribution is not enabled for this Partner integration.</li>
-<li><code>409 Conflict</code>: the Partner customer does not exist or is inactive.</li>
+<li><code>400 Bad Request</code>: <code>partner_external_user_id</code> or <code>venue_id</code> is missing or invalid.</li>
+<li><code>403 Forbidden</code>: authentication failed, Partner APIs are disabled, or checkout attribution is disabled.</li>
+<li><code>409 Conflict</code>: the Partner customer does not exist at the requested venue, is inactive, has an incomplete profile, or the venue is outside the Partner integration&#39;s current scope.</li>
+<li><code>429 Too Many Requests</code>: the client IP has exceeded the shared Partner API limit.</li>
 </ul>
+<p>For example, requesting a token for a customer with an incomplete profile returns <code>409</code>:</p>
+<pre><code class="language-json">{
+  &quot;detail&quot;: &quot;Partner customer attribution requires a first name, last name, and email.&quot;,
+  &quot;error_code&quot;: &quot;partner_customer_attribution_profile_incomplete&quot;
+}
+</code></pre>
+<p>This endpoint can return these string error codes:</p>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th><code>error_code</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>403</code></td>
+<td><code>partner_customer_attribution_disabled</code></td>
+<td>Customer attribution is not enabled for the request.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>partner_customer_attribution_venue_scope</code></td>
+<td>The mapped venue is no longer within the Partner integration&#39;s authorized scope.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>partner_customer_attribution_identity_not_found</code></td>
+<td>The Partner customer has not been linked at the requested venue.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>partner_customer_attribution_identity_inactive</code></td>
+<td>The linked identity is inactive.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>partner_customer_attribution_profile_incomplete</code></td>
+<td>The linked profile is missing a required name or email. Repeat POST customer registration with the same email, external ID, and venue to update the names; it does not change the linked email.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>partner_customer_attribution_partner_inactive</code></td>
+<td>The Partner integration became inactive before issuance completed.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td><code>partner_customer_attribution_token_invalid</code></td>
+<td>The identity context could not be resolved safely.</td>
+</tr>
+</tbody></table>
+<p>Authentication failures and globally disabled Partner APIs can return <code>403</code> with only <code>detail</code>. Checkout validation is a separate operation and can reject a previously issued token. See <a href="/api/partner-api-overview#errors-and-retries">Errors and retries</a> for common response shapes and retry guidance.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

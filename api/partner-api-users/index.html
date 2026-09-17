@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -87,24 +87,17 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Sync a customer with Showpass</h1>
-<p>Connect a customer record in your application to Showpass. Do this when the customer registers or before their first attributed checkout.</p>
-<pre><code class="language-http">POST /api/partner/users/
+  <article><h1>Partner API: Register and update a customer</h1>
+<p>Connect a customer in your application to Showpass using signed server-to-server requests. Customer registration requires a valid email, first name, and last name. Phone is optional, matching regular Showpass registration.</p>
+<h2>Register or update a customer</h2>
+<pre><code class="language-http">POST /api/v1/partner/users/
 </code></pre>
-<p>This is an idempotent server-to-server operation for a <code>partner_external_user_id</code> that already exists: Showpass reuses the existing customer link instead of creating another one.</p>
-<p>The profile fields are used when Showpass creates or safely links the customer. Repeating the request for an existing <code>partner_external_user_id</code> updates only the supplied partner-owned profile fields (<code>first_name</code>, <code>last_name</code>, and <code>phone</code>) and leaves omitted fields unchanged. <code>email</code> is used for safe linking and is not updated by this request.</p>
-<p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
-<h2>Choose the customer ID</h2>
-<p><code>partner_external_user_id</code> is the durable connection between your customer and their Showpass activity. Use an immutable database ID from your system. Do not use an email address or another value that can change.</p>
-<p>The same ID is returned in attributed webhooks and is required when creating a fresh checkout token or manage-order link.</p>
-<h2>Request body</h2>
 <pre><code class="language-json">{
   &quot;partner_external_user_id&quot;: &quot;customer-42&quot;,
   &quot;email&quot;: &quot;buyer@example.com&quot;,
-  &quot;email_verified&quot;: true,
   &quot;first_name&quot;: &quot;Taylor&quot;,
   &quot;last_name&quot;: &quot;Buyer&quot;,
-  &quot;phone&quot;: null
+  &quot;venue_id&quot;: 456
 }
 </code></pre>
 <table>
@@ -120,71 +113,90 @@
 <td><code>partner_external_user_id</code></td>
 <td>string</td>
 <td>Yes</td>
-<td>Stable customer ID from your system, up to 255 characters. It is trimmed and lowercased.</td>
+<td>Stable customer ID within your Partner integration and venue, up to 255 characters. Trimmed and lowercased.</td>
 </tr>
 <tr>
 <td><code>email</code></td>
 <td>string</td>
 <td>Yes</td>
-<td>Customer email address, up to 128 characters.</td>
-</tr>
-<tr>
-<td><code>email_verified</code></td>
-<td>boolean</td>
-<td>Yes</td>
-<td>Whether your application has verified the email. When <code>true</code>, Showpass may safely link an existing Showpass customer with the same email.</td>
+<td>Valid customer email, up to 128 characters. Trusted as verified for Partner account linking.</td>
 </tr>
 <tr>
 <td><code>first_name</code></td>
 <td>string</td>
-<td>No</td>
-<td>First name, up to 32 characters.</td>
+<td>Yes</td>
+<td>Nonblank first name, up to 32 characters.</td>
 </tr>
 <tr>
 <td><code>last_name</code></td>
-<td>string or null</td>
-<td>No</td>
-<td>Last name, up to 32 characters.</td>
+<td>string</td>
+<td>Yes</td>
+<td>Nonblank last name, up to 32 characters.</td>
 </tr>
 <tr>
 <td><code>phone</code></td>
 <td>string or null</td>
 <td>No</td>
-<td>Phone number, up to 32 characters.</td>
+<td>Up to 32 characters before normalization. Omit to preserve an existing phone; blank or null clears it.</td>
 </tr>
 <tr>
 <td><code>venue_id</code></td>
-<td>integer or null</td>
-<td>No</td>
-<td>Showpass organization scope for this request. It must match the scope configured for the Partner integration.</td>
+<td>integer</td>
+<td>Yes</td>
+<td>Positive Showpass organization ID within the Partner&#39;s authorized scope.</td>
 </tr>
 </tbody></table>
-<h2>Response</h2>
-<p>The endpoint returns <code>201</code> when it creates a customer link and <code>200</code> when it reuses one:</p>
+<p><code>is_email_verified</code> is not part of this API. Do not send a password or verification flag. Showpass trusts the email asserted by the authenticated Partner for account linking. Partners must establish the customer&#39;s identity in their own backend before signing a request. A matching existing email can therefore link to an existing Showpass customer.</p>
+<p>The venue owns the customer record. Each Partner has its own external-ID mapping to that venue customer. Different Partners can use different external IDs for the same venue customer, and a customer&#39;s mappings at different venues are separate.</p>
+<p>POST checks the email and external ID within the authenticated Partner and requested venue:</p>
+<table>
+<thead>
+<tr>
+<th>Existing mapping</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Email and external ID match the same identity</td>
+<td>Update that venue customer&#39;s names and supplied phone; return <code>200</code>.</td>
+</tr>
+<tr>
+<td>Email is already linked under a different external ID</td>
+<td>Return <code>409</code>; the email already has a mapping for this Partner and venue.</td>
+</tr>
+<tr>
+<td>External ID is already linked to a different email</td>
+<td>Return <code>409</code>; the ID already belongs to another customer for this Partner and venue.</td>
+</tr>
+<tr>
+<td>Neither email nor external ID has a mapping</td>
+<td>Create the mapping and return <code>201</code>. Reuse the existing Showpass account and venue customer when available; otherwise create them.</td>
+</tr>
+</tbody></table>
+<p>Send the same required fields for updates. Omitting <code>phone</code> preserves the venue customer&#39;s current phone. Sending blank or null clears it. POST does not change the linked email or external ID. Existing shared Showpass account details, phone verification, and other venues stay unchanged. Different authorized Partners linked to the same venue customer update that same venue record.</p>
+<p>There is no PUT customer endpoint. Use POST for both registration and profile updates.</p>
+<p>Use an immutable external ID from your system, not an email address or event ID. <code>partner_user_id</code> is not an alias for <code>partner_external_user_id</code>.</p>
+<h2>Response and checkout attribution</h2>
 <pre><code class="language-json">{
-  &quot;partner_identity_id&quot;: 123,
   &quot;partner_external_user_id&quot;: &quot;customer-42&quot;,
   &quot;status&quot;: &quot;active&quot;,
   &quot;link_reason&quot;: &quot;created_user&quot;,
-  &quot;venue_id&quot;: 456,
-  &quot;customer_attribution_token&quot;: &quot;opaque-token&quot;,
-  &quot;customer_attribution_token_expires_in_seconds&quot;: 3600
+  &quot;venue_id&quot;: 456
 }
 </code></pre>
-<p>The token fields are included only when checkout attribution is enabled for the integration. You can use that token immediately or <a href="/api/partner-api-customer-attribution-token">request a fresh token before checkout</a>.</p>
-<p><code>link_reason</code> explains how Showpass resolved the customer:</p>
+<p><code>link_reason</code> is <code>created_user</code> when a new Showpass account is created, <code>email_auto_linked</code> for a new mapping to an existing account, and <code>reused_existing</code> for an existing mapping or profile update.</p>
+<p>When checkout attribution is enabled for the venue, every successful POST, including updates and retries, also returns <code>customer_attribution_token</code> and <code>token_expires_in_seconds</code>.</p>
+<p>Phone is optional for registration, token issuance, and Partner checkout. Successful POST requests return a token when attribution is enabled, including when phone is omitted, blank, or null. The token is valid only for the mapped venue. Use the returned token or <a href="/api/partner-api-customer-attribution-token">request a fresh attribution token</a>. During token issuance, a missing required name or email on a previously linked profile can still return <code>409</code> with <code>partner_customer_attribution_profile_incomplete</code>.</p>
+<p>Checkout keeps its normal purchaser fields and account defaults. Normal account synchronization, customer refresh, and checkout profile enrichment still apply and may later update these details. Partner POST itself only updates the linked venue customer.</p>
+<h2>Authentication and errors</h2>
+<p>Use the <a href="/api/partner-api-overview">Partner HMAC headers</a>. Sign <code>POST</code> and the full request path <code>/api/v1/partner/users/</code>.</p>
 <ul>
-<li><code>created_user</code>: Showpass created a customer and partner link.</li>
-<li><code>reused_existing</code>: this <code>partner_external_user_id</code> was already linked.</li>
-<li><code>email_auto_linked</code>: the verified email was safely linked to an existing Showpass customer.</li>
+<li><code>400</code>: required fields are missing, blank, null, or invalid.</li>
+<li><code>403</code>: authentication failed, Partner APIs are disabled, or the venue is outside the Partner scope.</li>
+<li><code>409</code>: the customer identity is inactive, the venue does not exist, or the email or external ID conflicts with an existing identity for this Partner and venue.</li>
+<li><code>429</code>: the shared Partner request limit was exceeded.</li>
 </ul>
-<p>Showpass returns a conflict instead of silently linking customers when the email, identity status, or organization scope is unsafe or ambiguous.</p>
-<h2>Errors</h2>
-<ul>
-<li><code>400 Bad Request</code>: a field is missing or invalid.</li>
-<li><code>403 Forbidden</code>: authentication failed, or <code>venue_id</code> is outside the integration’s organization scope.</li>
-<li><code>409 Conflict</code>: the email conflicts with existing data, the partner customer is inactive, or <code>venue_id</code> does not identify an existing Showpass organization.</li>
-</ul>
+<p>A venue customer already linked to a different account or email also returns <code>409</code>; POST does not relink that record. A different external ID cannot create a second mapping to the same venue customer within one Partner. Resolve that conflict before retrying. See <a href="/api/partner-api-overview#errors-and-retries">Errors and retries</a>.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

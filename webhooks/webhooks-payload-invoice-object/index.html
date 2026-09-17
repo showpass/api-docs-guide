@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -187,7 +187,7 @@
 </thead>
 <tbody><tr>
 <td><code>id</code></td>
-<td>The unique identifier for the webhook event itself. This corresponds to the webhook event record in Showpass and is useful for referencing in support or logs.</td>
+<td>The invoice transaction identifier used for signature verification. Different webhook events can share this value; use <code>webhook_event_uuid</code> to deduplicate deliveries.</td>
 </tr>
 <tr>
 <td><code>event_type</code></td>

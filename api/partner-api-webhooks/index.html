@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -87,17 +87,22 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Match orders to your customers</h1>
-<p>Showpass webhooks report purchases and post-purchase changes. For an attributed checkout, the payload can include the stable customer ID from your system:</p>
+  <article><h1>Partner API: Match orders to your customers</h1>
+<p>Showpass webhooks report purchases and post-purchase changes. For an attributed checkout, the payload can include the stable customer ID from your system. This abbreviated purchase example shows the fields needed for correlation:</p>
 <pre><code class="language-json">{
+  &quot;id&quot;: &quot;d9-1234-4abc-8def-123456789abc&quot;,
   &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;webhook_event_uuid&quot;: &quot;09117c09-e1f8-4913-b2f5-52cc161cf5f7&quot;,
   &quot;data&quot;: {
+    &quot;showpass_organization_id&quot;: 456,
+    &quot;transaction_id&quot;: &quot;d9-1234-4abc-8def-123456789abc&quot;,
     &quot;partner_slug&quot;: &quot;your-partner&quot;,
     &quot;partner_external_user_id&quot;: &quot;customer-42&quot;
   }
 }
 </code></pre>
-<p>Use <code>partner_external_user_id</code> to find the customer in your system. Use the webhook’s Showpass transaction identifier to find or create the corresponding order record.</p>
+<p>Check that <code>data.partner_slug</code> identifies your integration before looking up <code>data.partner_external_user_id</code>. Customer IDs are scoped to a Partner integration and venue. Use <code>data.showpass_organization_id</code> together with the Partner slug and external ID to resolve the venue customer mapping. Use <code>data.transaction_id</code> to correlate the event&#39;s transaction and <code>webhook_event_uuid</code> to deduplicate deliveries.</p>
+<p>For invoice events, the top-level <code>id</code> identifies the invoice transaction and is used for signature verification. It is not the unique webhook event ID. Different events can refer to the same transaction.</p>
 <p>The Partner fields extend the existing event-specific <code>data</code> object. They do not replace the normal invoice, customer, ticket, or transaction fields documented for that webhook.</p>
 <h2>Supported order activity</h2>
 <p>Partner attribution can be included on these existing events:</p>
@@ -130,13 +135,17 @@
 </tr>
 </tbody></table>
 <p>Choose the events required by your product. Most integrations begin with <code>invoice.purchase</code> and add refund, void, and transfer events when they display post-purchase order state.</p>
+<h2>Attribution on transfers</h2>
+<p>On both <code>invoice.transfer</code> and <code>invoice.transferred</code>, the Partner fields come from the original sale&#39;s attribution, including when a transfer follows an earlier transfer. They identify the original attributed customer, not necessarily the recipient of the transferred tickets. Do not assign the recipient&#39;s order to that customer based on these fields alone.</p>
+<p>Use the event-specific invoice and ticket data to process the transfer. Partner fields are omitted for distributor transfers and transfers across organizations. The standard transfer webhook can still be delivered.</p>
 <h2>Delivery and verification</h2>
 <p>Partner attribution does not create a separate webhook or receiver. Configure the normal Showpass webhook events and URL, then verify every delivery using the documented <code>X-SHOWPASS-SIGNATURE</code> header before processing it.</p>
 <p>See <a href="/webhooks/webhooks-setup-and-management">Webhook setup and management</a>, <a href="/webhooks/webhooks-security">webhook security</a>, and the <a href="/webhooks/webhooks-payload-invoice-object">invoice payload reference</a>.</p>
-<p>Process deliveries idempotently using the webhook event identifier or the equivalent event-specific identifier. Expect retries and events that arrive after the initial purchase.</p>
+<p>Persist <code>webhook_event_uuid</code> with your processing result so a retry does not apply the same event twice. Do not deduplicate solely by <code>id</code> or <code>data.transaction_id</code>, since that can discard distinct events for one transaction. The request payload and event UUID are persisted when the event is created and reused on retries; attribution is not recalculated for each delivery. Do not expect retrying an event to add previously missing Partner fields.</p>
+<p>Expect retries and events that arrive after the initial purchase. The webhook signing secret and HMAC-SHA1 scheme are separate from the Partner API credentials and HMAC-SHA256 request-signing scheme.</p>
 <h2>When Partner fields are absent</h2>
-<p>Showpass includes Partner fields only when it can resolve one clear Partner customer for the order. If no attribution exists—or the match is ambiguous—the normal webhook is still delivered without <code>partner_slug</code> and <code>partner_external_user_id</code>.</p>
-<p>Treat missing Partner fields as an unattributed Showpass order. Do not infer the Partner customer from buyer email alone.</p>
+<p>Showpass includes Partner fields only when enrichment is enabled and it can safely resolve one clear attribution for the event. Fields can be absent because no attribution exists, the match is ambiguous, enrichment is disabled, a lookup fails, or a transfer is excluded. The standard webhook continues without the Partner fields when enrichment is unavailable.</p>
+<p>Missing Partner fields mean this delivery does not provide Partner attribution. Preserve any previously established association; their absence does not prove the order was never attributed. Do not infer the Partner customer from buyer email alone.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

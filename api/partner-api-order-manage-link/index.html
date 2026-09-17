@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -87,19 +87,19 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Send a customer to their order</h1>
+  <article><h1>Partner API: Send a customer to their order</h1>
 <p>Create a short-lived link that opens a customer’s completed order in Showpass. Use it for <strong>View tickets</strong>, <strong>View receipt</strong>, or <strong>Manage order</strong> actions in your application.</p>
-<pre><code class="language-http">POST /api/partner/orders/manage-link/
+<pre><code class="language-http">POST /api/v1/partner/orders/manage-link/
 </code></pre>
-<p>Call this endpoint from your backend only. Showpass verifies that the transaction belongs to the supplied Partner customer and is within the integration’s organization scope.</p>
+<p>Call this endpoint from your backend only. Showpass derives the venue from the transaction, resolves your external ID for that venue, and verifies that the order belongs to the linked customer and is within the integration’s organization scope. Do not send a separate <code>venue_id</code>.</p>
 <p>Authenticate the request with the HMAC scheme in the <a href="/api/partner-api-overview">Partner API overview</a>.</p>
 <h2>Request body</h2>
 <pre><code class="language-json">{
   &quot;partner_external_user_id&quot;: &quot;customer-42&quot;,
-  &quot;transaction_id&quot;: &quot;showpass-transaction-id&quot;
+  &quot;transaction_id&quot;: &quot;d9-1234-4abc-8def-123456789abc&quot;
 }
 </code></pre>
-<p>Use the same <code>partner_external_user_id</code> used for checkout attribution. Store the Showpass <code>transaction_id</code> from the purchase webhook with your order record.</p>
+<p>Use the same <code>partner_external_user_id</code> used for checkout attribution. Store <code>data.transaction_id</code> from the purchase webhook with your order record. The example transaction ID is illustrative; replace it with the actual Showpass value. It must pass Showpass transaction-ID validation and be at most 30 characters. Do not send the webhook event UUID or your own order ID.</p>
 <h2>Response</h2>
 <p>The endpoint returns <code>201</code>:</p>
 <pre><code class="language-json">{
@@ -111,18 +111,28 @@
 <h2>What happens in Showpass</h2>
 <ol>
 <li>Showpass consumes the one-time code.</li>
-<li>Showpass creates access scoped to the requested order—not a full Showpass account session.</li>
+<li>Showpass creates access scoped to the requested order, without creating a full Showpass account session.</li>
 <li>The customer is redirected to the standard Showpass order page.</li>
 <li>The final browser URL does not contain the one-time code.</li>
 </ol>
 <p>Do not embed <code>manage_url</code> in an iframe, store it as a permanent order URL, or send it to another customer.</p>
-<p>Invalid, expired, used, or out-of-scope links do not create access. A direct visit with an invalid code returns the customer to the Showpass login flow.</p>
+<h2>Access lifetime and recovery</h2>
+<p>The unused link expires 120 seconds after issuance. Consuming it creates a separate order-access session that expires 120 seconds after consumption. The link&#39;s <code>expires_in_seconds</code> describes the unused link, not permanent access to the order.</p>
+<p>Invalid, expired, used, or out-of-scope links do not create access. Failed handoffs redirect to <code>/account/manage-order-link-expired/</code>. A browser signed into a different Showpass customer account is also rejected; the link does not switch that account.</p>
+<p>When the customer needs access again, have your backend request a fresh link after checking that they are authorized to view the order. Reusing a consumed link will not renew access. Correct account or organization-scope problems before requesting another link.</p>
 <h2>Errors</h2>
 <ul>
 <li><code>400 Bad Request</code>: a customer or transaction ID is missing or invalid.</li>
-<li><code>403 Forbidden</code>: authentication failed or the order is outside the Partner integration’s organization scope.</li>
+<li><code>403 Forbidden</code>: authentication failed, Partner APIs or manage-order handoff are disabled, or the order is outside the Partner integration&#39;s organization scope.</li>
 <li><code>409 Conflict</code>: the customer or order cannot be found, the customer is inactive, or the order does not belong to that customer.</li>
+<li><code>429 Too Many Requests</code>: the client IP has exceeded the shared Partner API limit.</li>
 </ul>
+<p>For example, an order that cannot be found for the supplied customer returns <code>409</code>:</p>
+<pre><code class="language-json">{
+  &quot;detail&quot;: &quot;Partner request order does not exist.&quot;
+}
+</code></pre>
+<p>See <a href="/api/partner-api-overview#errors-and-retries">Errors and retries</a>. These API errors apply when requesting a link; the browser handoff uses the redirect behavior described above.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

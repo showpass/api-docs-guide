@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -184,8 +184,11 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
   &quot;customer_attribution_token&quot;: customerAttributionToken
 });
 </code></pre>
-<p>The token associates the resulting Showpass basket and order with the stable customer ID in your system. It does not sign the customer in or replace the buyer information collected during checkout.</p>
+<p>The token binds the resulting Showpass basket and order to the linked Showpass customer. Checkout requires the payment organization to match the token&#39;s venue and remain within the Partner integration&#39;s current assignments. It rejects a browser authenticated as a different customer. It does not create a full Showpass login session; additional buyer information and payment requirements still apply.</p>
 <p>See <a href="/api/partner-api-integration-flow">Build a partner ticketing flow</a> for the server-to-server customer sync, token issuance, webhook, and order-management steps.</p>
+<h3>Try it in the playground</h3>
+<p>Open the <a href="/sdk/widget-playground">Widget Playground</a>, select the same environment that issued your token, and enter an event slug whose payment organization matches the token&#39;s venue. Choose <strong>Event tickets</strong>, expand <strong>Partner customer</strong>, and paste the API response&#39;s <code>customer_attribution_token</code>. Select <strong>Apply token</strong>, then try the <strong>Popup</strong> (modal) or <strong>Embedded</strong> (mounted) preview.</p>
+<p>The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.</p>
 <hr>
 <h2>Basic Usage Examples</h2>
 <p>These examples assume the Showpass SDK is already loaded. For production-ready code that handles SDK loading, see &quot;Robust Implementation Examples&quot; below.</p>

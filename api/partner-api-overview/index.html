@@ -75,8 +75,8 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-5qi14rJh.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-Dc429kR0.css">
+    <script type="module" crossorigin src="/assets/index-fwoITLPo.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DMrTlmRg.css">
   </head>
 
   <body>
@@ -87,9 +87,11 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Partner API overview</h1>
-<p>Use the Partner API when your application owns the customer experience and Showpass provides event discovery, checkout, tickets, and order management.</p>
-<p>The Partner API connects a customer in your system to their Showpass purchase. It complements the <a href="/api/public-api-introduction">Public Discovery API</a>, the <a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a>, and <a href="/webhooks/webhooks-introduction">Showpass webhooks</a>.</p>
+  <article><h1>Partner API: Overview</h1>
+<p>The Partner API connects your application&#39;s customers to Showpass. Use it when you build your own website or mobile app and use Showpass for event discovery, checkout, tickets, and order management.
+In supported checkout and order management flows, customers can complete their purchase or access their order without a separate Showpass login. This does not create a full Showpass account session.
+It complements the <a href="/api/public-api-introduction">Public Discovery API</a>, the <a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a>, and <a href="/webhooks/webhooks-introduction">Showpass webhooks</a>.</p>
+<p>The Partner API is available for Showpass Partners. If you&#39;d like to learn more or become a partner, please contact us.</p>
 <h2>What the integration does</h2>
 <table>
 <thead>
@@ -129,14 +131,17 @@
 <li><a href="/api/partner-api-webhooks">Webhook payloads identify the partner customer</a>, so your system can reconcile order activity.</li>
 <li>When the customer needs their tickets or receipt, your backend <a href="/api/partner-api-order-manage-link">creates a manage-order link</a>.</li>
 </ol>
-<p>See <a href="/api/partner-api-integration-flow">Build a partner ticketing flow</a> for the complete sequence and implementation examples.</p>
 <h2>Identity and authentication are separate</h2>
 <p><code>partner_external_user_id</code> is your stable identifier for a customer. A <code>customer_attribution_token</code> carries that server-owned relationship into a Showpass checkout. The token provides purchase attribution only: it does not sign a customer in, prove their identity in the browser, or create a full Showpass session.</p>
-<p>Partner credentials authenticate your backend. Never send the partner secret, <code>partner_external_user_id</code>, bearer tokens, or refresh tokens to the purchase widget.</p>
 <h2>Base URL and access</h2>
-<pre><code class="language-text">https://www.showpass.com/api/partner/
+<pre><code class="language-text">https://www.showpass.com/api/v1/partner/
 </code></pre>
-<p>Showpass provides Partner API credentials and enables the required capabilities during partner onboarding. Contact your Showpass representative for a Key ID and Secret.</p>
+<p>Showpass provides two separate values and enables the required capabilities during partner onboarding. Contact your Showpass representative for your <strong>Partner key ID</strong> and <strong>Partner secret</strong>:</p>
+<pre><code class="language-text">PARTNER_KEY_ID=&lt;partner_key_id&gt;
+PARTNER_SECRET=&lt;random_secret&gt;
+</code></pre>
+<p>Configure these separately in your backend. Keep <code>PARTNER_SECRET</code> in your secret manager. Send the key ID in <code>X-Showpass-Partner-Key-Id</code> and use the secret only to compute the HMAC signature. Never send the secret in a request header or body, or expose it in frontend code. These values are not an <code>Authorization: Token</code> or bearer token.</p>
+<p>If you previously received a combined credential, separate it at the first period into the key ID and secret. The values and signing protocol are unchanged, so this does not require rotation.</p>
 <h2>HMAC authentication</h2>
 <p>Every Partner API request is server-to-server and includes these headers:</p>
 <table>
@@ -152,7 +157,7 @@
 </tr>
 <tr>
 <td><code>X-Showpass-Partner-Timestamp</code></td>
-<td>Unix timestamp in seconds. Requests outside the five-minute acceptance window are rejected.</td>
+<td>Unix timestamp in seconds.</td>
 </tr>
 <tr>
 <td><code>X-Showpass-Partner-Nonce</code></td>
@@ -171,17 +176,23 @@ HTTP_METHOD
 PATH_AND_QUERY
 SHA256_OF_RAW_REQUEST_BODY
 </code></pre>
-<p>Sign the exact method, path and query string, and body bytes sent to Showpass. For an empty body, hash the empty byte string.</p>
+<p>The first line, <code>v1</code>, identifies the HMAC signing protocol, independently of the API URL version. A future URL version would not automatically change this marker or the signing algorithm.</p>
+<p>Sign the uppercase HTTP method, exact path and query string, and body bytes sent to Showpass. Include the trailing slash. For an empty body, hash the empty byte string. If you change the path or JSON body, calculate a new signature over the changed request.</p>
 <pre><code class="language-python">import hashlib
 import hmac
+import os
 import time
 import uuid
 
-partner_secret = &quot;your-partner-secret&quot;
-body = &#39;{&quot;partner_external_user_id&quot;:&quot;customer-42&quot;}&#39;
+partner_key_id = os.environ[&quot;PARTNER_KEY_ID&quot;]
+partner_secret = os.environ[&quot;PARTNER_SECRET&quot;]
+if not partner_key_id or not partner_secret:
+    raise ValueError(&quot;Set both PARTNER_KEY_ID and PARTNER_SECRET&quot;)
+
+body = &#39;{&quot;partner_external_user_id&quot;:&quot;customer-42&quot;,&quot;venue_id&quot;:456}&#39;
 timestamp = str(int(time.time()))
 nonce = str(uuid.uuid4())
-path_and_query = &quot;/api/partner/customer-attribution-token/&quot;
+path_and_query = &quot;/api/v1/partner/customer-attribution-token/&quot;
 body_hash = hashlib.sha256(body.encode()).hexdigest()
 
 canonical = &quot;\n&quot;.join([
@@ -200,8 +211,8 @@ signature = &quot;sha256=&quot; + hmac.new(
 </code></pre>
 <p>Missing or invalid authentication returns <code>403</code>. Generate a new timestamp, nonce, and signature for every request.</p>
 <h2>Organization scope</h2>
-<p>A Partner integration can be restricted to one Showpass organization. When a credential has this restriction, a request cannot operate outside it. The Partner API currently represents this scope with the <code>venue_id</code> request and response field.</p>
-<p>Partner customer IDs are trimmed, normalized to lowercase, and unique within a Partner integration.</p>
+<p>A Partner integration must have explicit Showpass organization assignments. It can be assigned multiple organizations; an assignment may also include child organizations when Showpass enables that option.</p>
+<p>Customer sync and token issuance require <code>venue_id</code> on every request. Each Partner external-ID mapping belongs to one venue customer. Different Partners can map their own IDs to the same venue customer. Checkout requires the token’s venue to match the basket’s payment organization. Manage-order access resolves the mapping using the order’s venue. Both operations also enforce the integration’s current organization assignments.</p>
 <h2>Endpoint catalog</h2>
 <table>
 <thead>
@@ -213,20 +224,58 @@ signature = &quot;sha256=&quot; + hmac.new(
 </thead>
 <tbody><tr>
 <td><code>POST</code></td>
-<td><a href="/api/partner-api-users"><code>/api/partner/users/</code></a></td>
-<td>Connect a customer in your system to Showpass.</td>
+<td><a href="/api/partner-api-users"><code>/api/v1/partner/users/</code></a></td>
+<td>Register or update a venue customer using your external ID.</td>
 </tr>
 <tr>
 <td><code>POST</code></td>
-<td><a href="/api/partner-api-customer-attribution-token"><code>/api/partner/customer-attribution-token/</code></a></td>
+<td><a href="/api/partner-api-customer-attribution-token"><code>/api/v1/partner/customer-attribution-token/</code></a></td>
 <td>Carry that customer relationship into checkout.</td>
 </tr>
 <tr>
 <td><code>POST</code></td>
-<td><a href="/api/partner-api-order-manage-link"><code>/api/partner/orders/manage-link/</code></a></td>
+<td><a href="/api/partner-api-order-manage-link"><code>/api/v1/partner/orders/manage-link/</code></a></td>
 <td>Send the customer to a specific Showpass order.</td>
 </tr>
 </tbody></table>
+<h2>Errors and retries</h2>
+<table>
+<thead>
+<tr>
+<th>Status</th>
+<th>Meaning</th>
+<th>Next action</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>400</code></td>
+<td>Missing or invalid request data.</td>
+<td>Correct the reported field before retrying.</td>
+</tr>
+<tr>
+<td><code>403</code></td>
+<td>Authentication failed, a capability is disabled, or organization scope is denied.</td>
+<td>Check signing, credentials, onboarding capabilities, and organization assignments.</td>
+</tr>
+<tr>
+<td><code>409</code></td>
+<td>A customer or order is missing, inactive, conflicting, or otherwise unavailable for the operation.</td>
+<td>Resolve the endpoint-specific conflict before retrying.</td>
+</tr>
+<tr>
+<td><code>429</code></td>
+<td>Too many requests from the client IP.</td>
+<td>Wait for <code>Retry-After</code> before sending another request.</td>
+</tr>
+</tbody></table>
+<p>Validation errors include <code>detail</code>, <code>field</code>, and <code>error_list</code>. For example, a customer sync request that supplies all other required fields but omits <code>venue_id</code> returns <code>400</code>:</p>
+<pre><code class="language-json">{
+  &quot;detail&quot;: &quot;Venue Id: This field is required.&quot;,
+  &quot;field&quot;: &quot;venue_id&quot;,
+  &quot;error_list&quot;: [&quot;Venue Id: This field is required.&quot;]
+}
+</code></pre>
+<p>Authentication and domain errors can instead return only <code>detail</code>. The attribution-token endpoint also supplies a string <code>error_code</code> for its documented capability and identity errors.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
