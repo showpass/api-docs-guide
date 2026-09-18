@@ -33,28 +33,24 @@ const isPlaygroundWidget = (value: string | null): value is PlaygroundWidget =>
 
 const WIDGET_CHOICES = {
   event: {
-    title: "Event tickets", description: "Sell tickets for one event.", icon: Ticket,
+    title: "Event tickets", icon: Ticket,
     fieldLabel: "Event slug", inputId: "playground-input-eventId", placeholder: "e.g. summer-music-night",
     help: "The last part of your Showpass event URL. Use the event slug, not a numeric event ID.",
-    example: "showpass.com/summer-music-night/ → summer-music-night",
   },
   calendar: {
-    title: "Event calendar", description: "Browse an organization's events.", icon: CalendarDays,
+    title: "Event calendar", icon: CalendarDays,
     fieldLabel: "Organization ID or slug", inputId: "playground-input-venueId", placeholder: "e.g. 83 or your-organization",
     help: "The Showpass organization whose events you want to display. This is also called the venue ID.",
-    example: "The calendar displays events belonging to this organization.",
   },
   product: {
-    title: "Products", description: "Open a product purchase flow.", icon: ShoppingBag,
+    title: "Products", icon: ShoppingBag,
     fieldLabel: "Product ID", inputId: "playground-input-productId", placeholder: "e.g. 4264",
     help: "The Showpass product identifier supplied by the organizer for the product you want to sell.",
-    example: "Use a product from the selected environment.",
   },
   membership: {
-    title: "Memberships", description: "Offer a membership program.", icon: Users,
+    title: "Memberships", icon: Users,
     fieldLabel: "Membership identifier", inputId: "playground-input-memberId", placeholder: "Enter your membership identifier",
     help: "The membership program identifier supplied by the organizer. This identifies the program, not an individual member.",
-    example: "Use a membership program from the selected environment.",
   },
 } as const;
 
@@ -111,6 +107,7 @@ const WidgetPlayground: React.FC = () => {
   const onSdkReady = React.useCallback(() => setSdkReady(true), []);
 
   const changeEnvironment = (value: string) => {
+    if (value === environment) return;
     // Reload before replacing the SDK so open widgets and tokens cannot cross environments.
     window.location.assign(`${location.pathname}?${buildSearch({ environment: value })}${location.hash}`);
   };
@@ -182,32 +179,28 @@ const WidgetPlayground: React.FC = () => {
       <ShowpassIntegration environment={environment} onReady={onSdkReady} onError={setSdkError} />
 
       <div className="prose prose-slate max-w-none dark:prose-invert">
-        <HeaderWithLink id="widget-playground" level={1}>
+        <HeaderWithLink id="widget-playground" level={1} className="mt-4">
           <span data-testid="playground-title">Widget Playground</span>
         </HeaderWithLink>
-        <Separator className="mb-2 opacity-60" />
-        <p className="my-6 text-foreground/90 leading-relaxed text-[15px]">Choose what to sell or display, then try the Showpass experience on your page.</p>
+        <Separator className="mb-4 opacity-60" />
       </div>
 
-      <section aria-label="Widget configuration" data-testid="playground-controls" className="mb-8 overflow-hidden rounded-xl border bg-card shadow-sm">
-        <fieldset className="min-w-0 p-5 sm:p-6">
-          <legend className="float-left mb-4 flex w-full items-center gap-2 text-sm font-semibold">
+      <section aria-label="Widget configuration" data-testid="playground-controls" className="mb-4 overflow-hidden rounded-xl border bg-card shadow-sm [&_p]:mb-0">
+        <fieldset className="min-w-0 p-3 sm:p-4">
+          <legend className="float-left mb-2 flex w-full items-center gap-2 text-sm font-semibold">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">1</span>
             Choose a widget
           </legend>
-          <div className="clear-both grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+          <div className="clear-both grid grid-cols-2 gap-2 sm:grid-cols-4">
             {Object.entries(WIDGET_CHOICES).map(([value, choice]) => {
               const Icon = choice.icon;
               return (
                 <label key={value} data-testid={`playground-widget-${value}`} className="relative cursor-pointer">
                   <input type="radio" name="widget-type" value={value} checked={activeWidget === value}
                     onChange={() => setActiveWidget(value as PlaygroundWidget)} className="peer sr-only" />
-                  <span className="flex h-full gap-3 rounded-lg border p-4 transition-colors hover:bg-muted/40 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
-                    <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
-                    <span>
-                      <span className="block text-sm font-semibold">{choice.title}</span>
-                      <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{choice.description}</span>
-                    </span>
+                  <span className="flex h-full items-center gap-2 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
+                    <Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
+                    <span className="text-sm font-semibold">{choice.title}</span>
                   </span>
                 </label>
               );
@@ -215,26 +208,28 @@ const WidgetPlayground: React.FC = () => {
           </div>
         </fieldset>
 
-        <div className="grid border-t lg:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
-          <div className="min-w-0 space-y-6 p-5 sm:p-6">
+        <div className="grid border-t md:grid-cols-[minmax(0,1.15fr)_minmax(0,1fr)]">
+          <div className="min-w-0 space-y-3 p-3 sm:p-4">
             <div>
-              <h3 className="mb-5 flex items-center gap-2 text-sm font-semibold">
+              <h3 className="mb-3 mt-0 flex items-center gap-2 text-sm font-semibold">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">2</span>
                 Connect your content
               </h3>
-              <label htmlFor="playground-environment" className="block text-sm font-medium">Environment</label>
-              <p id="environment-help" className="mt-1 text-xs leading-relaxed text-muted-foreground">
-                {environment === "prod" ? "Live Showpass events and checkout." : environment === "demo" ? "Test with events and tokens created in demo." : "Test against your local Showpass backend."}
-              </p>
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                <select id="playground-environment" aria-label="Widget environment" aria-describedby="environment-help environment-change-help"
-                  value={environment} onChange={(event) => changeEnvironment(event.target.value)}
-                  className="h-10 min-w-28 rounded-md border border-input bg-background px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                  {Object.entries(WIDGET_ENVIRONMENTS).map(([value, config]) => <option key={value} value={value}>{config.label}</option>)}
-                </select>
-                <span className="min-w-0 break-all font-mono text-xs text-muted-foreground">{WIDGET_ENVIRONMENTS[environment].origin}</span>
-              </div>
-              <p id="environment-change-help" className="mt-2 text-xs text-muted-foreground">Changing environment reloads the page and clears your customer token.</p>
+              <fieldset className="min-w-0">
+                <legend className="sr-only">Environment</legend>
+                <div className="grid auto-cols-fr grid-flow-col gap-2">
+                  {Object.entries(WIDGET_ENVIRONMENTS).map(([value, config]) => (
+                    <label key={value} data-testid={`playground-environment-${value}`} className="min-w-0 cursor-pointer">
+                      <input type="radio" name="environment" value={value} checked={environment === value}
+                        onChange={() => changeEnvironment(value)} className="peer sr-only" />
+                      <span className="flex h-full flex-col items-center justify-center gap-1 rounded-lg border bg-background px-2 py-3 text-center transition-colors hover:bg-muted/30 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
+                        <span className="text-sm font-semibold">{config.label}</span>
+                        <span className="w-full break-all font-mono text-xs text-muted-foreground">{config.origin}</span>
+                      </span>
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
             </div>
 
             <div>
@@ -245,23 +240,22 @@ const WidgetPlayground: React.FC = () => {
               <p id="widget-identifier-help" className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedWidget.help}</p>
               <Input id={selectedWidget.inputId} data-testid={selectedWidget.inputId} value={selectedIdentifier.value}
                 onChange={(event) => selectedIdentifier.onChange(event.target.value)} placeholder={selectedWidget.placeholder}
-                aria-describedby="widget-identifier-help widget-identifier-example" className="mt-3 h-11" />
-              <p id="widget-identifier-example" className="mt-2 break-words text-xs text-muted-foreground">{selectedWidget.example}</p>
+                aria-describedby="widget-identifier-help" className="mt-2 h-10" />
             </div>
 
             {activeWidget === "event" && (
               <details className="group rounded-lg border bg-muted/10">
-                <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg p-4 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
+                <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2 text-sm font-semibold">
                       Partner customer <span className="font-normal text-muted-foreground">Optional</span>
                       {customerAttributionToken && <span className="inline-flex items-center gap-1 text-xs text-primary"><Check className="h-3 w-3" aria-hidden="true" />Token applied</span>}
                     </span>
-                    <span className="mt-1 block text-xs text-muted-foreground">Are you a Showpass Partner? Link checkout to a customer from your application.</span>
                   </span>
                   <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" aria-hidden="true" />
                 </summary>
-                <div className="space-y-3 border-t p-4">
+                <div className="space-y-3 border-t p-3">
+                  <p className="text-xs text-muted-foreground">Are you a Showpass Partner? Link checkout to a customer from your application.</p>
                   <p className="text-xs leading-relaxed text-muted-foreground">
                     Use a token for the event’s organization in the selected environment. Get it from your backend or the <Link className="text-primary underline" to="/api/partner-api-customer-attribution-token">Partner API Explorer</Link>.
                   </p>
@@ -283,26 +277,26 @@ const WidgetPlayground: React.FC = () => {
             )}
           </div>
 
-          <div className="min-w-0 space-y-6 border-t bg-muted/10 p-5 sm:p-6 lg:border-l lg:border-t-0">
+          <div className="min-w-0 space-y-3 border-t bg-muted/10 p-3 sm:p-4 md:border-l md:border-t-0">
             <fieldset className="min-w-0">
-              <legend className="mb-5 flex items-center gap-2 text-sm font-semibold">
+              <legend className="mb-3 flex items-center gap-2 text-sm font-semibold">
                 <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">3</span>
                 Choose how it appears
               </legend>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
                 {([
-                  { value: "popup", title: "Popup", subtitle: "Modal", help: "A button opens checkout over the page.", icon: ArrowUpRight },
-                  { value: "mounted", title: "Embedded", subtitle: "Mounted", help: "The widget appears directly inside your page.", icon: PanelTop },
+                  { value: "popup", title: "Modal", subtitle: "", help: "A button opens checkout over the page.", icon: ArrowUpRight },
+                  { value: "mounted", title: "Embedded", subtitle: "", help: "The widget appears directly inside your page.", icon: PanelTop },
                 ] as const).map((mode) => {
                   const Icon = mode.icon;
                   return (
                     <label key={mode.value} data-testid={`playground-tab-${mode.value}`} className="block cursor-pointer">
                       <input type="radio" name="preview-mode" value={mode.value} checked={activeTab === mode.value}
                         onChange={() => setActiveTab(mode.value)} className="peer sr-only" />
-                      <span className="flex gap-3 rounded-lg border bg-background p-4 transition-colors hover:bg-muted/30 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
-                        <Icon className="mt-0.5 h-5 w-5 shrink-0 text-primary" aria-hidden="true" />
+                      <span className="flex h-full gap-2 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/30 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
+                        <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
                         <span>
-                          <span className="block text-sm font-semibold">{mode.title} <span className="ml-1 text-xs font-normal text-muted-foreground">{mode.subtitle}</span></span>
+                          <span className="block text-sm font-semibold">{mode.title}{mode.subtitle && <span className="ml-1 text-xs font-normal text-muted-foreground">{mode.subtitle}</span>}</span>
                           <span className="mt-1 block text-xs leading-relaxed text-muted-foreground">{mode.help}</span>
                         </span>
                       </span>
@@ -312,14 +306,14 @@ const WidgetPlayground: React.FC = () => {
               </div>
             </fieldset>
 
-            <div className="border-t pt-5">
+            <div className="border-t pt-3">
               <label htmlFor="playground-color-hex" className="block text-sm font-medium">Brand color <span className="ml-1 text-xs font-normal text-muted-foreground">Optional</span></label>
               <p id="brand-color-help" className="mt-1 text-xs text-muted-foreground">Used for buttons and accents inside the widget.</p>
-              <div className="mt-3 flex items-center gap-3">
+              <div className="mt-2 flex items-center gap-2">
                 <input type="color" aria-label="Choose brand color" value={/^#[0-9a-f]{6}$/i.test(themeColor) ? themeColor : "#24727b"}
-                  onChange={(event) => setThemeColor(event.target.value)} className="h-11 w-11 shrink-0 cursor-pointer rounded-md border bg-background p-1" />
+                  onChange={(event) => setThemeColor(event.target.value)} className="h-10 w-10 shrink-0 cursor-pointer rounded-md border bg-background p-1" />
                 <Input id="playground-color-hex" value={themeColor} onChange={(event) => setThemeColor(event.target.value)}
-                  placeholder="#24727b" aria-describedby="brand-color-help" className="h-11 max-w-36 font-mono" />
+                  placeholder="#24727b" aria-describedby="brand-color-help" className="h-10 max-w-36 font-mono" />
               </div>
             </div>
           </div>

@@ -4,9 +4,9 @@ export const SHOWPASS_SDK_URL =
   "https://www.showpass.com/static/dist/sdk.js";
 
 export const WIDGET_ENVIRONMENTS = {
-  prod: { label: "prod", origin: "https://www.showpass.com" },
-  demo: { label: "demo", origin: "https://demo.showpass.com" },
-  ...(import.meta.env.DEV ? { dev: { label: "dev", origin: "https://localhost.showpass.com" } } : {}),
+  prod: { label: "Production", origin: "https://www.showpass.com" },
+  demo: { label: "Demo", origin: "https://demo.showpass.com" },
+  ...(import.meta.env.DEV ? { dev: { label: "Local", origin: "https://localhost.showpass.com" } } : {}),
 } as const;
 export type WidgetEnvironment = keyof typeof WIDGET_ENVIRONMENTS;
 
