@@ -54,6 +54,17 @@ docs-app/
 
 Deployed automatically to **GitHub Pages** using `gh-pages`.
 
+### OpenAPI reference
+
+The general Showpass API reference is served at `/openapi/` from
+`public/openapi/index.html`, with a downloadable specification at
+`/openapi/openapi.yaml`. Open `/openapi/index.html` on the local development server,
+or run `npm run build && npm run preview` and open `/openapi/` to preview the built page.
+The reference uses demo by default and includes generic organization examples.
+
+Client references remain available at `/bullbustin/` and `/a440/`. Keep shared
+endpoint and schema updates consistent across the specifications where applicable.
+
 ---
 
 ## 💡 Highlights

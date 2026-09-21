@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Explore the Showpass API for public discovery, organization orders and tickets, patron accounts, scanning, promotions, held baskets, and webhooks." />
+    <title>Showpass API Reference</title>
+    <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="https://unpkg.com/swagger-ui-dist@5/swagger-ui.css" />
+    <style>
+      body { margin: 0; }
+      .reference-nav {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1rem 20px;
+        border-bottom: 1px solid #d8dde7;
+        font: 600 14px system-ui, sans-serif;
+      }
+      .reference-nav a { color: #1754a1; }
+    </style>
+  </head>
+  <body>
+    <nav class="reference-nav" aria-label="Documentation">
+      <a href="/">Showpass Developer Docs</a>
+      <a href="./openapi.yaml" download>Download OpenAPI specification</a>
+    </nav>
+    <div id="swagger-ui"></div>
+    <noscript>Enable JavaScript to explore the API, or download the OpenAPI specification above.</noscript>
+    <script src="https://unpkg.com/swagger-ui-dist@5/swagger-ui-bundle.js"></script>
+    <script>
+      window.onload = function () {
+        window.ui = SwaggerUIBundle({
+          url: './openapi.yaml',
+          dom_id: '#swagger-ui',
+          deepLinking: true,
+          displayRequestDuration: true,
+          persistAuthorization: false,
+          validatorUrl: null,
+          presets: [SwaggerUIBundle.presets.apis],
+          layout: 'BaseLayout'
+        });
+      };
+    </script>
+  </body>
+</html>
