@@ -1,12 +1,13 @@
 # 2. Initial Setup: GA4 and GTM Basics
 
 
-This section guides you through the foundational steps of setting up a Google Tag Manager (GTM) container and a Google Analytics 4 (GA4) property, then linking them for basic page view tracking. This is the first step before implementing more advanced ecommerce tracking.
+This section guides you through setting up a Google Tag Manager (GTM) container and connecting it to Showpass. Google Analytics 4 (GA4) is optional. Complete Steps 2 and 3 only if you want to send data to GA4; otherwise, continue from Step 1 to Step 4 and configure the analytics or marketing tags you need.
 
 ## Prerequisites
 
 - You have a Google account
-- You have access to [Google Tag Manager](https://tagmanager.google.com/) and [Google Analytics](https://analytics.google.com/)
+- You have access to [Google Tag Manager](https://tagmanager.google.com/)
+- If you plan to use GA4, you also have access to [Google Analytics](https://analytics.google.com/)
 
 ---
 
@@ -27,6 +28,8 @@ This section guides you through the foundational steps of setting up a Google Ta
 
 ## Step 2: Create a New GA4 Property (If You Don't Have One)
 
+This step is optional and applies only if you plan to use GA4.
+
 1. Go to [Google Analytics](https://analytics.google.com/)
 2. If you have an existing account, select it. If not, create a new Google Analytics account
 3. Navigate to the **Admin** section (usually a gear icon in the bottom left)
@@ -46,7 +49,7 @@ This section guides you through the foundational steps of setting up a Google Ta
 
 ## Step 3: Create the GA4 Configuration Tag in GTM
 
-This tag will send basic page view data and initialize GA4 on pages where GTM is loaded.
+This optional tag sends basic page view data and initializes GA4 on pages where GTM is loaded. Skip this step if you are not using GA4.
 
 1. In your GTM container, go to **Tags** and click **New**
 2. **Name your tag:** A descriptive name like `GA4 - Configuration - All Pages` or `Initialization`
@@ -73,9 +76,9 @@ This tag will send basic page view data and initialize GA4 on pages where GTM is
 ## Step 5: Publish Your GTM Container
 
 1. In GTM, click the **Submit** button in the top right corner
-2. Enter a **Version Name** (e.g., "Initial GA4 Setup") and an optional **Version Description**
+2. Enter a **Version Name** (e.g., "Initial GTM Setup") and an optional **Version Description**
 3. Click **Publish**
 
-Once these steps are completed, your GTM container will be linked to your Showpass setup, and the GA4 Configuration tag will start sending page view data to your GA4 property from pages where the GTM container is loaded by Showpass.
+Once these steps are completed, your GTM container will be linked to your Showpass setup. The tags you configure determine where tracking data is sent. If you completed the optional GA4 setup, the GA4 Configuration tag will send page view data to your GA4 property from pages where Showpass loads the container.
 
 Next, you will set up specific ecommerce tracking.

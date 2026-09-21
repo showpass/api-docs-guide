@@ -362,11 +362,11 @@ const additionalIntegrationPaths: IntegrationPath[] = [
   {
     id: "google-tag-manager",
     label: "Google Tag Manager",
-    outcome: "Measure purchases with GA4",
-    title: "Connect Showpass purchase activity to GA4 and GTM.",
+    outcome: "Track purchases with GTM",
+    title: "Connect Showpass purchase activity to GTM.",
     description:
       "Configure ecommerce events, data layer values, and conversion tracking for your analytics workflow.",
-    facts: ["GA4", "Google Tag Manager", "Ecommerce events"],
+    facts: ["Google Tag Manager", "Ecommerce events"],
     codeLabel: "Data layer",
     codeLines: gtmTrackingCodeLines,
     action: "Open the GTM guide",
