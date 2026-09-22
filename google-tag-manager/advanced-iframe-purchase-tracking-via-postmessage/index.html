@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-D4jCW0CW.js"></script>
+    <script type="module" crossorigin src="/assets/index-DAcbka3_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -287,8 +287,8 @@
 <ol start="4">
 <li><strong>Triggering:</strong><ul>
 <li>Click <strong>Choose a trigger to make this tag fire...</strong></li>
-<li>Select <strong>Window loded</strong> trigger</li>
-<li>This ensures the listener is set up as soon as the page loads</li>
+<li>Select <strong>Window Loaded</strong> as the only firing trigger</li>
+<li>This registers the listener when the window finishes loading; it continues listening for subsequent messages</li>
 </ul>
 </li>
 <li>Click <strong>Save</strong></li>
@@ -312,8 +312,9 @@
 </ul>
 </li>
 <li>Click <strong>Save</strong></li>
-<li>Update your existing tag to use this trigger. Your <code>Custom HTML - Listen for Showpass iFrame postMessage</code> should now trigger both <code>Window Loaded</code> and <code>Custom - Custom - Showpass Ecommerce Events</code></li>
+<li>Use ecommerce event triggers on your analytics and marketing tags for the events each tag should track. Keep <code>Custom HTML - Listen for Showpass iFrame postMessage</code> configured to fire on <strong>Window Loaded only</strong>. If the listener already uses <code>Custom - Showpass Ecommerce Events</code>, remove that trigger from the listener.</li>
 </ol>
+<p>The listener remains active after Window Loaded. Firing it again on ecommerce events registers additional message handlers and can duplicate events pushed to the parent data layer.</p>
 <p>For tracking specific single events like <code>add_to_cart</code> - please see <a href="https://dev.showpass.com/google-tag-manager/tracking-custom-conversions-marketing-pixels">Tracking Custom Conversions</a></p>
 <hr>
 <h3>Step B3: Verify Your Parent GTM Ecommerce Tags</h3>
@@ -337,8 +338,9 @@
 <li><strong>Navigate to a page</strong> on your website that contains the Showpass embedded widget</li>
 <li><strong>Perform ecommerce actions</strong> within the widget (e.g., add to cart, purchase)</li>
 <li><strong>In the Parent GTM Tag Assistant:</strong><ul>
+<li>Verify that <code>Custom HTML - Listen for Showpass iFrame postMessage</code> fires once on Window Loaded and does not fire again on ecommerce events</li>
 <li>Look for your ecommerce events (e.g., <code>add_to_cart</code>, <code>purchase</code>) appearing in the event timeline</li>
-<li>Verify that your GA4 Ecommerce Event tag and other marketing tags fire as expected</li>
+<li>Verify that your configured analytics and marketing tags fire as expected</li>
 </ul>
 </li>
 <li><strong>Check browser console:</strong><ul>

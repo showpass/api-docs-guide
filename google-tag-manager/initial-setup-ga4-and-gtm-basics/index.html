@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-D4jCW0CW.js"></script>
+    <script type="module" crossorigin src="/assets/index-DAcbka3_.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -88,11 +88,12 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>2. Initial Setup: GA4 and GTM Basics</h1>
-<p>This section guides you through the foundational steps of setting up a Google Tag Manager (GTM) container and a Google Analytics 4 (GA4) property, then linking them for basic page view tracking. This is the first step before implementing more advanced ecommerce tracking.</p>
+<p>This section guides you through setting up a Google Tag Manager (GTM) container and connecting it to Showpass. Google Analytics 4 (GA4) is optional. Complete Steps 2 and 3 only if you want to send data to GA4; otherwise, continue from Step 1 to Step 4 and configure the analytics or marketing tags you need.</p>
 <h2>Prerequisites</h2>
 <ul>
 <li>You have a Google account</li>
-<li>You have access to <a href="https://tagmanager.google.com/">Google Tag Manager</a> and <a href="https://analytics.google.com/">Google Analytics</a></li>
+<li>You have access to <a href="https://tagmanager.google.com/">Google Tag Manager</a></li>
+<li>If you plan to use GA4, you also have access to <a href="https://analytics.google.com/">Google Analytics</a></li>
 </ul>
 <hr>
 <h2>Step 1: Create a New GTM Container (If You Don&#39;t Have One)</h2>
@@ -114,6 +115,7 @@
 </ol>
 <hr>
 <h2>Step 2: Create a New GA4 Property (If You Don&#39;t Have One)</h2>
+<p>This step is optional and applies only if you plan to use GA4.</p>
 <ol>
 <li>Go to <a href="https://analytics.google.com/">Google Analytics</a></li>
 <li>If you have an existing account, select it. If not, create a new Google Analytics account</li>
@@ -134,7 +136,7 @@
 </ol>
 <hr>
 <h2>Step 3: Create the GA4 Configuration Tag in GTM</h2>
-<p>This tag will send basic page view data and initialize GA4 on pages where GTM is loaded.</p>
+<p>This optional tag sends basic page view data and initializes GA4 on pages where GTM is loaded. Skip this step if you are not using GA4.</p>
 <ol>
 <li>In your GTM container, go to <strong>Tags</strong> and click <strong>New</strong></li>
 <li><strong>Name your tag:</strong> A descriptive name like <code>GA4 - Configuration - All Pages</code> or <code>Initialization</code></li>
@@ -163,10 +165,10 @@
 <h2>Step 5: Publish Your GTM Container</h2>
 <ol>
 <li>In GTM, click the <strong>Submit</strong> button in the top right corner</li>
-<li>Enter a <strong>Version Name</strong> (e.g., &quot;Initial GA4 Setup&quot;) and an optional <strong>Version Description</strong></li>
+<li>Enter a <strong>Version Name</strong> (e.g., &quot;Initial GTM Setup&quot;) and an optional <strong>Version Description</strong></li>
 <li>Click <strong>Publish</strong></li>
 </ol>
-<p>Once these steps are completed, your GTM container will be linked to your Showpass setup, and the GA4 Configuration tag will start sending page view data to your GA4 property from pages where the GTM container is loaded by Showpass.</p>
+<p>Once these steps are completed, your GTM container will be linked to your Showpass setup. The tags you configure determine where tracking data is sent. If you completed the optional GA4 setup, the GA4 Configuration tag will send page view data to your GA4 property from pages where Showpass loads the container.</p>
 <p>Next, you will set up specific ecommerce tracking.</p>
 </article>
 </div></div>
