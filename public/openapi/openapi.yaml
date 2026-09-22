@@ -2341,8 +2341,8 @@ paths:
         not charge the customer or issue purchased tickets. Optionally use the separate hold link email
         action.
 
-        6. Manage scheduled expiry with the held basket expiry endpoint, or release the hold with the release
-        endpoint. Release also returns a background job. Confirm release in the organizer dashboard before
+        6. Release the hold with the release endpoint. Release returns a background job.
+        Confirm release in the organizer dashboard before
         treating the inventory as available again.
 
 
@@ -2464,10 +2464,10 @@ paths:
         Read the basket first, then send its complete desired item_groups list with existing group IDs and the
         customer, seller, and allocation settings you need to retain. Omitted groups are removed. Inventory,
         sale windows, event requirements, and hold restrictions are validated again. The example covers
-        general admission tickets. Use the dedicated expiry action to change scheduled hold expiry. Echo the
+        general admission tickets. Echo the
         latest checkout_idempotency_key from GET; keep the updated key returned by a successful PUT. A stale
-        key or concurrent update can return 400 when idempotency checks are enabled. Regular basket PATCH
-        returns 405. Caller session and seller scope apply.
+        key or concurrent update can return 400 when idempotency checks are enabled. Caller session and seller
+        scope apply.
       security:
         - OrganizationToken: []
       parameters:
@@ -2733,7 +2733,7 @@ paths:
         Read the basket first, then send its complete desired item_groups list with existing group IDs and the
         customer, seller, and allocation settings you need to retain. Omitted groups are removed. Inventory,
         sale windows, event requirements, and hold restrictions are validated again. The example covers
-        general admission tickets. Use the dedicated expiry action to change scheduled hold expiry. Requires
+        general admission tickets. Requires
         box office and manage-holds permissions. Seller visibility restrictions still apply. This route
         serializes edits but does not enforce the regular basket version-key check.
       security:
@@ -2787,134 +2787,6 @@ paths:
                 $ref: '#/components/schemas/Error'
         '404':
           description: Requested basket or hold details not found or unavailable to the caller.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    patch:
-      tags:
-        - Held baskets and hold links
-      operationId: patchHeldBasket
-      summary: Edit held basket fields with the full item list
-      description: >-
-        Read the basket first, then send its complete desired item_groups list with existing group IDs and the
-        customer, seller, and allocation settings you need to retain. Omitted groups are removed. Inventory,
-        sale windows, event requirements, and hold restrictions are validated again. The example covers
-        general admission tickets. Use the dedicated expiry action to change scheduled hold expiry. Requires
-        box office and manage-holds permissions. Seller visibility restrictions still apply. This route
-        serializes edits but does not enforce the regular basket version-key check. Include the complete
-        item_groups list and current payment_type even for PATCH; a customer-only partial payload is not
-        supported by the shared basket validation.
-      security:
-        - OrganizationToken: []
-      parameters:
-        - $ref: '#/components/parameters/VenueId'
-        - $ref: '#/components/parameters/HoldBasketId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/HeldBasketPatchRequest'
-            examples:
-              tickets:
-                summary: Update a two-ticket general admission basket; replace IDs and version key with GET values
-                value:
-                  item_groups:
-                    - id: 41001
-                      item_type: ticket
-                      type: 3002
-                      quantity: 2
-                  email: customer@example.com
-                  name_on_ticket: Example Customer
-                  sold_by: 2001
-                  payment_type: 2
-      responses:
-        '200':
-          description: Updated held basket.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HoldBasket'
-        '400':
-          description: Invalid input, basket state, inventory, or configuration.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required or invalid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Insufficient venue scope or permissions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Requested basket or hold details not found or unavailable to the caller.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-  /api/venue/{venueId}/tickets/baskets/holds/{basketId}/expiry/:
-    patch:
-      tags:
-        - Held baskets and hold links
-      operationId: updateHeldBasketExpiry
-      summary: Set or clear hold expiry
-      description: >-
-        Requires hold expiry to be enabled. Send a future timestamp to schedule expiry, or null to remove it.
-        The hold_expiry_date key is required. Returns the updated held basket.
-      security:
-        - OrganizationToken: []
-      parameters:
-        - $ref: '#/components/parameters/VenueId'
-        - $ref: '#/components/parameters/HoldBasketId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/HoldExpiryUpdateRequest'
-            examples:
-              scheduled:
-                summary: Replace with the desired future expiry
-                value:
-                  hold_expiry_date: '2027-01-01T00:00:00Z'
-              noExpiry:
-                value:
-                  hold_expiry_date: null
-      responses:
-        '200':
-          description: Updated basket.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/HoldBasket'
-        '400':
-          description: Invalid input, basket state, inventory, or configuration.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required or invalid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Insufficient venue scope or permissions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Basket not found or unavailable to the caller.
           content:
             application/json:
               schema:
@@ -3271,78 +3143,6 @@ paths:
         - Held baskets and hold links
       operationId: updateDynamicHoldSettings
       summary: Update dynamic hold settings
-      description: >-
-        Use the hold metadata ID from basket.on_hold_detail.id, not basket.id. This endpoint manages existing
-        hold details. Create a dynamic hold through the basket hold action with hold_type=dynamic_hold, then
-        retrieve the basket for its metadata ID and checkout link. Use the held-basket release action to
-        release inventory. Venue access and permissions apply. Edit description, purchase limits, banner, or
-        expiry. Send both purchase limits together to validate their relationship. Omitted expiry stays
-        unchanged; null removes it. is_comp_hold_link and items_sold are read-only. Use application/json for
-        text and numeric settings, or multipart/form-data to upload image_banner. Refresh settings after
-        saving.
-      security:
-        - OrganizationToken: []
-      parameters:
-        - $ref: '#/components/parameters/VenueId'
-        - $ref: '#/components/parameters/HoldDetailsId'
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/DynamicHoldSettingsUpdate'
-            examples:
-              limits:
-                value:
-                  description: Example group allocation
-                  purchase_limit_min: 1
-                  purchase_limit_max: 4
-              expiry:
-                summary: Requires expiry enablement; replace with a future timestamp
-                value:
-                  hold_expiry_date: '2027-01-01T00:00:00Z'
-              clearExpiry:
-                value:
-                  hold_expiry_date: null
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/DynamicHoldSettingsUpload'
-      responses:
-        '200':
-          description: Updated hold settings.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/DynamicHoldSettings'
-        '400':
-          description: Invalid input, basket state, inventory, or configuration.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '401':
-          description: Authentication required or invalid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '403':
-          description: Insufficient venue scope or permissions.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-        '404':
-          description: Requested basket or hold details not found or unavailable to the caller.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Error'
-    patch:
-      tags:
-        - Held baskets and hold links
-      operationId: patchDynamicHoldSettings
-      summary: Partially update dynamic hold settings
       description: >-
         Use the hold metadata ID from basket.on_hold_detail.id, not basket.id. This endpoint manages existing
         hold details. Create a dynamic hold through the basket hold action with hold_type=dynamic_hold, then
@@ -5607,16 +5407,6 @@ components:
             Background job identifier returned when work is queued. It is not confirmation of completion or
             email delivery.
           example: bfe3a0c2-4c10-4c27-b1f6-ffb9bdc20ad1
-    HoldExpiryUpdateRequest:
-      type: object
-      required:
-        - hold_expiry_date
-      properties:
-        hold_expiry_date:
-          type: string
-          description: Future ISO 8601 timestamp, or null to remove scheduled expiry.
-          format: date-time
-          nullable: true
     HoldLinkEmailRequest:
       type: object
       properties:
@@ -5706,8 +5496,7 @@ components:
         payment_type:
           type: integer
           description: >-
-            Current numeric payment type returned by GET. Preserve this value when editing; required in a
-            held-basket PATCH because basket validation uses it.
+            Current numeric payment type returned by GET. Preserve this value when editing.
         sold_by:
           type: integer
           description: Current seller ID. Preserve when editing another seller's hold with manage-all-holds access.
@@ -5715,14 +5504,8 @@ components:
       description: >-
         General admission ticket basket edit shape. Read the current basket first and preserve its customer,
         seller, discount, and allocation settings. Send the complete desired item_groups list and current
-        payment_type even for held-basket PATCH; the shared basket validation expects them. Assigned seating
+        payment_type; the shared basket validation expects them. Assigned seating
         and other inventory types require their corresponding allocation fields.
-    HeldBasketPatchRequest:
-      allOf:
-        - $ref: '#/components/schemas/HoldBasketEditRequest'
-        - type: object
-          required:
-            - payment_type
     HoldSplitItemRequest:
       type: object
       required:
