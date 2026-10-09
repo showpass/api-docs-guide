@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Auto-Opening Popup Widgets - Showpass WordPress Plugin</title>
-    <meta name="description" content="Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates." />
+    <title>Auto-Opening Modal Widgets - Showpass WordPress Plugin</title>
+    <meta name="description" content="Open Showpass widgets automatically as in-page modals with the WordPress plugin. Configure an event and provide a manual button as a fallback." />
     <meta name="author" content="Showpass Devs" />
     <meta name="robots" content="index, follow" />
     <meta name="language" content="English" />
@@ -27,8 +27,8 @@
     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
 
     <!-- Open Graph / Facebook -->
-    <meta property="og:title" content="Auto-Opening Popup Widgets - Showpass WordPress Plugin" />
-    <meta property="og:description" content="Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates." />
+    <meta property="og:title" content="Auto-Opening Modal Widgets - Showpass WordPress Plugin" />
+    <meta property="og:description" content="Open Showpass widgets automatically as in-page modals with the WordPress plugin. Configure an event and provide a manual button as a fallback." />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://dev.showpass.com/" />
     <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
@@ -37,8 +37,8 @@
     <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:site" content="@showpassevents" />
-    <meta name="twitter:title" content="Auto-Opening Popup Widgets - Showpass WordPress Plugin" />
-    <meta name="twitter:description" content="Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates." />
+    <meta name="twitter:title" content="Auto-Opening Modal Widgets - Showpass WordPress Plugin" />
+    <meta name="twitter:description" content="Open Showpass widgets automatically as in-page modals with the WordPress plugin. Configure an event and provide a manual button as a fallback." />
     <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
 
     <!-- Favicon and app icons -->
@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DAcbka3_.js"></script>
+    <script type="module" crossorigin src="/assets/index-CHSDkOQt.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -87,7 +87,7 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Automatically opening pop-up widgets on page load</h1>
+  <article><h1>Automatically opening modal widgets on page load</h1>
 <p>Make the Showpass ticket widget open automatically when visitors land on specific pages. Perfect for dedicated landing pages and ad campaigns where the primary goal is immediate ticket purchases.</p>
 <h2>How it works</h2>
 <p><strong>Parameter:</strong> <code>auto=your-event-slug</code></p>
@@ -98,7 +98,7 @@
 <ol>
 <li>Plugin detects the <code>auto</code> parameter</li>
 <li>Extracts the event slug value (<code>my-big-concert</code>)</li>
-<li>Automatically opens the Showpass ticket widget for that event in a pop-up</li>
+<li>Automatically opens the Showpass ticket widget for that event in a modal</li>
 </ol>
 <blockquote>
 <p><strong>Note:</strong> The event slug is the part after <code>showpass.com/</code> in your event URL. For example: <code>https://www.showpass.com/my-big-concert/</code> → slug is <code>my-big-concert</code></p>
@@ -212,8 +212,8 @@ Flyer: https://yourwebsite.com/info/?auto=charity-event
 <li>SEO benefits from rich content</li>
 </ol>
 <hr>
-<h3>Handle pop-up blockers</h3>
-<p>The Showpass widget typically appears as an <strong>in-page modal</strong> (not a browser pop-up window), so most pop-up blockers should not interfere.</p>
+<h3>Browser compatibility</h3>
+<p>The Showpass widget opens as an <strong>in-page modal</strong>. If automatic opening fails, check browser and extension behavior and provide a manual button as a fallback.</p>
 <p><strong>However:</strong></p>
 <ul>
 <li>Behavior can vary by browser and extensions</li>

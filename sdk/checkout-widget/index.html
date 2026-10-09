@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DAcbka3_.js"></script>
+    <script type="module" crossorigin src="/assets/index-CHSDkOQt.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -88,28 +88,25 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Checkout Widget</h1>
-<h2>Overview</h2>
-<p>The Checkout Widget initiates the final stages of a purchase transaction. It guides users through order review, payment information entry, and transaction completion. Depending on your Showpass organization settings, it may also prompt for login if the user isn&#39;t already signed in.</p>
-<p>This widget can be launched as a pop-up (typically after cart review) or embedded into a dedicated checkout page or section.</p>
-<hr>
-<h2>SDK Function Signature</h2>
-<pre><code class="language-javascript">// Pop-up mode - displays as a modal dialog
-showpass.tickets.checkoutWidget(params);
-
-// Embedded mode - mounts into a container element
-showpass.tickets.checkoutWidget(params, containerId);
+<p>Use <code>checkoutWidget</code> to open the current basket for order review and payment. Depending on the organization settings, the customer may also be asked to sign in.</p>
+<h2>Before you start</h2>
+<p><a href="/sdk/sdk-getting-started">Load the SDK once</a> and wait for it to be ready. The examples below show the calls to use with that guide&#39;s loading and error handling.</p>
+<p>Add items through the purchase or calendar widgets first. Checkout uses the browser&#39;s existing basket; this call does not create its contents.</p>
+<h2>Open a modal</h2>
+<p>Call this from your button handler:</p>
+<pre><code class="language-javascript">window.showpass.tickets.checkoutWidget({
+  &quot;theme-primary&quot;: &quot;#24727b&quot;,
+});
 </code></pre>
-<hr>
-<h2>Prerequisites</h2>
-<ul>
-<li>The Showpass SDK must be included on your page (see &quot;SDK Getting Started&quot; guide)</li>
-<li>Ensure the SDK is loaded before calling its functions</li>
-<li>Items should be present in the shopping cart before calling this function</li>
-</ul>
-<blockquote>
-<p><strong>Note:</strong> The checkout widget typically requires items in the cart to function properly.</p>
-</blockquote>
-<hr>
+<h2>Embed one widget</h2>
+<p>Create the container, then run the SDK call after both are ready:</p>
+<pre><code class="language-html">&lt;div id=&quot;checkout-widget&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-javascript">window.showpass.tickets.checkoutWidget(
+  { &quot;theme-primary&quot;: &quot;#24727b&quot; },
+  &quot;checkout-widget&quot;
+);
+</code></pre>
 <h2>Parameters</h2>
 <table>
 <thead>
@@ -157,129 +154,8 @@ showpass.tickets.checkoutWidget(params, containerId);
 <td><strong>For Embedded Mode:</strong> The ID of the HTML <code>&lt;div&gt;</code> element where the checkout flow will mount</td>
 </tr>
 </tbody></table>
-<hr>
-<h2>Basic Usage Examples</h2>
-<p>These examples assume the Showpass SDK is already loaded and items are in the cart. For production-ready code, see &quot;Robust Implementation Examples&quot; below.</p>
-<h3>Pop-up Mode (Basic)</h3>
-<p>Typically called after a user reviews their cart and clicks a &quot;Proceed to Checkout&quot; button.</p>
-<pre><code class="language-javascript">// Define checkout configuration
-let params = {
-  &quot;theme-primary&quot;: &quot;#28a745&quot;, // Green theme
-  &quot;keep-shopping&quot;: false, // &#39;Close&#39; button is more appropriate here
-};
-
-// Open the checkout widget as a pop-up
-showpass.tickets.checkoutWidget(params);
-</code></pre>
-<hr>
-<h3>Embedded Mode (Basic)</h3>
-<p>Useful for creating a dedicated checkout page with seamless integration.</p>
-<pre><code class="language-html">&lt;!-- Container element for the checkout widget --&gt;
-&lt;div id=&quot;checkout-process-here&quot;&gt;&lt;/div&gt;
-
-&lt;script&gt;
-  // Configure and embed the checkout widget
-  let embedParams = {
-    &quot;theme-primary&quot;: &quot;#007bff&quot;, // Blue theme
-  };
-  showpass.tickets.checkoutWidget(embedParams, &quot;checkout-process-here&quot;);
-&lt;/script&gt;
-</code></pre>
-<blockquote>
-<p><strong>Note:</strong> These basic examples assume <code>showpass.tickets</code> is ready. For production environments, always use the robust implementation patterns below.</p>
-</blockquote>
-<hr>
-<h2>Robust Implementation Examples</h2>
-<p>These examples include proper SDK availability checks to ensure reliable execution.</p>
-<h3>Pop-up Mode (Robust)</h3>
-<p>This implementation uses a button click (e.g., &quot;Proceed to Checkout&quot; from a cart page) to open the widget.</p>
-<p><strong>HTML:</strong></p>
-<pre><code class="language-html">&lt;button id=&quot;proceedToCheckoutBtn&quot;&gt;Proceed to Checkout&lt;/button&gt;
-</code></pre>
-<p><strong>JavaScript:</strong></p>
-<pre><code class="language-javascript">function handleCheckoutClick() {
-  if (window.showpass &amp;&amp; window.showpass.tickets) {
-    const params = {
-      &quot;theme-primary&quot;: &quot;#17a2b8&quot;,
-      &quot;keep-shopping&quot;: false,
-    };
-    window.showpass.tickets.checkoutWidget(params);
-  } else {
-    console.error(&quot;Showpass SDK not available.&quot;);
-  }
-}
-
-function initializeCheckoutButton() {
-  const button = document.getElementById(&quot;proceedToCheckoutBtn&quot;);
-  if (button) {
-    button.addEventListener(&quot;click&quot;, handleCheckoutClick);
-  } else {
-    console.error(&quot;Checkout button not found.&quot;);
-  }
-}
-
-// Initialize when DOM is ready
-if (document.readyState === &quot;loading&quot;) {
-  document.addEventListener(&quot;DOMContentLoaded&quot;, initializeCheckoutButton);
-} else {
-  initializeCheckoutButton();
-}
-</code></pre>
-<hr>
-<h3>Embedded Mode (Robust)</h3>
-<p>This implementation ensures the SDK is loaded before embedding the checkout widget into a dedicated checkout page.</p>
-<p><strong>HTML:</strong></p>
-<pre><code class="language-html">&lt;div id=&quot;embedded-checkout-container&quot;&gt;&lt;/div&gt;
-</code></pre>
-<p><strong>JavaScript:</strong></p>
-<pre><code class="language-javascript">function embedCheckoutWidget() {
-  const containerId = &quot;embedded-checkout-container&quot;;
-
-  if (window.showpass &amp;&amp; window.showpass.tickets) {
-    const params = {
-      &quot;theme-primary&quot;: &quot;#6c757d&quot;,
-    };
-    window.showpass.tickets.checkoutWidget(params, containerId);
-  } else {
-    console.error(&quot;Showpass SDK not available.&quot;);
-    // Optionally, retry after a delay
-    setTimeout(embedCheckoutWidget, 500);
-  }
-}
-
-// Execute when DOM is ready
-if (document.readyState === &quot;loading&quot;) {
-  document.addEventListener(&quot;DOMContentLoaded&quot;, embedCheckoutWidget);
-} else {
-  embedCheckoutWidget();
-}
-</code></pre>
-<hr>
-<h3>Alternative: Using Script Onload Callback</h3>
-<p>If you&#39;re dynamically loading the SDK, you can use the <code>onload</code> callback:</p>
-<pre><code class="language-javascript">let script = document.createElement(&quot;script&quot;);
-script.onload = function () {
-  // SDK is now loaded - safe to call checkout widget
-  const params = {
-    &quot;theme-primary&quot;: &quot;#ffc107&quot;,
-    &quot;keep-shopping&quot;: false,
-  };
-  window.showpass.tickets.checkoutWidget(params);
-};
-script.src = &quot;https://www.showpass.com/static/dist/sdk.js&quot;;
-document.head.appendChild(script);
-</code></pre>
-<hr>
-<h2>Key Takeaways</h2>
-<ul>
-<li><strong>Cart required:</strong> Checkout widget typically requires items in the cart to function</li>
-<li><strong>Check SDK availability:</strong> Production code should always verify <code>window.showpass.tickets</code> exists before calling functions</li>
-<li><strong>Pop-up vs Embedded:</strong> Use pop-up mode for quick checkout flows; use embedded mode for dedicated checkout pages</li>
-<li><strong>No tracking-id:</strong> Checkout widget does not support the <code>tracking-id</code> parameter</li>
-<li><strong>Login handling:</strong> Widget may prompt for login based on your organization settings</li>
-<li><strong>Handle loading:</strong> Implement retry logic or use <code>DOMContentLoaded</code> to ensure SDK readiness</li>
-<li><strong>Theme customization:</strong> Use <code>theme-primary</code> to maintain brand consistency throughout the checkout experience</li>
-</ul>
+<h2>Layout limitations</h2>
+<p>Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder. For multiple offerings with one basket, use modal buttons and a visible checkout entry point. See <a href="/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket">Multiple widgets and a shared basket</a>.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

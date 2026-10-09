@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DAcbka3_.js"></script>
+    <script type="module" crossorigin src="/assets/index-CHSDkOQt.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -88,273 +88,156 @@
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Adding a calendar widget</h1>
-<p>Showpass offers a modern calendar widget to display your events. This is ideal for venues with many time-slot–based events or when you want to provide a visual calendar view for your users.</p>
-<p>There are two main ways to add the new calendar:</p>
-<ol>
-<li><strong>As a button that opens the calendar in a pop-up.</strong></li>
-<li><strong>As a calendar embedded directly onto your page.</strong></li>
-</ol>
-<blockquote>
-<p><strong>Note</strong><br>The plugin refers to this as <strong>“Calendar Widget V2.0”</strong> in the GitHub readme and recommends it over the older <code>[showpass_calendar]</code> shortcode.</p>
-</blockquote>
-<hr>
-<h2>Prerequisite: Organizer ID</h2>
-<p>All calendar shortcodes require your <strong>Showpass Organizer ID</strong> to be configured:</p>
-<ol>
-<li>In your WordPress dashboard, go to the Showpass plugin settings.</li>
-<li>Set the <strong>Organizer ID</strong> (this is stored as <code>option_organization_id</code>).</li>
-<li>Save your changes.</li>
-</ol>
-<p>If this value is not set, the calendar shortcodes will return:</p>
-<blockquote>
-<p><code>Please add your Showpass Organizer ID to your Wordpress Dashboard.</code></p>
-</blockquote>
-<hr>
-<h2>1. Calendar button (pop-up) with <code>[showpass_calendar_widget]</code></h2>
-<p>This shortcode adds a button to your page. When a user clicks this button, the Showpass event calendar opens in a pop-up.</p>
-<h3>How to add</h3>
-<ol>
-<li>Go to the WordPress page or post where you want the button.</li>
-<li>Add a <strong>Shortcode</strong> block.</li>
-<li>Use:</li>
-</ol>
-<pre><code class="language-text">[showpass_calendar_widget]
+<p>Use a calendar when customers need to browse dates before choosing tickets. The WordPress plugin offers two display options:</p>
+<table>
+<thead>
+<tr>
+<th>Display</th>
+<th>Shortcode</th>
+<th>Customer experience</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Modal</td>
+<td><code>[showpass_calendar_widget]</code></td>
+<td>A button opens the calendar over the current page.</td>
+</tr>
+<tr>
+<td>Embedded (inline)</td>
+<td><code>[showpass_embed_calendar]</code></td>
+<td>The calendar appears within the page layout.</td>
+</tr>
+</tbody></table>
+<p>Both use the modern calendar, called <strong>Calendar Widget V2.0</strong> in the plugin readme. For new pages, use these shortcodes instead of the legacy <code>[showpass_calendar]</code>.</p>
+<h2>Before you start</h2>
+<p>Set your <strong>Organizer ID</strong> in the Showpass plugin settings in WordPress and save the change. This setting is stored as <code>option_organization_id</code> and is required by the calendar shortcodes.</p>
+<p>If it is missing, the plugin displays: <code>Please add your Showpass Organizer ID to your Wordpress Dashboard.</code></p>
+<h2>Add a calendar button</h2>
+<p>Open your page or post, add a <strong>Shortcode</strong> block, and enter:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Browse Dates&quot;]
 </code></pre>
-<p><strong>Basic usage:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget]
+<p>Publish or update the page. The button opens the calendar in a modal; if you omit <code>label</code>, its text is <strong>Get Tickets</strong>.</p>
+<p>To show a selection of events, filter by tags:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Browse Workshops&quot; tags=&quot;workshops&quot;]
 </code></pre>
-<p>This creates a button with the default label <strong>“Get Tickets”</strong>.</p>
-<h3>Parameters for <code>[showpass_calendar_widget]</code></h3>
-<ul>
-<li><p><strong><code>label=&quot;Your Button Text&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Change the text displayed on the button.</p>
-</li>
-<li><p><strong>Default:</strong> <code>&quot;Get Tickets&quot;</code></p>
-</li>
-<li><p><strong>Example:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;View Event Calendar&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>tags=&quot;your-tag&quot;</code></strong> (or <code>tags=&quot;tag1,tag2&quot;</code>)</p>
-<ul>
-<li><p><strong>Use case:</strong> Filter events by specific Showpass tags (categories). If omitted, all events for the organizer are shown.</p>
-</li>
-<li><p><strong>Example – only “comedy” events:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Comedy Shows Calendar&quot; tags=&quot;comedy&quot;]
-</code></pre>
-</li>
-<li><p><strong>Example – show all events:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Full Event Calendar&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>is_attraction=&quot;true&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Enable <strong>attraction mode</strong> (for time-slot attractions, day passes, etc.). This tells the widget to treat the events as an attraction calendar.</p>
-</li>
-<li><p><strong>Important:</strong> The value must be the string <code>&quot;true&quot;</code> (not <code>true</code> or <code>is_attraction: true</code>).</p>
-</li>
-<li><p><strong>Example – attraction calendar button:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Buy Single Day Tickets&quot; tags=&quot;Daily&quot; is_attraction=&quot;true&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>event_id=&quot;123456&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Optionally scope the attraction calendar to a specific parent event ID.</p>
-</li>
-<li><p><strong>Example:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Buy Tickets&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>class=&quot;your-css-class&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Override the default button class for custom styling.</p>
-</li>
-<li><p><strong>Default:</strong> <code>&quot;showpass-button&quot;</code></p>
-</li>
-<li><p><strong>Example:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;View Calendar&quot; class=&quot;my-custom-button&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>lang=&quot;fr&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Set the widget UI language. If not specified, it defaults to English.</p>
-</li>
-<li><p><strong>Currently supported:</strong> <code>&quot;fr&quot;</code> for French.</p>
-</li>
-<li><p><strong>Example:</strong></p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Voir le calendrier&quot; lang=&quot;fr&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2>2. Embedded calendar with <code>[showpass_embed_calendar]</code></h2>
-<p>This shortcode embeds the full calendar directly into your WordPress page or post.</p>
-<h3>How to add</h3>
-<ol>
-<li>Go to the WordPress page or post where you want the calendar embedded.</li>
-<li>Add a <strong>Shortcode</strong> block.</li>
-<li>Use:</li>
-</ol>
+<p>Use a comma-separated list for multiple tags, such as <code>tags=&quot;workshops,experiences&quot;</code>.</p>
+<h2>Embed one calendar</h2>
+<p>For a page where the calendar is the main content, use:</p>
 <pre><code class="language-text">[showpass_embed_calendar]
 </code></pre>
-<p><strong>Basic usage:</strong></p>
-<pre><code class="language-text">[showpass_embed_calendar]
+<p>You can filter the embedded calendar too:</p>
+<pre><code class="language-text">[showpass_embed_calendar tags=&quot;workshops&quot;]
 </code></pre>
-<p>This embeds a calendar showing all events for your organizer.</p>
-<h3>Layout considerations</h3>
-<p>For the embedded calendar to display correctly on desktop, the container or section where you place this shortcode should be <strong>at least ~1200px wide</strong>. If the container is too narrow, the calendar may appear cramped or misaligned.</p>
-<h3>Parameters for <code>[showpass_embed_calendar]</code></h3>
-<ul>
-<li><p><strong><code>tags=&quot;your-tag&quot;</code></strong> (or <code>tags=&quot;tag1,tag2&quot;</code>)</p>
-<ul>
-<li><p><strong>Use case:</strong> Filter events in the embedded calendar by Showpass tags. If omitted, all events are shown.</p>
-</li>
-<li><p><strong>Example – only “workshop” events:</strong></p>
-<pre><code class="language-text">[showpass_embed_calendar tags=&quot;workshop&quot;]
+<p>These are alternative examples for a single calendar. Give it a wide content area and check the result in your theme on both desktop and mobile. Allow approximately 1200 px of width for the desktop layout.</p>
+<h2>Configure an attraction calendar</h2>
+<p>For an attraction with recurring dates or time slots, add <code>is_attraction=&quot;true&quot;</code>. Use <code>event_id</code> to scope the calendar to the parent event:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
 </code></pre>
-</li>
-<li><p><strong>Example – show all events:</strong></p>
-<pre><code class="language-text">[showpass_embed_calendar]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>is_attraction=&quot;true&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Enable attraction mode for the embedded calendar, similar to the widget button.</p>
-</li>
-<li><p><strong>Example:</strong></p>
-<pre><code class="language-text">[showpass_embed_calendar tags=&quot;Daily&quot; is_attraction=&quot;true&quot;]
-</code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>event_id=&quot;123456&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Scope the embedded attraction calendar to a specific event ID.</p>
-</li>
-<li><p><strong>Example:</strong></p>
+<p>For an inline version of the same calendar:</p>
 <pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
 </code></pre>
-</li>
-</ul>
-</li>
-<li><p><strong><code>lang=&quot;fr&quot;</code></strong></p>
-<ul>
-<li><p><strong>Use case:</strong> Set the embedded calendar UI language.</p>
-</li>
-<li><p><strong>Default:</strong> English</p>
-</li>
-<li><p><strong>Example:</strong></p>
-<pre><code class="language-text">[showpass_embed_calendar tags=&quot;workshop&quot; lang=&quot;fr&quot;]
+<p>These are <strong>WordPress shortcode parameters</strong>. For a direct JavaScript integration, use the separate <a href="/sdk/event-calendar-widget">SDK Calendar Widget reference</a>; its attraction example uses an event slug.</p>
+<h2>Parameters</h2>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Applies to</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>label</code></td>
+<td>Modal button</td>
+<td>Button text; defaults to <code>&quot;Get Tickets&quot;</code></td>
+</tr>
+<tr>
+<td><code>class</code></td>
+<td>Modal button</td>
+<td>Custom CSS classes; defaults to <code>&quot;showpass-button&quot;</code></td>
+</tr>
+<tr>
+<td><code>tags</code></td>
+<td>Both</td>
+<td>Event tags, such as <code>&quot;workshops&quot;</code> or <code>&quot;workshops,experiences&quot;</code>; omit for all organizer events</td>
+</tr>
+<tr>
+<td><code>is_attraction</code></td>
+<td>Both</td>
+<td>Set to <code>&quot;true&quot;</code> for attraction mode</td>
+</tr>
+<tr>
+<td><code>event_id</code></td>
+<td>Both</td>
+<td>Scope the attraction calendar to a parent event</td>
+</tr>
+<tr>
+<td><code>lang</code></td>
+<td>Both</td>
+<td>Use <code>&quot;fr&quot;</code> for French; English is the default</td>
+</tr>
+</tbody></table>
+<p>For example, a French-language calendar button:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Voir les dates&quot; lang=&quot;fr&quot;]
 </code></pre>
-</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2>Which calendar option should I use?</h2>
-<ul>
-<li><p><strong>Button (<code>[showpass_calendar_widget]</code>):</strong></p>
-<ul>
-<li>Best when you want to keep the page layout clean.</li>
-<li>Users only see the calendar when they click the button.</li>
-<li>Works well in headers, sidebars, or call-to-action sections.</li>
-</ul>
-</li>
-<li><p><strong>Embedded (<code>[showpass_embed_calendar]</code>):</strong></p>
-<ul>
-<li>Best when the calendar is the main content of the page (e.g., a “What’s On” or “Events Calendar” page).</li>
-<li>Needs more horizontal space for an optimal layout.</li>
-</ul>
-</li>
-</ul>
-<p>Both options use the same modern Showpass calendar engine.</p>
-<hr>
-<h2>Older calendar shortcode <code>[showpass_calendar]</code> (legacy)</h2>
-<p>The plugin still includes an older calendar shortcode:</p>
-<pre><code class="language-text">[showpass_calendar]
+<h2>Combine calendars and event buttons</h2>
+<p>For admission, workshops, and experiences that customers should buy together, use calendar and <a href="/wordpress/adding-single-button-embed-widget">single-event buttons</a> that all open modals. Keep the offerings under the same Showpass organization and add a visible <a href="/wordpress/adding-checkout-cart-button">cart button</a>:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
+[showpass_calendar_widget label=&quot;Browse Workshops&quot; tags=&quot;workshops&quot;]
+[showpass_widget slug=&quot;evening-experience&quot; label=&quot;Book an Experience&quot;]
+[showpass_cart_button]
 </code></pre>
-<p>This works, but for <strong>new implementations</strong> you should use:</p>
-<ul>
-<li><code>[showpass_calendar_widget]</code> (button pop-up), or</li>
-<li><code>[showpass_embed_calendar]</code> (embedded calendar).</li>
-</ul>
-<p>If you need to maintain an existing <code>[showpass_calendar]</code> setup, here is a brief reference for the key parameters:</p>
-<ul>
-<li><p><strong><code>starting_date=&quot;D-M-YYYY&quot;</code></strong></p>
-<ul>
-<li><strong>Format:</strong> <code>day-month-year</code> (no leading zeros).</li>
-<li><strong>Example:</strong> <code>starting_date=&quot;1-12-2024&quot;</code> → December 1, 2024.</li>
-<li>Sets the initial month/day the calendar displays.</li>
-</ul>
-</li>
-<li><p><strong><code>tags=&quot;tagname&quot;</code></strong></p>
-<ul>
-<li>Filter events by a specific tag (similar to the newer shortcodes).</li>
-</ul>
-</li>
-<li><p><strong><code>hide_schedule=&quot;true&quot;</code> / <code>&quot;false&quot;</code></strong></p>
-<ul>
-<li>Controls the horizontal daily schedule display under the calendar.</li>
-<li><strong>Default:</strong> <code>hide_schedule=&quot;true&quot;</code> (schedule is hidden).</li>
-<li>Set <code>hide_schedule=&quot;false&quot;</code> to show the schedule.</li>
-</ul>
-</li>
-<li><p><strong>Recurring event controls</strong></p>
-<ul>
-<li><strong><code>hide_children=&quot;true|false&quot;</code></strong></li>
-<li><strong><code>only_parents=&quot;true|false&quot;</code></strong></li>
-<li>Both default to <code>&quot;false&quot;</code>, which shows all instances of recurring events.</li>
-<li>Use these if you want to hide individual child occurrences or show only parent events.</li>
-</ul>
-</li>
-<li><p><strong>View configuration</strong></p>
-<ul>
-<li><strong><code>week=&quot;disabled&quot;</code></strong> – disable week view.</li>
-<li><strong><code>month=&quot;disabled&quot;</code></strong> – disable month view.</li>
-<li>If omitted, both views are available along with day view.</li>
-</ul>
-</li>
-<li><p><strong>Navigation styling</strong></p>
-<ul>
-<li><p><strong><code>arrows=&quot;white-arrows&quot;</code></strong></p>
-<ul>
-<li>Adds a CSS class that can be used to style the previous/next arrows (commonly to white).</li>
-</ul>
-</li>
-</ul>
-</li>
-<li><p><strong>View selector</strong></p>
-<ul>
-<li><p><strong><code>hide_view_select=&quot;true&quot;</code></strong></p>
-<ul>
-<li>Hides the dropdown that lets users switch between <strong>month</strong>, <strong>week</strong>, and <strong>day</strong> views.</li>
-<li><strong>Default:</strong> <code>&quot;false&quot;</code> (the selector is shown).</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<p>For any new pages or redesigns, prefer:</p>
-<pre><code class="language-text">[showpass_calendar_widget]
-</code></pre>
-<p>or</p>
-<pre><code class="language-text">[showpass_embed_calendar]
-</code></pre>
+<p>Closing one modal lets the customer browse another offering and return to the basket. Before launch, test adding items through each button and reopening the cart on the same website and browser.</p>
+<h2>Maintaining the legacy calendar</h2>
+<p>Existing pages may use <code>[showpass_calendar]</code>. Keep these options for maintenance; choose one of the modern shortcodes above for new implementations.</p>
+<table>
+<thead>
+<tr>
+<th>Legacy parameter</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>starting_date=&quot;1-12-2024&quot;</code></td>
+<td>Initial date in <code>D-M-YYYY</code> format</td>
+</tr>
+<tr>
+<td><code>tags=&quot;workshops&quot;</code></td>
+<td>Filter by tags</td>
+</tr>
+<tr>
+<td><code>hide_schedule=&quot;false&quot;</code></td>
+<td>Show the daily schedule; default is <code>true</code></td>
+</tr>
+<tr>
+<td><code>hide_children=&quot;true&quot;</code></td>
+<td>Hide recurring child events; default is <code>false</code></td>
+</tr>
+<tr>
+<td><code>only_parents=&quot;true&quot;</code></td>
+<td>Show only parent events; default is <code>false</code></td>
+</tr>
+<tr>
+<td><code>week=&quot;disabled&quot;</code></td>
+<td>Disable week view</td>
+</tr>
+<tr>
+<td><code>month=&quot;disabled&quot;</code></td>
+<td>Disable month view</td>
+</tr>
+<tr>
+<td><code>arrows=&quot;white-arrows&quot;</code></td>
+<td>Apply the named arrow CSS class</td>
+</tr>
+<tr>
+<td><code>hide_view_select=&quot;true&quot;</code></td>
+<td>Hide the view selector; default is <code>false</code></td>
+</tr>
+</tbody></table>
+<h2>Limitations and launch checks</h2>
+<p><strong>Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder.</strong> This includes multiple embedded calendars or an embedded calendar beside an inline purchase widget. Separate inline widgets must not be relied on for one synchronized basket.</p>
+<p>For a shared basket across several offerings, use modal buttons throughout. A single embedded calendar is a different layout. See <a href="/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket">Multiple widgets and a shared basket</a> before combining inline and modal widgets.</p>
+<p>Test the full journey on desktop and mobile, including navigation between booking pages and adding items in different orders. Confirm the cart contains the expected items before checkout and before the basket expires.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

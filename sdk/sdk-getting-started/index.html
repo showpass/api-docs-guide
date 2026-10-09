@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DAcbka3_.js"></script>
+    <script type="module" crossorigin src="/assets/index-CHSDkOQt.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -87,155 +87,123 @@
     
     <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
-  <article><h1>Showpass SDK Introduction</h1>
-<h2>Overview</h2>
-<p>The Showpass JavaScript SDK (Software Development Kit) enables seamless integration of Showpass&#39;s ticketing and product purchasing functionalities directly into your website. With the SDK, you can display purchase widgets as pop-up dialogs or embed them into your page layout for a fully integrated experience.</p>
-<blockquote>
-<p><strong>Important:</strong> Your domain must have a valid SSL certificate (<code>https://</code>) installed for the SDK to function properly.</p>
-</blockquote>
-<hr>
-<h2>Including the SDK</h2>
-<p>You have two primary methods for including the Showpass SDK on your website:</p>
-<h3>Option 1: Direct Script Tag (Recommended)</h3>
-<p>Include the SDK using a standard <code>&lt;script&gt;</code> tag with either <code>async</code> or <code>defer</code> attribute to prevent blocking page rendering. Place this tag in the <code>&lt;head&gt;</code> section or before the closing <code>&lt;/body&gt;</code> tag.</p>
-<h4>Using <code>async</code></h4>
-<p>The script downloads in parallel with HTML parsing and executes immediately when available:</p>
-<pre><code class="language-html">&lt;script
-  type=&quot;text/javascript&quot;
-  src=&quot;https://www.showpass.com/static/dist/sdk.js&quot;
-  async
-&gt;&lt;/script&gt;
-</code></pre>
-<h4>Using <code>defer</code> (Recommended)</h4>
-<p>The script downloads in parallel with HTML parsing but only executes after the HTML document is fully parsed, ensuring the DOM is ready:</p>
-<pre><code class="language-html">&lt;script
-  type=&quot;text/javascript&quot;
-  src=&quot;https://www.showpass.com/static/dist/sdk.js&quot;
-  defer
-&gt;&lt;/script&gt;
-</code></pre>
-<hr>
-<h3>Option 2: Dynamic Script Loading</h3>
-<p>You can programmatically load the SDK using JavaScript:</p>
-<pre><code class="language-javascript">(function (window, document) {
-  let script = document.createElement(&quot;script&quot;);
-  script.type = &quot;text/javascript&quot;;
-  script.async = true;
-  script.src = &quot;https://www.showpass.com/static/dist/sdk.js&quot;;
-  let firstScript = document.getElementsByTagName(&quot;script&quot;)[0];
-  firstScript.parentNode.insertBefore(script, firstScript);
-})(window, document);
-</code></pre>
-<hr>
-<h2>SDK Function Structure</h2>
-<p>Once loaded, the SDK exposes its functions under the <code>showpass.tickets</code> namespace (e.g., <code>showpass.tickets.eventPurchaseWidget(...)</code>).</p>
-<h3>Function Signature Pattern</h3>
-<p>Most SDK functions that display widgets follow this pattern:</p>
-<pre><code class="language-javascript">sdkFunction(requiredArg1, optionalParamsObject, optionalContainerIdForEmbedding)
-</code></pre>
-<h3>Widget Display Modes</h3>
-<p><strong>Pop-up Mode (Default):</strong></p>
-<ul>
-<li>Call a widget function without the <code>containerId</code> argument</li>
-<li>Widget displays as a modal dialog overlay</li>
-<li>Example: <code>eventPurchaseWidget(slug, params)</code></li>
-</ul>
-<p><strong>Embedded Mode:</strong></p>
-<ul>
-<li>Pass the ID of your target HTML <code>&lt;div&gt;</code> element as the <code>containerId</code> argument</li>
-<li>Widget embeds directly into the specified container</li>
-<li>Example: <code>eventPurchaseWidget(slug, params, &#39;myDivId&#39;)</code></li>
-</ul>
-<hr>
-<h2>Ensuring SDK Readiness</h2>
-<p>Since the SDK loads asynchronously, you must ensure it&#39;s available before calling its functions. Here are three recommended approaches:</p>
-<h3>Method 1: Check for SDK Availability</h3>
-<pre><code class="language-javascript">function callSDKWhenReady() {
-  if (typeof window.showpass !== &quot;undefined&quot; &amp;&amp; window.showpass.tickets) {
-    // SDK is ready - make your calls
-    window.showpass.tickets.eventPurchaseWidget(&quot;your-slug&quot;, {
-      /* params */
-    });
-  } else {
-    // SDK not ready yet - wait and try again
-    setTimeout(callSDKWhenReady, 100);
-  }
-}
-
-// Call when page is ready
-if (document.readyState === &quot;loading&quot;) {
-  document.addEventListener(&quot;DOMContentLoaded&quot;, callSDKWhenReady);
-} else {
-  callSDKWhenReady();
-}
-</code></pre>
-<hr>
-<h3>Method 2: Using DOMContentLoaded (When Using <code>defer</code>)</h3>
-<pre><code class="language-javascript">document.addEventListener(&quot;DOMContentLoaded&quot;, function () {
-  // SDK should be loaded by now due to defer
-  if (window.showpass &amp;&amp; window.showpass.tickets) {
-    window.showpass.tickets.eventPurchaseWidget(&quot;your-slug&quot;, {
-      /* params */
-    });
-  }
-});
-</code></pre>
-<hr>
-<h3>Method 3: Script Onload Callback (For Dynamic Loading)</h3>
-<pre><code class="language-javascript">let script = document.createElement(&quot;script&quot;);
-script.onload = function () {
-  // SDK is now loaded
-  window.showpass.tickets.eventPurchaseWidget(&quot;your-slug&quot;, {
-    /* params */
-  });
-};
-script.src = &quot;https://www.showpass.com/static/dist/sdk.js&quot;;
-document.head.appendChild(script);
-</code></pre>
-<hr>
-<h2>Available SDK Functions</h2>
-<p>The Showpass SDK provides several specialized functions for different integration scenarios:</p>
+  <article><h1>Getting started with the Showpass SDK</h1>
+<p>Use the JavaScript SDK to open Showpass ticket, product, membership, calendar, and checkout widgets on your website. Your page must use HTTPS.</p>
+<h2>Choose a display mode</h2>
 <table>
 <thead>
 <tr>
-<th>Function</th>
-<th>Purpose</th>
+<th>Mode</th>
+<th>How it works</th>
+<th>How to open it</th>
 </tr>
 </thead>
 <tbody><tr>
-<td><strong>Ticket Purchase Widget</strong></td>
-<td>Enable event ticket selection and purchase</td>
+<td><strong>Modal</strong></td>
+<td>The widget opens over the current page, usually after a button click.</td>
+<td>Omit <code>containerId</code>.</td>
 </tr>
 <tr>
-<td><strong>Product Purchase Widget</strong></td>
-<td>Display marketplace product options and add to cart</td>
-</tr>
-<tr>
-<td><strong>Memberships Purchase Widget</strong></td>
-<td>Offer membership and season pass purchases</td>
-</tr>
-<tr>
-<td><strong>Calendar Widget</strong></td>
-<td>Show interactive calendar for event browsing and booking</td>
-</tr>
-<tr>
-<td><strong>Checkout Widget</strong></td>
-<td>Initiate final checkout and payment process</td>
-</tr>
-<tr>
-<td><strong>Cart Quantity Listener</strong></td>
-<td>Monitor real-time changes to shopping cart item count</td>
+<td><strong>Embedded (inline)</strong></td>
+<td>The widget appears inside your page layout.</td>
+<td>Pass the ID of an existing container element.</td>
 </tr>
 </tbody></table>
-<p>Refer to the specific documentation page for each function to learn about detailed parameters, examples, and best practices.</p>
-<hr>
-<h2>Next Steps</h2>
-<p>Now that you understand the SDK basics, explore the individual widget documentation to learn how to:</p>
+<p>For multiple offerings that customers should add to one basket, start with buttons that open modals. The <a href="/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket">shared-basket guidance</a> covers supported layouts and limitations.</p>
+<h2>Load the SDK once</h2>
+<p>Use the canonical URL:</p>
+<pre><code class="language-html">&lt;script src=&quot;https://www.showpass.com/static/dist/sdk.js&quot; defer&gt;&lt;/script&gt;
+</code></pre>
+<p>After loading, the SDK is available as <code>window.showpass.tickets</code>. Wait for it before calling a widget method. With the deferred script above, initialize your page at <code>DOMContentLoaded</code>; if you insert the script dynamically, wait for its <code>load</code> event instead.</p>
+<h2>Connect a button</h2>
+<p>This plain HTML example loads the SDK, connects a button, and displays a message if the widget cannot open. Replace <code>your-event-slug</code> with your event&#39;s slug.</p>
+<pre><code class="language-html">&lt;script src=&quot;https://www.showpass.com/static/dist/sdk.js&quot; defer&gt;&lt;/script&gt;
+
+&lt;button id=&quot;buy-tickets&quot; type=&quot;button&quot;&gt;Buy tickets&lt;/button&gt;
+&lt;p id=&quot;showpass-status&quot; role=&quot;status&quot; hidden&gt;&lt;/p&gt;
+
+&lt;script&gt;
+  window.addEventListener(&quot;DOMContentLoaded&quot;, function () {
+    const button = document.getElementById(&quot;buy-tickets&quot;);
+    const status = document.getElementById(&quot;showpass-status&quot;);
+
+    button.addEventListener(&quot;click&quot;, async function () {
+      if (!window.showpass?.tickets) {
+        status.textContent = &quot;Ticket sales are temporarily unavailable.&quot;;
+        status.hidden = false;
+        return;
+      }
+
+      button.disabled = true;
+      status.hidden = true;
+
+      try {
+        await window.showpass.tickets.eventPurchaseWidget(&quot;your-event-slug&quot;, {
+          &quot;theme-primary&quot;: &quot;#24727b&quot;,
+        });
+      } catch (error) {
+        console.error(&quot;Unable to open the Showpass widget&quot;, error);
+        status.textContent = &quot;Ticket sales are temporarily unavailable.&quot;;
+        status.hidden = false;
+      } finally {
+        button.disabled = false;
+      }
+    });
+  });
+&lt;/script&gt;
+</code></pre>
+<p>The button is disabled while the widget opens. The returned promise resolves when the initial widget is shown, not when the customer finishes shopping or closes it.</p>
+<h2>Embed a widget</h2>
+<p>Create the container before calling the SDK, then pass its ID as the final argument. Run this example after both the SDK and the page content are ready:</p>
+<pre><code class="language-html">&lt;div id=&quot;event-widget&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-javascript">window.showpass.tickets.eventPurchaseWidget(
+  &quot;your-event-slug&quot;,
+  { &quot;theme-primary&quot;: &quot;#24727b&quot; },
+  &quot;event-widget&quot;
+);
+</code></pre>
+<p>The widget guides below use this same pattern. Their examples show the widget call; use the loading and error handling above in your page integration. Pass <code>{}</code> when you do not need options.</p>
+<h2>Choose a widget</h2>
+<table>
+<thead>
+<tr>
+<th>Customer task</th>
+<th>Guide</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Buy tickets for one event</td>
+<td><a href="/sdk/ticket-purchase-widget">Ticket Purchase Widget</a></td>
+</tr>
+<tr>
+<td>Browse event dates or attraction time slots</td>
+<td><a href="/sdk/event-calendar-widget">Calendar Widget</a></td>
+</tr>
+<tr>
+<td>Buy a product</td>
+<td><a href="/sdk/product-purchase-widget">Product Purchase Widget</a></td>
+</tr>
+<tr>
+<td>Buy a membership or season pass</td>
+<td><a href="/sdk/membership-purchase-widget">Membership Purchase Widget</a></td>
+</tr>
+<tr>
+<td>Review the basket and check out</td>
+<td><a href="/sdk/checkout-widget">Checkout Widget</a></td>
+</tr>
+<tr>
+<td>Display the number of items in the cart</td>
+<td><a href="/sdk/cart-quantity-listener">Cart Quantity Listener</a></td>
+</tr>
+</tbody></table>
+<h2>Integration checks and limitations</h2>
 <ul>
-<li>Integrate specific widgets for your use case</li>
-<li>Customize widget appearance and behavior</li>
-<li>Handle advanced scenarios like embedded widgets</li>
-<li>Implement cart tracking and checkout flows</li>
+<li>Load the SDK once per page. In a client-rendered application, share the loader rather than adding a new script for each widget.</li>
+<li>Mount an embedded widget only after its container exists. Avoid repeated mounts into the same container.</li>
+<li>Keep a visible error or fallback action when loading fails; do not retry indefinitely.</li>
+<li>Choose one loading approach. <code>DOMContentLoaded</code> alone does not wait for a script loaded with <code>async</code> or inserted later.</li>
+<li>Do not use multiple inline SDK widgets on one page unless using Showpass Website Builder. Read the <a href="/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket">shared-basket limitations</a> before combining widgets.</li>
 </ul>
 </article>
 </div></div>
