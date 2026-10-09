@@ -870,12 +870,19 @@ axios.post(baseUrl, postData, {
 
   // ---- Ticket Scan Actions (POST): pickup, return, void ----
   "/api/private-api-ticket-scan-actions": {
-    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/",
     method: "POST",
     description: "Create a scan history with various actions (pickup, return, void).",
+    requestBodyTemplate: `{
+  "item": 123456,
+  "action": "pickup",
+  "scanner_device": "web_app",
+  "barcode_type": "static",
+  "barcode_string": "1234567890"
+}`,
     examples: {
       curl: `# Example for pickup action (scan)
-curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -887,7 +894,7 @@ curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
 }'
 
 # Example for return action (undo scan)
-curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -896,7 +903,7 @@ curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
 }'
 
 # Example for void action (invalidate)
-curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -1081,11 +1088,11 @@ axios.post(baseUrl, voidPayload, { headers })
 
   // ---- Create ticket scan history (POST): rotating barcode ----
   "/api/private-api-create-ticket-scan-history-rotating": {
-    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/",
     method: "POST",
     description: "Pickup using a rotating barcode (non-NFC device allowed).",
     examples: {
-      curl: `curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+      curl: `curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -1166,12 +1173,12 @@ axios.post(baseUrl, payload, { headers })
 
   // ---- Create ticket scan history (POST): tracked barcode (e.g., Apple Wallet) ----
   "/api/private-api-create-ticket-scan-history-tracked": {
-    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/",
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/",
     method: "POST",
     description:
       "Pickup using a tracked barcode (e.g., Apple Wallet). For NFC-only events, use an NFC-capable scanner_device.",
     examples: {
-      curl: `curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+      curl: `curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -1256,12 +1263,12 @@ axios.post(baseUrl, payload, { headers })
 
   // ---- Scan stats (aggregated) ----
   "/api/private-api-scan-stats": {
-    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id={event_id}",
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/stats/?item__event_id={event_id}",
     method: "GET",
     description:
       "Aggregated scan stats. Optional params: breakdown_by_type=true, created__gte=ISO8601, created__lte=ISO8601.",
     examples: {
-      curl: `curl -X GET "https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id=98765&breakdown_by_type=true" \\
+      curl: `curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/histories/stats/?item__event_id=98765&breakdown_by_type=true" \\
 -H "Authorization: Token YOUR_API_TOKEN"`,
       python: `import requests
 
@@ -1996,11 +2003,11 @@ run().catch(error => {
 
   // ---- Scan stats timeline (per-day) ----
   "/api/private-api-scan-stats-timeline": {
-    endpoint: "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id={event_id}",
+    endpoint: "https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/stats/timeline/?item__event_id={event_id}",
     method: "GET",
     description: "Timeline of scan stats grouped by day.",
     examples: {
-      curl: `curl -X GET "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id=98765" \\
+      curl: `curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/histories/stats/timeline/?item__event_id=98765" \\
 -H "Authorization: Token YOUR_API_TOKEN"`,
       python: `import requests
 
