@@ -1,4 +1,4 @@
-# Automatically opening pop-up widgets on page load
+# Automatically opening modal widgets on page load
 
 Make the Showpass ticket widget open automatically when visitors land on specific pages. Perfect for dedicated landing pages and ad campaigns where the primary goal is immediate ticket purchases.
 
@@ -17,7 +17,7 @@ https://yourwebsite.com/featured-event/?auto=my-big-concert
 
 1. Plugin detects the `auto` parameter
 2. Extracts the event slug value (`my-big-concert`)
-3. Automatically opens the Showpass ticket widget for that event in a pop-up
+3. Automatically opens the Showpass ticket widget for that event in a modal
 
 > **Note:** The event slug is the part after `showpass.com/` in your event URL. For example: `https://www.showpass.com/my-big-concert/` → slug is `my-big-concert`
 
@@ -170,9 +170,9 @@ Even with auto-open, the underlying WordPress page should include:
 
 ---
 
-### Handle pop-up blockers
+### Browser compatibility
 
-The Showpass widget typically appears as an **in-page modal** (not a browser pop-up window), so most pop-up blockers should not interfere.
+The Showpass widget opens as an **in-page modal**. If automatic opening fails, check browser and extension behavior and provide a manual button as a fallback.
 
 **However:**
 - Behavior can vary by browser and extensions

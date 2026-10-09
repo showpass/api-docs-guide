@@ -75,14 +75,14 @@ Display an interactive calendar view of events (legacy calendar).
 
 ### `[showpass_calendar_widget]`
 
-Add a button that opens the modern calendar widget in a pop-up.
+Add a button that opens the modern calendar widget in a modal.
 
 **Use cases:**
 - Calendar button in headers or sidebars
 - Quick access to event calendar
 
 **Documentation:**
-- **[Adding Calendar Widget](/wordpress/adding-calendar-widget)** – See "Calendar button (pop-up)" section
+- **[Adding Calendar Widget](/wordpress/adding-calendar-widget)** – See "Add a calendar button"
 
 **Quick examples:**
 ```text
@@ -211,7 +211,7 @@ Display multiple events side-by-side in a pricing comparison table.
 | `[showpass_events]` | Display event lists or detail pages | [Event Lists](/wordpress/adding-event-list), [Event Details](/wordpress/adding-event-detail-page) |
 | `[showpass_widget]` | Purchase buttons/widgets for events/products/memberships | [Single Button Widget](/wordpress/adding-single-button-embed-widget) |
 | `[showpass_calendar]` | Legacy calendar view | [Calendar Widget](/wordpress/adding-calendar-widget) |
-| `[showpass_calendar_widget]` | Calendar button (pop-up) | [Calendar Widget](/wordpress/adding-calendar-widget) |
+| `[showpass_calendar_widget]` | Calendar button (modal) | [Calendar Widget](/wordpress/adding-calendar-widget) |
 | `[showpass_embed_calendar]` | Embedded calendar | [Calendar Widget](/wordpress/adding-calendar-widget) |
 | `[showpass_products]` | Display products | [Product List](/wordpress/adding-product-list) |
 | `[showpass_memberships]` | Display memberships | [Membership List](/wordpress/adding-membership-list) |
@@ -285,7 +285,7 @@ Use `template="data"` to get raw JSON data for custom PHP templates.
 Use URL parameter `?auto=event-slug` to automatically open widgets on page load.
 
 **Documentation:**
-- **[Automatically Opening Pop-up Widgets](/wordpress/automatically-opening-popup-widgets)** – Complete guide
+- **[Automatically Opening Modal Widgets](/wordpress/automatically-opening-popup-widgets)** – Complete guide
 
 ### Dynamic Cart Counter
 

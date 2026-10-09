@@ -181,9 +181,9 @@ export const seoDataMap: Record<string, SEOData> = {
     keywords: "wordpress custom templates, theme customization, template override, wordpress theming, custom event templates"
   },
   "/wordpress/automatically-opening-popup-widgets": {
-    title: "Auto-Opening Popup Widgets - Showpass WordPress Plugin",
-    description: "Configure automatic popup widgets for enhanced user engagement. Set triggers and timing for optimal conversion rates.",
-    keywords: "popup widgets, auto popup, widget triggers, conversion optimization, popup timing"
+    title: "Auto-Opening Modal Widgets - Showpass WordPress Plugin",
+    description: "Open Showpass widgets automatically as in-page modals with the WordPress plugin. Configure an event and provide a manual button as a fallback.",
+    keywords: "modal widgets, automatic opening, WordPress widgets, Showpass checkout"
   },
   "/wordpress/tips-and-troubleshooting": {
     title: "Tips & Troubleshooting - Showpass WordPress Plugin",
