@@ -9861,8 +9861,14 @@ axios.post(baseUrl, postData, {
 })
 .catch(error => {
   console.error('POST Error:', error);
-});`},response:{status:200,body:{id:123456,event_id:98765,status:"payed",barcode_string:"1234567890",type:{id:3001,name:"General Admission",multiscan_limit:1},included_in_stats:!0}}},"/api/private-api-ticket-scan-actions":{endpoint:"https://www.showpass.com/api/venue/tickets/items/histories/",method:"POST",description:"Create a scan history with various actions (pickup, return, void).",examples:{curl:`# Example for pickup action (scan)
-curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+});`},response:{status:200,body:{id:123456,event_id:98765,status:"payed",barcode_string:"1234567890",type:{id:3001,name:"General Admission",multiscan_limit:1},included_in_stats:!0}}},"/api/private-api-ticket-scan-actions":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/",method:"POST",description:"Create a scan history with various actions (pickup, return, void).",requestBodyTemplate:`{
+  "item": 123456,
+  "action": "pickup",
+  "scanner_device": "web_app",
+  "barcode_type": "static",
+  "barcode_string": "1234567890"
+}`,examples:{curl:`# Example for pickup action (scan)
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -9874,7 +9880,7 @@ curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
 }'
 
 # Example for return action (undo scan)
-curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -9883,7 +9889,7 @@ curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
 }'
 
 # Example for void action (invalidate)
-curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -10045,7 +10051,7 @@ axios.post(baseUrl, voidPayload, { headers })
   .catch(error => {
     console.error('Void Error:', error);
   });
-*/`},response:{status:201,body:{id:777001,item:123456,action:"pickup",before:"payed",after:"used",venue:123456789,created_by:42,scanner_device:"web_app",barcode_type:"static",created:"2025-07-31T18:00:00Z"}}},"/api/private-api-create-ticket-scan-history-rotating":{endpoint:"https://www.showpass.com/api/venue/tickets/items/histories/",method:"POST",description:"Pickup using a rotating barcode (non-NFC device allowed).",examples:{curl:`curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+*/`},response:{status:201,body:{id:777001,item:123456,action:"pickup",before:"payed",after:"used",venue:123456789,created_by:42,scanner_device:"web_app",barcode_type:"static",created:"2025-07-31T18:00:00Z"}}},"/api/private-api-create-ticket-scan-history-rotating":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/",method:"POST",description:"Pickup using a rotating barcode (non-NFC device allowed).",examples:{curl:`curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -10109,7 +10115,7 @@ axios.post(baseUrl, payload, { headers })
   })
   .catch(error => {
     console.error('Error:', error);
-  });`},response:{status:201,body:{id:777004,item:123456,action:"pickup",barcode_type:"rotating"}}},"/api/private-api-create-ticket-scan-history-tracked":{endpoint:"https://www.showpass.com/api/venue/tickets/items/histories/",method:"POST",description:"Pickup using a tracked barcode (e.g., Apple Wallet). For NFC-only events, use an NFC-capable scanner_device.",examples:{curl:`curl -X POST "https://www.showpass.com/api/venue/tickets/items/histories/" \\
+  });`},response:{status:201,body:{id:777004,item:123456,action:"pickup",barcode_type:"rotating"}}},"/api/private-api-create-ticket-scan-history-tracked":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/",method:"POST",description:"Pickup using a tracked barcode (e.g., Apple Wallet). For NFC-only events, use an NFC-capable scanner_device.",examples:{curl:`curl -X POST "https://www.showpass.com/api/venue/123456789/tickets/items/histories/" \\
 -H "Authorization: Token YOUR_API_TOKEN" \\
 -H "Content-Type: application/json" \\
 -d '{
@@ -10176,7 +10182,7 @@ axios.post(baseUrl, payload, { headers })
   })
   .catch(error => {
     console.error('Error:', error);
-  });`},response:{status:201,body:{id:777005,item:123456,action:"pickup",barcode_type:"static",barcode_source:"apple"}}},"/api/private-api-scan-stats":{endpoint:"https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id={event_id}",method:"GET",description:"Aggregated scan stats. Optional params: breakdown_by_type=true, created__gte=ISO8601, created__lte=ISO8601.",examples:{curl:`curl -X GET "https://www.showpass.com/api/venue/tickets/items/histories/stats/?item__event_id=98765&breakdown_by_type=true" \\
+  });`},response:{status:201,body:{id:777005,item:123456,action:"pickup",barcode_type:"static",barcode_source:"apple"}}},"/api/private-api-scan-stats":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/stats/?item__event_id={event_id}",method:"GET",description:"Aggregated scan stats. Optional params: breakdown_by_type=true, created__gte=ISO8601, created__lte=ISO8601.",examples:{curl:`curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/histories/stats/?item__event_id=98765&breakdown_by_type=true" \\
 -H "Authorization: Token YOUR_API_TOKEN"`,python:`import requests
 
 # Define the venue_id and construct the base URL
@@ -10705,7 +10711,7 @@ async function run() {
 
 run().catch(error => {
   console.error(error.response?.data || error.message);
-});`},response:{status:201,body:{id:9001,password:"APPROVED-ACCESS-2026",ticket_type_ids:[],start_time:"2026-07-02T18:00:00Z",end_time:"2026-07-09T18:00:00Z",is_active:!0,ticket_type:3002,venue:1234,password_use_count:0,is_regex_match:!1}}},"/api/private-api-scan-stats-timeline":{endpoint:"https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id={event_id}",method:"GET",description:"Timeline of scan stats grouped by day.",examples:{curl:`curl -X GET "https://www.showpass.com/api/venue/tickets/items/histories/stats/timeline/?item__event_id=98765" \\
+});`},response:{status:201,body:{id:9001,password:"APPROVED-ACCESS-2026",ticket_type_ids:[],start_time:"2026-07-02T18:00:00Z",end_time:"2026-07-09T18:00:00Z",is_active:!0,ticket_type:3002,venue:1234,password_use_count:0,is_regex_match:!1}}},"/api/private-api-scan-stats-timeline":{endpoint:"https://www.showpass.com/api/venue/{venue_id}/tickets/items/histories/stats/timeline/?item__event_id={event_id}",method:"GET",description:"Timeline of scan stats grouped by day.",examples:{curl:`curl -X GET "https://www.showpass.com/api/venue/123456789/tickets/items/histories/stats/timeline/?item__event_id=98765" \\
 -H "Authorization: Token YOUR_API_TOKEN"`,python:`import requests
 
 # Define the venue_id and construct the base URL
