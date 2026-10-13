@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-C9g52MNb.js"></script>
+    <script type="module" crossorigin src="/assets/index--i-tWyrV.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -89,6 +89,9 @@
   <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
   <article><h1>Showpass Webhooks: Payload - Invoice object</h1>
 <p>When Showpass sends a webhook for invoice-related events (like <code>invoice.purchase</code>, <code>invoice.refund</code>, etc.), the payload delivered to your endpoint contains detailed information structured as an &quot;Invoice&quot; object. This section describes the format of this object.</p>
+<p><code>membership_links</code> arrays on invoice items and ticket items identify the source
+membership charge. This linkage connects generated tickets to a purchase or renewal while leaving the
+invoice&#39;s financial fields unchanged. See <a href="#membership-purchase-linkage">Membership purchase linkage</a>.</p>
 <hr>
 <h2>Sample webhook request (Invoice structure)</h2>
 <p>Here is an example of a request that Showpass sends as a webhook when delivering the invoice structure, typically for an <code>invoice.purchase</code> event.</p>
@@ -227,7 +230,7 @@
 </tr>
 <tr>
 <td><code>data.payment_type</code></td>
-<td>Payment method used. <br><strong>Choices:</strong> <code>[&#39;cash&#39;, &#39;credit&#39;, &#39;interac&#39;, &#39;complimentary&#39;, &#39;free&#39;, &#39;bundled&#39;, &#39;transferred&#39;, &#39;direct_deposit&#39;, &#39;other&#39;, &#39;payment_plan&#39;, &#39;user_credit&#39;, &#39;exchange_credit&#39;, &#39;afterpay&#39;]</code></td>
+<td>Payment method used. <br><strong>Choices:</strong> <code>[&#39;cash&#39;, &#39;credit&#39;, &#39;interac&#39;, &#39;complimentary&#39;, &#39;free&#39;, &#39;bundled&#39;, &#39;transferred&#39;, &#39;direct_deposit&#39;, &#39;other&#39;, &#39;payment_plan&#39;, &#39;user_credit&#39;, &#39;exchange_credit&#39;, &#39;afterpay&#39;, &#39;auto_generated&#39;]</code></td>
 </tr>
 <tr>
 <td><code>data.other_payment_type</code></td>
@@ -450,6 +453,190 @@
 <td>Name of the product attribute (if applicable).</td>
 </tr>
 </tbody></table>
+<hr>
+<h2>Membership purchase linkage</h2>
+<p>Membership purchase linkage is included by default. Older payloads may omit these
+arrays. Stored notifications keep the body captured when they were created,
+including on retry.</p>
+<p>Each <code>data.invoice_items[]</code> and <code>data.ticket_items[]</code>
+record includes a <code>membership_links</code> array. A membership charge line contains
+links for the memberships bought or renewed through that exact invoice item.
+A grouped charge line can have several links. A generated ticket contains a link
+to the charge that granted its membership access. Ordinary ticket and product
+items have empty arrays. The invoice item for a generated ticket can also have
+an empty array; read its source from the ticket item.</p>
+<h3>Link fields</h3>
+<p>The same fields apply to entries in both arrays. Identifier values are integers
+unless indicated otherwise, and fields can be <code>null</code> where the source is unknown
+or does not apply.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>member_id</code></td>
+<td>The member at the source purchase when resolved; otherwise the known associated member, or <code>null</code>.</td>
+</tr>
+<tr>
+<td><code>current_member_id</code></td>
+<td>The member associated with the source batch or invoice line. After a membership transfer, this can differ from <code>member_id</code>. It is not necessarily the current ticket holder after a direct ticket transfer.</td>
+</tr>
+<tr>
+<td><code>membership_purchase_id</code></td>
+<td>The captured purchase identity for this member and charged invoice item. A renewal has a new identity even when the member is unchanged.</td>
+</tr>
+<tr>
+<td><code>renewal_season_id</code></td>
+<td>The purchased renewal season, or <code>null</code> for nonseasonal memberships or unknown seasons.</td>
+</tr>
+<tr>
+<td><code>source_transaction_id</code></td>
+<td>String transaction identifier of the invoice that charged for the membership purchase or renewal.</td>
+</tr>
+<tr>
+<td><code>source_invoice_item_id</code></td>
+<td>Integer identifier of the exact membership charge line on that source invoice.</td>
+</tr>
+<tr>
+<td><code>lineage_status</code></td>
+<td><code>resolved</code>, <code>unavailable</code>, or <code>ambiguous</code>, as described below.</td>
+</tr>
+</tbody></table>
+<p><code>resolved</code> means a captured purchase identifies the source. <code>unavailable</code> means
+the necessary source records are missing. <code>ambiguous</code> means the contributing
+records identify conflicting sources. Both unresolved statuses have
+<code>membership_purchase_id</code>, <code>source_transaction_id</code>, and <code>source_invoice_item_id</code>
+set to <code>null</code>. Do not infer a source by matching customer email, dates, a member&#39;s
+original invoice, or its latest renewal. Historical sources are not automatically
+backfilled.</p>
+<h3>Purchase, renewal, and generated ticket examples</h3>
+<p>These shortened payloads use fictional identifiers and omit unrelated invoice
+fields. Each represents a separate <code>invoice.purchase</code> notification with its own
+<code>webhook_event_uuid</code>.</p>
+<p>An initial membership charge has no ticket items yet. Its membership invoice item
+identifies the source purchase:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;MEMBERSHIP-PURCHASE-1001&quot;,
+  &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;webhook_event_uuid&quot;: &quot;6583bcae-69a0-44c4-8456-bca87559d4c5&quot;,
+  &quot;data&quot;: {
+    &quot;transaction_id&quot;: &quot;MEMBERSHIP-PURCHASE-1001&quot;,
+    &quot;showpass_organization_id&quot;: &quot;123&quot;,
+    &quot;ticket_items&quot;: [],
+    &quot;invoice_items&quot;: [
+      {
+        &quot;id&quot;: 501,
+        &quot;invoice_item_type&quot;: &quot;membership&quot;,
+        &quot;quantity&quot;: 1,
+        &quot;membership_links&quot;: [
+          {
+            &quot;member_id&quot;: 9001,
+            &quot;current_member_id&quot;: 9001,
+            &quot;membership_purchase_id&quot;: 101,
+            &quot;renewal_season_id&quot;: null,
+            &quot;source_transaction_id&quot;: &quot;MEMBERSHIP-PURCHASE-1001&quot;,
+            &quot;source_invoice_item_id&quot;: 501,
+            &quot;lineage_status&quot;: &quot;resolved&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>A renewal of that same member produces a new charge line and purchase identity:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;MEMBERSHIP-RENEWAL-2001&quot;,
+  &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;webhook_event_uuid&quot;: &quot;1e051533-2545-4bc9-bd03-9c30dcfb6cc4&quot;,
+  &quot;data&quot;: {
+    &quot;transaction_id&quot;: &quot;MEMBERSHIP-RENEWAL-2001&quot;,
+    &quot;showpass_organization_id&quot;: &quot;123&quot;,
+    &quot;ticket_items&quot;: [],
+    &quot;invoice_items&quot;: [
+      {
+        &quot;id&quot;: 502,
+        &quot;invoice_item_type&quot;: &quot;membership&quot;,
+        &quot;quantity&quot;: 1,
+        &quot;membership_links&quot;: [
+          {
+            &quot;member_id&quot;: 9001,
+            &quot;current_member_id&quot;: 9001,
+            &quot;membership_purchase_id&quot;: 102,
+            &quot;renewal_season_id&quot;: null,
+            &quot;source_transaction_id&quot;: &quot;MEMBERSHIP-RENEWAL-2001&quot;,
+            &quot;source_invoice_item_id&quot;: 502,
+            &quot;lineage_status&quot;: &quot;resolved&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>A ticket generated from the renewal has a different invoice transaction. Its link
+points back to the renewal charge, not to the generated ticket invoice:</p>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;GENERATED-TICKETS-3001&quot;,
+  &quot;event_type&quot;: &quot;invoice.purchase&quot;,
+  &quot;webhook_event_uuid&quot;: &quot;925fd7a8-0f1e-4a14-8516-056d426c977f&quot;,
+  &quot;data&quot;: {
+    &quot;transaction_id&quot;: &quot;GENERATED-TICKETS-3001&quot;,
+    &quot;showpass_organization_id&quot;: &quot;123&quot;,
+    &quot;payment_type&quot;: &quot;auto_generated&quot;,
+    &quot;gross_revenue&quot;: &quot;0.00&quot;,
+    &quot;net_sales&quot;: &quot;0.00&quot;,
+    &quot;invoice_items&quot;: [
+      {
+        &quot;id&quot;: 503,
+        &quot;invoice_item_type&quot;: &quot;ticket&quot;,
+        &quot;quantity&quot;: 1,
+        &quot;membership_links&quot;: []
+      }
+    ],
+    &quot;ticket_items&quot;: [
+      {
+        &quot;id&quot;: 7001,
+        &quot;ticket_item_type&quot;: &quot;ticket&quot;,
+        &quot;membership_links&quot;: [
+          {
+            &quot;member_id&quot;: 9001,
+            &quot;current_member_id&quot;: 9001,
+            &quot;membership_purchase_id&quot;: 102,
+            &quot;renewal_season_id&quot;: null,
+            &quot;source_transaction_id&quot;: &quot;MEMBERSHIP-RENEWAL-2001&quot;,
+            &quot;source_invoice_item_id&quot;: 502,
+            &quot;lineage_status&quot;: &quot;resolved&quot;
+          }
+        ]
+      }
+    ]
+  }
+}
+</code></pre>
+<p>Previously generated tickets keep purchase <code>101</code> if that purchase granted their
+access. Renewing the member does not change their captured source. Deferred
+seasonal renewals keep the prior active source until the new season is activated.</p>
+<h3>Consuming membership links</h3>
+<ol>
+<li>Subscribe to Purchase (<code>invoice.purchase</code>) on an enabled webhook endpoint.</li>
+<li>Deduplicate notifications with <code>webhook_event_uuid</code>, not the source transaction.</li>
+<li>For a resolved link, join <code>source_transaction_id</code> and <code>source_invoice_item_id</code>
+to the membership charge within <code>showpass_organization_id</code>. Use
+<code>membership_purchase_id</code> and <code>member_id</code> to distinguish members sharing a line.</li>
+<li>Accept charge and generated ticket notifications in either order. Retain a
+pending association if the matching charge has not arrived yet.</li>
+<li>Treat an absent array, an empty array, and unresolved lineage separately.
+Preserve unresolved records for reconciliation instead of assigning a guessed
+purchase.</li>
+</ol>
+<p>The linked charge and generated ticket invoice retain their own financial values.
+These links do not move revenue, taxes, fees, or discounts between invoices. A
+zero value on a generated ticket invoice does not imply that its membership was
+free. Membership links are invoice payload fields, not a new webhook event type.</p>
 <hr>
 <h2>Using the payload</h2>
 <p>This structured payload allows you to:</p>

@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-C9g52MNb.js"></script>
+    <script type="module" crossorigin src="/assets/index--i-tWyrV.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -136,6 +136,16 @@
 <p>The purchase, refund, void, and transfer events can include optional partner
 customer fields for supported Partner integrations. See <a href="/api/partner-api-webhooks">Partner attribution in
 webhooks</a>.</p>
+<hr>
+<h2>Membership purchases and generated tickets</h2>
+<p>Membership purchases, renewals, and their generated ticket invoices use
+<code>invoice.purchase</code>. Select Purchase when configuring the endpoint. An existing
+enabled endpoint subscribed to Purchase can receive these notifications without
+a new subscription or endpoint.</p>
+<p>A membership charge notification is created after membership processing captures its purchase identifiers. A generated
+ticket notification has its own invoice transaction and includes the source
+purchase in <code>ticket_items[].membership_links</code>. Neither delivery order nor arrival
+together is guaranteed. See <a href="/webhooks/webhooks-payload-invoice-object#membership-purchase-linkage">Membership purchase linkage</a>.</p>
 <hr>
 <h2>Subscribing to events</h2>
 <p>When you set up or edit a webhook endpoint in the Showpass dashboard (as described in &quot;Setup and Management&quot;), you will be able to select one or more of these event types. Your endpoint will then only receive notifications for the events it is subscribed to.</p>

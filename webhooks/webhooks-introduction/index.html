@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-C9g52MNb.js"></script>
+    <script type="module" crossorigin src="/assets/index--i-tWyrV.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -117,6 +117,14 @@
 <code>partner_external_user_id</code> in webhook payloads. This uses the existing webhook events and
 URL.
 See <a href="/api/partner-api-webhooks">Partner attribution in webhooks</a> for details.</p>
+<hr>
+<h2>Membership purchase linkage</h2>
+<p>Existing invoice webhooks include <code>membership_links</code> on invoice items and ticket items. These identifiers
+connect tickets generated from a membership to the exact membership purchase or
+renewal that granted access. Subscribe to the existing Purchase event
+(<code>invoice.purchase</code>); there is no separate Memberships event to select.</p>
+<p>See <a href="/webhooks/webhooks-payload-invoice-object#membership-purchase-linkage">Membership purchase linkage in the invoice payload</a>
+for fields, examples, and handling older payloads.</p>
 <hr>
 <h2>Why use webhooks?</h2>
 <h3>Real-time automation</h3>
