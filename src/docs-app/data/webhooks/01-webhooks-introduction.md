@@ -55,8 +55,7 @@ See [Partner attribution in webhooks](/api/partner-api-webhooks) for details.
 
 ## Membership purchase linkage
 
-When Showpass enables membership purchase linkage, existing invoice webhooks can
-include `membership_links` on invoice items and ticket items. These identifiers
+Existing invoice webhooks include `membership_links` on invoice items and ticket items. These identifiers
 connect tickets generated from a membership to the exact membership purchase or
 renewal that granted access. Subscribe to the existing Purchase event
 (`invoice.purchase`); there is no separate Memberships event to select.

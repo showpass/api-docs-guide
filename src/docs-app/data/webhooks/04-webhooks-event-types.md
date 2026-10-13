@@ -35,8 +35,7 @@ Membership purchases, renewals, and their generated ticket invoices use
 enabled endpoint subscribed to Purchase can receive these notifications without
 a new subscription or endpoint.
 
-When membership purchase linkage is enabled, a membership charge notification is
-created after membership processing captures its purchase identifiers. A generated
+A membership charge notification is created after membership processing captures its purchase identifiers. A generated
 ticket notification has its own invoice transaction and includes the source
 purchase in `ticket_items[].membership_links`. Neither delivery order nor arrival
 together is guaranteed. See [Membership purchase linkage](/webhooks/webhooks-payload-invoice-object#membership-purchase-linkage).

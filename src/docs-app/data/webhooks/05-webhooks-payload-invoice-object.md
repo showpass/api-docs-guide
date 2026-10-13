@@ -3,9 +3,8 @@
 
 When Showpass sends a webhook for invoice-related events (like `invoice.purchase`, `invoice.refund`, etc.), the payload delivered to your endpoint contains detailed information structured as an "Invoice" object. This section describes the format of this object.
 
-When membership purchase linkage is enabled, `membership_links` arrays on invoice
-items and ticket items identify the source membership charge. This optional
-extension connects generated tickets to a purchase or renewal while leaving the
+`membership_links` arrays on invoice items and ticket items identify the source
+membership charge. This linkage connects generated tickets to a purchase or renewal while leaving the
 invoice's financial fields unchanged. See [Membership purchase linkage](#membership-purchase-linkage).
 
 ---
@@ -181,12 +180,11 @@ The following table describes the fields typically found in the webhook payload 
 
 ## Membership purchase linkage
 
-This extension is available when Showpass has enabled membership purchase linkage.
-Confirm availability with Showpass before relying on it. Payloads created before
-activation, or without enrichment, may omit these arrays. Stored notifications
-keep the body captured when they were created, including on retry.
+Membership purchase linkage is included by default. Older payloads may omit these
+arrays. Stored notifications keep the body captured when they were created,
+including on retry.
 
-With enrichment enabled, each `data.invoice_items[]` and `data.ticket_items[]`
+Each `data.invoice_items[]` and `data.ticket_items[]`
 record includes a `membership_links` array. A membership charge line contains
 links for the memberships bought or renewed through that exact invoice item.
 A grouped charge line can have several links. A generated ticket contains a link
