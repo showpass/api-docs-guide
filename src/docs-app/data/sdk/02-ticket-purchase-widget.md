@@ -70,6 +70,39 @@ Open the [Widget Playground](/sdk/widget-playground), select the same environmen
 
 The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
 
+### Start a new checkout
+
+Applying or clearing a token changes the token held by your page. It does not discard items or change the customer attached to an existing Showpass basket. The Playground's **Clear token** control keeps that basket.
+
+Use **Start new checkout** to discard the current basket before switching customers or returning to ordinary checkout. The SDK opens a Showpass-hosted confirmation dialog and closes existing widgets:
+
+```javascript
+const tickets = window.showpass?.tickets;
+if (typeof tickets?.startNewCheckout !== "function") {
+  showResetUnavailable();
+} else {
+  try {
+    const completed = await tickets.startNewCheckout();
+    // true: server expiry was verified (or there was no basket).
+    // false: the user cancelled before an expiry request started.
+    // Recreate previews using your current configuration and in-memory token.
+    reopenPreviews();
+    if (completed) showNewCheckoutReady();
+  } catch {
+    // Keep previews closed and offer a reset retry until the result is verified.
+    showResetRetry();
+  }
+}
+```
+
+The old basket reference is cleared only after the server confirms expiry. Refused expiry, active purchases, holds, network errors, and unavailable hosted checkout do not report success. A lost response may mean the basket already expired; retrying verifies its state before proceeding.
+
+The method returns `Promise<boolean>` and accepts an optional `{ signal: AbortSignal }`. Aborting rejects with `AbortError`; it stops waiting and cannot undo an expiry already confirmed by the user. The host must recreate its embedded previews after success or safe cancellation. Keep them closed after failure and offer retry.
+
+The next basket uses the currently applied attribution token, or ordinary checkout if no token is applied. Ordinary checkout still respects the browser's authenticated session. Tokens remain in memory; never add them to URLs, storage, snippets, or persisted configuration.
+
+Deploy the rebuilt SDK and hosted checkout together before enabling this flow. Capability-check older SDKs; a new SDK connected to older hosted checkout rejects when the confirmation handshake is unavailable.
+
 ## Multiple widgets and a shared basket
 
 For admission, workshops, and experiences from the same Showpass organization, use buttons that open event and calendar widgets in modals. Customers can add an item, close the modal, open another offering, and return to [checkout](/sdk/checkout-widget) with the basket. Keep this flow on the same website and browser, before the basket expires.

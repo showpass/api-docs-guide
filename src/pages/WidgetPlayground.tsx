@@ -10,6 +10,7 @@ import SEOHead from "@/shared/components/SEOHead.tsx";
 import { seoDataMap } from "@/docs-app/data/seoData.ts";
 import { CalendarDays, Ticket, Users, ShoppingBag, ArrowUpRight, PanelTop, ChevronDown, Check } from "lucide-react";
 import { WIDGET_ENVIRONMENTS, type WidgetEnvironment } from "@/docs-app/ui/components/widgets/showpass-sdk";
+import { CheckoutRestartUnavailableError, runCheckoutRestart } from "@/docs-app/ui/components/widgets/checkout-restart";
 
 // Import Showpass components
 import ShowpassIntegration from "@/docs-app/ui/components/widgets/ShowpassIntegration.tsx";
@@ -104,7 +105,46 @@ const WidgetPlayground: React.FC = () => {
   const [eventError, setEventError] = React.useState("");
   const [isOpeningEvent, setIsOpeningEvent] = React.useState(false);
   const openingEvent = React.useRef(false);
+  const [isRestarting, setIsRestarting] = React.useState(false);
+  const [previewsPaused, setPreviewsPaused] = React.useState(false);
+  const [previewGeneration, setPreviewGeneration] = React.useState(0);
+  const [checkoutStatus, setCheckoutStatus] = React.useState("");
+  const [checkoutError, setCheckoutError] = React.useState("");
+  const restartController = React.useRef<AbortController>();
+  React.useEffect(() => () => restartController.current?.abort(), []);
   const onSdkReady = React.useCallback(() => setSdkReady(true), []);
+
+  const startNewCheckout = async () => {
+    if (restartController.current || openingEvent.current || !sdkReady) return;
+    const controller = new AbortController();
+    restartController.current = controller;
+    setCheckoutStatus("");
+    setCheckoutError("");
+    try {
+      await runCheckoutRestart(window.showpass?.tickets, {
+        signal: controller.signal,
+        onStart: () => { setIsRestarting(true); setPreviewsPaused(true); },
+        onRestorePreviews: (completed) => {
+          setPreviewGeneration((value) => value + 1);
+          setPreviewsPaused(false);
+          setCheckoutStatus(completed
+            ? customerAttributionToken
+              ? "New checkout ready. Your next basket will use the currently applied customer token."
+              : "New checkout ready. Your next basket will use ordinary checkout without a partner token."
+            : "New checkout cancelled. Your existing basket was kept.");
+        },
+      });
+    } catch (error) {
+      if (!controller.signal.aborted) {
+        setCheckoutError(error instanceof CheckoutRestartUnavailableError
+          ? error.message
+          : "We couldn't verify the basket reset. Previews remain closed. Retry start new checkout before continuing.");
+      }
+    } finally {
+      restartController.current = undefined;
+      if (!controller.signal.aborted) setIsRestarting(false);
+    }
+  };
 
   const changeEnvironment = (value: string) => {
     if (value === environment) return;
@@ -143,7 +183,7 @@ const WidgetPlayground: React.FC = () => {
   }), [modalWidgetOptions, customerAttributionToken]);
 
   const openEventWidget = async () => {
-    if (openingEvent.current || !sdkReady || !window.showpass?.tickets) return;
+    if (openingEvent.current || restartController.current || previewsPaused || !sdkReady || !window.showpass?.tickets) return;
     openingEvent.current = true;
     setIsOpeningEvent(true);
     setEventError("");
@@ -186,6 +226,7 @@ const WidgetPlayground: React.FC = () => {
       </div>
 
       <section aria-label="Widget configuration" data-testid="playground-controls" className="mb-4 overflow-hidden rounded-xl border bg-card shadow-sm [&_p]:mb-0">
+        <fieldset disabled={isRestarting} className="min-w-0 border-0 p-0">
         <fieldset className="min-w-0 p-3 sm:p-4">
           <legend className="float-left mb-2 flex w-full items-center gap-2 text-sm font-semibold">
             <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary/10 text-xs text-primary">1</span>
@@ -267,11 +308,12 @@ const WidgetPlayground: React.FC = () => {
                     <Button size="sm" disabled={!tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
                       onClick={() => setCustomerAttributionToken(tokenInput.trim())}>Apply token</Button>
                     <Button size="sm" variant="outline" disabled={!tokenInput && !customerAttributionToken}
-                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); }}>Clear token</Button>
+                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); setCheckoutStatus("Token cleared here. Your existing basket and its customer attribution are kept. Use Start new checkout to discard that basket."); }}>Clear token</Button>
                   </div>
                   {tokenError && <p role="alert" className="text-xs text-destructive">{tokenError}</p>}
                   {tokenInput.trim() !== customerAttributionToken && !tokenError && <p className="text-xs text-muted-foreground">Your changes have not been applied yet.</p>}
                   <p role="status" className="text-xs">{customerAttributionToken ? "Token applied to Event Tickets." : "No token applied. You can still try normal checkout."}</p>
+                  <p className="text-xs text-muted-foreground">Applying or clearing a token keeps the existing basket and its customer. Start a new checkout to change customers or begin ordinary checkout.</p>
                 </div>
               </details>
             )}
@@ -318,12 +360,21 @@ const WidgetPlayground: React.FC = () => {
             </div>
           </div>
         </div>
+        </fieldset>
       </section>
+      <div className="mb-4 flex flex-wrap items-center gap-3">
+        <Button variant="outline" disabled={!sdkReady || isRestarting || isOpeningEvent} onClick={startNewCheckout}>
+          {isRestarting ? "Starting…" : previewsPaused ? "Retry start new checkout" : "Start new checkout"}
+        </Button>
+        <p className="text-sm text-muted-foreground">Discards the current basket only after confirmation in Showpass checkout.</p>
+      </div>
+      {checkoutStatus && <p role="status" className="mb-4 text-sm">{checkoutStatus}</p>}
+      {checkoutError && <p role="alert" className="mb-4 text-sm text-destructive">{checkoutError}</p>}
       {sdkError && <p role="alert" className="mb-4 text-destructive">{sdkError} Check that this environment is running and reload the page.</p>}
       {!sdkReady && !sdkError && <p role="status" className="mb-4">Loading Showpass widgets…</p>}
 
       {/* Widget Content */}
-      {sdkReady && <div className="mb-10">
+      {sdkReady && !previewsPaused && <div key={previewGeneration} className="mb-10">
         {/* Modal Widgets */}
         {activeTab === "popup" && (
           <div className="space-y-6">
