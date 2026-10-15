@@ -200,8 +200,8 @@ This tag listens for messages from the Showpass iFrame and processes them.
 
 4. **Triggering:**
    - Click **Choose a trigger to make this tag fire...**
-   - Select **Window loded** trigger
-   - This ensures the listener is set up as soon as the page loads
+   - Select **Window Loaded** as the only firing trigger
+   - This registers the listener when the window finishes loading; it continues listening for subsequent messages
 5. Click **Save**
 
 ---
@@ -221,7 +221,9 @@ This tag listens for messages from the Showpass iFrame and processes them.
    - Check the box for **Use regex matching**. This allows the trigger to fire on any of the listed events
    - **This trigger fires on:** Select **All Custom Events**
 4. Click **Save**
-5. Update your existing tag to use this trigger. Your `Custom HTML - Listen for Showpass iFrame postMessage` should now trigger both `Window Loaded` and `Custom - Custom - Showpass Ecommerce Events`
+5. Use ecommerce event triggers on your analytics and marketing tags for the events each tag should track. Keep `Custom HTML - Listen for Showpass iFrame postMessage` configured to fire on **Window Loaded only**. If the listener already uses `Custom - Showpass Ecommerce Events`, remove that trigger from the listener.
+
+The listener remains active after Window Loaded. Firing it again on ecommerce events registers additional message handlers and can duplicate events pushed to the parent data layer.
 
 For tracking specific single events like `add_to_cart` - please see [Tracking Custom Conversions](https://dev.showpass.com/google-tag-manager/tracking-custom-conversions-marketing-pixels)
 
@@ -252,8 +254,9 @@ Test your setup using https://tagassistant.google.com/
 2. **Navigate to a page** on your website that contains the Showpass embedded widget
 3. **Perform ecommerce actions** within the widget (e.g., add to cart, purchase)
 4. **In the Parent GTM Tag Assistant:**
+   - Verify that `Custom HTML - Listen for Showpass iFrame postMessage` fires once on Window Loaded and does not fire again on ecommerce events
    - Look for your ecommerce events (e.g., `add_to_cart`, `purchase`) appearing in the event timeline
-   - Verify that your GA4 Ecommerce Event tag and other marketing tags fire as expected
+   - Verify that your configured analytics and marketing tags fire as expected
 5. **Check browser console:**
    - Look for any errors related to postMessage
    - You can add `console.log()` statements in your postMessage listener script to debug

@@ -1,8 +1,8 @@
 import { ApiExampleSet } from "@/docs-app/data/types.ts";
 
 const signingNote = `
-The request body must be hashed exactly as sent. Set PARTNER_CREDENTIAL to the
-complete credential provided by Showpass. The example splits it internally. The canonical
+The request body must be hashed exactly as sent. Set PARTNER_KEY_ID and PARTNER_SECRET to the
+separate values provided by Showpass. The canonical
 v1 marker identifies the signing protocol, independently of the API URL version.`;
 
 export const partnerHmacExamples = (
@@ -15,13 +15,8 @@ export const partnerHmacExamples = (
   return {
     curl: `(
 set -eu
-: "\${PARTNER_CREDENTIAL:?Set PARTNER_CREDENTIAL to your complete Showpass credential}"
-PARTNER_KEY_ID="\${PARTNER_CREDENTIAL%%.*}"
-PARTNER_SECRET="\${PARTNER_CREDENTIAL#*.}"
-if [ "$PARTNER_KEY_ID" = "$PARTNER_CREDENTIAL" ] || [ -z "$PARTNER_KEY_ID" ] || [ -z "$PARTNER_SECRET" ]; then
-  printf '%s\\n' 'Invalid Partner credential: expected key_id.secret' >&2
-  exit 1
-fi
+: "\${PARTNER_KEY_ID:?Set PARTNER_KEY_ID to your Showpass Partner key ID}"
+: "\${PARTNER_SECRET:?Set PARTNER_SECRET to your Showpass Partner secret}"
 TIMESTAMP=$(date +%s)
 NONCE=$(uuidgen | tr '[:upper:]' '[:lower:]')
 BODY='${escapedBody}'
@@ -45,10 +40,10 @@ import uuid
 
 import requests
 
-credential = os.environ["PARTNER_CREDENTIAL"].strip()
-partner_key_id, separator, partner_secret = credential.partition(".")
-if not separator or not partner_key_id or not partner_secret:
-    raise ValueError("Invalid Partner credential: expected key_id.secret")
+partner_key_id = os.environ["PARTNER_KEY_ID"]
+partner_secret = os.environ["PARTNER_SECRET"]
+if not partner_key_id or not partner_secret:
+    raise ValueError("Set both PARTNER_KEY_ID and PARTNER_SECRET")
 
 body = ${bodyLiteral}
 timestamp = str(int(time.time()))
@@ -78,12 +73,10 @@ print(response.status_code, response.json())`,
     node: `const crypto = require('crypto');
 const axios = require('axios');
 
-const credential = (process.env.PARTNER_CREDENTIAL || '').trim();
-const separatorIndex = credential.indexOf('.');
-const partnerKeyId = credential.slice(0, separatorIndex);
-const partnerSecret = credential.slice(separatorIndex + 1);
-if (separatorIndex < 1 || !partnerSecret) {
-  throw new Error('Invalid Partner credential: expected key_id.secret');
+const partnerKeyId = process.env.PARTNER_KEY_ID;
+const partnerSecret = process.env.PARTNER_SECRET;
+if (!partnerKeyId || !partnerSecret) {
+  throw new Error('Set both PARTNER_KEY_ID and PARTNER_SECRET');
 }
 
 const body = ${bodyLiteral};

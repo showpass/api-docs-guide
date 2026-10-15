@@ -28,6 +28,20 @@ webhooks](/api/partner-api-webhooks).
 
 ---
 
+## Membership purchases and generated tickets
+
+Membership purchases, renewals, and their generated ticket invoices use
+`invoice.purchase`. Select Purchase when configuring the endpoint. An existing
+enabled endpoint subscribed to Purchase can receive these notifications without
+a new subscription or endpoint.
+
+A membership charge notification is created after membership processing captures its purchase identifiers. A generated
+ticket notification has its own invoice transaction and includes the source
+purchase in `ticket_items[].membership_links`. Neither delivery order nor arrival
+together is guaranteed. See [Membership purchase linkage](/webhooks/webhooks-payload-invoice-object#membership-purchase-linkage).
+
+---
+
 ## Subscribing to events
 
 When you set up or edit a webhook endpoint in the Showpass dashboard (as described in "Setup and Management"), you will be able to select one or more of these event types. Your endpoint will then only receive notifications for the events it is subscribed to.

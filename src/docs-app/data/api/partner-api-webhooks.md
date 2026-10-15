@@ -1,4 +1,4 @@
-# Match orders to your customers
+# Partner API: Match orders to your customers
 
 Showpass webhooks report purchases and post-purchase changes. For an attributed checkout, the payload can include the stable customer ID from your system. This abbreviated purchase example shows the fields needed for correlation:
 
@@ -8,6 +8,7 @@ Showpass webhooks report purchases and post-purchase changes. For an attributed 
   "event_type": "invoice.purchase",
   "webhook_event_uuid": "09117c09-e1f8-4913-b2f5-52cc161cf5f7",
   "data": {
+    "showpass_organization_id": 456,
     "transaction_id": "d9-1234-4abc-8def-123456789abc",
     "partner_slug": "your-partner",
     "partner_external_user_id": "customer-42"
@@ -15,7 +16,7 @@ Showpass webhooks report purchases and post-purchase changes. For an attributed 
 }
 ```
 
-Check that `data.partner_slug` identifies your integration before looking up `data.partner_external_user_id`. Customer IDs are unique within a Partner integration, not across integrations. Use `data.transaction_id` to correlate the event's transaction and `webhook_event_uuid` to deduplicate deliveries.
+Check that `data.partner_slug` identifies your integration before looking up `data.partner_external_user_id`. Customer IDs are scoped to a Partner integration and venue. Use `data.showpass_organization_id` together with the Partner slug and external ID to resolve the venue customer mapping. Use `data.transaction_id` to correlate the event's transaction and `webhook_event_uuid` to deduplicate deliveries.
 
 For invoice events, the top-level `id` identifies the invoice transaction and is used for signature verification. It is not the unique webhook event ID. Different events can refer to the same transaction.
 

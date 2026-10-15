@@ -78,7 +78,7 @@ This is your venue/organization ID in Showpass. The plugin uses it to load your 
 
 **Parameter:** Widget Color (optional)
 
-The primary color of the Showpass purchase widget (the pop-up checkout modal).
+The primary color of the Showpass purchase widget (the checkout modal).
 
 **Value:** Hex color code (e.g., `#ff0000` for red)
 

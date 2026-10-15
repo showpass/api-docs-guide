@@ -1,30 +1,39 @@
 # Ticket Purchase Widget
 
-## Overview
+Use `eventPurchaseWidget` to let customers select tickets for one event and proceed to checkout. The event is identified by its **slug**, such as `summer-concert` from `https://www.showpass.com/summer-concert/`.
 
-The Ticket Purchase Widget allows users to select ticket quantities for a specific event and proceed to checkout. It provides a seamless ticket selection experience and can be displayed as a pop-up dialog or embedded directly into your webpage.
+## Before you start
 
----
+[Load the SDK once](/sdk/sdk-getting-started) and wait for it to be ready. Use the button and error-handling pattern in that guide with the calls below.
 
-## SDK Function Signature
+## Open a modal
+
+Call the widget from your button handler, without a container ID:
 
 ```javascript
-// Pop-up mode - displays as a modal dialog
-showpass.tickets.eventPurchaseWidget(slug, params);
-
-// Embedded mode - mounts into a container element
-showpass.tickets.eventPurchaseWidget(slug, params, containerId);
+window.showpass.tickets.eventPurchaseWidget("summer-concert", {
+  "theme-primary": "#24727b",
+  "keep-shopping": true,
+});
 ```
 
----
+`keep-shopping` changes the purchase widget's return button label. It does not link separate baskets.
 
-## Prerequisites
+## Embed one widget
 
-- The Showpass SDK must be included on your page (see "SDK Getting Started" guide)
-- Ensure the SDK is loaded before calling its functions
-- You need the event's unique **slug** identifier
+Create the container, then call the SDK after the container and SDK are ready:
 
----
+```html
+<div id="event-widget"></div>
+```
+
+```javascript
+window.showpass.tickets.eventPurchaseWidget(
+  "summer-concert",
+  { "theme-primary": "#24727b" },
+  "event-widget"
+);
+```
 
 ## Parameters
 
@@ -41,8 +50,6 @@ showpass.tickets.eventPurchaseWidget(slug, params, containerId);
 | **params['customer_attribution_token']** | String | Partner integrations | Short-lived token that associates checkout with a customer connected through the Partner API. |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML `<div>` element where the widget will mount |
 
----
-
 ## Partner customer attribution
 
 If your backend uses the Showpass Partner API, request a fresh customer attribution token before opening checkout and pass it in `params`:
@@ -53,199 +60,22 @@ showpass.tickets.eventPurchaseWidget(event.slug, {
 });
 ```
 
-The token binds the resulting Showpass basket and order to the linked Showpass customer. Checkout validates the payment organization against the Partner integration's current assignments and rejects a browser authenticated as a different customer. It does not create a full Showpass login session; additional buyer information and payment requirements still apply.
+The token binds the resulting Showpass basket and order to the linked Showpass customer. Checkout requires the payment organization to match the token's venue and remain within the Partner integration's current assignments. It rejects a browser authenticated as a different customer. It does not create a full Showpass login session; additional buyer information and payment requirements still apply.
 
 See [Build a partner ticketing flow](/api/partner-api-integration-flow) for the server-to-server customer sync, token issuance, webhook, and order-management steps.
 
 ### Try it in the playground
 
-Open the [Widget Playground](/sdk/widget-playground), select the same environment that issued your token, and enter an event slug from that environment. Choose **Event tickets**, expand **Partner customer**, and paste the API response's `customer_attribution_token`. Select **Apply token**, then try the **Popup** (modal) or **Embedded** (mounted) preview.
+Open the [Widget Playground](/sdk/widget-playground), select the same environment that issued your token, and enter an event slug whose payment organization matches the token's venue. Choose **Event tickets**, expand **Partner customer**, and paste the API response's `customer_attribution_token`. Select **Apply token**, then try the **Modal** or **Embedded** (mounted) preview.
 
 The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
 
-### Changing customers or starting without attribution
+## Multiple widgets and a shared basket
 
-**Clear token** removes the playground's token. It keeps the existing basket and any customer attribution already saved on that basket.
+For admission, workshops, and experiences from the same Showpass organization, use buttons that open event and calendar widgets in modals. Customers can add an item, close the modal, open another offering, and return to [checkout](/sdk/checkout-widget) with the basket. Keep this flow on the same website and browser, before the basket expires.
 
-To test a different customer, apply their token and select **Start new checkout**. To test ordinary checkout, clear the token first, then select **Start new checkout**. Showpass opens a confirmation dialog before discarding the old basket and releasing its reservations. After confirmation succeeds, select your items again. The next basket uses the currently applied token, if any. Renewing a token for the same customer does not require discarding their basket.
+**Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder.** This includes several purchase widgets, several calendars, or a mixture of the two. Separate inline widgets must not be relied on to maintain one synchronized basket.
 
-Integrations using the updated SDK can request the same confirmation:
+A single inline widget is a different layout. Do not extend the modal recommendation to a mixture of inline and modal widgets without testing that exact flow. When several offerings need one basket, use modals throughout.
 
-```js
-if (typeof window.showpass.tickets.startNewCheckout === "function") {
-  const restarted = await window.showpass.tickets.startNewCheckout();
-  if (restarted) {
-    await window.showpass.tickets.eventPurchaseWidget("event-slug", {
-      ...(customerAttributionToken ? { customer_attribution_token: customerAttributionToken } : {})
-    });
-  }
-}
-```
-
-`startNewCheckout()` closes existing widgets and resolves to `true` only after the reset is confirmed, or `false` when cancelled. Reload embedded previews after either result; cancellation retains the basket. Handle a rejected promise as a failed dialog launch. This method requires the updated SDK and checkout application in the selected environment; older SDKs do not expose it. It cannot discard a basket while a purchase is in progress.
-
----
-
-## Basic Usage Examples
-
-These examples assume the Showpass SDK is already loaded. For production-ready code that handles SDK loading, see "Robust Implementation Examples" below.
-
-### Pop-up Mode (Basic)
-
-```javascript
-// Define widget configuration
-let params = {
-  "theme-primary": "#FF7F00",
-  "keep-shopping": true,
-};
-
-// Open the ticket widget as a pop-up
-showpass.tickets.eventPurchaseWidget("my-event-slug", params);
-```
-
----
-
-### Embedded Mode (Basic)
-
-```html
-<!-- Container element for the widget -->
-<div id="event-widget-here"></div>
-
-<script>
-  // Configure and embed the widget
-  let embedParams = { "theme-primary": "#337ab7" };
-  showpass.tickets.eventPurchaseWidget(
-    "another-event-slug",
-    embedParams,
-    "event-widget-here"
-  );
-</script>
-```
-
-> **Note:** These basic examples assume `showpass.tickets` is ready. For production environments, always use the robust implementation patterns below.
-
----
-
-## Robust Implementation Examples
-
-These examples include proper SDK availability checks to ensure reliable execution.
-
-### Pop-up Mode (Robust)
-
-This implementation attaches event listeners to buttons with the class `showpass-popup-button` and reads the event slug from a `data-event-slug` attribute.
-
-**HTML:**
-
-```html
-<button class="showpass-popup-button" data-event-slug="my-first-event">
-  Buy Tickets for Event 1
-</button>
-<button class="showpass-popup-button" data-event-slug="another-event">
-  Buy Tickets for Event 2
-</button>
-```
-
-**JavaScript:**
-
-```javascript
-function initializeEventWidgets() {
-  const buttons = document.querySelectorAll(".showpass-popup-button");
-
-  buttons.forEach(function (button) {
-    button.addEventListener("click", function () {
-      const slug = button.getAttribute("data-event-slug");
-      
-      if (slug && window.showpass && window.showpass.tickets) {
-        const params = {
-          "theme-primary": "#007bff",
-          "keep-shopping": true,
-        };
-        window.showpass.tickets.eventPurchaseWidget(slug, params);
-      } else {
-        console.error("Showpass SDK not available or slug is missing.");
-      }
-    });
-  });
-}
-
-// Initialize when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", initializeEventWidgets);
-} else {
-  initializeEventWidgets();
-}
-```
-
----
-
-### Embedded Mode (Robust)
-
-This implementation ensures the SDK is loaded before embedding the widget.
-
-**HTML:**
-
-```html
-<div id="embedded-event-widget-container"></div>
-```
-
-**JavaScript:**
-
-```javascript
-function embedEventWidget() {
-  const containerId = "embedded-event-widget-container";
-  const eventSlug = "my-event-slug";
-
-  if (window.showpass && window.showpass.tickets) {
-    const params = {
-      "theme-primary": "#28a745",
-      "show-description": true,
-    };
-    window.showpass.tickets.eventPurchaseWidget(
-      eventSlug,
-      params,
-      containerId
-    );
-  } else {
-    console.error("Showpass SDK not available.");
-    // Optionally, retry after a delay
-    setTimeout(embedEventWidget, 500);
-  }
-}
-
-// Execute when DOM is ready
-if (document.readyState === "loading") {
-  document.addEventListener("DOMContentLoaded", embedEventWidget);
-} else {
-  embedEventWidget();
-}
-```
-
----
-
-### Alternative: Using Script Onload Callback
-
-If you're dynamically loading the SDK, you can use the `onload` callback:
-
-```javascript
-let script = document.createElement("script");
-script.onload = function () {
-  // SDK is now loaded - safe to call widget functions
-  const params = { "theme-primary": "#6c757d" };
-  window.showpass.tickets.eventPurchaseWidget(
-    "my-event-slug",
-    params
-  );
-};
-script.src = "https://www.showpass.com/static/dist/sdk.js";
-document.head.appendChild(script);
-```
-
----
-
-## Key Takeaways
-
-- **Slug is required:** Always obtain the correct event slug from the Showpass event URL
-- **Check SDK availability:** Production code should always verify `window.showpass.tickets` exists before calling functions
-- **Pop-up vs Embedded:** Use pop-up mode for quick interactions; use embedded mode for seamless page integration
-- **Customize appearance:** Use `theme-primary` to match your brand colors
-- **Handle loading:** Implement retry logic or use `DOMContentLoaded` to ensure SDK readiness
+Before launch, test adding items in both orders, navigating between booking pages, and reopening checkout. Confirm that all expected items are present on desktop and mobile. A shared storage key or a cart-count display alone does not verify the complete basket flow.

@@ -544,7 +544,7 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     className={navLinkClass}
                     onClick={handleLinkClick}
                   >
-                    Automatically opening popup widgets
+                    Automatically opening modal widgets
                   </NavLink>
                 </li>
                 <li>

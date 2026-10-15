@@ -2,14 +2,14 @@
 
 
 
-Welcome to the Showpass Google Tag Manager (GTM) integration guide. This documentation will help you understand how to leverage GTM to track user activity, implement Google Analytics 4 (GA4), and integrate other marketing tags for events and purchases managed through Showpass.
+This guide explains how to use Google Tag Manager (GTM) to track user activity and connect analytics and marketing tags to events and purchases managed through Showpass. Google Analytics 4 (GA4) is an optional destination for this data; it is not required to use the GTM integration.
 
 ## Purpose of GTM Integration
 
 Integrating Showpass with Google Tag Manager allows you to:
 
 - Track detailed ecommerce events (like `view_item`, `add_to_cart`, `purchase`)
-- Send this data to Google Analytics 4 (GA4) for comprehensive reporting
+- Send this data to your chosen analytics tools, including GA4 if you use it
 - Implement various third-party marketing and analytics tags (e.g., Facebook Pixel, TikTok Pixel, Google Ads) without modifying your website code directly
 - Gain deeper insights into customer behavior and conversion funnels
 

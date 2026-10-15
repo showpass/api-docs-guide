@@ -1,465 +1,128 @@
-# Adding a single button or embeddable widget
+# Adding a purchase button or embedded widget
 
-The Showpass WordPress plugin lets you add **"Buy Now"** buttons or embed the full **purchase widget** directly on your pages using the `[showpass_widget]` shortcode. Perfect for linking to specific events, products, or memberships.
+Use `[showpass_widget]` to sell tickets, products, or memberships from a WordPress page. By default, it creates a button that opens the purchase widget in a **modal**, an overlay on the current page. Set `embedded="true"` to display the widget **inline**, within the page layout.
 
+## Add your first button
 
-## What is a shortcode?
-
-A shortcode is a small piece of text wrapped in square brackets `[]` that WordPress replaces with dynamic content. WordPress transforms `[showpass_widget]` into a button or embedded purchase interface.
-
----
-
-## How to add the widget shortcode
-
-### Step 1: Open the page editor
-
-1. Go to the WordPress page or post where you want the button
-2. Click **Edit** to open the block editor
-
-### Step 2: Add a Shortcode block
-
-1. In the editor, click the **+** icon to add a new block
-2. Search for and add the **Shortcode** block
-
-![Shortcode](/images/wordpress/shortcode.png)
-
-3. Type your `[showpass_widget]` shortcode with parameters
-4. Click **Update** or **Publish**
-
-![Shortcode add](/images/wordpress/showpass-events.png)
-
-> **Tip:** You can also paste the shortcode directly into a Paragraph block in most themes.
-
----
-
-## Basic button usage
-
-Create a simple button that opens the Showpass purchase widget in a pop-up:
-
-```text
-[showpass_widget slug="your-event-slug"]
-```
-
-**Example:** For `https://showpass.com/my-awesome-concert`, use:
-
-```text
-[showpass_widget slug="my-awesome-concert"]
-```
-
-This creates a button with the default label **"Get Tickets"**. When clicked, the widget opens for ticket purchases.
-
----
-
-## Embedding the widget directly
-
-Display the purchase widget directly on the page (no button, no pop-up):
-
-```text
-[showpass_widget slug="your-event-slug" embedded="true"]
-```
-
-**Use case:** Dedicated ticketing pages where customers can purchase immediately without clicking a button.
-
----
-
-## Widget types
-
-The `[showpass_widget]` shortcode supports three types via the `type` parameter.
-
-### Events (default)
-
-**Parameter:** `type="event"`
-
-For selling event tickets.
-
-**Required:** `slug`
-
-**Examples:**
-
-```text
-[showpass_widget type="event" slug="annual-gala"]
-[showpass_widget type="event" slug="annual-gala" embedded="true"]
-```
-
-> **Note:** If `type` is omitted, `event` is assumed.
-
----
-
-### Products
-
-**Parameter:** `type="product"`
-
-For selling merchandise or other products.
-
-**Required:** `id` (numeric product ID from Showpass)
-
-**Examples:**
-
-```text
-[showpass_widget type="product" id="12345"]
-[showpass_widget type="product" id="12345" embedded="true"]
-```
-
----
-
-### Memberships
-
-**Parameter:** `type="membership"`
-
-For selling memberships.
-
-**Required:** `id` (numeric membership group ID from Showpass)
-
-**Examples:**
-
-```text
-[showpass_widget type="membership" id="67890"]
-[showpass_widget type="membership" id="67890" embedded="true"]
-```
-
----
-
-## Customization parameters
-
-Control what the widget loads and how it behaves using these parameters.
-
-### Event slug
-
-**Parameter:** `slug="your-event-slug"`
-
-**Use case:** Link to a specific event (required for `type="event"`)
-
-**Value:** The unique part of your Showpass event URL
-
-**Example:** For `showpass.com/halloween-party`, the slug is `halloween-party`
-
-```text
-[showpass_widget slug="halloween-party"]
-```
-
----
-
-### Product or membership ID
-
-**Parameter:** `id="12345"`
-
-**Use case:** Link to a product or membership
-
-**Value:** Numeric ID from your Showpass dashboard
-
-**Finding the ID:**
-
-1. Log in to Showpass dashboard
-2. Go to Products or Memberships
-3. Note the numeric ID next to the item name
-
-**Examples:**
-
-```text
-[showpass_widget type="product" id="5021"]
-[showpass_widget type="membership" id="9847"]
-```
-
----
-
-### Button text
-
-**Parameter:** `label="Your Custom Text"`
-
-**Use case:** Change the button label
-
-**Default:** "Get Tickets"
-
-**Examples:**
-
-```text
-[showpass_widget slug="summer-fest" label="Buy Tickets"]
-[showpass_widget slug="workshop" label="Register Now"]
-[showpass_widget type="product" id="123" label="Shop Now"]
-```
-
----
-
-### Embedded mode
-
-**Parameter:** `embedded="true"`
-
-**Use case:** Display the widget directly on the page (no button)
-
-**Default:** `false` (shows a button)
-
-**Example:**
-
-```text
-[showpass_widget slug="concert" embedded="true"]
-```
-
-**When to use:**
-- Dedicated ticketing pages
-- Checkout pages
-- Landing pages with single purchase focus
-
----
-
-### Tracking ID
-
-**Parameter:** `tracking_id="your-tracking-token"`
-
-**Use case:** Directly set an affiliate tracking ID for this widget (alternative to URL-based `aff` parameter)
-
-**Value:** Your Showpass tracking token
-
-**Example:**
-
-```text
-[showpass_widget slug="concert" tracking_id="8ee54af5"]
-```
-
-**Note:** This is a shortcode parameter alternative to using `?aff=token` in the URL. See [Widgets and affiliate tracking links](/wordpress/widgets-and-affiliate-tracking-links) for more details.
-
----
-
-### Show specific tickets
-
-**Parameter:** `show_specific_tickets="ticket-id-1,ticket-id-2"`
-
-**Use case:** Show only specific ticket types in the widget
-
-**Value:** Comma-separated list of ticket type IDs
-
-**Example:**
-
-```text
-[showpass_widget slug="event" show_specific_tickets="123,456"]
-```
-
----
-
-### Custom CSS class
-
-**Parameter:** `class="your-css-class"`
-
-**Use case:** Apply custom CSS classes to the button for styling
-
-**Default:** `"showpass-button"` (with default icon)
-
-**Important:** When you provide a custom `class`, the default ticket icon is **not included**. If you want the icon, use the default class or add your own icon via CSS.
-
-**Example:**
-
-```text
-[showpass_widget slug="event" class="btn btn-primary my-custom-button"]
-```
-
-**Note:** If you've set a default button class in admin settings (`option_showpass_default_button_class`), that will be used instead of `showpass-button` when `class` is not specified.
-
----
-
-### Keep shopping button text
-
-**Parameter:** `keep_shopping="true|false"`
-
-**Use case:** Override the global "Keep Shopping" button setting for this widget
-
-**Default:** Uses global admin setting (`option_keep_shopping`)
-
-**Values:** 
-- `"true"` - Show "Keep Shopping" button
-- `"false"` - Show "Close" button instead
-
-**Example:**
-
-```text
-[showpass_widget slug="event" keep_shopping="false"]
-```
-
-**Note:** This per-widget setting overrides the global admin setting.
-
----
-
-### Widget description visibility
-
-**Parameter:** `show_widget_description="true|false"`
-
-**Use case:** Override the global widget description setting for this widget
-
-**Default:** Uses global admin setting (`option_show_widget_description`)
-
-**Example:**
-
-```text
-[showpass_widget slug="event" show_widget_description="true"]
-```
-
----
-
-## Complete examples
-
-### Basic event button
+1. Open the page or post in the WordPress editor.
+2. Add a **Shortcode** block.
+3. Paste the shortcode below, replacing the event slug.
+4. Select **Update** or **Publish**, then check the button on the published page.
 
 ```text
 [showpass_widget slug="summer-concert"]
 ```
 
----
+The slug is the last part of the event URL. For `https://www.showpass.com/summer-concert/`, use `summer-concert`.
 
-### Custom button with text
+![Add a Shortcode block](/images/wordpress/shortcode.png)
+
+The default button label is **Get Tickets**. Use `label` to change it:
 
 ```text
-[showpass_widget slug="summer-concert" label="Get Your Tickets"]
+[showpass_widget slug="summer-concert" label="Buy Tickets"]
 ```
 
----
+## Choose what to sell
 
-### Embedded event widget
+| Offering | Shortcode | Identifier |
+| --- | --- | --- |
+| Event tickets | `[showpass_widget slug="summer-concert"]` | Event slug; `type="event"` is the default |
+| Products | `[showpass_widget type="product" id="12345" label="Shop Now"]` | Product ID |
+| Memberships | `[showpass_widget type="membership" id="67890" label="Join Now"]` | Membership group ID |
+
+Use the identifier for the offering you want to sell. A product or membership ID is not an event slug.
+
+## Embed one widget
+
+To display the purchase interface directly on a dedicated page, add `embedded="true"`:
 
 ```text
 [showpass_widget slug="summer-concert" embedded="true"]
 ```
 
----
-
-### Product purchase button
+The same setting applies to product and membership widgets:
 
 ```text
-[showpass_widget type="product" id="12345" label="Buy Merchandise"]
+[showpass_widget type="product" id="12345" embedded="true"]
 ```
 
----
+Choose the example for your page; these are alternatives, not a layout containing several inline widgets.
 
-### Membership signup (embedded)
+## Customize the widget
+
+Add parameters inside the shortcode, separated by spaces. Use straight quotation marks.
+
+| Parameter | Purpose | Example or default |
+| --- | --- | --- |
+| `type` | Select tickets, products, or memberships | `"event"` (default), `"product"`, or `"membership"` |
+| `slug` | Choose an event | `slug="summer-concert"` |
+| `id` | Choose a product or membership group | `id="12345"` |
+| `label` | Set the button text | `label="Register Now"` |
+| `embedded` | Display inline instead of opening a modal | `embedded="true"`; default is `false` |
+| `tracking_id` | Apply a Showpass tracking token | `tracking_id="campaign-token"` |
+| `show_specific_tickets` | Limit the ticket types shown | `show_specific_tickets="123,456"` |
+| `class` | Apply your theme's button classes | `class="btn btn-primary"` |
+| `keep_shopping` | Select “Keep Shopping” (`true`) or “Close” (`false`) for this purchase widget | Inherits the plugin's global setting when omitted |
+| `show_widget_description` | Override description visibility | `"true"` or `"false"`; inherits the global setting when omitted |
+
+For example, a workshop button with selected ticket types:
 
 ```text
-[showpass_widget type="membership" id="67890" embedded="true"]
+[showpass_widget slug="winter-workshop" label="Book a Workshop" show_specific_tickets="123,456" keep_shopping="true"]
 ```
 
----
+`keep_shopping` changes the purchase widget's button label. It is not a basket-linking setting. Do not assume the same parameter changes the calendar widget's controls.
 
-### Widget with tracking and custom styling
+For tracking setup, see [Widgets and affiliate tracking links](/wordpress/widgets-and-affiliate-tracking-links).
 
-```text
-[showpass_widget slug="annual-gala" label="Buy Tickets" tracking_id="campaign-123" class="custom-btn"]
-```
+### Button styling
 
----
+The default button class is `showpass-button`, unless a default class is configured in the plugin settings. Supplying a custom `class` replaces that choice and omits the default ticket icon.
 
-## Styling the button
-
-Customize the button appearance with CSS in your theme:
+To style the existing button, add CSS through **Appearance → Customize → Additional CSS** or your child theme:
 
 ```css
-/* Target the Showpass widget button */
 .showpass-widget-button {
-    background-color: #9e2a2b !important;
-    color: white !important;
-    padding: 15px 30px !important;
-    border-radius: 8px !important;
-    font-size: 18px !important;
-    font-weight: 600 !important;
+    background-color: #9e2a2b;
+    color: white;
+    padding: 15px 30px;
+    border-radius: 8px;
 }
 
 .showpass-widget-button:hover {
-    background-color: #7d2122 !important;
+    background-color: #7d2122;
 }
 ```
 
-**Where to add:**
-- **Appearance → Customize → Additional CSS**
-- Or in your child theme's `style.css`
+## Offer several events with one basket
 
----
-
-## Common use cases
-
-### Event landing page
-
-Create a dedicated page for each event with embedded widget:
+Use separate buttons that open modals for offerings from the same Showpass organization. You can combine single-event buttons with [calendar buttons](/wordpress/adding-calendar-widget):
 
 ```text
-[showpass_widget slug="spring-gala" embedded="true"]
+[showpass_widget slug="general-admission" label="Book Admission" keep_shopping="true"]
+[showpass_widget slug="winter-workshop" label="Book a Workshop" keep_shopping="true"]
+[showpass_calendar_widget label="Browse Experiences" tags="experiences"]
+[showpass_cart_button]
 ```
 
----
+Customers can add an item, close the modal, open another offering, and return to the cart to check out. Keep the [cart button](/wordpress/adding-checkout-cart-button) easy to find, including when customers navigate between booking pages.
 
-### Multiple events on one page
+## Limitations and launch checks
 
-Add multiple buttons for different events:
+**Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder.** This includes several purchase widgets or a mixture of embedded purchase and calendar widgets. Do not rely on separate inline widgets to maintain one synchronized basket.
 
-```text
-[showpass_widget slug="concert-a" label="Concert A Tickets"]
-[showpass_widget slug="concert-b" label="Concert B Tickets"]
-[showpass_widget slug="concert-c" label="Concert C Tickets"]
-```
+For several offerings with one basket, use modal buttons throughout. A single inline widget is a different layout; do not assume that mixing inline widgets and modals has the same basket behavior. See [Multiple widgets and a shared basket](/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket).
 
----
-
-### Sidebar widget
-
-Add a button in your sidebar (using a Shortcode widget or block):
-
-```text
-[showpass_widget slug="next-show" label="Buy Tickets"]
-```
-
----
-
-### Product showcase
-
-Embed product purchase widgets on product pages:
-
-```text
-[showpass_widget type="product" id="501" embedded="true"]
-```
-
----
+Before launch, test the customer's complete journey on desktop and mobile: add admission, add a workshop or experience, reopen the cart, and confirm both items are present. Repeat in the opposite order and across any relevant pages, using the same website and browser before the basket expires.
 
 ## Troubleshooting
 
-### Button doesn't appear
+| Problem | What to check |
+| --- | --- |
+| No button appears | Confirm the plugin is active, check the shortcode and quotation marks, then clear site caches. |
+| The wrong offering opens | Check `type` and the event slug, product ID, or membership group ID. |
+| Connection is blocked | Confirm HTTPS, domain configuration, and the browser console error. |
+| An embedded widget looks cramped | Check its container width and theme CSS. |
 
-- **Check plugin is active:** Plugins → Installed Plugins
-- **Verify shortcode syntax:** Ensure straight quotes, not curly quotes
-- **Clear cache:** Browser and WordPress caching plugins
-
----
-
-### Widget shows wrong event/product
-
-- **Verify slug or ID:** Check the exact value from Showpass
-- **Test directly on Showpass:** Confirm the event/product exists
-- **Check for typos:** Slugs and IDs are case-sensitive
-
----
-
-### "Connection blocked" error
-
-- **Whitelist your domain** in Showpass dashboard
-- **Check HTTPS:** Ensure consistent protocol usage
-- **Review browser console:** Look for specific error messages
-
----
-
-### Embedded widget styling issues
-
-- **Use custom CSS:** Target the embedded widget container with CSS
-- **Check container width:** Ensure parent container has adequate width
-- **Theme conflicts:** Check for CSS conflicts with your theme
-
----
-
-## Next steps
-
-Now that you know how to add purchase buttons and widgets, explore:
-
-- **[Display event lists](/wordpress/adding-event-list)** – Show multiple events in grid/list format
-- **[Create event detail pages](/wordpress/adding-event-detail-page)** – Build dedicated pages for each event
-- **[Add a calendar widget](/wordpress/adding-calendar-widget)** – Display interactive event calendar
-- **[Customize with templates](/wordpress/creating-custom-templates)** – Build custom layouts with raw data
-
----
-
-## Additional resources
-
-- **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
-- **WordPress Shortcode documentation:** [codex.wordpress.org/Shortcode](https://codex.wordpress.org/Shortcode)
-- **CSS customization guide:** [wordpress.org/support/article/css](https://wordpress.org/support/article/css/)
+For more layouts, see [event lists](/wordpress/adding-event-list), [event detail pages](/wordpress/adding-event-detail-page), and [custom templates](/wordpress/creating-custom-templates).
