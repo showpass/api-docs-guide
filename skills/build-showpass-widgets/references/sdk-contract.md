@@ -39,7 +39,7 @@ All widget factory methods below create and show their widget before resolving. 
 | `checkoutWidget`           | `(params, containerId?) => Promise<Widget>`                 | Requires the browser's current Showpass cart state.                                    |
 | `expressCheckoutWidget`    | `(params, containerId?) => Promise<Widget>`                 | Use only when the product flow explicitly requires it.                                 |
 | `addCartCountListener`     | `(listener) => cleanup`                                     | The callback receives a numeric cart count. Always call the cleanup function.          |
-| `startNewCheckout`         | `(options?: { signal?: AbortSignal }) => Promise<boolean>` | Added in the local checkout reset implementation. Requires deployment of both SDK and checkout; capability-check older bundles. Opens confirmation, expires and verifies the old basket, and returns true on success or false on cancellation. Closes existing widgets; remount embedded previews after either result. |
+| `startNewCheckout`         | `(options?: { signal?: AbortSignal }) => Promise<boolean>` | Requires coordinated SDK and hosted checkout deployment; capability-check older bundles. Opens confirmation, verifies expiry, and returns true on completion or false on cancellation before expiry starts. Failure and abort reject. Remount previews after either boolean result; keep them closed with retry after rejection. Abort cannot undo confirmed server expiry. |
 
 ## Modal and embedded modes
 
