@@ -80,7 +80,7 @@ Pass `{}` when no options are needed.
 
 These options work in the second argument to `calendarWidget` for both modal and embedded calendars. Use the camelCase names below for SDK calls; [WordPress shortcodes](/wordpress/adding-calendar-widget#calendar-targeting-and-display-options) use snake_case attributes.
 
-> **Availability:** Use a frontend and rebuilt SDK that implement these options. Special Events opening-view and `all` support are tracked in [frontend PR #7283](https://github.com/showpass/showpass-frontend/pull/7283); do not rely on them until that update is deployed. Legacy calendar routes do not implement the new targeting and display options.
+> **Availability:** Use a frontend and rebuilt SDK that implement these options. Legacy calendar routes do not implement the new targeting and display options.
 
 | SDK option | Type | Outgoing URL parameter | Effect |
 | --- | --- | --- | --- |
