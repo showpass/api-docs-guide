@@ -86,7 +86,7 @@ For example, a French-language calendar button:
 
 The following options apply to both `[showpass_calendar_widget]` and `[showpass_embed_calendar]`.
 
-> **Availability:** These shortcode options require plugin **4.0.9** and a matching calendar frontend and rebuilt SDK. The release work is tracked in [WordPress plugin PR #77](https://github.com/showpass/showpass-wordpress-plugin/pull/77) and [frontend PR #7283](https://github.com/showpass/showpass-frontend/pull/7283). Do not enable them before those updates are deployed. Legacy calendar routes and `[showpass_calendar]` do not implement these options.
+> **Availability:** These shortcode options require plugin **4.0.9** and a matching calendar frontend and rebuilt SDK. Do not enable them before those updates are deployed. Legacy calendar routes and `[showpass_calendar]` do not implement these options.
 
 | Shortcode attribute | Value | Effect |
 | --- | --- | --- |
