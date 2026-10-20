@@ -82,6 +82,54 @@ For example, a French-language calendar button:
 [showpass_calendar_widget label="Voir les dates" lang="fr"]
 ```
 
+## Calendar targeting and display options
+
+The following options apply to both `[showpass_calendar_widget]` and `[showpass_embed_calendar]`.
+
+> **Availability:** These shortcode options require plugin **4.0.9** and a matching calendar frontend and rebuilt SDK. The release work is tracked in [WordPress plugin PR #77](https://github.com/showpass/showpass-wordpress-plugin/pull/77) and [frontend PR #7283](https://github.com/showpass/showpass-frontend/pull/7283). Do not enable them before those updates are deployed. Legacy calendar routes and `[showpass_calendar]` do not implement these options.
+
+| Shortcode attribute | Value | Effect |
+| --- | --- | --- |
+| `calendar_date` | Venue-local date, such as `"2026-12-14"` | Starts with that date selected before proceeding to time selection. |
+| `calendar_timeslot` | Public timeslot slug, such as `"evening-show"` | Targets a time slot on `calendar_date`; use the actual slug for that calendar, not a display label or clock time. Requires `calendar_date`. |
+| `calendar_special_event` | One configured special-event key, comma-separated keys, or `"all"` | Sets the initial special-event filters. Keys come from the calendar's special-event configuration. Use `all` on its own to select every currently filterable special event. |
+| `calendar_open_state` | `"calendar"` or `"special-events"` | Chooses the initial discovery view independently of the special-event filters. Calendars without a rich Special Events panel stay in the calendar view. |
+| `display_price_patron_type_id` | Positive venue-local PatronType ID, such as `"17"` | Changes display pricing only. It does not filter dates, availability, or the tickets customers can buy. |
+| `hide_price` | `"true"` or `"false"` | Hides calendar price text and the price-range filter when true; availability and ticket selection are unchanged. |
+| `highlight_multi_day_events_on_start_date_only` | `"true"` or `"false"` | Highlights a multi-day event only on its local start date when true. |
+
+Omit an option to keep the calendar's default behavior. Use quoted shortcode values, including `"false"` when explicitly disabling a boolean option. Do not use JavaScript arrays or camelCase SDK option names in shortcodes.
+
+### Open the Special Events view
+
+For an attraction with Special Events configured:
+
+```text
+[showpass_calendar_widget label="Browse Special Events" is_attraction="true" event_id="123456" calendar_open_state="special-events" calendar_special_event="all"]
+```
+
+Opening the view and selecting filters are separate choices. Use only `calendar_open_state="special-events"` to open the panel without preselecting filters, or only `calendar_special_event="all"` to preselect filters while keeping the normal calendar view. `all` excludes ended special events and entries without usable stable keys.
+
+Customers can switch back to Calendar. If a quantity prompt is configured, it appears first. An explicit Special Events opening view takes precedence over automatic navigation to a targeted date or time slot.
+
+### Target a date and time slot
+
+Replace the example date and timeslot slug with values for your calendar:
+
+```text
+[showpass_embed_calendar is_attraction="true" event_id="123456" calendar_date="2026-12-14" calendar_timeslot="evening-show"]
+```
+
+### Control display pricing and highlighting
+
+Use a PatronType ID belonging to the organizer:
+
+```text
+[showpass_embed_calendar display_price_patron_type_id="17" hide_price="false" highlight_multi_day_events_on_start_date_only="true"]
+```
+
+These examples each use one embedded calendar. The [SDK reference](/sdk/event-calendar-widget#calendar-targeting-and-display-options) lists the equivalent JavaScript options and types.
+
 ## Combine calendars and event buttons
 
 For admission, workshops, and experiences that customers should buy together, use calendar and [single-event buttons](/wordpress/adding-single-button-embed-widget) that all open modals. Keep the offerings under the same Showpass organization and add a visible [cart button](/wordpress/adding-checkout-cart-button):
