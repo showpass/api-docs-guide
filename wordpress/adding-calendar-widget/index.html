@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-9pnDRG8k.js"></script>
+    <script type="module" crossorigin src="/assets/index-R9tW_5iv.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -130,13 +130,13 @@
 </code></pre>
 <p>These are alternative examples for a single calendar. Give it a wide content area and check the result in your theme on both desktop and mobile. Allow approximately 1200 px of width for the desktop layout.</p>
 <h2>Configure an attraction calendar</h2>
-<p>For an attraction with recurring dates or time slots, add <code>is_attraction=&quot;true&quot;</code>. Use <code>event_id</code> to scope the calendar to the parent event:</p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
+<p>For an attraction with recurring dates or time slots, add <code>is_attraction=&quot;true&quot;</code>. Use <code>event_id</code> for the parent attraction event’s <strong>slug</strong>, such as <code>daily-admission</code>, not its numeric database ID:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;daily-admission&quot;]
 </code></pre>
 <p>For an inline version of the same calendar:</p>
-<pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
+<pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;daily-admission&quot;]
 </code></pre>
-<p>These are <strong>WordPress shortcode parameters</strong>. For a direct JavaScript integration, use the separate <a href="/sdk/event-calendar-widget">SDK Calendar Widget reference</a>; its attraction example uses an event slug.</p>
+<p>The plugin forwards the attraction slug to the SDK. For a direct JavaScript integration, use the <a href="/sdk/event-calendar-widget">SDK Calendar Widget reference</a> with the same slug.</p>
 <h2>Parameters</h2>
 <table>
 <thead>
@@ -169,7 +169,7 @@
 <tr>
 <td><code>event_id</code></td>
 <td>Both</td>
-<td>Scope the attraction calendar to a parent event</td>
+<td>Parent attraction event <strong>slug</strong>, such as <code>&quot;daily-admission&quot;</code>; not a numeric event ID</td>
 </tr>
 <tr>
 <td><code>lang</code></td>
@@ -232,13 +232,13 @@
 <p>Omit an option to keep the calendar&#39;s default behavior. Use quoted shortcode values, including <code>&quot;false&quot;</code> when explicitly disabling a boolean option. Do not use JavaScript arrays or camelCase SDK option names in shortcodes.</p>
 <h3>Open the Special Events view</h3>
 <p>For an attraction with Special Events configured:</p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Browse Special Events&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot; calendar_open_state=&quot;special-events&quot; calendar_special_event=&quot;all&quot;]
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Browse Special Events&quot; is_attraction=&quot;true&quot; event_id=&quot;daily-admission&quot; calendar_open_state=&quot;special-events&quot; calendar_special_event=&quot;all&quot;]
 </code></pre>
 <p>Opening the view and selecting filters are separate choices. Use only <code>calendar_open_state=&quot;special-events&quot;</code> to open the panel without preselecting filters, or only <code>calendar_special_event=&quot;all&quot;</code> to preselect filters while keeping the normal calendar view. <code>all</code> excludes ended special events and entries without usable stable keys.</p>
 <p>Customers can switch back to Calendar. If a quantity prompt is configured, it appears first. An explicit Special Events opening view takes precedence over automatic navigation to a targeted date or time slot.</p>
 <h3>Target a date and time slot</h3>
 <p>Replace the example date and timeslot slug with values for your calendar:</p>
-<pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;123456&quot; calendar_date=&quot;2026-12-14&quot; calendar_timeslot=&quot;evening-show&quot;]
+<pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;daily-admission&quot; calendar_date=&quot;2026-12-14&quot; calendar_timeslot=&quot;evening-show&quot;]
 </code></pre>
 <h3>Control display pricing and highlighting</h3>
 <p>Use a PatronType ID belonging to the organizer:</p>
@@ -247,7 +247,7 @@
 <p>These examples each use one embedded calendar. The <a href="/sdk/event-calendar-widget#calendar-targeting-and-display-options">SDK reference</a> lists the equivalent JavaScript options and types.</p>
 <h2>Combine calendars and event buttons</h2>
 <p>For admission, workshops, and experiences that customers should buy together, use calendar and <a href="/wordpress/adding-single-button-embed-widget">single-event buttons</a> that all open modals. Keep the offerings under the same Showpass organization and add a visible <a href="/wordpress/adding-checkout-cart-button">cart button</a>:</p>
-<pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;daily-admission&quot;]
 [showpass_calendar_widget label=&quot;Browse Workshops&quot; tags=&quot;workshops&quot;]
 [showpass_widget slug=&quot;evening-experience&quot; label=&quot;Book an Experience&quot;]
 [showpass_cart_button]
