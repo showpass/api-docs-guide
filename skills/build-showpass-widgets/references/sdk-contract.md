@@ -57,7 +57,7 @@ Embedded mode:
 
 ## Query params
 
-The source-level `WidgetQueryParams` currently includes:
+The general source-level `WidgetQueryParams` inventory below is supplemented by the calendar URL mappings in [Typed calendar options and URL mapping](#typed-calendar-options-and-url-mapping):
 
 ```text
 event_id
@@ -144,6 +144,53 @@ await tickets.calendarWidget(venueId, {
 Attraction routing requires both `is_attraction: true` and a non-empty `event_id`. Without both, the SDK uses the standard calendar route.
 
 Although the option is named `event_id`, the current attraction route consumes an event **slug** (`pages/widget/calendar/attraction/[eventSlug].tsx`). Pass the organizer-provided attraction slug, not a numeric database ID.
+
+### Typed calendar options and URL mapping
+
+`calendarWidget` accepts `CalendarWidgetParams`. SDK callers use the camelCase options below; `features/calendar.ts` maps them to snake_case iframe query parameters. Do not pass the URL aliases as the preferred SDK object API.
+
+| SDK option | Type | Outgoing URL parameter | Effect |
+| --- | --- | --- | --- |
+| `calendarDate` | String | `calendar_date` | Venue-local date in `YYYY-MM-DD` format, such as `"2026-12-14"`. Selects the date before proceeding to time selection. |
+| `calendarTimeslot` | String | `calendar_timeslot` | Public timeslot slug on `calendarDate`, such as `"evening-show"`. Requires `calendarDate`; use the actual slug, not a display label or clock time. |
+| `calendarSpecialEvent` | String or string array | `calendar_special_event` | Configured stable special-event key, multiple keys, or the single reserved value `"all"` to select every currently filterable special event. |
+| `calendarOpenState` | `"calendar"` or `"special-events"` | `calendar_open_state` | Initial discovery view. Falls back to Calendar when no rich Special Events panel exists. |
+| `displayPricePatronTypeId` | Number | `display_price_patron_type_id` | Positive venue-local PatronType ID. Affects display pricing only, without filtering availability, dates, or purchasable ticket types. |
+| `hidePrice` | Boolean | `hide_price` | Hides calendar price text and the price-range filter when true. Does not change availability or ticket selection. |
+| `highlightMultiDayEventsOnStartDateOnly` | Boolean | `highlight_multi_day_events_on_start_date_only` | Highlights a multi-day event only on its venue-local start date when true. |
+
+The option mapping follows `packages/core/src/app-contexts/sdk/services/Widget/Widget-types.ts` and `packages/core/src/app-contexts/sdk/features/calendar.ts`. `calendarOpenState` and the reserved `calendarSpecialEvent: "all"` require the matching frontend and rebuilt SDK release; see the [calendar guide](https://dev.showpass.com/sdk/event-calendar-widget#calendar-targeting-and-display-options) for availability. This source check does not establish that a deployed bundle contains those additions.
+
+Use venue-local `YYYY-MM-DD` dates and actual public timeslot slugs. Special-event keys refer to configured attraction special events, not ordinary event tags or database IDs. A string selects one key; an array selects multiple keys and is transported as repeated `calendar_special_event` query parameters. Omit options to keep defaults. The falsy-value serializer limitation described above still applies; do not assume an explicit false overrides a non-default deployed setting.
+
+Modal display-pricing example:
+
+```ts
+await tickets.calendarWidget(venueId, {
+  displayPricePatronTypeId: 17,
+  hidePrice: true,
+});
+```
+
+Embedded attraction direct-target example, after the SDK and container are ready:
+
+```ts
+await tickets.calendarWidget(venueId, {
+  is_attraction: true,
+  event_id: attractionEventSlug,
+  calendarDate: "2026-12-14",
+  calendarTimeslot: "evening-show",
+  calendarSpecialEvent: ["opening-night", "holiday-show"],
+  displayPricePatronTypeId: 17,
+  hidePrice: false,
+}, "attraction-calendar");
+```
+
+Use `calendarSpecialEvent: "opening-night"` for a single configured key. Use `"all"` on its own to select all currently filterable special events after the corresponding SDK release. `calendarOpenState: "special-events"` opens the rich Special Events panel independently of filter selection; a configured quantity prompt remains first, and calendars without that panel retain the Calendar view.
+
+Direct targets do not bypass availability. Malformed dates or a timeslot without a valid date discard the direct-target request. Past dates use normal discovery. A requested future day is selected only when returned by the regular calendar response; a missing day stays unselected in a nonempty target month, while an empty month falls back to first-event discovery. An unmatched timeslot leaves time selection to the customer. Unknown special-event keys discard the initial special-event filter selection.
+
+For WordPress, use the corresponding snake_case shortcode attributes and comma-separated special-event keys. The plugin's `event_id` attribute forwards the attraction event slug to the same SDK route; it is not a numeric event ID. See the [WordPress calendar guide](https://dev.showpass.com/wordpress/adding-calendar-widget#calendar-targeting-and-display-options).
 
 ## Cart listener
 

@@ -88,8 +88,8 @@ Add a button that opens the modern calendar widget in a modal.
 ```text
 [showpass_calendar_widget]
 [showpass_calendar_widget label="View Calendar" tags="comedy"]
-[showpass_calendar_widget is_attraction="true" event_id="123456"]
-[showpass_calendar_widget is_attraction="true" event_id="123456" calendar_open_state="special-events" calendar_special_event="all"]
+[showpass_calendar_widget is_attraction="true" event_id="daily-admission"]
+[showpass_calendar_widget is_attraction="true" event_id="daily-admission" calendar_open_state="special-events" calendar_special_event="all"]
 ```
 
 ---
@@ -109,7 +109,7 @@ Embed the full calendar widget directly on a page.
 ```text
 [showpass_embed_calendar]
 [showpass_embed_calendar tags="workshop" lang="fr"]
-[showpass_embed_calendar is_attraction="true" event_id="123456"]
+[showpass_embed_calendar is_attraction="true" event_id="daily-admission"]
 [showpass_embed_calendar hide_price="true" highlight_multi_day_events_on_start_date_only="true"]
 ```
 

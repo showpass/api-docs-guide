@@ -82,15 +82,17 @@ These options work in the second argument to `calendarWidget` for both modal and
 
 > **Availability:** Use a frontend and rebuilt SDK that implement these options. Special Events opening-view and `all` support are tracked in [frontend PR #7283](https://github.com/showpass/showpass-frontend/pull/7283); do not rely on them until that update is deployed. Legacy calendar routes do not implement the new targeting and display options.
 
-| SDK option | Type | Effect |
-| --- | --- | --- |
-| `calendarDate` | String | Venue-local date in `YYYY-MM-DD` format, such as `"2026-12-14"`. Selects the date before proceeding to time selection. |
-| `calendarTimeslot` | String | Public timeslot slug on `calendarDate`, such as `"evening-show"`. Requires `calendarDate`; use the actual slug, not a display label or clock time. |
-| `calendarSpecialEvent` | String or string array | Configured stable special-event key, multiple keys, or the single reserved value `"all"` to select every currently filterable special event. |
-| `calendarOpenState` | `"calendar"` or `"special-events"` | Initial discovery view. Falls back to Calendar when no rich Special Events panel exists. |
-| `displayPricePatronTypeId` | Number | Positive venue-local PatronType ID. Affects display pricing only, without filtering availability, dates, or purchasable ticket types. |
-| `hidePrice` | Boolean | Hides calendar price text and the price-range filter when true. Does not change availability or ticket selection. |
-| `highlightMultiDayEventsOnStartDateOnly` | Boolean | Highlights a multi-day event only on its venue-local start date when true. |
+| SDK option | Type | Outgoing URL parameter | Effect |
+| --- | --- | --- | --- |
+| `calendarDate` | String | `calendar_date` | Venue-local date in `YYYY-MM-DD` format, such as `"2026-12-14"`. Selects the date before proceeding to time selection. |
+| `calendarTimeslot` | String | `calendar_timeslot` | Public timeslot slug on `calendarDate`, such as `"evening-show"`. Requires `calendarDate`; use the actual slug, not a display label or clock time. |
+| `calendarSpecialEvent` | String or string array | `calendar_special_event` | Configured stable special-event key, multiple keys, or the single reserved value `"all"` to select every currently filterable special event. |
+| `calendarOpenState` | `"calendar"` or `"special-events"` | `calendar_open_state` | Initial discovery view. Falls back to Calendar when no rich Special Events panel exists. |
+| `displayPricePatronTypeId` | Number | `display_price_patron_type_id` | Positive venue-local PatronType ID. Affects display pricing only, without filtering availability, dates, or purchasable ticket types. |
+| `hidePrice` | Boolean | `hide_price` | Hides calendar price text and the price-range filter when true. Does not change availability or ticket selection. |
+| `highlightMultiDayEventsOnStartDateOnly` | Boolean | `highlight_multi_day_events_on_start_date_only` | Highlights a multi-day event only on its venue-local start date when true. |
+
+The SDK maps these camelCase options to the snake_case URL parameters internally. Use the SDK option names in JavaScript objects; the URL names describe iframe transport. Arrays produce repeated `calendar_special_event` query parameters.
 
 Omit an option to retain calendar defaults. Pass numbers and booleans as JavaScript values, such as `17` and `false`, rather than strings.
 
@@ -134,6 +136,36 @@ window.showpass.tickets.calendarWidget(
   "targeted-calendar"
 );
 ```
+
+### Target several special events
+
+For an attraction with configured special events, pass their stable keys, not event IDs, display labels, or ordinary event tags:
+
+```javascript
+window.showpass.tickets.calendarWidget(123, {
+  is_attraction: true,
+  event_id: "daily-admission",
+  calendarDate: "2026-12-14",
+  calendarTimeslot: "evening-show",
+  calendarSpecialEvent: ["opening-night", "holiday-show"],
+  displayPricePatronTypeId: 17,
+  hidePrice: true,
+});
+```
+
+Use `calendarSpecialEvent: "opening-night"` for a single key. These filters select configured attraction special events; they do not replace the standard calendar's `tags` filter.
+
+### Direct-target fallback
+
+Direct targets are initial selections, not a way to bypass availability or purchase tickets automatically:
+
+- A malformed date, multiple date/timeslot values, or a timeslot without a valid date causes the direct-target request to be ignored. Normal calendar browsing remains available.
+- A past date does not become the selected date. The calendar uses its normal discovery flow.
+- A valid future date is selected only if the normal calendar response contains that day. If the month has events but the requested day does not, the calendar stays on that month without selecting the day. An empty month falls back to normal first-event discovery.
+- If a timeslot slug does not match the selected date's public timeslots, customers choose from the available times instead.
+- Unknown special-event keys do not create filters. If any requested key is unknown, the initial special-event filter selection is discarded.
+
+Dates are interpreted in the venue's timezone. Normal ticket availability, quantity prompts, and checkout validation still apply.
 
 ## Shared-basket limitations
 

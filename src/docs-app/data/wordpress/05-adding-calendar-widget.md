@@ -51,19 +51,19 @@ These are alternative examples for a single calendar. Give it a wide content are
 
 ## Configure an attraction calendar
 
-For an attraction with recurring dates or time slots, add `is_attraction="true"`. Use `event_id` to scope the calendar to the parent event:
+For an attraction with recurring dates or time slots, add `is_attraction="true"`. Use `event_id` for the parent attraction event’s **slug**, such as `daily-admission`, not its numeric database ID:
 
 ```text
-[showpass_calendar_widget label="Book Admission" is_attraction="true" event_id="123456"]
+[showpass_calendar_widget label="Book Admission" is_attraction="true" event_id="daily-admission"]
 ```
 
 For an inline version of the same calendar:
 
 ```text
-[showpass_embed_calendar is_attraction="true" event_id="123456"]
+[showpass_embed_calendar is_attraction="true" event_id="daily-admission"]
 ```
 
-These are **WordPress shortcode parameters**. For a direct JavaScript integration, use the separate [SDK Calendar Widget reference](/sdk/event-calendar-widget); its attraction example uses an event slug.
+The plugin forwards the attraction slug to the SDK. For a direct JavaScript integration, use the [SDK Calendar Widget reference](/sdk/event-calendar-widget) with the same slug.
 
 ## Parameters
 
@@ -73,7 +73,7 @@ These are **WordPress shortcode parameters**. For a direct JavaScript integratio
 | `class` | Modal button | Custom CSS classes; defaults to `"showpass-button"` |
 | `tags` | Both | Event tags, such as `"workshops"` or `"workshops,experiences"`; omit for all organizer events |
 | `is_attraction` | Both | Set to `"true"` for attraction mode |
-| `event_id` | Both | Scope the attraction calendar to a parent event |
+| `event_id` | Both | Parent attraction event **slug**, such as `"daily-admission"`; not a numeric event ID |
 | `lang` | Both | Use `"fr"` for French; English is the default |
 
 For example, a French-language calendar button:
@@ -105,7 +105,7 @@ Omit an option to keep the calendar's default behavior. Use quoted shortcode val
 For an attraction with Special Events configured:
 
 ```text
-[showpass_calendar_widget label="Browse Special Events" is_attraction="true" event_id="123456" calendar_open_state="special-events" calendar_special_event="all"]
+[showpass_calendar_widget label="Browse Special Events" is_attraction="true" event_id="daily-admission" calendar_open_state="special-events" calendar_special_event="all"]
 ```
 
 Opening the view and selecting filters are separate choices. Use only `calendar_open_state="special-events"` to open the panel without preselecting filters, or only `calendar_special_event="all"` to preselect filters while keeping the normal calendar view. `all` excludes ended special events and entries without usable stable keys.
@@ -117,7 +117,7 @@ Customers can switch back to Calendar. If a quantity prompt is configured, it ap
 Replace the example date and timeslot slug with values for your calendar:
 
 ```text
-[showpass_embed_calendar is_attraction="true" event_id="123456" calendar_date="2026-12-14" calendar_timeslot="evening-show"]
+[showpass_embed_calendar is_attraction="true" event_id="daily-admission" calendar_date="2026-12-14" calendar_timeslot="evening-show"]
 ```
 
 ### Control display pricing and highlighting
@@ -135,7 +135,7 @@ These examples each use one embedded calendar. The [SDK reference](/sdk/event-ca
 For admission, workshops, and experiences that customers should buy together, use calendar and [single-event buttons](/wordpress/adding-single-button-embed-widget) that all open modals. Keep the offerings under the same Showpass organization and add a visible [cart button](/wordpress/adding-checkout-cart-button):
 
 ```text
-[showpass_calendar_widget label="Book Admission" is_attraction="true" event_id="123456"]
+[showpass_calendar_widget label="Book Admission" is_attraction="true" event_id="daily-admission"]
 [showpass_calendar_widget label="Browse Workshops" tags="workshops"]
 [showpass_widget slug="evening-experience" label="Book an Experience"]
 [showpass_cart_button]
