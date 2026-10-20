@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index--i-tWyrV.js"></script>
+    <script type="module" crossorigin src="/assets/index-DPP9JOq2.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -201,6 +201,85 @@
 <td>Prompt for quantity before adding tickets to the cart</td>
 </tr>
 </tbody></table>
+<h2>Calendar targeting and display options</h2>
+<p>These options work in the second argument to <code>calendarWidget</code> for both modal and embedded calendars. Use the camelCase names below for SDK calls; <a href="/wordpress/adding-calendar-widget#calendar-targeting-and-display-options">WordPress shortcodes</a> use snake_case attributes.</p>
+<blockquote>
+<p><strong>Availability:</strong> Use a frontend and rebuilt SDK that implement these options. Special Events opening-view and <code>all</code> support are tracked in <a href="https://github.com/showpass/showpass-frontend/pull/7283">frontend PR #7283</a>; do not rely on them until that update is deployed. Legacy calendar routes do not implement the new targeting and display options.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>SDK option</th>
+<th>Type</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>calendarDate</code></td>
+<td>String</td>
+<td>Venue-local date in <code>YYYY-MM-DD</code> format, such as <code>&quot;2026-12-14&quot;</code>. Selects the date before proceeding to time selection.</td>
+</tr>
+<tr>
+<td><code>calendarTimeslot</code></td>
+<td>String</td>
+<td>Public timeslot slug on <code>calendarDate</code>, such as <code>&quot;evening-show&quot;</code>. Requires <code>calendarDate</code>; use the actual slug, not a display label or clock time.</td>
+</tr>
+<tr>
+<td><code>calendarSpecialEvent</code></td>
+<td>String or string array</td>
+<td>Configured stable special-event key, multiple keys, or the single reserved value <code>&quot;all&quot;</code> to select every currently filterable special event.</td>
+</tr>
+<tr>
+<td><code>calendarOpenState</code></td>
+<td><code>&quot;calendar&quot;</code> or <code>&quot;special-events&quot;</code></td>
+<td>Initial discovery view. Falls back to Calendar when no rich Special Events panel exists.</td>
+</tr>
+<tr>
+<td><code>displayPricePatronTypeId</code></td>
+<td>Number</td>
+<td>Positive venue-local PatronType ID. Affects display pricing only, without filtering availability, dates, or purchasable ticket types.</td>
+</tr>
+<tr>
+<td><code>hidePrice</code></td>
+<td>Boolean</td>
+<td>Hides calendar price text and the price-range filter when true. Does not change availability or ticket selection.</td>
+</tr>
+<tr>
+<td><code>highlightMultiDayEventsOnStartDateOnly</code></td>
+<td>Boolean</td>
+<td>Highlights a multi-day event only on its venue-local start date when true.</td>
+</tr>
+</tbody></table>
+<p>Omit an option to retain calendar defaults. Pass numbers and booleans as JavaScript values, such as <code>17</code> and <code>false</code>, rather than strings.</p>
+<h3>Open Special Events and select all filters</h3>
+<p>Run this after the SDK is ready, using your own organization and attraction slug:</p>
+<pre><code class="language-javascript">window.showpass.tickets.calendarWidget(123, {
+  is_attraction: true,
+  event_id: &quot;daily-admission&quot;,
+  calendarOpenState: &quot;special-events&quot;,
+  calendarSpecialEvent: &quot;all&quot;,
+});
+</code></pre>
+<p>The two options are independent: <code>calendarOpenState</code> chooses the view, while <code>calendarSpecialEvent</code> chooses filters. To preselect specific keys instead, use <code>calendarSpecialEvent: [&quot;opening-night&quot;, &quot;holiday-show&quot;]</code> with keys from that calendar&#39;s configuration. <code>&quot;all&quot;</code> excludes ended special events and entries without usable stable keys; do not combine it with individual keys in an array.</p>
+<p>A configured quantity prompt appears first. An explicit Special Events opening view takes precedence over automatic date/timeslot navigation. Customers can switch back to Calendar and continue browsing.</p>
+<h3>Embed a targeted date and time slot</h3>
+<p>Create the container before running the SDK call. Replace the example date, slug, and PatronType ID with values for your calendar:</p>
+<pre><code class="language-html">&lt;div id=&quot;targeted-calendar&quot;&gt;&lt;/div&gt;
+</code></pre>
+<pre><code class="language-javascript">window.showpass.tickets.calendarWidget(
+  123,
+  {
+    is_attraction: true,
+    event_id: &quot;daily-admission&quot;,
+    calendarDate: &quot;2026-12-14&quot;,
+    calendarTimeslot: &quot;evening-show&quot;,
+    displayPricePatronTypeId: 17,
+    hidePrice: false,
+    highlightMultiDayEventsOnStartDateOnly: true,
+  },
+  &quot;targeted-calendar&quot;
+);
+</code></pre>
 <h2>Shared-basket limitations</h2>
 <p>For several calendars or a calendar alongside single-event widgets, use buttons that open modals when customers need one basket. Keep the offerings within the same Showpass organization and provide a <a href="/sdk/checkout-widget">checkout button</a>.</p>
 <p><strong>Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder.</strong> This includes multiple embedded calendars and calendars beside inline purchase widgets. A single embedded calendar is a different layout.</p>

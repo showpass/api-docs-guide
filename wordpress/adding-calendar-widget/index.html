@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index--i-tWyrV.js"></script>
+    <script type="module" crossorigin src="/assets/index-DPP9JOq2.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -180,6 +180,71 @@
 <p>For example, a French-language calendar button:</p>
 <pre><code class="language-text">[showpass_calendar_widget label=&quot;Voir les dates&quot; lang=&quot;fr&quot;]
 </code></pre>
+<h2>Calendar targeting and display options</h2>
+<p>The following options apply to both <code>[showpass_calendar_widget]</code> and <code>[showpass_embed_calendar]</code>.</p>
+<blockquote>
+<p><strong>Availability:</strong> These shortcode options require plugin <strong>4.0.9</strong> and a matching calendar frontend and rebuilt SDK. The release work is tracked in <a href="https://github.com/showpass/showpass-wordpress-plugin/pull/77">WordPress plugin PR #77</a> and <a href="https://github.com/showpass/showpass-frontend/pull/7283">frontend PR #7283</a>. Do not enable them before those updates are deployed. Legacy calendar routes and <code>[showpass_calendar]</code> do not implement these options.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Shortcode attribute</th>
+<th>Value</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>calendar_date</code></td>
+<td>Venue-local date, such as <code>&quot;2026-12-14&quot;</code></td>
+<td>Starts with that date selected before proceeding to time selection.</td>
+</tr>
+<tr>
+<td><code>calendar_timeslot</code></td>
+<td>Public timeslot slug, such as <code>&quot;evening-show&quot;</code></td>
+<td>Targets a time slot on <code>calendar_date</code>; use the actual slug for that calendar, not a display label or clock time. Requires <code>calendar_date</code>.</td>
+</tr>
+<tr>
+<td><code>calendar_special_event</code></td>
+<td>One configured special-event key, comma-separated keys, or <code>&quot;all&quot;</code></td>
+<td>Sets the initial special-event filters. Keys come from the calendar&#39;s special-event configuration. Use <code>all</code> on its own to select every currently filterable special event.</td>
+</tr>
+<tr>
+<td><code>calendar_open_state</code></td>
+<td><code>&quot;calendar&quot;</code> or <code>&quot;special-events&quot;</code></td>
+<td>Chooses the initial discovery view independently of the special-event filters. Calendars without a rich Special Events panel stay in the calendar view.</td>
+</tr>
+<tr>
+<td><code>display_price_patron_type_id</code></td>
+<td>Positive venue-local PatronType ID, such as <code>&quot;17&quot;</code></td>
+<td>Changes display pricing only. It does not filter dates, availability, or the tickets customers can buy.</td>
+</tr>
+<tr>
+<td><code>hide_price</code></td>
+<td><code>&quot;true&quot;</code> or <code>&quot;false&quot;</code></td>
+<td>Hides calendar price text and the price-range filter when true; availability and ticket selection are unchanged.</td>
+</tr>
+<tr>
+<td><code>highlight_multi_day_events_on_start_date_only</code></td>
+<td><code>&quot;true&quot;</code> or <code>&quot;false&quot;</code></td>
+<td>Highlights a multi-day event only on its local start date when true.</td>
+</tr>
+</tbody></table>
+<p>Omit an option to keep the calendar&#39;s default behavior. Use quoted shortcode values, including <code>&quot;false&quot;</code> when explicitly disabling a boolean option. Do not use JavaScript arrays or camelCase SDK option names in shortcodes.</p>
+<h3>Open the Special Events view</h3>
+<p>For an attraction with Special Events configured:</p>
+<pre><code class="language-text">[showpass_calendar_widget label=&quot;Browse Special Events&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot; calendar_open_state=&quot;special-events&quot; calendar_special_event=&quot;all&quot;]
+</code></pre>
+<p>Opening the view and selecting filters are separate choices. Use only <code>calendar_open_state=&quot;special-events&quot;</code> to open the panel without preselecting filters, or only <code>calendar_special_event=&quot;all&quot;</code> to preselect filters while keeping the normal calendar view. <code>all</code> excludes ended special events and entries without usable stable keys.</p>
+<p>Customers can switch back to Calendar. If a quantity prompt is configured, it appears first. An explicit Special Events opening view takes precedence over automatic navigation to a targeted date or time slot.</p>
+<h3>Target a date and time slot</h3>
+<p>Replace the example date and timeslot slug with values for your calendar:</p>
+<pre><code class="language-text">[showpass_embed_calendar is_attraction=&quot;true&quot; event_id=&quot;123456&quot; calendar_date=&quot;2026-12-14&quot; calendar_timeslot=&quot;evening-show&quot;]
+</code></pre>
+<h3>Control display pricing and highlighting</h3>
+<p>Use a PatronType ID belonging to the organizer:</p>
+<pre><code class="language-text">[showpass_embed_calendar display_price_patron_type_id=&quot;17&quot; hide_price=&quot;false&quot; highlight_multi_day_events_on_start_date_only=&quot;true&quot;]
+</code></pre>
+<p>These examples each use one embedded calendar. The <a href="/sdk/event-calendar-widget#calendar-targeting-and-display-options">SDK reference</a> lists the equivalent JavaScript options and types.</p>
 <h2>Combine calendars and event buttons</h2>
 <p>For admission, workshops, and experiences that customers should buy together, use calendar and <a href="/wordpress/adding-single-button-embed-widget">single-event buttons</a> that all open modals. Keep the offerings under the same Showpass organization and add a visible <a href="/wordpress/adding-checkout-cart-button">cart button</a>:</p>
 <pre><code class="language-text">[showpass_calendar_widget label=&quot;Book Admission&quot; is_attraction=&quot;true&quot; event_id=&quot;123456&quot;]
