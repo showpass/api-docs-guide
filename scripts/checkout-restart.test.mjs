@@ -16,7 +16,11 @@ function fixture() {
   const controller = new AbortController();
   const window = {
     crypto: webcrypto,
-    location: { origin: "https://dev.showpass.com" },
+    location: { origin: "https://dev.showpass.com", reload: () => events.push("reload") },
+    history: {
+      state: { idx: 0 },
+      replaceState(state, title, url) { this.state = state; if (url) window.location.href = new URL(url, window.location.origin).toString(); },
+    },
     addEventListener: (type, fn) => listeners.add(fn),
     removeEventListener: (type, fn) => listeners.delete(fn),
     setTimeout: (fn, delay) => { const id = Symbol(); timers.set(id, { fn, delay }); return id; },
@@ -29,7 +33,7 @@ function fixture() {
   };
   const exports = {};
   vm.runInNewContext(code, { window, exports, Error, DOMException, URL, URLSearchParams, Uint32Array });
-  const options = { origin: "https://www.showpass.com", signal: controller.signal, onReady: () => events.push("ready") };
+  const options = { origin: "https://www.showpass.com", signal: controller.signal };
   function message(status, overrides = {}) {
     const requestId = frame.src ? new URL(frame.src).searchParams.get("requestId") : "late";
     for (const listener of [...listeners]) listener({ origin: options.origin, source: frame.contentWindow, data: { type: exports.CHECKOUT_RESET_MESSAGE, requestId, status }, ...overrides });
@@ -40,7 +44,7 @@ function fixture() {
 test("navigation retains only public settings and strips tokens and reset state", () => {
   const f = fixture();
   const search = new URLSearchParams({ environment: "demo", eventId: "event", membershipId: "membership", theme: "#24727b", tab: "mounted", widget: "event", customer_attribution_token: "SECRET", token: "SECRET", returnUrl: "https://evil.example", checkoutAction: "reset" });
-  const resetUrl = new URL(f.getCheckoutResetUrl(search, true), f.window.location.origin);
+  const resetUrl = new URL(f.getCheckoutResetUrl(search, "reset"), f.window.location.origin);
   assert.equal(resetUrl.pathname, "/sdk/widget-playground");
   assert.equal(resetUrl.searchParams.get("memberId"), "membership");
   assert.equal(resetUrl.searchParams.get("checkoutAction"), "reset");
@@ -49,9 +53,33 @@ test("navigation retains only public settings and strips tokens and reset state"
   assert.equal(resetUrl.searchParams.get("tab"), "mounted");
   assert.ok(!resetUrl.toString().includes("SECRET"));
   assert.ok(!resetUrl.searchParams.has("returnUrl"));
-  const back = new URL(f.getCheckoutResetUrl(resetUrl.searchParams, false), f.window.location.origin);
+  const back = new URL(f.getCheckoutResetUrl(resetUrl.searchParams), f.window.location.origin);
   assert.ok(!back.searchParams.has("checkoutAction"));
   assert.equal(back.searchParams.get("theme"), "#24727b");
+});
+
+test("a button click reloads the Playground with a single-use reset intent and no token", () => {
+  const f = fixture();
+  assert.equal(f.consumeCheckoutResetIntent(), false);
+  f.startCheckoutReset(new URLSearchParams({ environment: "demo", eventId: "test-event", customer_attribution_token: "SECRET" }));
+  const url = new URL(f.window.location.href);
+  assert.equal(url.pathname, "/sdk/widget-playground");
+  assert.equal(url.searchParams.get("checkoutAction"), "reset");
+  assert.ok(!f.window.location.href.includes("SECRET"));
+  assert.ok(!JSON.stringify(f.window.history.state).includes("SECRET"));
+  assert.deepEqual(f.events, ["reload"]);
+  assert.equal(f.consumeCheckoutResetIntent(), true);
+  assert.equal(f.consumeCheckoutResetIntent(), false);
+  assert.equal(f.window.history.state.idx, 0);
+});
+
+test("a completed reset retains public settings without starting another reset", () => {
+  const f = fixture();
+  const url = new URL(f.getCheckoutResetUrl(new URLSearchParams({ eventId: "test-event", checkoutAction: "reset", token: "SECRET" }), "complete"), f.window.location.origin);
+  assert.equal(url.searchParams.get("checkoutAction"), "complete");
+  assert.equal(url.searchParams.get("eventId"), "test-event");
+  assert.ok(!url.toString().includes("SECRET"));
+  assert.equal(f.consumeCheckoutResetIntent(), false);
 });
 
 test("the private bridge starts without an SDK and sends no customer or basket credentials", async () => {
@@ -66,7 +94,7 @@ test("the private bridge starts without an SDK and sends no customer or basket c
   f.message("ready");
   assert.deepEqual(JSON.parse(JSON.stringify(f.replies)), [[{ type: f.CHECKOUT_RESET_MESSAGE, requestId: url.searchParams.get("requestId"), status: "initialize" }, f.options.origin]]);
   f.message("complete");
-  assert.equal(await pending, true);
+  assert.equal(await pending, undefined);
   assert.equal(f.listeners.size, 0);
   assert.equal(f.timers.size, 0);
   assert.equal(f.frame.src, "");
@@ -85,19 +113,22 @@ test("only the expected frame, origin, request and message can complete a ready 
   f.message("ready");
   f.message("ready");
   f.message("unknown");
-  assert.deepEqual(f.events, ["ready"]);
+  assert.deepEqual(f.events, []);
   assert.equal(f.replies.length, 1);
   assert.equal(f.listeners.size, 1);
   f.message("complete");
-  assert.equal(await pending, true);
+  assert.equal(await pending, undefined);
 });
 
-test("cancellation keeps the basket outcome distinct from verified reset", async () => {
+test("a legacy confirmation helper cannot start or complete the automatic reset", async () => {
   const f = fixture();
   const pending = f.runCheckoutRestart(f.frame, f.options);
-  f.message("ready");
-  f.message("cancelled");
-  assert.equal(await pending, false);
+  const requestId = new URL(f.frame.src).searchParams.get("requestId");
+  f.message("ready", { data: { type: "showpass.playground.checkout-reset", requestId, status: "ready" } });
+  f.message("complete", { data: { type: "showpass.playground.checkout-reset", requestId, status: "complete" } });
+  assert.equal(f.replies.length, 0);
+  [...f.timers.values()][0].fn();
+  await assert.rejects(pending, { name: "CheckoutRestartUnavailableError" });
 });
 
 test("an unverified attempt rejects and a retry uses a fresh request identity", async () => {
@@ -113,7 +144,7 @@ test("an unverified attempt rejects and a retry uses a fresh request identity", 
   f.message("complete", { data: { type: f.CHECKOUT_RESET_MESSAGE, requestId: oldId, status: "complete" } });
   assert.equal(f.listeners.size, 1);
   f.message("complete");
-  assert.equal(await second, true);
+  assert.equal(await second, undefined);
 });
 
 test("an unavailable hosted helper times out and removes listeners", async () => {
@@ -127,14 +158,17 @@ test("an unavailable hosted helper times out and removes listeners", async () =>
   assert.equal(f.listeners.size, 0);
 });
 
-test("readiness stops the startup timeout while the user considers confirmation", async () => {
+test("a helper that stops responding after readiness fails and offers retry", async () => {
   const f = fixture();
   const pending = f.runCheckoutRestart(f.frame, f.options);
   f.message("ready");
-  assert.equal(f.timers.size, 0);
-  f.controller.abort();
-  await assert.rejects(pending, { name: "AbortError" });
+  assert.equal(f.timers.size, 1);
+  const timer = [...f.timers.values()][0];
+  assert.equal(timer.delay, 120_000);
+  timer.fn();
+  await assert.rejects(pending, /could not be verified/);
   assert.equal(f.listeners.size, 0);
+  assert.equal(f.frame.src, "");
 });
 
 test("an already-aborted request never loads the helper", async () => {

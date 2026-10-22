@@ -1,37 +1,51 @@
-export const CHECKOUT_RESET_MESSAGE = "showpass.playground.checkout-reset";
+export const CHECKOUT_RESET_MESSAGE = "showpass.playground.basket-reset";
 
 export class CheckoutRestartUnavailableError extends Error {
   constructor() {
-    super("Reset test checkout is unavailable. Use dev.showpass.com for Production or Demo; local Playground builds require the local Showpass app. The reset update must also be deployed in the selected environment.");
+    super("Basket reset is unavailable. Check the selected environment and try again.");
     this.name = "CheckoutRestartUnavailableError";
   }
 }
 
 const PUBLIC_SETTINGS = ["environment", "eventId", "venueId", "productId", "memberId", "theme", "tab", "widget"];
 
-export function getCheckoutResetUrl(search: URLSearchParams, reset: boolean): string {
+export function getCheckoutResetUrl(search: URLSearchParams, action?: "reset" | "complete"): string {
   const query = new URLSearchParams();
   for (const key of PUBLIC_SETTINGS) {
     const value = search.get(key) ?? (key === "memberId" ? search.get("membershipId") : null);
     if (value) query.set(key, value);
   }
-  if (reset) query.set("checkoutAction", "reset");
+  if (action) query.set("checkoutAction", action);
   const queryString = query.toString();
   return `/sdk/widget-playground${queryString ? `?${queryString}` : ""}`;
+}
+
+export function startCheckoutReset(search: URLSearchParams): void {
+  // A reload unloads every old SDK widget. The history marker records the button
+  // click without carrying a token or allowing a shared reset URL to expire a cart.
+  window.history.replaceState({ ...window.history.state, playgroundBasketReset: true }, "", getCheckoutResetUrl(search, "reset"));
+  window.location.reload();
+}
+
+export function consumeCheckoutResetIntent(): boolean {
+  const state = window.history.state;
+  if (state?.playgroundBasketReset !== true) return false;
+  const { playgroundBasketReset, ...rest } = state;
+  window.history.replaceState(rest, "");
+  return true;
 }
 
 interface CheckoutRestartOptions {
   origin: string;
   signal: AbortSignal;
-  onReady: () => void;
 }
 
 // This private bridge deliberately uses no SDK. The previous widget document
 // must have been unloaded by a full navigation before mounting this iframe.
 export function runCheckoutRestart(
   iframe: HTMLIFrameElement,
-  { origin, signal, onReady }: CheckoutRestartOptions,
-): Promise<boolean> {
+  { origin, signal }: CheckoutRestartOptions,
+): Promise<void> {
   const aborted = () => new DOMException("Checkout reset was aborted.", "AbortError");
   if (signal.aborted) return Promise.reject(aborted());
   const parentOrigin = window.location.origin;
@@ -48,16 +62,17 @@ export function runCheckoutRestart(
   return new Promise((resolve, reject) => {
     let ready = false;
     let settled = false;
-    const timeout = window.setTimeout(() => finish(new CheckoutRestartUnavailableError()), 30_000);
-    function finish(result: boolean | Error) {
+    let timeout = window.setTimeout(() => finish(new CheckoutRestartUnavailableError()), 30_000);
+    const unverified = () => new Error("Basket reset could not be verified. Try again.");
+    function finish(error?: Error) {
       if (settled) return;
       settled = true;
       window.clearTimeout(timeout);
       window.removeEventListener("message", receive);
       signal.removeEventListener("abort", abort);
       iframe.removeAttribute("src");
-      if (result instanceof Error) reject(result);
-      else resolve(result);
+      if (error) reject(error);
+      else resolve();
     }
     function abort() { finish(aborted()); }
     function receive(event: MessageEvent) {
@@ -69,11 +84,12 @@ export function runCheckoutRestart(
         iframe.contentWindow?.postMessage({ type: CHECKOUT_RESET_MESSAGE, requestId, status: "initialize" }, origin);
         ready = true;
         window.clearTimeout(timeout);
-        onReady();
+        // Three basket requests each have a 30s timeout. Never leave the button
+        // waiting forever if the helper disappears after becoming ready.
+        timeout = window.setTimeout(() => finish(unverified()), 120_000);
       } else if (ready) {
-        if (message.status === "complete") finish(true);
-        else if (message.status === "cancelled") finish(false);
-        else if (message.status === "failed") finish(new Error("The basket reset could not be verified. Retry before opening another preview."));
+        if (message.status === "complete") finish();
+        else if (message.status === "failed") finish(unverified());
       }
     }
     window.addEventListener("message", receive);

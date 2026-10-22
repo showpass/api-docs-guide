@@ -74,13 +74,13 @@ The widget forwards the token to Showpass checkout, which includes it in the bas
 
 Applying or clearing a token changes the Playground setting. It does not discard items or change the customer attached to an existing Showpass basket. **Clear token** keeps that basket.
 
-Use **Reset test checkout** in the Playground before testing another customer:
+Use **Reset basket** beside **Apply token** and **Clear token**, inside **Partner customer**, before testing another customer:
 
-1. Open reset. Your public Playground settings are kept, but both the pasted and applied token are cleared, even if you later cancel.
-2. Confirm in the Showpass dialog to expire the old basket and release its reservations. Cancellation keeps the basket and reservations.
-3. After returning to the same Playground, paste and apply the next customer's token, then select items to create a fresh basket. Leave the token empty to try ordinary checkout.
+1. Click **Reset basket**. It immediately starts resetting the basket, with progress shown below the token controls. There is no separate confirmation page or dialog.
+2. The Playground refreshes to unload old widgets and clears both the pasted and applied token. Your public settings are kept. The old basket is expired and its reservations released.
+3. When **Basket reset** appears, paste and apply the next customer's token, then select items to create a fresh basket. Leave the token empty to try ordinary checkout.
 
-The saved basket reference is cleared only after the server confirms expiry. Refused expiry, active purchases, holds, network errors, and unavailable storage do not report success. Failed or unverified attempts keep previews closed and offer retry. A lost response may mean the basket already expired; retry verifies its state. Leaving the page cannot undo server expiry.
+The saved basket reference is cleared only after the server confirms expiry. Refused expiry, active purchases, holds, network errors, and unavailable storage do not report success. Failed or unverified attempts keep previews closed and show **Retry reset** in the same section. A lost response may mean the basket already expired; retry verifies its state. Leaving the page cannot undo server expiry. A shared reset URL alone does not start a reset; the button must be clicked.
 
 **Production uses real tickets.** This tool does not create a separate sandbox basket. It can affect another widget sharing the same stored basket in this browser and environment. Browser storage partitioning can change which contexts share it. Released tickets or seats may no longer be available when selected again. Use Demo for testing where possible and keep other checkout sessions idle.
 

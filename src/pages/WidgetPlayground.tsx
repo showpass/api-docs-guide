@@ -10,7 +10,6 @@ import SEOHead from "@/shared/components/SEOHead.tsx";
 import { seoDataMap } from "@/docs-app/data/seoData.ts";
 import { CalendarDays, Ticket, Users, ShoppingBag, ArrowUpRight, PanelTop, ChevronDown, Check } from "lucide-react";
 import { WIDGET_ENVIRONMENTS, type WidgetEnvironment } from "@/docs-app/ui/components/widgets/showpass-sdk";
-import { getCheckoutResetUrl } from "@/docs-app/ui/components/widgets/checkout-restart";
 import PlaygroundCheckoutReset from "@/docs-app/ui/components/widgets/PlaygroundCheckoutReset";
 
 // Import Showpass components
@@ -56,7 +55,7 @@ const WIDGET_CHOICES = {
   },
 } as const;
 
-const WidgetPlaygroundPreviews: React.FC = () => {
+const WidgetPlayground: React.FC = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/sdk/widget-playground"];
 
@@ -65,6 +64,8 @@ const WidgetPlaygroundPreviews: React.FC = () => {
   // membershipId), theme, tab (popup|mounted), widget (calendar|event|
   // membership|product), environment (prod|demo, plus dev in development builds).
   const [searchParams] = useSearchParams();
+  const resetting = searchParams.get("checkoutAction") === "reset";
+  const resetCompleted = searchParams.get("checkoutAction") === "complete";
   const location = useLocation();
   const navigate = useNavigate();
   const eventId = searchParams.get("eventId") ?? "";
@@ -89,6 +90,7 @@ const WidgetPlaygroundPreviews: React.FC = () => {
     return new URLSearchParams(Object.entries(values).filter(([, value]) => value !== "")).toString();
   };
   const updateConfig = (changes: Partial<Record<PlaygroundQueryKey, string>>) => {
+    if (resetting) return;
     navigate({ pathname: location.pathname, search: `?${buildSearch(changes)}`, hash: location.hash }, { replace: true, preventScrollReset: true });
   };
   const setEventId = (value: string) => updateConfig({ eventId: value });
@@ -109,14 +111,8 @@ const WidgetPlaygroundPreviews: React.FC = () => {
   const [checkoutStatus, setCheckoutStatus] = React.useState("");
   const onSdkReady = React.useCallback(() => setSdkReady(true), []);
 
-  const resetTestCheckout = () => {
-    // A new document disposes every SDK iframe/listener, including child widgets
-    // created during embedded navigation. Tokens are intentionally not carried over.
-    window.location.replace(getCheckoutResetUrl(new URLSearchParams(buildSearch({})), true));
-  };
-
   const changeEnvironment = (value: string) => {
-    if (value === environment) return;
+    if (resetting || value === environment) return;
     // Reload before replacing the SDK so open widgets and tokens cannot cross environments.
     window.location.assign(`${location.pathname}?${buildSearch({ environment: value })}${location.hash}`);
   };
@@ -185,7 +181,7 @@ const WidgetPlaygroundPreviews: React.FC = () => {
         keywords={seoData.keywords}
       />
       
-      <ShowpassIntegration environment={environment} onReady={onSdkReady} onError={setSdkError} />
+      {!resetting && <ShowpassIntegration environment={environment} onReady={onSdkReady} onError={setSdkError} />}
 
       <div className="prose prose-slate max-w-none dark:prose-invert">
         <HeaderWithLink id="widget-playground" level={1} className="mt-4">
@@ -205,7 +201,7 @@ const WidgetPlaygroundPreviews: React.FC = () => {
               const Icon = choice.icon;
               return (
                 <label key={value} data-testid={`playground-widget-${value}`} className="relative cursor-pointer">
-                  <input type="radio" name="widget-type" value={value} checked={activeWidget === value}
+                  <input type="radio" name="widget-type" value={value} checked={activeWidget === value} disabled={resetting}
                     onChange={() => setActiveWidget(value as PlaygroundWidget)} className="peer sr-only" />
                   <span className="flex h-full items-center gap-2 rounded-lg border px-3 py-2.5 transition-colors hover:bg-muted/40 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
                     <Icon className="h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
@@ -229,7 +225,7 @@ const WidgetPlaygroundPreviews: React.FC = () => {
                 <div className="grid auto-cols-fr grid-flow-col gap-2">
                   {Object.entries(WIDGET_ENVIRONMENTS).map(([value, config]) => (
                     <label key={value} data-testid={`playground-environment-${value}`} className="min-w-0 cursor-pointer">
-                      <input type="radio" name="environment" value={value} checked={environment === value}
+                      <input type="radio" name="environment" value={value} checked={environment === value} disabled={resetting}
                         onChange={() => changeEnvironment(value)} className="peer sr-only" />
                       <span className="flex h-full flex-col items-center justify-center gap-1 rounded-lg border bg-background px-2 py-3 text-center transition-colors hover:bg-muted/30 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
                         <span className="text-sm font-semibold">{config.label}</span>
@@ -247,13 +243,13 @@ const WidgetPlaygroundPreviews: React.FC = () => {
                 <span className="text-xs text-muted-foreground">Required</span>
               </div>
               <p id="widget-identifier-help" className="mt-1 text-xs leading-relaxed text-muted-foreground">{selectedWidget.help}</p>
-              <Input id={selectedWidget.inputId} data-testid={selectedWidget.inputId} value={selectedIdentifier.value}
+              <Input id={selectedWidget.inputId} data-testid={selectedWidget.inputId} value={selectedIdentifier.value} disabled={resetting}
                 onChange={(event) => selectedIdentifier.onChange(event.target.value)} placeholder={selectedWidget.placeholder}
                 aria-describedby="widget-identifier-help" className="mt-2 h-10" />
             </div>
 
             {activeWidget === "event" && (
-              <details className="group rounded-lg border bg-muted/10">
+              <details open={resetting || resetCompleted || undefined} className="group rounded-lg border bg-muted/10">
                 <summary className="flex cursor-pointer list-none items-center gap-2 rounded-lg px-3 py-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring [&::-webkit-details-marker]:hidden">
                   <span className="min-w-0 flex-1">
                     <span className="flex flex-wrap items-center gap-2 text-sm font-semibold">
@@ -269,19 +265,21 @@ const WidgetPlaygroundPreviews: React.FC = () => {
                     Use a token for the event’s organization in the selected environment. Get it from your backend or the <Link className="text-primary underline" to="/api/partner-api-customer-attribution-token">Partner API Explorer</Link>.
                   </p>
                   <label htmlFor="playground-attribution-token" className="block text-sm font-medium">Customer attribution token</label>
-                  <Input id="playground-attribution-token" type="password" autoComplete="off" spellCheck={false} maxLength={128}
+                  <Input id="playground-attribution-token" type="password" autoComplete="off" spellCheck={false} maxLength={128} disabled={resetting}
                     value={tokenInput} onChange={(event) => setTokenInput(event.target.value)} placeholder="customer_attribution_token"
                     aria-invalid={!!tokenError} />
                   <div className="flex flex-wrap gap-2">
-                    <Button size="sm" disabled={!tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
+                    <Button size="sm" disabled={resetting || !tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
                       onClick={() => setCustomerAttributionToken(tokenInput.trim())}>Apply token</Button>
-                    <Button size="sm" variant="outline" disabled={!tokenInput && !customerAttributionToken}
-                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); setCheckoutStatus("Token cleared here. Your existing basket and its customer attribution are kept. Use Reset test checkout to discard that basket."); }}>Clear token</Button>
+                    <Button size="sm" variant="outline" disabled={resetting || (!tokenInput && !customerAttributionToken)}
+                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); setCheckoutStatus("Token cleared. The existing basket is kept. Use Reset basket to discard it."); }}>Clear token</Button>
+                    <PlaygroundCheckoutReset environment={environment} disabled={isOpeningEvent} />
                   </div>
                   {tokenError && <p role="alert" className="text-xs text-destructive">{tokenError}</p>}
                   {tokenInput.trim() !== customerAttributionToken && !tokenError && <p className="text-xs text-muted-foreground">Your changes have not been applied yet.</p>}
                   <p role="status" className="text-xs">{customerAttributionToken ? "Token applied to Event Tickets." : "No token applied. You can still try normal checkout."}</p>
-                  <p className="text-xs text-muted-foreground">Applying or clearing a token keeps the existing basket and its customer. Use Reset test checkout before testing another customer or ordinary checkout.</p>
+                  <p className="text-xs text-muted-foreground">Apply/Clear token keeps the current basket. Reset basket clears it and your token, then refreshes the Playground. Your login stays the same.</p>
+                  {environment === "prod" && <p className="text-xs text-destructive">Production reset releases real reservations, including those shared with other widgets.</p>}
                 </div>
               </details>
             )}
@@ -301,7 +299,7 @@ const WidgetPlaygroundPreviews: React.FC = () => {
                   const Icon = mode.icon;
                   return (
                     <label key={mode.value} data-testid={`playground-tab-${mode.value}`} className="block cursor-pointer">
-                      <input type="radio" name="preview-mode" value={mode.value} checked={activeTab === mode.value}
+                      <input type="radio" name="preview-mode" value={mode.value} checked={activeTab === mode.value} disabled={resetting}
                         onChange={() => setActiveTab(mode.value)} className="peer sr-only" />
                       <span className="flex h-full gap-2 rounded-lg border bg-background p-3 transition-colors hover:bg-muted/30 peer-checked:border-primary peer-checked:bg-primary/5 peer-focus-visible:ring-2 peer-focus-visible:ring-ring peer-focus-visible:ring-offset-2">
                         <Icon className="mt-0.5 h-4 w-4 shrink-0 text-primary" aria-hidden="true" />
@@ -320,25 +318,18 @@ const WidgetPlaygroundPreviews: React.FC = () => {
               <label htmlFor="playground-color-hex" className="block text-sm font-medium">Brand color <span className="ml-1 text-xs font-normal text-muted-foreground">Optional</span></label>
               <p id="brand-color-help" className="mt-1 text-xs text-muted-foreground">Used for buttons and accents inside the widget.</p>
               <div className="mt-2 flex items-center gap-2">
-                <input type="color" aria-label="Choose brand color" value={/^#[0-9a-f]{6}$/i.test(themeColor) ? themeColor : "#24727b"}
+                <input type="color" aria-label="Choose brand color" value={/^#[0-9a-f]{6}$/i.test(themeColor) ? themeColor : "#24727b"} disabled={resetting}
                   onChange={(event) => setThemeColor(event.target.value)} className="h-10 w-10 shrink-0 cursor-pointer rounded-md border bg-background p-1" />
-                <Input id="playground-color-hex" value={themeColor} onChange={(event) => setThemeColor(event.target.value)}
+                <Input id="playground-color-hex" value={themeColor} onChange={(event) => setThemeColor(event.target.value)} disabled={resetting}
                   placeholder="#24727b" aria-describedby="brand-color-help" className="h-10 max-w-36 font-mono" />
               </div>
             </div>
           </div>
         </div>
       </section>
-      <div className="mb-4 flex flex-wrap items-center gap-3">
-        <Button variant="outline" disabled={isOpeningEvent} onClick={resetTestCheckout}>
-          Reset test checkout
-        </Button>
-        <p className="text-sm text-muted-foreground">Opening reset clears your pasted token, even if you cancel. Your Playground settings are kept. Paste the next customer token after returning.</p>
-      </div>
-      {environment === "prod" && <p role="alert" className="mb-4 text-sm text-destructive">Production uses real tickets. Reset can expire a basket shared with another widget in this browser and release its reservations. It does not sign you out. Demo is recommended for testing.</p>}
       {checkoutStatus && <p role="status" className="mb-4 text-sm">{checkoutStatus}</p>}
       {sdkError && <p role="alert" className="mb-4 text-destructive">{sdkError} Check that this environment is running and reload the page.</p>}
-      {!sdkReady && !sdkError && <p role="status" className="mb-4">Loading Showpass widgets…</p>}
+      {!resetting && !sdkReady && !sdkError && <p role="status" className="mb-4">Loading Showpass widgets…</p>}
 
       {/* Widget Content */}
       {sdkReady && <div className="mb-10">
@@ -506,12 +497,6 @@ const WidgetPlaygroundPreviews: React.FC = () => {
       </div>}
     </div>
   );
-};
-
-const WidgetPlayground: React.FC = () => {
-  const [search] = useSearchParams();
-  // Choose reset mode before mounting the SDK loader or any widget previews.
-  return search.get("checkoutAction") === "reset" ? <PlaygroundCheckoutReset /> : <WidgetPlaygroundPreviews />;
 };
 
 export default WidgetPlayground;
