@@ -107,7 +107,6 @@ const WidgetPlayground: React.FC = () => {
   const openingEvent = React.useRef(false);
   const [isRestarting, setIsRestarting] = React.useState(false);
   const [previewsPaused, setPreviewsPaused] = React.useState(false);
-  const [previewGeneration, setPreviewGeneration] = React.useState(0);
   const [checkoutStatus, setCheckoutStatus] = React.useState("");
   const [checkoutError, setCheckoutError] = React.useState("");
   const restartController = React.useRef<AbortController>();
@@ -125,7 +124,6 @@ const WidgetPlayground: React.FC = () => {
         signal: controller.signal,
         onStart: () => { setIsRestarting(true); setPreviewsPaused(true); },
         onRestorePreviews: (completed) => {
-          setPreviewGeneration((value) => value + 1);
           setPreviewsPaused(false);
           setCheckoutStatus(completed
             ? customerAttributionToken
@@ -374,7 +372,7 @@ const WidgetPlayground: React.FC = () => {
       {!sdkReady && !sdkError && <p role="status" className="mb-4">Loading Showpass widgets…</p>}
 
       {/* Widget Content */}
-      {sdkReady && !previewsPaused && <div key={previewGeneration} className="mb-10">
+      {sdkReady && !previewsPaused && <div className="mb-10">
         {/* Modal Widgets */}
         {activeTab === "popup" && (
           <div className="space-y-6">
