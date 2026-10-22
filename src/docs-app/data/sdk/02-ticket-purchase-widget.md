@@ -70,38 +70,23 @@ Open the [Widget Playground](/sdk/widget-playground), select the same environmen
 
 The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
 
-### Start a new checkout
+### Reset a test checkout in the Playground
 
-Applying or clearing a token changes the token held by your page. It does not discard items or change the customer attached to an existing Showpass basket. The Playground's **Clear token** control keeps that basket.
+Applying or clearing a token changes the Playground setting. It does not discard items or change the customer attached to an existing Showpass basket. **Clear token** keeps that basket.
 
-Use **Start new checkout** to discard the current basket before switching customers or returning to ordinary checkout. The SDK opens a Showpass-hosted confirmation dialog and closes existing widgets:
+Use **Reset test checkout** in the Playground before testing another customer:
 
-```javascript
-const tickets = window.showpass?.tickets;
-if (typeof tickets?.startNewCheckout !== "function") {
-  showResetUnavailable();
-} else {
-  try {
-    const completed = await tickets.startNewCheckout();
-    // true: server expiry was verified (or there was no basket).
-    // false: the user cancelled before an expiry request started.
-    // Recreate previews using your current configuration and in-memory token.
-    reopenPreviews();
-    if (completed) showNewCheckoutReady();
-  } catch {
-    // Keep previews closed and offer a reset retry until the result is verified.
-    showResetRetry();
-  }
-}
-```
+1. Open reset. Your public Playground settings are kept, but both the pasted and applied token are cleared, even if you later cancel.
+2. Confirm in the Showpass dialog to expire the old basket and release its reservations. Cancellation keeps the basket and reservations.
+3. After returning to the same Playground, paste and apply the next customer's token, then select items to create a fresh basket. Leave the token empty to try ordinary checkout.
 
-The old basket reference is cleared only after the server confirms expiry. Refused expiry, active purchases, holds, network errors, and unavailable hosted checkout do not report success. A lost response may mean the basket already expired; retrying verifies its state before proceeding.
+The saved basket reference is cleared only after the server confirms expiry. Refused expiry, active purchases, holds, network errors, and unavailable storage do not report success. Failed or unverified attempts keep previews closed and offer retry. A lost response may mean the basket already expired; retry verifies its state. Leaving the page cannot undo server expiry.
 
-The method returns `Promise<boolean>` and accepts an optional `{ signal: AbortSignal }`. Aborting rejects with `AbortError`; it stops waiting and cannot undo an expiry already confirmed by the user. The host must recreate its embedded previews after success or safe cancellation. Keep them closed after failure and offer retry.
+**Production uses real tickets.** This tool does not create a separate sandbox basket. It can affect another widget sharing the same stored basket in this browser and environment. Browser storage partitioning can change which contexts share it. Released tickets or seats may no longer be available when selected again. Use Demo for testing where possible and keep other checkout sessions idle.
 
-The next basket uses the currently applied attribution token, or ordinary checkout if no token is applied. Ordinary checkout still respects the browser's authenticated session. Tokens remain in memory; never add them to URLs, storage, snippets, or persisted configuration.
+Reset does not sign you out or switch Showpass accounts. A token for customer B can still be rejected if the browser is signed in as customer A. Ordinary checkout also respects the browser's authenticated session.
 
-Deploy the rebuilt SDK and hosted checkout together before enabling this flow. Capability-check older SDKs; a new SDK connected to older hosted checkout rejects when the confirmation handshake is unavailable.
+This is a Playground testing tool, not a public SDK method. The hosted reset helper must be deployed in the selected environment before using it; no new SDK release is needed. Hosted access is limited to `https://dev.showpass.com`; local Playground origins on port 8080 can reset only the local Showpass application. Tokens remain in memory and must never be added to URLs, storage, snippets, or persisted configuration.
 
 ## Multiple widgets and a shared basket
 
