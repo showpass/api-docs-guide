@@ -88,7 +88,8 @@ Add a button that opens the modern calendar widget in a modal.
 ```text
 [showpass_calendar_widget]
 [showpass_calendar_widget label="View Calendar" tags="comedy"]
-[showpass_calendar_widget is_attraction="true" event_id="123456"]
+[showpass_calendar_widget is_attraction="true" event_id="daily-admission"]
+[showpass_calendar_widget is_attraction="true" event_id="daily-admission" calendar_open_state="special-events" calendar_special_event="all"]
 ```
 
 ---
@@ -108,8 +109,17 @@ Embed the full calendar widget directly on a page.
 ```text
 [showpass_embed_calendar]
 [showpass_embed_calendar tags="workshop" lang="fr"]
-[showpass_embed_calendar is_attraction="true" event_id="123456"]
+[showpass_embed_calendar is_attraction="true" event_id="daily-admission"]
+[showpass_embed_calendar hide_price="true" highlight_multi_day_events_on_start_date_only="true"]
 ```
+
+---
+
+### Shared calendar options (plugin 4.0.9)
+
+Both modern calendar shortcodes accept `calendar_date`, `calendar_timeslot`, `calendar_special_event`, `calendar_open_state`, `display_price_patron_type_id`, `hide_price`, and `highlight_multi_day_events_on_start_date_only`.
+
+These require plugin 4.0.9 plus the matching calendar frontend and rebuilt SDK. See [Calendar targeting and display options](/wordpress/adding-calendar-widget#calendar-targeting-and-display-options) for values, release dependencies, defaults, and examples. They do not apply to the legacy `[showpass_calendar]` shortcode.
 
 ---
 
