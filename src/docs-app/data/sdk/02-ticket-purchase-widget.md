@@ -70,6 +70,8 @@ Open the [Widget Playground](/sdk/widget-playground), select the same environmen
 
 The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
 
+**If you are signed in, your Showpass account must match the token’s customer.** To test different customers, use a private window and stay signed out. Local Django admin sessions on `localhost.showpass.com` can also authenticate widget requests; keep admin in your normal browser and test the Playground in the private window. Reset basket keeps the current login.
+
 ### Reset a test checkout in the Playground
 
 Applying or clearing a token changes the Playground setting. It does not discard items or change the customer attached to an existing Showpass basket. **Clear token** keeps that basket.

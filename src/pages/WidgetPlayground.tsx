@@ -267,7 +267,12 @@ const WidgetPlayground: React.FC = () => {
                   <label htmlFor="playground-attribution-token" className="block text-sm font-medium">Customer attribution token</label>
                   <Input id="playground-attribution-token" type="password" autoComplete="off" spellCheck={false} maxLength={128} disabled={resetting}
                     value={tokenInput} onChange={(event) => setTokenInput(event.target.value)} placeholder="customer_attribution_token"
-                    aria-invalid={!!tokenError} />
+                    aria-invalid={!!tokenError} aria-describedby="playground-attribution-session-help" />
+                  <p id="playground-attribution-session-help" className="text-xs leading-relaxed text-muted-foreground">
+                    <strong>If signed in, your Showpass account must match the token’s customer.</strong>{" "}
+                    Test different customers in a private window while signed out.
+                    {environment === "dev" && " Local Django admin sessions can also authenticate checkout."}
+                  </p>
                   <div className="flex flex-wrap gap-2">
                     <Button size="sm" disabled={resetting || !tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
                       onClick={() => setCustomerAttributionToken(tokenInput.trim())}>Apply token</Button>
