@@ -270,8 +270,7 @@ const WidgetPlayground: React.FC = () => {
                     aria-invalid={!!tokenError} aria-describedby="playground-attribution-session-help" />
                   <p id="playground-attribution-session-help" className="text-xs leading-relaxed text-muted-foreground">
                     <strong>If signed in, your Showpass account must match the token’s customer.</strong>{" "}
-                    Test different customers in a private window while signed out.
-                    {environment === "dev" && " Local Django admin sessions can also authenticate checkout."}
+                    Test different customers in an incognito window while signed out.
                   </p>
                   <div className="flex flex-wrap gap-2">
                     <Button size="sm" disabled={resetting || !tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
