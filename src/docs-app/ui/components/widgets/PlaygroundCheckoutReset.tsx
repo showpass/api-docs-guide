@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/shared/components/button";
 import { consumeCheckoutResetIntent, getCheckoutResetUrl, runCheckoutRestart, startCheckoutReset } from "./checkout-restart";
 import { WIDGET_ENVIRONMENTS, type WidgetEnvironment } from "./showpass-sdk";
@@ -13,9 +13,9 @@ export default function PlaygroundCheckoutReset({ environment, disabled }: Playg
   const [search] = useSearchParams();
   const navigate = useNavigate();
   const resetting = search.get("checkoutAction") === "reset";
-  const completed = search.get("checkoutAction") === "complete";
+  const completed = useLocation().state?.basketResetComplete === true;
   const config = WIDGET_ENVIRONMENTS[environment];
-  const returnUrl = getCheckoutResetUrl(search, "complete");
+  const returnUrl = getCheckoutResetUrl(search);
   const iframe = React.useRef<HTMLIFrameElement>(null);
   const authorized = React.useRef(false);
   const [attempt, setAttempt] = React.useState(0);
@@ -41,7 +41,7 @@ export default function PlaygroundCheckoutReset({ environment, disabled }: Playg
       origin: config.origin,
       signal: controller.signal,
     }).then(() => {
-      if (!controller.signal.aborted) navigate(returnUrl, { replace: true, preventScrollReset: true });
+      if (!controller.signal.aborted) navigate(returnUrl, { replace: true, preventScrollReset: true, state: { basketResetComplete: true } });
     }).catch((failure: unknown) => {
       if (!controller.signal.aborted) {
         setError(failure instanceof Error ? failure.message : "Basket reset could not be verified. Try again.");

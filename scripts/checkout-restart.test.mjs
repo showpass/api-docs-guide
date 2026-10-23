@@ -3,7 +3,13 @@ import test from "node:test";
 import { readFileSync } from "node:fs";
 import { webcrypto } from "node:crypto";
 import vm from "node:vm";
+import { createRequire } from "node:module";
 import ts from "typescript";
+
+const require = createRequire(import.meta.url);
+const React = require("react");
+const { renderToStaticMarkup } = require("react-dom/server");
+const { StaticRouter } = require("react-router-dom/server");
 
 const source = readFileSync(new URL("../src/docs-app/ui/components/widgets/checkout-restart.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
@@ -75,11 +81,58 @@ test("a button click reloads the Playground with a single-use reset intent and n
 
 test("a completed reset retains public settings without starting another reset", () => {
   const f = fixture();
-  const url = new URL(f.getCheckoutResetUrl(new URLSearchParams({ eventId: "test-event", checkoutAction: "reset", token: "SECRET" }), "complete"), f.window.location.origin);
-  assert.equal(url.searchParams.get("checkoutAction"), "complete");
+  const url = new URL(f.getCheckoutResetUrl(new URLSearchParams({ eventId: "test-event", checkoutAction: "reset", token: "SECRET" })), f.window.location.origin);
+  assert.ok(!url.searchParams.has("checkoutAction"));
   assert.equal(url.searchParams.get("eventId"), "test-event");
   assert.ok(!url.toString().includes("SECRET"));
   assert.equal(f.consumeCheckoutResetIntent(), false);
+});
+
+test("expired or malformed history markers cannot authorize reset", () => {
+  const f = fixture();
+  for (const timestamp of [Date.now() - 61_000, Date.now() + 61_000, true, "reset"]) {
+    f.window.history.state = { playgroundBasketReset: timestamp };
+    assert.equal(f.consumeCheckoutResetIntent(), false);
+  }
+});
+
+function renderReset(search, state = null) {
+  const f = fixture();
+  const componentSource = readFileSync(new URL("../src/docs-app/ui/components/widgets/PlaygroundCheckoutReset.tsx", import.meta.url), "utf8");
+  const componentCode = ts.transpileModule(componentSource, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020, jsx: ts.JsxEmit.React } }).outputText;
+  const exports = {};
+  vm.runInNewContext(componentCode, {
+    exports,
+    require: name => {
+      if (name === "@/shared/components/button") return { Button: props => React.createElement("button", props) };
+      if (name === "./checkout-restart") return f;
+      if (name === "./showpass-sdk") return { WIDGET_ENVIRONMENTS: { demo: { origin: "https://demo.showpass.com" } } };
+      return require(name);
+    },
+  });
+  return renderToStaticMarkup(React.createElement(StaticRouter, { location: { pathname: "/sdk/widget-playground", search, state } },
+    React.createElement(exports.default, { environment: "demo", disabled: false })));
+}
+
+test("a shared completion URL cannot display verified reset success", () => {
+  const html = renderReset("?checkoutAction=complete");
+  assert.ok(!html.includes("Basket reset. Paste the next customer token."));
+});
+
+test("verified completion is reported inline without a confirmation UI", () => {
+  const html = renderReset("", { basketResetComplete: true });
+  assert.ok(html.includes('role="status"'));
+  assert.ok(html.includes("Basket reset. Paste the next customer token."));
+  assert.ok(!html.includes("<iframe"));
+  assert.ok(!html.includes('role="dialog"'));
+});
+
+test("reset progress keeps its helper hidden and disables the reset button", () => {
+  const html = renderReset("?checkoutAction=reset");
+  assert.match(html, /<button[^>]*disabled=""/);
+  assert.match(html, /<iframe[^>]*hidden=""/);
+  assert.ok(html.includes("Resetting basket…"));
+  assert.ok(!html.includes('role="dialog"'));
 });
 
 test("the private bridge starts without an SDK and sends no customer or basket credentials", async () => {

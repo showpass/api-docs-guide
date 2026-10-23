@@ -64,9 +64,9 @@ const WidgetPlayground: React.FC = () => {
   // membershipId), theme, tab (popup|mounted), widget (calendar|event|
   // membership|product), environment (prod|demo, plus dev in development builds).
   const [searchParams] = useSearchParams();
-  const resetting = searchParams.get("checkoutAction") === "reset";
-  const resetCompleted = searchParams.get("checkoutAction") === "complete";
   const location = useLocation();
+  const resetting = searchParams.get("checkoutAction") === "reset";
+  const resetCompleted = location.state?.basketResetComplete === true;
   const navigate = useNavigate();
   const eventId = searchParams.get("eventId") ?? "";
   const venueId = searchParams.get("venueId") ?? "";

@@ -9,7 +9,7 @@ export class CheckoutRestartUnavailableError extends Error {
 
 const PUBLIC_SETTINGS = ["environment", "eventId", "venueId", "productId", "memberId", "theme", "tab", "widget"];
 
-export function getCheckoutResetUrl(search: URLSearchParams, action?: "reset" | "complete"): string {
+export function getCheckoutResetUrl(search: URLSearchParams, action?: "reset"): string {
   const query = new URLSearchParams();
   for (const key of PUBLIC_SETTINGS) {
     const value = search.get(key) ?? (key === "memberId" ? search.get("membershipId") : null);
@@ -23,16 +23,17 @@ export function getCheckoutResetUrl(search: URLSearchParams, action?: "reset" | 
 export function startCheckoutReset(search: URLSearchParams): void {
   // A reload unloads every old SDK widget. The history marker records the button
   // click without carrying a token or allowing a shared reset URL to expire a cart.
-  window.history.replaceState({ ...window.history.state, playgroundBasketReset: true }, "", getCheckoutResetUrl(search, "reset"));
+  window.history.replaceState({ ...window.history.state, playgroundBasketReset: Date.now() }, "", getCheckoutResetUrl(search, "reset"));
   window.location.reload();
 }
 
 export function consumeCheckoutResetIntent(): boolean {
   const state = window.history.state;
-  if (state?.playgroundBasketReset !== true) return false;
+  if (typeof state?.playgroundBasketReset !== "number") return false;
   const { playgroundBasketReset, ...rest } = state;
   window.history.replaceState(rest, "");
-  return true;
+  const age = Date.now() - playgroundBasketReset;
+  return age >= 0 && age < 60_000;
 }
 
 interface CheckoutRestartOptions {
