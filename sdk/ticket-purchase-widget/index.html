@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-BVWrHEru.js"></script>
+    <script type="module" crossorigin src="/assets/index-C13oeu1R.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -191,6 +191,19 @@
 <h3>Try it in the playground</h3>
 <p>Open the <a href="/sdk/widget-playground">Widget Playground</a>, select the same environment that issued your token, and enter an event slug whose payment organization matches the token&#39;s venue. Choose <strong>Event tickets</strong>, expand <strong>Partner customer</strong>, and paste the API response&#39;s <code>customer_attribution_token</code>. Select <strong>Apply token</strong>, then try the <strong>Modal</strong> or <strong>Embedded</strong> (mounted) preview.</p>
 <p>The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.</p>
+<p><strong>If you are signed in, your Showpass account must match the token’s customer.</strong> To test different customers, use an incognito window and stay signed out. Reset basket keeps the current login.</p>
+<h3>Reset a test checkout in the Playground</h3>
+<p>Applying or clearing a token changes the Playground setting. It does not discard items or change the customer attached to an existing Showpass basket. <strong>Clear token</strong> keeps that basket.</p>
+<p>Use <strong>Reset basket</strong> beside <strong>Apply token</strong> and <strong>Clear token</strong>, inside <strong>Partner customer</strong>, before testing another customer:</p>
+<ol>
+<li>Click <strong>Reset basket</strong>. It immediately starts resetting the basket, with progress shown below the token controls. There is no separate confirmation page or dialog.</li>
+<li>The Playground refreshes to unload old widgets and clears both the pasted and applied token. Your public settings are kept. The old basket is expired and its reservations released.</li>
+<li>When <strong>Basket reset</strong> appears, paste and apply the next customer&#39;s token, then select items to create a fresh basket. Leave the token empty to try ordinary checkout.</li>
+</ol>
+<p>The saved basket reference is cleared only after the server confirms expiry. Refused expiry, active purchases, holds, network errors, and unavailable storage do not report success. Failed or unverified attempts keep previews closed and show <strong>Retry reset</strong> in the same section. A lost response may mean the basket already expired; retry verifies its state. Leaving the page cannot undo server expiry. A shared reset URL alone does not start a reset; the button must be clicked.</p>
+<p><strong>Production uses real tickets.</strong> This tool does not create a separate sandbox basket. It can affect another widget sharing the same stored basket in this browser and environment. Browser storage partitioning can change which contexts share it. Released tickets or seats may no longer be available when selected again. Use Demo for testing where possible and keep other checkout sessions idle.</p>
+<p>Reset does not sign you out or switch Showpass accounts. A token for customer B can still be rejected if the browser is signed in as customer A. Ordinary checkout also respects the browser&#39;s authenticated session.</p>
+<p>This is a Playground testing tool, not a public SDK method. The hosted reset helper must be deployed in the selected environment before using it; no new SDK release is needed. Hosted access is limited to <code>https://dev.showpass.com</code>; local Playground origins on port 8080 can reset only the local Showpass application. Tokens remain in memory and must never be added to URLs, storage, snippets, or persisted configuration.</p>
 <h2>Multiple widgets and a shared basket</h2>
 <p>For admission, workshops, and experiences from the same Showpass organization, use buttons that open event and calendar widgets in modals. Customers can add an item, close the modal, open another offering, and return to <a href="/sdk/checkout-widget">checkout</a> with the basket. Keep this flow on the same website and browser, before the basket expires.</p>
 <p><strong>Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder.</strong> This includes several purchase widgets, several calendars, or a mixture of the two. Separate inline widgets must not be relied on to maintain one synchronized basket.</p>
