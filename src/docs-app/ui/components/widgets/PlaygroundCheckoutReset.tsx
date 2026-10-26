@@ -61,7 +61,7 @@ export default function PlaygroundCheckoutReset({ environment, disabled }: Playg
 
   return <>
     <Button size="sm" variant="outline" disabled={disabled || (resetting && !error)} onClick={reset}>
-      {error ? "Retry reset" : "Reset basket"}
+      {error ? "Retry reset" : "Clear token & reset basket"}
     </Button>
     {resetting && <iframe ref={iframe} title="Reset test basket" hidden allow="storage-access *" referrerPolicy="origin" />}
     {error ? <p role="alert" className="w-full text-xs text-destructive">{error}</p>
