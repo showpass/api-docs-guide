@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-C13oeu1R.js"></script>
+    <script type="module" crossorigin src="/assets/index-DvgwZ4GD.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -191,12 +191,12 @@
 <h3>Try it in the playground</h3>
 <p>Open the <a href="/sdk/widget-playground">Widget Playground</a>, select the same environment that issued your token, and enter an event slug whose payment organization matches the token&#39;s venue. Choose <strong>Event tickets</strong>, expand <strong>Partner customer</strong>, and paste the API response&#39;s <code>customer_attribution_token</code>. Select <strong>Apply token</strong>, then try the <strong>Modal</strong> or <strong>Embedded</strong> (mounted) preview.</p>
 <p>The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.</p>
-<p><strong>If you are signed in, your Showpass account must match the token’s customer.</strong> To test different customers, use an incognito window and stay signed out. Reset basket keeps the current login.</p>
+<p><strong>If you are signed in, your Showpass account must match the token’s customer.</strong> To test different customers, use an incognito window and stay signed out. Clearing and resetting keeps the current login.</p>
 <h3>Reset a test checkout in the Playground</h3>
-<p>Applying or clearing a token changes the Playground setting. It does not discard items or change the customer attached to an existing Showpass basket. <strong>Clear token</strong> keeps that basket.</p>
-<p>Use <strong>Reset basket</strong> beside <strong>Apply token</strong> and <strong>Clear token</strong>, inside <strong>Partner customer</strong>, before testing another customer:</p>
+<p>Applying a token changes the Playground setting and keeps the existing basket and customer. <strong>Clear token &amp; reset basket</strong> removes both the pasted and applied token and expires that basket so you can test another customer.</p>
+<p>Use <strong>Clear token &amp; reset basket</strong> beside <strong>Apply token</strong>, inside <strong>Partner customer</strong>, before testing another customer:</p>
 <ol>
-<li>Click <strong>Reset basket</strong>. It immediately starts resetting the basket, with progress shown below the token controls. There is no separate confirmation page or dialog.</li>
+<li>Click <strong>Clear token &amp; reset basket</strong>. It immediately starts resetting the basket, with progress shown below the token controls. There is no separate confirmation page or dialog.</li>
 <li>The Playground refreshes to unload old widgets and clears both the pasted and applied token. Your public settings are kept. The old basket is expired and its reservations released.</li>
 <li>When <strong>Basket reset</strong> appears, paste and apply the next customer&#39;s token, then select items to create a fresh basket. Leave the token empty to try ordinary checkout.</li>
 </ol>
