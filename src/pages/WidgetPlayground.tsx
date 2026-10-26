@@ -108,7 +108,6 @@ const WidgetPlayground: React.FC = () => {
   const [eventError, setEventError] = React.useState("");
   const [isOpeningEvent, setIsOpeningEvent] = React.useState(false);
   const openingEvent = React.useRef(false);
-  const [checkoutStatus, setCheckoutStatus] = React.useState("");
   const onSdkReady = React.useCallback(() => setSdkReady(true), []);
 
   const changeEnvironment = (value: string) => {
@@ -275,14 +274,12 @@ const WidgetPlayground: React.FC = () => {
                   <div className="flex flex-wrap gap-2">
                     <Button size="sm" disabled={resetting || !tokenInput.trim() || !!tokenError || tokenInput.trim() === customerAttributionToken}
                       onClick={() => setCustomerAttributionToken(tokenInput.trim())}>Apply token</Button>
-                    <Button size="sm" variant="outline" disabled={resetting || (!tokenInput && !customerAttributionToken)}
-                      onClick={() => { setTokenInput(""); setCustomerAttributionToken(""); setCheckoutStatus("Token cleared. The existing basket is kept. Use Reset basket to discard it."); }}>Clear token</Button>
                     <PlaygroundCheckoutReset environment={environment} disabled={isOpeningEvent} />
                   </div>
                   {tokenError && <p role="alert" className="text-xs text-destructive">{tokenError}</p>}
                   {tokenInput.trim() !== customerAttributionToken && !tokenError && <p className="text-xs text-muted-foreground">Your changes have not been applied yet.</p>}
                   <p role="status" className="text-xs">{customerAttributionToken ? "Token applied to Event Tickets." : "No token applied. You can still try normal checkout."}</p>
-                  <p className="text-xs text-muted-foreground">Apply/Clear token keeps the current basket. Reset basket clears it and your token, then refreshes the Playground. Your login stays the same.</p>
+                  <p className="text-xs text-muted-foreground">Applying a token keeps the existing basket. Clearing and resetting removes the token and expires that basket. Your login stays the same.</p>
                   {environment === "prod" && <p className="text-xs text-destructive">Production reset releases real reservations, including those shared with other widgets.</p>}
                 </div>
               </details>
@@ -331,7 +328,6 @@ const WidgetPlayground: React.FC = () => {
           </div>
         </div>
       </section>
-      {checkoutStatus && <p role="status" className="mb-4 text-sm">{checkoutStatus}</p>}
       {sdkError && <p role="alert" className="mb-4 text-destructive">{sdkError} Check that this environment is running and reload the page.</p>}
       {!resetting && !sdkReady && !sdkError && <p role="status" className="mb-4">Loading Showpass widgets…</p>}
 

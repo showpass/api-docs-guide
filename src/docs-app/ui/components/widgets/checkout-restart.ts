@@ -17,7 +17,9 @@ export function getCheckoutResetUrl(search: URLSearchParams, action?: "reset"): 
   }
   if (action) query.set("checkoutAction", action);
   const queryString = query.toString();
-  return `/sdk/widget-playground${queryString ? `?${queryString}` : ""}`;
+  // GitHub Pages redirects directory URLs without a trailing slash. Avoid that
+  // redirect on reload because it clears the history marker for the reset click.
+  return `/sdk/widget-playground/${queryString ? `?${queryString}` : ""}`;
 }
 
 export function startCheckoutReset(search: URLSearchParams): void {
