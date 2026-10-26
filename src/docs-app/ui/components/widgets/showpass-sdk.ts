@@ -15,7 +15,7 @@ const SDK_LOAD_TIMEOUT_MS = 15_000;
 
 export type ShowpassWidgetParams = Record<
   string,
-  string | boolean | undefined
+  string | number | boolean | string[] | undefined
 >;
 
 export interface ShowpassWidgetHandle {

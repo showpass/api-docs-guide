@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "test": "npm run test:links && npm run test:widgets",
+    "test": "npm run test:types && npm run test:links && npm run test:widgets",
+    "test:types": "tsc --noEmit -p tsconfig.app.json",
     "test:links": "node scripts/validate-doc-links.mjs",
     "test:widgets": "node --test scripts/widget-sdk-loader.test.mjs scripts/checkout-restart.test.mjs",
     "build:search": "node scripts/build-search-index.mjs",
