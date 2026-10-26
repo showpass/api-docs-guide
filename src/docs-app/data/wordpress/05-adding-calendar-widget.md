@@ -166,3 +166,15 @@ Existing pages may use `[showpass_calendar]`. Keep these options for maintenance
 For a shared basket across several offerings, use modal buttons throughout. A single embedded calendar is a different layout. See [Multiple widgets and a shared basket](/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket) before combining inline and modal widgets.
 
 Test the full journey on desktop and mobile, including navigation between booking pages and adding items in different orders. Confirm the cart contains the expected items before checkout and before the basket expires.
+
+## Consistent parameter names
+
+After the SPW-20291 SDK and matching WordPress plugin release, use snake_case for matching options in JavaScript SDK objects, widget URLs and WordPress attributes. Existing names remain compatible. See [Widget parameter naming and migration](/sdk/parameter-naming) for the alias table, precedence and deployment requirements.
+
+Both modern calendar shortcodes forward shared options such as `theme_primary`, `theme_secondary`, `theme_dark`, `keep_shopping`, `tracking_id`, `redirect_url` and `prompt_for_quantity` alongside the calendar targeting and pricing options. Use quoted values; explicit `"false"` is preserved. Each option retains its existing widget-specific behavior.
+
+```text
+[showpass_calendar_widget calendar_date="2026-12-14" hide_price="true" theme_primary="24727b" keep_shopping="false"]
+```
+
+Use `[showpass_embed_calendar]` with the same attributes for an embedded calendar on a separate page. These shared per-shortcode options require the matching plugin update and rebuilt SDK; do not assume plugin 4.0.9 forwards all of them.

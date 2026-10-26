@@ -14,7 +14,7 @@ Call this from your button handler:
 
 ```javascript
 window.showpass.tickets.membershipPurchaseWidget(789, {
-  "theme-primary": "#24727b",
+  "theme_primary": "#24727b",
 });
 ```
 
@@ -29,7 +29,7 @@ Create the container, then run the SDK call after both are ready:
 ```javascript
 window.showpass.tickets.membershipPurchaseWidget(
   789,
-  { "theme-primary": "#24727b" },
+  { "theme_primary": "#24727b" },
   "membership-widget"
 );
 ```
@@ -40,11 +40,11 @@ window.showpass.tickets.membershipPurchaseWidget(
 | --- | --- | --- | --- |
 | **membershipId** | Integer | Required | The unique numerical ID of the membership |
 | **params** | Object | Optional | Configuration object containing widget customization options |
-| **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
-| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
-| **params['show-description']** | Boolean | Optional | Control membership description visibility. Default: `true` |
+| **params['theme_primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
+| **params['keep_shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
+| **params['show_description']** | Boolean | Optional | Control membership description visibility. Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
-| **params['tracking-id']** | - | - | Currently not supported for membership widgets |
+| **params['tracking_id']** | - | - | Currently not supported for membership widgets |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML `<div>` element where the widget will mount |
 
 ## Layout limitations

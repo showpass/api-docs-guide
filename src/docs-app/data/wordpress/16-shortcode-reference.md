@@ -329,3 +329,15 @@ For generating shortcodes from URLs:
 
 - **Showpass Help Center:** [help.showpass.com](https://help.showpass.com/hc/en-us)
 - **WordPress Shortcode documentation:** [codex.wordpress.org/Shortcode](https://codex.wordpress.org/Shortcode)
+
+## Consistent parameter names
+
+After the SPW-20291 SDK and matching WordPress plugin release, use snake_case for matching options in JavaScript SDK objects, widget URLs and WordPress attributes. Existing names remain compatible. See [Widget parameter naming and migration](/sdk/parameter-naming) for the alias table, precedence and deployment requirements.
+
+Both modern calendar shortcodes forward shared options such as `theme_primary`, `theme_secondary`, `theme_dark`, `keep_shopping`, `tracking_id`, `redirect_url` and `prompt_for_quantity` alongside the calendar targeting and pricing options. Use quoted values; explicit `"false"` is preserved. Each option retains its existing widget-specific behavior.
+
+```text
+[showpass_calendar_widget calendar_date="2026-12-14" hide_price="true" theme_primary="24727b" keep_shopping="false"]
+```
+
+Use `[showpass_embed_calendar]` with the same attributes for an embedded calendar on a separate page. These shared per-shortcode options require the matching plugin update and rebuilt SDK; do not assume plugin 4.0.9 forwards all of them.

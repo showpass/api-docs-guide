@@ -19,7 +19,7 @@ Call this from a button handler. Omit `tags` to show the organization's events w
 
 ```javascript
 window.showpass.tickets.calendarWidget(123, {
-  "theme-primary": "#24727b",
+  "theme_primary": "#24727b",
   tags: "workshops",
 });
 ```
@@ -34,8 +34,8 @@ Set `is_attraction: true` and supply the attraction slug:
 window.showpass.tickets.calendarWidget(123, {
   is_attraction: true,
   event_id: "daily-admission",
-  "ticket-type-selection-required": true,
-  "prompt-for-quantity": true,
+  "ticket_type_selection_required": true,
+  "prompt_for_quantity": true,
 });
 ```
 
@@ -52,7 +52,7 @@ Create a container and pass its ID as the third argument. Run the call after bot
 ```javascript
 window.showpass.tickets.calendarWidget(
   123,
-  { "theme-primary": "#24727b", tags: "workshops" },
+  { "theme_primary": "#24727b", tags: "workshops" },
   "showpass-calendar"
 );
 ```
@@ -68,31 +68,31 @@ Pass `{}` when no options are needed.
 | `venueId` | Number or string | Organization identifier |
 | `params` | Object | Calendar and appearance options |
 | `containerId` | String, optional | Existing container ID for inline mode; omit for a modal |
-| `params['theme-primary']` | String | Primary color, such as `"#24727b"` |
+| `params['theme_primary']` | String | Primary color, such as `"#24727b"` |
 | `params['lang']` | String | Use `"fr"` for French; English is the default |
 | `params['tags']` | String | Comma-separated event tags for a standard calendar |
 | `params['is_attraction']` | Boolean | Set to `true` for an attraction calendar |
 | `params['event_id']` | String | Attraction event **slug**, required for attraction mode |
-| `params['ticket-type-selection-required']` | Boolean | Require ticket-type selection before choosing a date |
-| `params['prompt-for-quantity']` | Boolean | Prompt for quantity before adding tickets to the cart |
+| `params['ticket_type_selection_required']` | Boolean | Require ticket-type selection before choosing a date |
+| `params['prompt_for_quantity']` | Boolean | Prompt for quantity before adding tickets to the cart |
 
 ## Calendar targeting and display options
 
-These options work in the second argument to `calendarWidget` for both modal and embedded calendars. Use the camelCase names below for SDK calls; [WordPress shortcodes](/wordpress/adding-calendar-widget#calendar-targeting-and-display-options) use snake_case attributes.
+These options work in the second argument to `calendarWidget` for both modal and embedded calendars. Use the snake_case names below for SDK calls; [WordPress shortcodes](/wordpress/adding-calendar-widget#calendar-targeting-and-display-options) use snake_case attributes.
 
 > **Availability:** Use a frontend and rebuilt SDK that implement these options. Legacy calendar routes do not implement the new targeting and display options.
 
 | SDK option | Type | Outgoing URL parameter | Effect |
 | --- | --- | --- | --- |
-| `calendarDate` | String | `calendar_date` | Venue-local date in `YYYY-MM-DD` format, such as `"2026-12-14"`. Selects the date before proceeding to time selection. |
-| `calendarTimeslot` | String | `calendar_timeslot` | Public timeslot slug on `calendarDate`, such as `"evening-show"`. Requires `calendarDate`; use the actual slug, not a display label or clock time. |
-| `calendarSpecialEvent` | String or string array | `calendar_special_event` | Configured stable special-event key, multiple keys, or the single reserved value `"all"` to select every currently filterable special event. |
-| `calendarOpenState` | `"calendar"` or `"special-events"` | `calendar_open_state` | Initial discovery view. Falls back to Calendar when no rich Special Events panel exists. |
-| `displayPricePatronTypeId` | Number | `display_price_patron_type_id` | Positive venue-local PatronType ID. Affects display pricing only, without filtering availability, dates, or purchasable ticket types. |
-| `hidePrice` | Boolean | `hide_price` | Hides calendar price text and the price-range filter when true. Does not change availability or ticket selection. |
-| `highlightMultiDayEventsOnStartDateOnly` | Boolean | `highlight_multi_day_events_on_start_date_only` | Highlights a multi-day event only on its venue-local start date when true. |
+| `calendar_date` | String | `calendar_date` | Venue-local date in `YYYY-MM-DD` format, such as `"2026-12-14"`. Selects the date before proceeding to time selection. |
+| `calendar_timeslot` | String | `calendar_timeslot` | Public timeslot slug on `calendar_date`, such as `"evening-show"`. Requires `calendar_date`; use the actual slug, not a display label or clock time. |
+| `calendar_special_event` | String or string array | `calendar_special_event` | Configured stable special-event key, multiple keys, or the single reserved value `"all"` to select every currently filterable special event. |
+| `calendar_open_state` | `"calendar"` or `"special-events"` | `calendar_open_state` | Initial discovery view. Falls back to Calendar when no rich Special Events panel exists. |
+| `display_price_patron_type_id` | Number | `display_price_patron_type_id` | Positive venue-local PatronType ID. Affects display pricing only, without filtering availability, dates, or purchasable ticket types. |
+| `hide_price` | Boolean | `hide_price` | Hides calendar price text and the price-range filter when true. Does not change availability or ticket selection. |
+| `highlight_multi_day_events_on_start_date_only` | Boolean | `highlight_multi_day_events_on_start_date_only` | Highlights a multi-day event only on its venue-local start date when true. |
 
-The SDK maps these camelCase options to the snake_case URL parameters internally. Use the SDK option names in JavaScript objects; the URL names describe iframe transport. Arrays produce repeated `calendar_special_event` query parameters.
+SDK objects, widget URLs and WordPress shortcodes use the same preferred snake_case option names. Existing camelCase calendar options and dashed shared options remain compatibility aliases. When both forms are supplied, an explicitly defined snake_case value wins, including false. See the [naming and migration guide](/sdk/parameter-naming). Arrays produce repeated `calendar_special_event` query parameters.
 
 Omit an option to retain calendar defaults. Pass numbers and booleans as JavaScript values, such as `17` and `false`, rather than strings.
 
@@ -104,12 +104,12 @@ Run this after the SDK is ready, using your own organization and attraction slug
 window.showpass.tickets.calendarWidget(123, {
   is_attraction: true,
   event_id: "daily-admission",
-  calendarOpenState: "special-events",
-  calendarSpecialEvent: "all",
+  calendar_open_state: "special-events",
+  calendar_special_event: "all",
 });
 ```
 
-The two options are independent: `calendarOpenState` chooses the view, while `calendarSpecialEvent` chooses filters. To preselect specific keys instead, use `calendarSpecialEvent: ["opening-night", "holiday-show"]` with keys from that calendar's configuration. `"all"` excludes ended special events and entries without usable stable keys; do not combine it with individual keys in an array.
+The two options are independent: `calendar_open_state` chooses the view, while `calendar_special_event` chooses filters. To preselect specific keys instead, use `calendar_special_event: ["opening-night", "holiday-show"]` with keys from that calendar's configuration. `"all"` excludes ended special events and entries without usable stable keys; do not combine it with individual keys in an array.
 
 A configured quantity prompt appears first. An explicit Special Events opening view takes precedence over automatic date/timeslot navigation. Customers can switch back to Calendar and continue browsing.
 
@@ -127,11 +127,11 @@ window.showpass.tickets.calendarWidget(
   {
     is_attraction: true,
     event_id: "daily-admission",
-    calendarDate: "2026-12-14",
-    calendarTimeslot: "evening-show",
-    displayPricePatronTypeId: 17,
-    hidePrice: false,
-    highlightMultiDayEventsOnStartDateOnly: true,
+    calendar_date: "2026-12-14",
+    calendar_timeslot: "evening-show",
+    display_price_patron_type_id: 17,
+    hide_price: false,
+    highlight_multi_day_events_on_start_date_only: true,
   },
   "targeted-calendar"
 );
@@ -145,15 +145,15 @@ For an attraction with configured special events, pass their stable keys, not ev
 window.showpass.tickets.calendarWidget(123, {
   is_attraction: true,
   event_id: "daily-admission",
-  calendarDate: "2026-12-14",
-  calendarTimeslot: "evening-show",
-  calendarSpecialEvent: ["opening-night", "holiday-show"],
-  displayPricePatronTypeId: 17,
-  hidePrice: true,
+  calendar_date: "2026-12-14",
+  calendar_timeslot: "evening-show",
+  calendar_special_event: ["opening-night", "holiday-show"],
+  display_price_patron_type_id: 17,
+  hide_price: true,
 });
 ```
 
-Use `calendarSpecialEvent: "opening-night"` for a single key. These filters select configured attraction special events; they do not replace the standard calendar's `tags` filter.
+Use `calendar_special_event: "opening-night"` for a single key. These filters select configured attraction special events; they do not replace the standard calendar's `tags` filter.
 
 ### Direct-target fallback
 

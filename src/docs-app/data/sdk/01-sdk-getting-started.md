@@ -48,7 +48,7 @@ This plain HTML example loads the SDK, connects a button, and displays a message
 
       try {
         await window.showpass.tickets.eventPurchaseWidget("your-event-slug", {
-          "theme-primary": "#24727b",
+          "theme_primary": "#24727b",
         });
       } catch (error) {
         console.error("Unable to open the Showpass widget", error);
@@ -75,7 +75,7 @@ Create the container before calling the SDK, then pass its ID as the final argum
 ```javascript
 window.showpass.tickets.eventPurchaseWidget(
   "your-event-slug",
-  { "theme-primary": "#24727b" },
+  { "theme_primary": "#24727b" },
   "event-widget"
 );
 ```
@@ -100,3 +100,7 @@ The widget guides below use this same pattern. Their examples show the widget ca
 - Keep a visible error or fallback action when loading fails; do not retry indefinitely.
 - Choose one loading approach. `DOMContentLoaded` alone does not wait for a script loaded with `async` or inserted later.
 - Do not use multiple inline SDK widgets on one page unless using Showpass Website Builder. Read the [shared-basket limitations](/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket) before combining widgets.
+
+## Parameter names and migration
+
+Use snake_case for public widget options across SDK objects, widget URLs and WordPress shortcodes. Existing names continue working. See the [parameter naming and migration guide](/sdk/parameter-naming) for aliases, precedence and release availability.

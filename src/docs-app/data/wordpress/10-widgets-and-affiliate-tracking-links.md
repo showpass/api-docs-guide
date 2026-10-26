@@ -26,7 +26,7 @@ There are two ways to set tracking IDs for Showpass widgets:
 Share your full tracking link in campaigns or with affiliates:
 
 ```text
-https://www.showpass.com/your-event/?tracking-id=8ee54af5
+https://www.showpass.com/your-event/?tracking_id=8ee54af5
 ```
 
 When customers click this link, they're taken to Showpass and the tracking token is recorded.
@@ -52,7 +52,7 @@ https://yourwebsite.com/event-page/?aff=8ee54af5
 The `[showpass_widget]` shortcode (specifically `type="event"`) automatically:
 
 1. Looks for the `aff` cookie
-2. If found, injects the `tracking-id` into the Showpass purchase widget
+2. If found, injects the `tracking_id` into the Showpass purchase widget
 3. Attributes the sale to the correct affiliate/campaign in Showpass reports
 
 ### Method 2: Direct tracking with `tracking_id` parameter
@@ -173,7 +173,7 @@ The tracking ID is applied when:
 2. Cookie is set
 3. User clicks a `[showpass_widget]` button to open the purchase widget
 
-**Direct links to Showpass.com with `tracking-id` parameter work independently of this WordPress plugin feature.**
+**Direct links to Showpass.com with `tracking_id` parameter work independently of this WordPress plugin feature.**
 
 ---
 
@@ -189,7 +189,7 @@ The tracking ID is applied when:
 
 1. Click your `[showpass_widget]` button
 2. Open browser DevTools → Network tab
-3. Look for requests to Showpass with your `tracking-id` included
+3. Look for requests to Showpass with your `tracking_id` included
 
 ### Step 3: Check Showpass reports
 
@@ -211,7 +211,7 @@ The tracking ID is applied when:
 ### Cookie not being set
 
 - **Check for HTTPS** – cookies may have restrictions on HTTP sites
-- **Verify URL format** – use `?aff=token` not `?tracking-id=token`
+- **Verify URL format** – use `?aff=token` not `?tracking_id=token`
 - **Test in incognito mode** to rule out browser extensions blocking cookies
 
 ### Multiple tracking sources

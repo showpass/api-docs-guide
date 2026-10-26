@@ -1,4 +1,5 @@
 import * as React from 'react';
+import type { ShowpassWidgetParams } from './showpass-sdk';
 import { Button } from "@/shared/components/button.tsx";
 import { CalendarRange } from 'lucide-react';
 
@@ -7,7 +8,7 @@ interface ShowpassCalendarWidgetProps {
   buttonIcon?: React.ReactNode;
   buttonClassName?: string;
   venueId?: string;
-  options?: Record<string, any>;
+  options?: ShowpassWidgetParams;
 }
 
 const ShowpassCalendarWidget = ({ 
@@ -22,8 +23,8 @@ const ShowpassCalendarWidget = ({
     if (typeof window === 'undefined') return;
     
     const defaultOptions = {
-      'theme-primary': '#FF7F00',
-      'keep-shopping': true
+      'theme_primary': '#FF7F00',
+      'keep_shopping': true
     };
     
     const mergedOptions = { ...defaultOptions, ...options };

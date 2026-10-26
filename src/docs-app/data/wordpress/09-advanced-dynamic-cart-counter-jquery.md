@@ -59,8 +59,8 @@ If working outside the plugin context, add JS-Cookie manually:
       $(".your-cart-click-trigger-element").on("click", function (event) {
         event.preventDefault();
         showpass.tickets.checkoutWidget({
-          "theme-primary": "#9e2a2b",
-          "keep-shopping": true
+          "theme_primary": "#9e2a2b",
+          "keep_shopping": true
         });
       });
     } else {

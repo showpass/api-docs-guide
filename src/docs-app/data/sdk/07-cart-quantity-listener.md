@@ -144,7 +144,7 @@ function initializeCartListener() {
     if (window.showpass && window.showpass.tickets) {
       // Open checkout widget with your preferred styling
       window.showpass.tickets.checkoutWidget({
-        "theme-primary": "#007bff",
+        "theme_primary": "#007bff",
       });
     } else {
       console.error("Showpass SDK not available for checkout.");
@@ -222,7 +222,7 @@ $(document).ready(function () {
       $cartLink.on("click", function (e) {
         e.preventDefault();
         window.showpass.tickets.checkoutWidget({
-          "theme-primary": "#28a745",
+          "theme_primary": "#28a745",
         });
       });
     } else {

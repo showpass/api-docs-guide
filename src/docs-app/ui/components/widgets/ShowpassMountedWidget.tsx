@@ -37,8 +37,8 @@ const ShowpassMountedWidget = ({
         const tickets = await loadShowpassSdk(environment);
         if (disposed) return;
         const widget = await tickets[method](id, {
-          "theme-primary": themeColor,
-          "keep-shopping": true,
+          "theme_primary": themeColor,
+          "keep_shopping": true,
           ...options,
         }, containerId);
         if (disposed) widget.unmount?.();
