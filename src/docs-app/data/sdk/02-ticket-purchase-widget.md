@@ -70,15 +70,15 @@ Open the [Widget Playground](/sdk/widget-playground), select the same environmen
 
 The widget forwards the token to Showpass checkout, which includes it in the basket request body. The playground keeps the token in memory and clears it on reload or environment change. Use a fresh token after its one-hour expiry; do not paste your Partner credential here. Close and reopen an existing modal after changing the applied token.
 
-**If you are signed in, your Showpass account must match the token’s customer.** To test different customers, use an incognito window and stay signed out. Reset basket keeps the current login.
+**If you are signed in, your Showpass account must match the token’s customer.** To test different customers, use an incognito window and stay signed out. Clearing and resetting keeps the current login.
 
 ### Reset a test checkout in the Playground
 
-Applying or clearing a token changes the Playground setting. It does not discard items or change the customer attached to an existing Showpass basket. **Clear token** keeps that basket.
+Applying a token changes the Playground setting and keeps the existing basket and customer. **Clear token & reset basket** removes both the pasted and applied token and expires that basket so you can test another customer.
 
-Use **Reset basket** beside **Apply token** and **Clear token**, inside **Partner customer**, before testing another customer:
+Use **Clear token & reset basket** beside **Apply token**, inside **Partner customer**, before testing another customer:
 
-1. Click **Reset basket**. It immediately starts resetting the basket, with progress shown below the token controls. There is no separate confirmation page or dialog.
+1. Click **Clear token & reset basket**. It immediately starts resetting the basket, with progress shown below the token controls. There is no separate confirmation page or dialog.
 2. The Playground refreshes to unload old widgets and clears both the pasted and applied token. Your public settings are kept. The old basket is expired and its reservations released.
 3. When **Basket reset** appears, paste and apply the next customer's token, then select items to create a fresh basket. Leave the token empty to try ordinary checkout.
 

@@ -1,4 +1,5 @@
 import * as React from "react";
+import { Loader2 } from "lucide-react";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/shared/components/button";
 import { consumeCheckoutResetIntent, getCheckoutResetUrl, runCheckoutRestart, startCheckoutReset } from "./checkout-restart";
@@ -20,6 +21,7 @@ export default function PlaygroundCheckoutReset({ environment, disabled }: Playg
   const authorized = React.useRef(false);
   const [attempt, setAttempt] = React.useState(0);
   const [error, setError] = React.useState("");
+  const busy = resetting && !error;
 
   React.useEffect(() => {
     const frame = iframe.current;
@@ -60,8 +62,9 @@ export default function PlaygroundCheckoutReset({ environment, disabled }: Playg
   };
 
   return <>
-    <Button size="sm" variant="outline" disabled={disabled || (resetting && !error)} onClick={reset}>
-      {error ? "Retry reset" : "Reset basket"}
+    <Button size="sm" variant="outline" disabled={disabled || busy} aria-busy={busy} onClick={reset}>
+      {busy && <Loader2 className="h-4 w-4 animate-spin motion-reduce:animate-none" aria-hidden="true" />}
+      {error ? "Retry reset" : busy ? "Resetting basket…" : "Clear token & reset basket"}
     </Button>
     {resetting && <iframe ref={iframe} title="Reset test basket" hidden allow="storage-access *" referrerPolicy="origin" />}
     {error ? <p role="alert" className="w-full text-xs text-destructive">{error}</p>

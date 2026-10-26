@@ -14,7 +14,7 @@ const { StaticRouter } = require("react-router-dom/server");
 const source = readFileSync(new URL("../src/docs-app/ui/components/widgets/checkout-restart.ts", import.meta.url), "utf8");
 const code = ts.transpileModule(source, { compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 } }).outputText;
 
-function fixture() {
+function fixture({ redirectDirectoryIndex = false } = {}) {
   const listeners = new Set();
   const timers = new Map();
   const replies = [];
@@ -22,7 +22,21 @@ function fixture() {
   const controller = new AbortController();
   const window = {
     crypto: webcrypto,
-    location: { origin: "https://dev.showpass.com", reload: () => events.push("reload") },
+    location: {
+      origin: "https://dev.showpass.com",
+      reload() {
+        events.push("reload");
+        const url = new URL(window.location.href);
+        if (redirectDirectoryIndex && url.pathname === "/sdk/widget-playground") {
+          // GitHub Pages adds the directory's trailing slash. HTTP redirects
+          // clear history state, including the single-use reset click marker.
+          url.pathname += "/";
+          window.location.href = url.toString();
+          window.history.state = null;
+          events.push("redirect");
+        }
+      },
+    },
     history: {
       state: { idx: 0 },
       replaceState(state, title, url) { this.state = state; if (url) window.location.href = new URL(url, window.location.origin).toString(); },
@@ -51,7 +65,7 @@ test("navigation retains only public settings and strips tokens and reset state"
   const f = fixture();
   const search = new URLSearchParams({ environment: "demo", eventId: "event", membershipId: "membership", theme: "#24727b", tab: "mounted", widget: "event", customer_attribution_token: "SECRET", token: "SECRET", returnUrl: "https://evil.example", checkoutAction: "reset" });
   const resetUrl = new URL(f.getCheckoutResetUrl(search, "reset"), f.window.location.origin);
-  assert.equal(resetUrl.pathname, "/sdk/widget-playground");
+  assert.equal(resetUrl.pathname, "/sdk/widget-playground/");
   assert.equal(resetUrl.searchParams.get("memberId"), "membership");
   assert.equal(resetUrl.searchParams.get("checkoutAction"), "reset");
   assert.equal(resetUrl.searchParams.get("environment"), "demo");
@@ -69,7 +83,7 @@ test("a button click reloads the Playground with a single-use reset intent and n
   assert.equal(f.consumeCheckoutResetIntent(), false);
   f.startCheckoutReset(new URLSearchParams({ environment: "demo", eventId: "test-event", customer_attribution_token: "SECRET" }));
   const url = new URL(f.window.location.href);
-  assert.equal(url.pathname, "/sdk/widget-playground");
+  assert.equal(url.pathname, "/sdk/widget-playground/");
   assert.equal(url.searchParams.get("checkoutAction"), "reset");
   assert.ok(!f.window.location.href.includes("SECRET"));
   assert.ok(!JSON.stringify(f.window.history.state).includes("SECRET"));
@@ -86,6 +100,17 @@ test("a completed reset retains public settings without starting another reset",
   assert.equal(url.searchParams.get("eventId"), "test-event");
   assert.ok(!url.toString().includes("SECRET"));
   assert.equal(f.consumeCheckoutResetIntent(), false);
+});
+
+test("the first reset click survives a static-host reload without losing its intent", () => {
+  const f = fixture({ redirectDirectoryIndex: true });
+  for (let attempt = 0; attempt < 3; attempt++) {
+    f.startCheckoutReset(new URLSearchParams({ environment: "demo", eventId: "test-event" }));
+    assert.equal(f.consumeCheckoutResetIntent(), true, "the first click must authorize reset after reload");
+    assert.equal(f.consumeCheckoutResetIntent(), false, "the intent must still be single-use");
+    assert.equal(new URL(f.window.location.href).pathname, "/sdk/widget-playground/");
+  }
+  assert.deepEqual(f.events, ["reload", "reload", "reload"]);
 });
 
 test("expired or malformed history markers cannot authorize reset", () => {
