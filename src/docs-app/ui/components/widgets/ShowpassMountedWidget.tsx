@@ -1,5 +1,5 @@
 import * as React from "react";
-import { loadShowpassSdk, type ShowpassWidgetParams, type WidgetEnvironment } from "./showpass-sdk";
+import { loadShowpassSdk, withWidgetDefaults, type ShowpassWidgetParams, type WidgetEnvironment } from "./showpass-sdk";
 
 export interface ShowpassMountedWidgetProps {
   method: "eventPurchaseWidget" | "calendarWidget" | "productPurchaseWidget" | "membershipPurchaseWidget";
@@ -36,11 +36,7 @@ const ShowpassMountedWidget = ({
       try {
         const tickets = await loadShowpassSdk(environment);
         if (disposed) return;
-        const widget = await tickets[method](id, {
-          "theme-primary": themeColor,
-          "keep-shopping": true,
-          ...options,
-        }, containerId);
+        const widget = await tickets[method](id, withWidgetDefaults(options, themeColor), containerId);
         if (disposed) widget.unmount?.();
         else unmount = widget.unmount?.bind(widget);
       } catch {

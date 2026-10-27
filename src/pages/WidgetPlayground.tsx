@@ -137,9 +137,9 @@ const WidgetPlayground: React.FC = () => {
   const selectedIdentifier = identifiers[activeWidget];
 
   // Memoize options for modal widgets
-  const modalWidgetOptions = React.useMemo(() => ({ 
-    "theme-primary": themeColor,
-    "keep-shopping": true 
+  const modalWidgetOptions = React.useMemo(() => ({
+    "theme_primary": themeColor,
+    "keep_shopping": true
   }), [themeColor]);
   const eventWidgetOptions = React.useMemo(() => ({
     ...modalWidgetOptions,
@@ -174,12 +174,12 @@ const WidgetPlayground: React.FC = () => {
 
   return (
     <div>
-      <SEOHead 
+      <SEOHead
         title={seoData.title}
         description={seoData.description}
         keywords={seoData.keywords}
       />
-      
+
       {!resetting && <ShowpassIntegration environment={environment} onReady={onSdkReady} onError={setSdkError} />}
 
       <div className="prose prose-slate max-w-none dark:prose-invert">

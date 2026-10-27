@@ -68,7 +68,7 @@ Here's a complete, minimal page that demonstrates the integration:
       function openTicketWidget(eventSlug) {
         if (window.showpass && window.showpass.tickets) {
           window.showpass.tickets.eventPurchaseWidget(eventSlug, {
-            "theme-primary": "#007bff",
+            "theme_primary": "#007bff",
           });
         } else {
           alert("Ticket widget not available. Please refresh the page.");
@@ -175,7 +175,7 @@ function openTicketWidget(eventSlug) {
   }
   
   window.showpass.tickets.eventPurchaseWidget(eventSlug, {
-    "theme-primary": "#007bff",
+    "theme_primary": "#007bff",
   });
 }
 ```
@@ -322,7 +322,7 @@ Here's an improved version with better structure and styling:
         }
         
         window.showpass.tickets.eventPurchaseWidget(eventSlug, {
-          "theme-primary": CONFIG.themeColor,
+          "theme_primary": CONFIG.themeColor,
         });
       }
 

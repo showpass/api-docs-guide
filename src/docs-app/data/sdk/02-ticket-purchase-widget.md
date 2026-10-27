@@ -12,12 +12,12 @@ Call the widget from your button handler, without a container ID:
 
 ```javascript
 window.showpass.tickets.eventPurchaseWidget("summer-concert", {
-  "theme-primary": "#24727b",
-  "keep-shopping": true,
+  "theme_primary": "#24727b",
+  "keep_shopping": true,
 });
 ```
 
-`keep-shopping` changes the purchase widget's return button label. It does not link separate baskets.
+`keep_shopping` changes the purchase widget's return button label. It does not link separate baskets.
 
 ## Embed one widget
 
@@ -30,7 +30,7 @@ Create the container, then call the SDK after the container and SDK are ready:
 ```javascript
 window.showpass.tickets.eventPurchaseWidget(
   "summer-concert",
-  { "theme-primary": "#24727b" },
+  { "theme_primary": "#24727b" },
   "event-widget"
 );
 ```
@@ -41,11 +41,11 @@ window.showpass.tickets.eventPurchaseWidget(
 | --- | --- | --- | --- |
 | **slug** | String | Required | The unique slug of the event (e.g., `my-event-slug` from `showpass.com/my-event-slug/`) |
 | **params** | Object | Optional | Configuration object containing widget customization options |
-| **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
-| **params['show-specific-tickets']** | String | Optional | Comma-separated list of ticket type IDs to display (e.g., `'1234,5678'`) |
-| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
-| **params['tracking-id']** | String | Optional | Tracking link ID for affiliate tracking, password bypass, or hidden ticket access |
-| **params['show-description']** | Boolean | Optional | Control event description visibility. Default: `true` |
+| **params['theme_primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
+| **params['show_specific_tickets']** | String | Optional | Comma-separated list of ticket type IDs to display (e.g., `'1234,5678'`) |
+| **params['keep_shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
+| **params['tracking_id']** | String | Optional | Tracking link ID for affiliate tracking, password bypass, or hidden ticket access |
+| **params['show_description']** | Boolean | Optional | Control event description visibility. Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
 | **params['customer_attribution_token']** | String | Partner integrations | Short-lived token that associates checkout with a customer connected through the Partner API. |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML `<div>` element where the widget will mount |

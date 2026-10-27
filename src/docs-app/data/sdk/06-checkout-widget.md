@@ -14,7 +14,7 @@ Call this from your button handler:
 
 ```javascript
 window.showpass.tickets.checkoutWidget({
-  "theme-primary": "#24727b",
+  "theme_primary": "#24727b",
 });
 ```
 
@@ -28,7 +28,7 @@ Create the container, then run the SDK call after both are ready:
 
 ```javascript
 window.showpass.tickets.checkoutWidget(
-  { "theme-primary": "#24727b" },
+  { "theme_primary": "#24727b" },
   "checkout-widget"
 );
 ```
@@ -38,10 +38,10 @@ window.showpass.tickets.checkoutWidget(
 | Parameter | Type | Status | Description |
 | --- | --- | --- | --- |
 | **params** | Object | Optional | Configuration object containing widget customization options |
-| **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
-| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button (may behave differently in checkout flow). Default: `true` |
+| **params['theme_primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
+| **params['keep_shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button (may behave differently in checkout flow). Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
-| **params['tracking-id']** | - | - | **Not supported** for checkout widget |
+| **params['tracking_id']** | - | - | **Not supported** for checkout widget |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML `<div>` element where the checkout flow will mount |
 
 ## Layout limitations

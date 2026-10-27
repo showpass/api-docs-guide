@@ -1,11 +1,12 @@
 import * as React from 'react';
+import { withWidgetDefaults, type ShowpassWidgetParams } from './showpass-sdk';
 import { Button } from "@/shared/components/button.tsx";
 
 interface ShowpassProductWidgetProps {
   buttonText?: string;
   buttonClassName?: string;
   id: string;
-  options?: Record<string, any>;
+  options?: ShowpassWidgetParams;
 }
 
 const ShowpassProductWidget = ({ 
@@ -18,12 +19,7 @@ const ShowpassProductWidget = ({
   const handleClick = () => {
     if (typeof window === 'undefined') return;
 
-    const defaultOptions = {
-      'theme-primary': '#FF7F00',
-      'keep-shopping': true
-    };
-
-    const mergedOptions = { ...defaultOptions, ...options };
+    const mergedOptions = withWidgetDefaults(options);
 
     try {
       if (window.showpass && window.showpass.tickets) {

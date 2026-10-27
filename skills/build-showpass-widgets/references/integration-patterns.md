@@ -30,7 +30,7 @@ Load the canonical script once and wait for deferred scripts before binding the 
 
       try {
         await window.showpass.tickets.eventPurchaseWidget("event-slug", {
-          "theme-primary": "#24727b",
+          "theme_primary": "#24727b",
         });
       } catch (error) {
         console.error("Unable to open the Showpass widget", error);
@@ -56,7 +56,7 @@ For an embedded widget, render the container before calling the SDK:
 ~~~js
 await window.showpass.tickets.calendarWidget(
   "venue-id-or-slug",
-  { "theme-primary": "#24727b" },
+  { "theme_primary": "#24727b" },
   "showpass-calendar",
 );
 ~~~
@@ -106,7 +106,7 @@ export function BuyTicketsButton({
     try {
       const tickets = await loadShowpassSdk();
       await tickets.eventPurchaseWidget(eventSlug, {
-        "theme-primary": themeColor,
+        "theme_primary": themeColor,
       });
     } catch (error) {
       console.error("Unable to open the Showpass widget", error);
@@ -173,7 +173,7 @@ export function EmbeddedCalendar({
 
         const widget = await tickets.calendarWidget(
           venueId,
-          { "theme-primary": themeColor },
+          { "theme_primary": themeColor },
           containerId,
         );
 

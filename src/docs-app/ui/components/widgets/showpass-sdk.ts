@@ -15,8 +15,22 @@ const SDK_LOAD_TIMEOUT_MS = 15_000;
 
 export type ShowpassWidgetParams = Record<
   string,
-  string | boolean | undefined
+  string | number | boolean | string[] | undefined
 >;
+
+export function withWidgetDefaults(
+  options: ShowpassWidgetParams,
+  themeColor = "#FF7F00",
+): ShowpassWidgetParams {
+  // Resolve aliases for wrapper defaults before they can mask caller values.
+  // All other option normalization stays with the SDK.
+  const { "theme-primary": themePrimary, "keep-shopping": keepShopping, ...params } = options;
+  return {
+    ...params,
+    theme_primary: params.theme_primary ?? themePrimary ?? themeColor,
+    keep_shopping: params.keep_shopping ?? keepShopping ?? true,
+  };
+}
 
 export interface ShowpassWidgetHandle {
   unmount?: () => void;

@@ -101,6 +101,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Display events in a beautiful calendar format using the Showpass calendar widget. Customize views and handle date navigation.",
     keywords: "event calendar widget, calendar view, event display, date picker, calendar integration"
   },
+  "/sdk/parameter-naming": {
+    title: "Widget Parameter Naming and Migration | Showpass SDK",
+    description: "Use consistent snake_case widget options across the SDK, URLs and WordPress, with compatible aliases and clear migration rules.",
+    keywords: "widget parameters, snake_case, SDK aliases, WordPress attributes, integration migration"
+  },
   "/sdk/checkout-widget": {
     title: "Checkout Widget - Showpass JavaScript SDK",
     description: "Implement the Showpass checkout widget for seamless payment processing. Handle cart management and checkout flows.",

@@ -19,7 +19,7 @@ Call this from your button handler:
 
 ```javascript
 window.showpass.tickets.productPurchaseWidget(1234, {
-  "theme-primary": "#24727b",
+  "theme_primary": "#24727b",
 });
 ```
 
@@ -34,7 +34,7 @@ Create the container, then run the SDK call after both are ready:
 ```javascript
 window.showpass.tickets.productPurchaseWidget(
   1234,
-  { "theme-primary": "#24727b" },
+  { "theme_primary": "#24727b" },
   "product-widget"
 );
 ```
@@ -45,13 +45,13 @@ window.showpass.tickets.productPurchaseWidget(
 | --- | --- | --- | --- |
 | **productId** | Integer | Required | The unique numerical ID of the product |
 | **params** | Object | Optional | Configuration object containing widget customization options |
-| **params['theme-primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
-| **params['theme-secondary']** | String | Optional | Hex code for accent widget color |
-| **params['theme-dark']** | Boolean | Optional | If `true`, displays the widget in dark theme |
-| **params['keep-shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
-| **params['show-description']** | Boolean | Optional | Control product description visibility. Default: `true` |
+| **params['theme_primary']** | String | Optional | Hex code for the main widget color (e.g., `'#dd3333'`) |
+| **params['theme_secondary']** | String | Optional | Hex code for accent widget color |
+| **params['theme_dark']** | Boolean | Optional | If `true`, displays the widget in dark theme |
+| **params['keep_shopping']** | Boolean | Optional | If `true`, displays "Keep Shopping" instead of "Close" button. Default: `true` |
+| **params['show_description']** | Boolean | Optional | Control product description visibility. Default: `true` |
 | **params['lang']** | String | Optional | Language code for widget interface. Use `'fr'` for French (defaults to English) |
-| **params['tracking-id']** | - | - | **Not supported** for product widgets |
+| **params['tracking_id']** | - | - | **Not supported** for product widgets |
 | **containerId** | String | Optional | **For Embedded Mode:** The ID of the HTML `<div>` element where the widget will mount |
 
 ## Layout limitations

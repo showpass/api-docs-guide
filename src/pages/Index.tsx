@@ -140,7 +140,7 @@ const integrationPaths: IntegrationPath[] = [
       </span>,
       <span key="sdk-4" className="pl-8">
         <SyntaxToken type="punctuation">{`{ `}</SyntaxToken>
-        <SyntaxToken type="property">&quot;keep-shopping&quot;</SyntaxToken>
+        <SyntaxToken type="property">&quot;keep_shopping&quot;</SyntaxToken>
         <SyntaxToken type="operator">: </SyntaxToken>
         <SyntaxToken type="boolean">true</SyntaxToken>
         <SyntaxToken type="punctuation">{` }`}</SyntaxToken>

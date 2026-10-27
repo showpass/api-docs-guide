@@ -64,7 +64,7 @@ Add parameters inside the shortcode, separated by spaces. Use straight quotation
 | `show_specific_tickets` | Limit the ticket types shown | `show_specific_tickets="123,456"` |
 | `class` | Apply your theme's button classes | `class="btn btn-primary"` |
 | `keep_shopping` | Select “Keep Shopping” (`true`) or “Close” (`false`) for this purchase widget | Inherits the plugin's global setting when omitted |
-| `show_widget_description` | Override description visibility | `"true"` or `"false"`; inherits the global setting when omitted |
+| `show_description` | Override description visibility after the matching SPW-20291 plugin release; `show_widget_description` remains an alias | `"true"` or `"false"`; inherits the global setting when omitted |
 
 For example, a workshop button with selected ticket types:
 
@@ -126,3 +126,6 @@ Before launch, test the customer's complete journey on desktop and mobile: add a
 | An embedded widget looks cramped | Check its container width and theme CSS. |
 
 For more layouts, see [event lists](/wordpress/adding-event-list), [event detail pages](/wordpress/adding-event-detail-page), and [custom templates](/wordpress/creating-custom-templates).
+
+
+See [Widget parameter naming and migration](/sdk/parameter-naming) for the preferred shared names, legacy aliases and release availability.

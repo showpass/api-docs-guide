@@ -237,7 +237,7 @@ import { loadShowpassSdk } from "./showpass-sdk";
 async function openEvent(event: DiscoveryEvent) {
   const tickets = await loadShowpassSdk();
   await tickets.eventPurchaseWidget(event.slug, {
-    "theme-primary": "#24727b",
+    "theme_primary": "#24727b",
   });
 }
 ~~~
