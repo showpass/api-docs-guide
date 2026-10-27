@@ -1,5 +1,5 @@
 import * as React from 'react';
-import type { ShowpassWidgetParams } from './showpass-sdk';
+import { withWidgetDefaults, type ShowpassWidgetParams } from './showpass-sdk';
 import { Button } from "@/shared/components/button.tsx";
 
 interface ShowpassMembershipWidgetProps {
@@ -19,12 +19,7 @@ const ShowpassMembershipWidget = ({
   const handleClick = () => {
     if (typeof window === 'undefined' || !id) return;
     
-    const defaultOptions = {
-      'theme_primary': '#FF7F00',
-      'keep_shopping': true
-    };
-    
-    const mergedOptions = { ...defaultOptions, ...options };
+    const mergedOptions = withWidgetDefaults(options);
     
     try {
       if (window.showpass && window.showpass.tickets) {
