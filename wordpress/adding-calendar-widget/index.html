@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DvgwZ4GD.js"></script>
+    <script type="module" crossorigin src="/assets/index-6KCJM7n1.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -303,6 +303,12 @@
 <p><strong>Do not use multiple inline SDK widgets on the same page unless using Showpass Website Builder.</strong> This includes multiple embedded calendars or an embedded calendar beside an inline purchase widget. Separate inline widgets must not be relied on for one synchronized basket.</p>
 <p>For a shared basket across several offerings, use modal buttons throughout. A single embedded calendar is a different layout. See <a href="/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket">Multiple widgets and a shared basket</a> before combining inline and modal widgets.</p>
 <p>Test the full journey on desktop and mobile, including navigation between booking pages and adding items in different orders. Confirm the cart contains the expected items before checkout and before the basket expires.</p>
+<h2>Consistent parameter names</h2>
+<p>After the SPW-20291 SDK and matching WordPress plugin release, use snake_case for matching options in JavaScript SDK objects, widget URLs and WordPress attributes. Existing names remain compatible. See <a href="/sdk/parameter-naming">Widget parameter naming and migration</a> for the alias table, precedence and deployment requirements.</p>
+<p>Both modern calendar shortcodes forward shared options such as <code>theme_primary</code>, <code>theme_secondary</code>, <code>theme_dark</code>, <code>keep_shopping</code>, <code>tracking_id</code>, <code>redirect_url</code> and <code>prompt_for_quantity</code> alongside the calendar targeting and pricing options. Use quoted values; explicit <code>&quot;false&quot;</code> is preserved. Each option retains its existing widget-specific behavior.</p>
+<pre><code class="language-text">[showpass_calendar_widget calendar_date=&quot;2026-12-14&quot; hide_price=&quot;true&quot; theme_primary=&quot;24727b&quot; keep_shopping=&quot;false&quot;]
+</code></pre>
+<p>Use <code>[showpass_embed_calendar]</code> with the same attributes for an embedded calendar on a separate page. These shared per-shortcode options require the matching plugin update and rebuilt SDK; do not assume plugin 4.0.9 forwards all of them.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->

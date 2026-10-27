@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Widget Parameter Naming and Migration | Showpass SDK</title>
+    <meta name="description" content="Use consistent snake_case widget options across the SDK, URLs and WordPress, with compatible aliases and clear migration rules." />
+    <meta name="author" content="Showpass Devs" />
+    <meta name="robots" content="index, follow" />
+    <meta name="language" content="English" />
+    <meta name="revisit-after" content="7 days" />
+
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-5LHTDWBG');</script>
+    <!-- End Google Tag Manager -->
+
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://dbx9avwd2hnkj.cloudfront.net">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&display=swap" rel="stylesheet">
+
+    <!-- Open Graph / Facebook -->
+    <meta property="og:title" content="Widget Parameter Naming and Migration | Showpass SDK" />
+    <meta property="og:description" content="Use consistent snake_case widget options across the SDK, URLs and WordPress, with compatible aliases and clear migration rules." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://dev.showpass.com/" />
+    <meta property="og:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+    <meta property="og:site_name" content="Showpass Developer Documentation" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@showpassevents" />
+    <meta name="twitter:title" content="Widget Parameter Naming and Migration | Showpass SDK" />
+    <meta name="twitter:description" content="Use consistent snake_case widget options across the SDK, URLs and WordPress, with compatible aliases and clear migration rules." />
+    <meta name="twitter:image" content="https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-og.jpg" />
+
+    <!-- Favicon and app icons -->
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/favicon.ico" />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href="https://dev.showpass.com/" />
+    
+    <!-- Sitemap reference -->
+    <link rel="sitemap" type="application/xml" href="/sitemap.xml" />
+
+    <!-- JSON-LD Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Showpass Developer Documentation",
+      "description": "Comprehensive developer documentation for Showpass API, JavaScript SDK, WordPress Plugin, Webhooks, and Google Tag Manager integration.",
+      "url": "https://dev.showpass.com",
+      "publisher": {
+        "@type": "Organization",
+        "name": "Showpass",
+        "url": "https://showpass.com",
+        "logo": {
+          "@type": "ImageObject",
+          "url": "https://dbx9avwd2hnkj.cloudfront.net/static/assets/img/showpass-logo.png"
+        }
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://dev.showpass.com/?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    <script type="module" crossorigin src="/assets/index-6KCJM7n1.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
+  </head>
+
+  <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-5LHTDWBG"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div id="root"><div id="ssg-prerender" style="font-family:sans-serif;max-width:860px;margin:0 auto;padding:2rem 1rem">
+  <nav style="margin-bottom:1.5rem"><a href="/" style="color:#4f46e5;text-decoration:none">← Showpass Developer Docs</a></nav>
+  <article><h1>Widget parameter naming and migration</h1>
+<p>Public widget option names use snake_case in SDK objects, widget URL queries and WordPress shortcode attributes. HTML data attributes still use dashes, as in <code>data-calendar-date</code>. JavaScript function names, DOM container IDs, event names, organizer content and saved Website Builder configuration are unchanged.</p>
+<h2>Release availability</h2>
+<p>This convention requires the SPW-20291 frontend and rebuilt SDK release. WordPress must use that SDK before its matching plugin update is published. Until deployment is verified, existing integrations should continue using their current names. Do not assume a cached SDK bundle supports the new names.</p>
+<h2>SDK and URL compatibility aliases</h2>
+<p>Existing names remain supported. There is no scheduled removal in this release. New integrations should use the preferred names; existing integrations can migrate one option at a time.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Preferred name</th>
+<th align="left">Existing alias</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>calendar_date</code></td>
+<td align="left"><code>calendarDate</code></td>
+</tr>
+<tr>
+<td align="left"><code>calendar_timeslot</code></td>
+<td align="left"><code>calendarTimeslot</code></td>
+</tr>
+<tr>
+<td align="left"><code>calendar_special_event</code></td>
+<td align="left"><code>calendarSpecialEvent</code></td>
+</tr>
+<tr>
+<td align="left"><code>calendar_open_state</code></td>
+<td align="left"><code>calendarOpenState</code></td>
+</tr>
+<tr>
+<td align="left"><code>display_price_patron_type_id</code></td>
+<td align="left"><code>displayPricePatronTypeId</code></td>
+</tr>
+<tr>
+<td align="left"><code>hide_price</code></td>
+<td align="left"><code>hidePrice</code></td>
+</tr>
+<tr>
+<td align="left"><code>highlight_multi_day_events_on_start_date_only</code></td>
+<td align="left"><code>highlightMultiDayEventsOnStartDateOnly</code></td>
+</tr>
+<tr>
+<td align="left"><code>jump_to_event</code></td>
+<td align="left"><code>jump-to-event</code></td>
+</tr>
+<tr>
+<td align="left"><code>keep_shopping</code></td>
+<td align="left"><code>keep-shopping</code></td>
+</tr>
+<tr>
+<td align="left"><code>prompt_for_quantity</code></td>
+<td align="left"><code>prompt-for-quantity</code></td>
+</tr>
+<tr>
+<td align="left"><code>redirect_url</code></td>
+<td align="left"><code>redirect-url</code></td>
+</tr>
+<tr>
+<td align="left"><code>show_specific_tickets</code></td>
+<td align="left"><code>show-specific-tickets</code></td>
+</tr>
+<tr>
+<td align="left"><code>theme_dark</code></td>
+<td align="left"><code>theme-dark</code></td>
+</tr>
+<tr>
+<td align="left"><code>theme_primary</code></td>
+<td align="left"><code>theme-primary</code></td>
+</tr>
+<tr>
+<td align="left"><code>theme_secondary</code></td>
+<td align="left"><code>theme-secondary</code></td>
+</tr>
+<tr>
+<td align="left"><code>ticket_type_selection_required</code></td>
+<td align="left"><code>ticket-type-selection-required</code>, historical <code>ticket-type-selection-requried</code></td>
+</tr>
+<tr>
+<td align="left"><code>tracking_id</code></td>
+<td align="left"><code>tracking-id</code></td>
+</tr>
+<tr>
+<td align="left"><code>show_description</code></td>
+<td align="left"><code>show-description</code></td>
+</tr>
+<tr>
+<td align="left"><code>branding_style</code></td>
+<td align="left"><code>branding-style</code></td>
+</tr>
+<tr>
+<td align="left"><code>is_embedded</code></td>
+<td align="left"><code>isEmbedded</code></td>
+</tr>
+<tr>
+<td align="left"><code>is_widget</code></td>
+<td align="left"><code>isWidget</code></td>
+</tr>
+</tbody></table>
+<p>Existing snake_case names such as <code>event_id</code>, <code>event_id__in</code>, <code>is_attraction</code>, <code>customer_attribution_token</code>, <code>purchase_source_platform</code> and UTM parameters keep their names. Single word options such as <code>lang</code>, <code>tags</code>, <code>screen</code>, <code>start</code> and <code>venue</code> are unchanged. An option is supported only by the widget or shortcode that already implements its behavior; consistent naming does not add capabilities to other widgets.</p>
+<h2>Conflict resolution</h2>
+<p>An explicitly defined snake_case value wins over its alias, including <code>false</code>, <code>0</code> and an empty string. If the snake_case value is <code>undefined</code>, the alias is used. Normalization leaves the caller&#39;s object unchanged, preserves unknown keys, and sends only one name for each recognized option. Existing validation and defaults remain with each feature.</p>
+<pre><code class="language-js">const params = {
+  calendar_date: &quot;2026-12-14&quot;,
+  hide_price: false,
+  theme_primary: &quot;24727b&quot;,
+  keep_shopping: false,
+};
+
+// Modal
+showpass.tickets.calendarWidget(42, params);
+
+// Embedded, on a separate page with this container already present
+showpass.tickets.calendarWidget(42, params, &quot;calendar-container&quot;);
+</code></pre>
+<p>Equivalent direct URL:</p>
+<pre><code class="language-text">/widget/calendar/venue/42/?calendar_date=2026-12-14&amp;hide_price=false&amp;theme_primary=24727b&amp;keep_shopping=false
+</code></pre>
+<p>Equivalent WordPress calendar attribute names, after the matching plugin release:</p>
+<pre><code class="language-text">[showpass_embed_calendar calendar_date=&quot;2026-12-14&quot; hide_price=&quot;false&quot; theme_primary=&quot;24727b&quot; keep_shopping=&quot;false&quot;]
+</code></pre>
+<p>WordPress gets the organization from plugin settings and uses quoted strings for values. Multiple special event keys are comma separated; SDK objects also accept an array. WordPress lowercases attribute names, so use snake_case rather than camelCase when authoring shortcodes. The existing <code>show_widget_description</code> attribute remains an alias for <code>show_description</code>. Plugin settings and older generated HTML continue to work.</p>
+<p>For an attraction calendar, keep <code>is_attraction: true</code> and pass the attraction event slug as <code>event_id</code>. Display pricing options affect presentation only, not inventory or ticket choices. Calendar dates and timeslots retain their existing validation and fallback behavior.</p>
+<h2>Migrate an existing integration</h2>
+<ol>
+<li>Confirm that the frontend and rebuilt SDK containing SPW-20291 are deployed. For WordPress, also install plugin 4.0.10 after that deployment.</li>
+<li>Rename options in your SDK calls or widget URLs using the table above. Keep each value and the widget function unchanged. You can migrate one option at a time.</li>
+<li>Test modal and embedded calendars separately, including date and special event selection, price visibility, language, tracking and checkout return behavior.</li>
+<li>Remove duplicate spellings from your configuration after testing. Existing aliases remain supported, so reverting to your previous names is safe.</li>
+</ol>
+<p>Before:</p>
+<pre><code class="language-js">showpass.tickets.calendarWidget(42, {
+  calendarDate: &quot;2026-12-14&quot;,
+  hidePrice: true,
+  &quot;keep-shopping&quot;: false,
+});
+</code></pre>
+<p>After:</p>
+<pre><code class="language-js">showpass.tickets.calendarWidget(42, {
+  calendar_date: &quot;2026-12-14&quot;,
+  hide_price: true,
+  keep_shopping: false,
+});
+</code></pre>
+<p>If both <code>hidePrice: true</code> and <code>hide_price: false</code> are present, the price remains visible. Rename object keys only; do not rename SDK functions such as <code>calendarWidget</code>, callback options, event names or HTML data attributes.</p>
+<p>WordPress 4.0.10 accepts the old <code>show_widget_description</code> name and dashed shared options on the modern widget shortcodes. Calendar aliases also accept camelCase names after WordPress lowercases them and dashed forms such as <code>calendar-date</code>. Prefer snake_case in saved shortcode content. Legacy event-list templates retain their own supported attributes; consult the <a href="/wordpress/shortcode-reference">shortcode reference</a>.</p>
+</article>
+</div></div>
+    <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
+    <script src="https://cdn.gpteng.co/gptengineer.js" type="module"></script>
+  </body>
+</html>

@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DvgwZ4GD.js"></script>
+    <script type="module" crossorigin src="/assets/index-6KCJM7n1.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -108,7 +108,7 @@
 </blockquote>
 <h4>Step 2: Customer clicks the tracking link</h4>
 <p>Share your full tracking link in campaigns or with affiliates:</p>
-<pre><code class="language-text">https://www.showpass.com/your-event/?tracking-id=8ee54af5
+<pre><code class="language-text">https://www.showpass.com/your-event/?tracking_id=8ee54af5
 </code></pre>
 <p>When customers click this link, they&#39;re taken to Showpass and the tracking token is recorded.</p>
 <h4>Step 3: Use the <code>aff</code> parameter on your website</h4>
@@ -126,7 +126,7 @@
 <p>The <code>[showpass_widget]</code> shortcode (specifically <code>type=&quot;event&quot;</code>) automatically:</p>
 <ol>
 <li>Looks for the <code>aff</code> cookie</li>
-<li>If found, injects the <code>tracking-id</code> into the Showpass purchase widget</li>
+<li>If found, injects the <code>tracking_id</code> into the Showpass purchase widget</li>
 <li>Attributes the sale to the correct affiliate/campaign in Showpass reports</li>
 </ol>
 <h3>Method 2: Direct tracking with <code>tracking_id</code> parameter</h3>
@@ -209,7 +209,7 @@ Business cards: ?aff=qr_businesscard
 <li>Cookie is set</li>
 <li>User clicks a <code>[showpass_widget]</code> button to open the purchase widget</li>
 </ol>
-<p><strong>Direct links to Showpass.com with <code>tracking-id</code> parameter work independently of this WordPress plugin feature.</strong></p>
+<p><strong>Direct links to Showpass.com with <code>tracking_id</code> parameter work independently of this WordPress plugin feature.</strong></p>
 <hr>
 <h2>Testing your tracking setup</h2>
 <h3>Step 1: Verify cookie is set</h3>
@@ -222,7 +222,7 @@ Business cards: ?aff=qr_businesscard
 <ol>
 <li>Click your <code>[showpass_widget]</code> button</li>
 <li>Open browser DevTools → Network tab</li>
-<li>Look for requests to Showpass with your <code>tracking-id</code> included</li>
+<li>Look for requests to Showpass with your <code>tracking_id</code> included</li>
 </ol>
 <h3>Step 3: Check Showpass reports</h3>
 <ol>
@@ -242,7 +242,7 @@ Business cards: ?aff=qr_businesscard
 <h3>Cookie not being set</h3>
 <ul>
 <li><strong>Check for HTTPS</strong> – cookies may have restrictions on HTTP sites</li>
-<li><strong>Verify URL format</strong> – use <code>?aff=token</code> not <code>?tracking-id=token</code></li>
+<li><strong>Verify URL format</strong> – use <code>?aff=token</code> not <code>?tracking_id=token</code></li>
 <li><strong>Test in incognito mode</strong> to rule out browser extensions blocking cookies</li>
 </ul>
 <h3>Multiple tracking sources</h3>

@@ -75,7 +75,7 @@
       }
     }
     </script>
-    <script type="module" crossorigin src="/assets/index-DvgwZ4GD.js"></script>
+    <script type="module" crossorigin src="/assets/index-6KCJM7n1.js"></script>
     <link rel="stylesheet" crossorigin href="/assets/index-D3878nHk.css">
   </head>
 
@@ -139,7 +139,7 @@
 
       try {
         await window.showpass.tickets.eventPurchaseWidget(&quot;your-event-slug&quot;, {
-          &quot;theme-primary&quot;: &quot;#24727b&quot;,
+          &quot;theme_primary&quot;: &quot;#24727b&quot;,
         });
       } catch (error) {
         console.error(&quot;Unable to open the Showpass widget&quot;, error);
@@ -159,7 +159,7 @@
 </code></pre>
 <pre><code class="language-javascript">window.showpass.tickets.eventPurchaseWidget(
   &quot;your-event-slug&quot;,
-  { &quot;theme-primary&quot;: &quot;#24727b&quot; },
+  { &quot;theme_primary&quot;: &quot;#24727b&quot; },
   &quot;event-widget&quot;
 );
 </code></pre>
@@ -205,6 +205,8 @@
 <li>Choose one loading approach. <code>DOMContentLoaded</code> alone does not wait for a script loaded with <code>async</code> or inserted later.</li>
 <li>Do not use multiple inline SDK widgets on one page unless using Showpass Website Builder. Read the <a href="/sdk/ticket-purchase-widget#multiple-widgets-and-a-shared-basket">shared-basket limitations</a> before combining widgets.</li>
 </ul>
+<h2>Parameter names and migration</h2>
+<p>Use snake_case for public widget options across SDK objects, widget URLs and WordPress shortcodes. Existing names continue working. See the <a href="/sdk/parameter-naming">parameter naming and migration guide</a> for aliases, precedence and release availability.</p>
 </article>
 </div></div>
     <!-- IMPORTANT: DO NOT REMOVE THIS SCRIPT TAG OR THIS VERY COMMENT! -->
