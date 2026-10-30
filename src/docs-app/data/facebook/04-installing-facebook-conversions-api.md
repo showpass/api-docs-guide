@@ -94,21 +94,6 @@ Domain verification is required for Conversions API to work properly.
 - **Access Token:** Paste the token from Step 2
 - **Pixel ID:** Your Facebook Pixel ID (should already be configured from pixel setup)
 
-### Configure Event Settings
-
-- **Purchase Events:** ✅ Enable (essential for conversion tracking)
-- **Checkout Events:** ✅ Enable (recommended)
-- **Add to Cart Events:** ✅ Enable (recommended)
-- **View Content Events:** ✅ Enable (optional but useful)
-
-### Data Sharing Settings
-
-- **Customer Information:** Enable to send hashed customer data
-- **Purchase Data:** Enable to send transaction details
-- **Event Deduplication:** ✅ Enable (prevents duplicate events)
-
-### Save Configuration
-
 1. Click **Save Settings**
 2. Your Conversions API integration is now active
 
@@ -140,29 +125,6 @@ Domain verification is required for Conversions API to work properly.
    - Ensure customer email is being sent (hashed)
    - Include phone numbers when available
    - Add location data (city, state, country)
-
----
-
-## Step 5: Monitor and Optimize
-
-### Regular Monitoring
-
-- **Event Coverage:** Ensure all purchase events are being tracked
-- **Data Quality:** Monitor for any data transmission errors
-- **Match Quality:** Maintain high event match quality scores
-- **Deduplication:** Verify events aren't being counted twice
-
-### Performance Optimization
-
-1. **Update Ad Campaigns**
-   - Set campaigns to optimize for Conversions API events
-   - Use the enhanced data for better audience targeting
-   - Create lookalike audiences based on server-side purchase data
-
-2. **Custom Audience Creation**
-   - Build audiences using server-side event data
-   - Create retargeting campaigns for incomplete purchases
-   - Develop VIP audiences based on purchase behavior
 
 ---
 
