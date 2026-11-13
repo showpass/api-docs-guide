@@ -1,37 +1,84 @@
 # Showpass Private Organizer API
 
-The Showpass Private Organizer API provides authenticated access to various functionality for event organizers, with a focus on ticket management and verification.
+The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.
 
-## Overview
+## Create an API key
 
-This private API allows organizers to perform various operations related to event management. Unlike the public API, this API requires authentication with a Showpass token and provides access to sensitive data and operations that are specific to event organizers.
+If Developer tools is enabled for your organization:
 
-The API is continuously evolving to provide more capabilities to event organizers, including ticket verification, scanning operations, tracking links, discounts, and access passwords.
+1. Sign in to Showpass and select the organization your integration will use.
+2. Open **Developer tools → API keys** at: https://www.showpass.com/manage/organization/developer/
+3. Select **Create API key** and enter a recognizable integration name.
+4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.
+5. Choose an expiration and create the key.
+6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.
 
-## Authentication
+The prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.
 
-The Private Organizer API requires authentication using a Showpass token:
+## How permissions and scopes work
 
+Each new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:
+
+- The key is active, has not expired and has not been revoked.
+- The employee still has valid access to that organization.
+- The employee's current permissions allow the operation.
+- The key's selected scopes allow the operation.
+- The endpoint's existing authorization rules allow access to the requested resource.
+
+For example, an employee with scanning permissions can create a key with eligible scanning scopes. Selecting a scanning scope does not grant permission to manage events. An All Access employee can choose a smaller set of scopes for a particular integration.
+
+Removing an employee's organization access or deactivating their account disables their keys. Reducing their permissions can stop existing API calls from succeeding. Increasing employee permissions does not add new scopes to an existing key. Platform staff privileges grant no additional authority to an API key.
+
+Scopes do not make every internal Showpass endpoint available. Use documented endpoints and supported operations. The descriptions shown when selecting scopes explain the operations each scope covers.
+
+## Send an authenticated request
+
+Send the full secret in the `Authorization` header, using `Token`, one space and the secret:
+
+```http
+Authorization: Token YOUR_API_KEY_SECRET
 ```
-Authorization: Token YOUR_API_TOKEN
+
+The authentication format is the same for developer keys and existing organizer API tokens. Send credentials only over HTTPS and keep them in your backend or secret manager. Do not put them in URLs, browser code, source control or logs.
+
+For a key with **Read events** access, replace `YOUR_ORGANIZATION_ID` below with the organization the key belongs to. Set `SHOWPASS_API_KEY` securely in your environment before running the request:
+
+```bash
+curl --request GET \
+  'https://www.showpass.com/api/venue/YOUR_ORGANIZATION_ID/events/?page_size=1' \
+  --header "Authorization: Token ${SHOWPASS_API_KEY}"
 ```
 
-You must include this token in the header of all requests to the private API endpoints. Contact Showpass support to obtain your organization's API token.
+The `venue` identifier in the URL is the organization ID. A key for one organization does not grant access to another organization.
 
-## Available Endpoints
+## Expiration, revocation and rotation
 
-The Private Organizer API provides a growing set of endpoints for event organizers to manage their events and tickets. Current documented areas include ticket verification, ticket scan actions, tracking links, discounts, and passwords for event or ticket type access control.
+Check the expiration and status in **Developer tools → API keys**. An expired or revoked key cannot be used again. If you lose the secret, create a replacement; the key list cannot reveal it.
 
-The API is designed to be extensible, allowing for new features and capabilities to be added over time to meet the evolving needs of event organizers.
+To rotate safely:
 
-## Getting Started
+1. Create a new key with the required scopes and an appropriate expiration.
+2. Update your integration to use the new secret.
+3. Verify the integration works using the new key.
+4. Revoke the old key.
 
-To get started with the Private Organizer API:
+Revocation immediately prevents new requests using that key. It cannot be undone. Employees can manage their own keys; employees with All Access or Developer management permission can inspect and revoke organization keys.
 
-1. Obtain an API token from Showpass support
-2. Review the available endpoints documentation to understand the capabilities
-3. Implement the API endpoints that meet your specific needs
+## Find a request in the logs
 
-Currently, the API documentation includes details on ticket verification, scanning operations, tracking links, discounts, and passwords, with more endpoints to be documented as they become available.
+When request history is available, open **Developer tools → Request logs** for the same organization.
 
-The following sections provide detailed documentation for the available endpoints.
+Request history is retained for 30 days. Filter by API key, HTTP method, status code or date range. Select an endpoint to open Request details. To find a specific call, copy its response's `X-Request-Id` header and enter that value in the **Request ID** filter. Clear any other filters that would exclude the request.
+
+History is limited to the organization and keys you are authorized to inspect. It covers developer API key requests; browser sessions and legacy organizer tokens are excluded. Requests rejected before authentication or by rate limits are not recorded, and recent requests may take time to appear. Do not rely on a missing row as proof that no request reached Showpass.
+
+## Troubleshooting
+
+| Result | What to check |
+| --- | --- |
+| `401 Unauthorized` | Confirm you sent the full secret with the `Token` prefix. Check whether the key expired, was revoked, or lost valid employee access. |
+| `403 Forbidden` | Check the selected organization, the key's scopes, the employee's current permissions and the endpoint's access rules. |
+| `404 Not Found` | Check the endpoint, organization ID and resource ID. Access rules can also make a resource unavailable. |
+| Request missing from history | Confirm you used a developer key, selected the correct organization and date range, and allowed time for logs to arrive. Authentication failures may have no history row. |
+
+When contacting support, include the request ID, HTTP method, endpoint, status code and approximate request time with its timezone. Never include the API secret.
