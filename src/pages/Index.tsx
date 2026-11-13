@@ -398,11 +398,11 @@ const additionalIntegrationPaths: IntegrationPath[] = [
 const allIntegrationPaths = [...integrationPaths, ...additionalIntegrationPaths];
 
 const indexMenuOrder: IntegrationId[] = [
-  "javascript-sdk",
   "public-api",
   "organizer-api",
   "partner-api",
   "webhooks",
+  "javascript-sdk",
   "cli",
   "wordpress",
   "google-tag-manager",
@@ -417,7 +417,7 @@ const orderedIntegrationPaths = indexMenuOrder.map(
 const Index = () => {
   const { setPageData } = useDocLayoutData();
   const seoData = seoDataMap["/"];
-  const [selectedId, setSelectedId] = useState<IntegrationId>("javascript-sdk");
+  const [selectedId, setSelectedId] = useState<IntegrationId>(indexMenuOrder[0]);
   const selectedPath =
     orderedIntegrationPaths.find(({ id }) => id === selectedId) ??
     orderedIntegrationPaths[0];

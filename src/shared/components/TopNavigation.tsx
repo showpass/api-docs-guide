@@ -8,7 +8,7 @@ import {
   ListTree,
   Menu,
   MoreHorizontal,
-  Newspaper,
+  Wrench,
   Search,
   X,
   Zap,
@@ -148,13 +148,13 @@ const TopNavigation = ({
               className="text-sm hover:bg-accent hover:text-accent-foreground"
             >
               <a
-                href="https://www.showpass.com/sell/ticketing-proof"
+                href="https://www.showpass.com/manage/organization/developer/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2"
               >
-                <Newspaper className="h-4 w-4" />
-                <span>News</span>
+                <Wrench className="h-4 w-4" />
+                <span>Developer tools</span>
               </a>
             </Button>
             <Button
@@ -212,13 +212,13 @@ const TopNavigation = ({
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <a
-                  href="https://www.showpass.com/sell/ticketing-proof"
+                  href="https://www.showpass.com/manage/organization/developer/"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex cursor-pointer items-center gap-2"
                 >
-                  <Newspaper className="h-4 w-4" />
-                  News
+                  <Wrench className="h-4 w-4" />
+                  Developer tools
                 </a>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
