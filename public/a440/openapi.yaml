@@ -249,12 +249,28 @@ paths:
         The response contains invoice-level fields only; it does not embed
         `invoice_items` or `ticket_items`. Use the invoice-items endpoint and
         the invoice tickets endpoint when those records are required.
+
+
+        When using a developer API key, both `created__gte` and `created__lt` are required,
+        including when other filters are supplied. Use ISO 8601 timestamps with a timezone
+        (for example, `Z` for UTC). The start is inclusive and the end is exclusive.
+        The end must be later than the start, and the window must be at most 31 days.
+        Fetch longer history in consecutive windows of up to 31 days.
+
+        Example request (replace `{venueId}` with your organization ID):
+
+        `GET /api/venue/{venueId}/financials/invoices/?created__gte=2026-11-01T00:00:00Z&created__lt=2026-11-02T00:00:00Z`
+
+        This selects records created on November 1, 2026 in UTC. When using an explicit
+        positive timezone offset, URL-encode the plus sign as `%2B`.
       security:
         - OrganizationToken: []
       parameters:
         - $ref: '#/components/parameters/VenueId'
         - $ref: '#/components/parameters/VenuePage'
         - $ref: '#/components/parameters/VenuePageSize'
+        - $ref: '#/components/parameters/HistoryCreatedGte'
+        - $ref: '#/components/parameters/HistoryCreatedLt'
         - name: email
           in: query
           description: Patron email associated with the order. URL-encode the value.
@@ -269,6 +285,10 @@ paths:
           description: Restrict results to orders containing this Showpass event ID.
           schema: { type: integer, minimum: 1 }
       responses:
+        '400':
+          description: >-
+            With a developer API key, a required window parameter is missing or invalid,
+            a timestamp has no timezone, or the window is not positive or exceeds 31 days.
         '200':
           description: Paginated organization invoice page
           content:
@@ -290,17 +310,37 @@ paths:
         numeric invoice `id` returned by the organization invoice endpoint in
         the `invoice` query parameter. These are invoice lines, not individual
         ticket records.
+
+
+        When using a developer API key, both `created__gte` and `created__lt` are required,
+        including when other filters are supplied. Use ISO 8601 timestamps with a timezone
+        (for example, `Z` for UTC). The start is inclusive and the end is exclusive.
+        The end must be later than the start, and the window must be at most 31 days.
+        Fetch longer history in consecutive windows of up to 31 days.
+
+        Example request (replace `{venueId}` with your organization ID):
+
+        `GET /api/venue/{venueId}/financials/invoices/items/?created__gte=2026-11-01T00:00:00Z&created__lt=2026-11-02T00:00:00Z`
+
+        This selects records created on November 1, 2026 in UTC. When using an explicit
+        positive timezone offset, URL-encode the plus sign as `%2B`.
       security:
         - OrganizationToken: []
       parameters:
         - $ref: '#/components/parameters/VenueId'
         - $ref: '#/components/parameters/VenuePage'
         - $ref: '#/components/parameters/VenuePageSize'
+        - $ref: '#/components/parameters/HistoryCreatedGte'
+        - $ref: '#/components/parameters/HistoryCreatedLt'
         - name: invoice
           in: query
           description: Numeric invoice ID from the organization invoice response.
           schema: { type: integer, minimum: 1 }
       responses:
+        '400':
+          description: >-
+            With a developer API key, a required window parameter is missing or invalid,
+            a timestamp has no timezone, or the window is not positive or exceeds 31 days.
         '200':
           description: Paginated invoice line items
           content:
@@ -844,6 +884,29 @@ components:
       name: Authorization
       description: 'Send `Token <organization-api-key>`. This key is scoped to one organization.'
   parameters:
+    HistoryCreatedGte:
+      name: created__gte
+      in: query
+      required: true
+      description: >-
+        Inclusive creation timestamp. Required with a developer API key together with
+        created__lt. Include a timezone; the positive window must be at most 31 days.
+      schema:
+        type: string
+        format: date-time
+      example: '2026-11-01T00:00:00Z'
+    HistoryCreatedLt:
+      name: created__lt
+      in: query
+      required: true
+      description: >-
+        Exclusive creation timestamp. Required with a developer API key together with
+        created__gte. Include a timezone; this must be later than created__gte and
+        at most 31 days after it.
+      schema:
+        type: string
+        format: date-time
+      example: '2026-11-02T00:00:00Z'
     VenueId:
       name: venueId
       in: path
