@@ -6,10 +6,10 @@ The Private Organizer API lets integrations work with an organization's events, 
 
 ## Create an API key
 
-If Developer tools is enabled for your organization:
+If API key management is enabled for your organization:
 
 1. Sign in to Showpass and select the organization your integration will use.
-2. Open **Developer tools → API keys** at: https://www.showpass.com/manage/organization/developer/
+2. Open **Integrations → API → API keys** at: https://www.showpass.com/manage/organization/integrations/api/keys/
 3. Select **Create API key** and enter a recognizable integration name.
 4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.
 5. Choose an expiration and create the key.
@@ -55,7 +55,7 @@ The `venue` identifier in the URL is the organization ID. A key for one organiza
 
 ## Expiration, revocation and rotation
 
-Check the expiration and status in **Developer tools → API keys**. An expired or revoked key cannot be used again. If you lose the secret, create a replacement; the key list cannot reveal it.
+Check the expiration and status in **Integrations → API → API keys**. An expired or revoked key cannot be used again. If you lose the secret, create a replacement; the key list cannot reveal it.
 
 To rotate safely:
 
@@ -68,7 +68,7 @@ Revocation immediately prevents new requests using that key. It cannot be undone
 
 ## Find a request in the logs
 
-When request history is available, open **Developer tools → Request logs** for the same organization.
+When request history is available, open **Integrations → API → Request logs** for the same organization.
 
 Request history is retained for 30 days. Filter by API key, HTTP method, status code or date range. Select an endpoint to open Request details. To find a specific call, copy its response's `X-Request-Id` header and enter that value in the **Request ID** filter. Clear any other filters that would exclude the request.
 
