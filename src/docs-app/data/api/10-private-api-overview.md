@@ -76,6 +76,8 @@ History is limited to the organization and keys you are authorized to inspect. I
 
 ## Troubleshooting
 
+For current organization members, see [Organization Membership Reads](/api/private-api-memberships). This contract requires `memberships:read` and current Manage Memberships permission or All Access.
+
 | Result | What to check |
 | --- | --- |
 | `401 Unauthorized` | Confirm you sent the full secret with the `Token` prefix. Check whether the key expired, was revoked, or lost valid employee access. |
