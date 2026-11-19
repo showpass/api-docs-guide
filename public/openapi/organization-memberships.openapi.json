@@ -1,0 +1,558 @@
+{
+  "components": {
+    "schemas": {
+      "DeveloperMember": {
+        "description": "Organization reconciliation fields, excluding scan credentials and employee identities.",
+        "properties": {
+          "expiry_date": {
+            "format": "date-time",
+            "readOnly": true,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "id": {
+            "readOnly": true,
+            "type": "integer"
+          },
+          "last_status_change": {
+            "format": "date-time",
+            "readOnly": true,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "membership_group": {
+            "readOnly": true,
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "membership_group_name": {
+            "readOnly": true,
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "membership_level": {
+            "readOnly": true,
+            "type": "integer"
+          },
+          "membership_level_name": {
+            "readOnly": true,
+            "type": "string"
+          },
+          "quantity": {
+            "readOnly": true,
+            "type": "integer"
+          },
+          "status": {
+            "description": "* `ms_active` - Active\n* `ms_disabled` - Disabled\n* `ms_expired` - Expired\n* `ms_transferred` - Transferred\n* `ms_transfer_returned` - Returned\n* `ms_refunded` - Refunded\n* `ms_refund_in_progress` - Refund In Progress\n* `ms_voided` - Voided\n* `ms_scancode_pending` - Scancode Pending",
+            "enum": [
+              "ms_active",
+              "ms_disabled",
+              "ms_expired",
+              "ms_transferred",
+              "ms_transfer_returned",
+              "ms_refunded",
+              "ms_refund_in_progress",
+              "ms_voided",
+              "ms_scancode_pending"
+            ],
+            "readOnly": true,
+            "type": "string",
+            "x-spec-enum-id": "80ad7ec783bb9653"
+          },
+          "venue": {
+            "readOnly": true,
+            "type": "integer"
+          },
+          "venue_user": {
+            "readOnly": true,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "id",
+          "venue",
+          "venue_user",
+          "membership_group",
+          "membership_group_name",
+          "membership_level",
+          "membership_level_name",
+          "status",
+          "quantity",
+          "last_status_change",
+          "expiry_date"
+        ],
+        "type": "object"
+      },
+      "DeveloperMemberPage": {
+        "properties": {
+          "count": {
+            "minimum": 0,
+            "type": "integer"
+          },
+          "next": {
+            "format": "uri",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "next_list": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "next_page_number": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "num_pages": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "page_number": {
+            "minimum": 1,
+            "type": "integer"
+          },
+          "previous": {
+            "format": "uri",
+            "type": [
+              "string",
+              "null"
+            ]
+          },
+          "previous_list": {
+            "items": {
+              "type": "integer"
+            },
+            "type": "array"
+          },
+          "previous_page_number": {
+            "type": [
+              "integer",
+              "null"
+            ]
+          },
+          "results": {
+            "items": {
+              "$ref": "#/components/schemas/DeveloperMember"
+            },
+            "maxItems": 100,
+            "type": "array"
+          }
+        },
+        "required": [
+          "count",
+          "next",
+          "previous",
+          "next_page_number",
+          "previous_page_number",
+          "page_number",
+          "num_pages",
+          "next_list",
+          "previous_list",
+          "results"
+        ],
+        "type": "object"
+      }
+    },
+    "securitySchemes": {
+      "DeveloperKey": {
+        "description": "Token <developer-api-key>. Requires memberships:read and current manage_memberships permission or All Access.",
+        "in": "header",
+        "name": "Authorization",
+        "type": "apiKey"
+      }
+    }
+  },
+  "info": {
+    "description": "SPW-21414 local contract. Publication requires the corresponding backend release. Read requests have no business mutations or asynchronous jobs.",
+    "title": "Organization member reads",
+    "version": "1.0.0"
+  },
+  "openapi": "3.1.0",
+  "paths": {
+    "/api/venue/{venueId}/memberships/members/": {
+      "get": {
+        "description": "Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot.",
+        "operationId": "organization_members_list",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "venueId",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "membership_group",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "membership_level",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "venue_user",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact current member status.",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "description": "* `ms_active` - Active\n* `ms_disabled` - Disabled\n* `ms_expired` - Expired\n* `ms_transferred` - Transferred\n* `ms_transfer_returned` - Returned\n* `ms_refunded` - Refunded\n* `ms_refund_in_progress` - Refund In Progress\n* `ms_voided` - Voided\n* `ms_scancode_pending` - Scancode Pending",
+              "enum": [
+                "ms_active",
+                "ms_disabled",
+                "ms_expired",
+                "ms_transferred",
+                "ms_transfer_returned",
+                "ms_refunded",
+                "ms_refund_in_progress",
+                "ms_voided",
+                "ms_scancode_pending"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-spec-enum-id": "80ad7ec783bb9653"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "count": 1,
+                  "next": null,
+                  "next_list": [],
+                  "next_page_number": null,
+                  "num_pages": 1,
+                  "page_number": 1,
+                  "previous": null,
+                  "previous_list": [],
+                  "previous_page_number": null,
+                  "results": [
+                    {
+                      "expiry_date": "2027-01-01T00:00:00Z",
+                      "id": 701,
+                      "last_status_change": null,
+                      "membership_group": 101,
+                      "membership_group_name": "Community",
+                      "membership_level": 201,
+                      "membership_level_name": "Gold",
+                      "quantity": 1,
+                      "status": "ms_active",
+                      "venue": 42,
+                      "venue_user": 901
+                    }
+                  ]
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/DeveloperMemberPage"
+                }
+              }
+            },
+            "description": "Current organization member records."
+          },
+          "400": {
+            "description": "Invalid, repeated or unsupported filter; invalid or oversized page/page_size."
+          },
+          "401": {
+            "description": "Invalid, expired or revoked key, or removed employment/account access."
+          },
+          "403": {
+            "description": "Missing scope, reduced permission, wrong organization or unsupported operation."
+          },
+          "404": {
+            "description": "Absent, filtered or inaccessible member; unavailable page."
+          },
+          "429": {
+            "description": "Shared budget exhausted: 60 requests/key/minute, 300/organization/minute. Retry-After is returned."
+          },
+          "503": {
+            "description": "Shared request limiter unavailable. Retry later."
+          }
+        },
+        "security": [
+          {
+            "DeveloperKey": []
+          }
+        ],
+        "summary": "List organization members",
+        "tags": [
+          "Organization members"
+        ],
+        "x-showpass-employee-permissions": [
+          "manage_memberships"
+        ],
+        "x-showpass-operation-inventory": {
+          "action": "list",
+          "contract-version": "1.0.0",
+          "disposition": "developer-key-admitted",
+          "inventory-ticket": "SPW-21380",
+          "method": "GET",
+          "source": "memberships.api.venue_based.viewsets.members.VenueBasedMemberViewSet",
+          "ticket": "SPW-21414"
+        },
+        "x-showpass-scopes": [
+          "memberships:read"
+        ]
+      }
+    },
+    "/api/venue/{venueId}/memberships/members/{memberId}/": {
+      "get": {
+        "description": "Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot.",
+        "operationId": "organization_members_retrieve",
+        "parameters": [
+          {
+            "description": "",
+            "in": "path",
+            "name": "venueId",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "path",
+            "name": "memberId",
+            "required": true,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "id",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "membership_group",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "membership_level",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact organization-scoped identifier.",
+            "in": "query",
+            "name": "venue_user",
+            "required": false,
+            "schema": {
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "Exact current member status.",
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "description": "* `ms_active` - Active\n* `ms_disabled` - Disabled\n* `ms_expired` - Expired\n* `ms_transferred` - Transferred\n* `ms_transfer_returned` - Returned\n* `ms_refunded` - Refunded\n* `ms_refund_in_progress` - Refund In Progress\n* `ms_voided` - Voided\n* `ms_scancode_pending` - Scancode Pending",
+              "enum": [
+                "ms_active",
+                "ms_disabled",
+                "ms_expired",
+                "ms_transferred",
+                "ms_transfer_returned",
+                "ms_refunded",
+                "ms_refund_in_progress",
+                "ms_voided",
+                "ms_scancode_pending"
+              ],
+              "readOnly": true,
+              "type": "string",
+              "x-spec-enum-id": "80ad7ec783bb9653"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page",
+            "required": false,
+            "schema": {
+              "default": 1,
+              "maximum": 1000,
+              "minimum": 1,
+              "type": "integer"
+            }
+          },
+          {
+            "description": "",
+            "in": "query",
+            "name": "page_size",
+            "required": false,
+            "schema": {
+              "default": 100,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "content": {
+              "application/json": {
+                "example": {
+                  "expiry_date": "2027-01-01T00:00:00Z",
+                  "id": 701,
+                  "last_status_change": null,
+                  "membership_group": 101,
+                  "membership_group_name": "Community",
+                  "membership_level": 201,
+                  "membership_level_name": "Gold",
+                  "quantity": 1,
+                  "status": "ms_active",
+                  "venue": 42,
+                  "venue_user": 901
+                },
+                "schema": {
+                  "$ref": "#/components/schemas/DeveloperMember"
+                }
+              }
+            },
+            "description": "Current organization member records."
+          },
+          "400": {
+            "description": "Invalid, repeated or unsupported filter; invalid or oversized page/page_size."
+          },
+          "401": {
+            "description": "Invalid, expired or revoked key, or removed employment/account access."
+          },
+          "403": {
+            "description": "Missing scope, reduced permission, wrong organization or unsupported operation."
+          },
+          "404": {
+            "description": "Absent, filtered or inaccessible member; unavailable page."
+          },
+          "429": {
+            "description": "Shared budget exhausted: 60 requests/key/minute, 300/organization/minute. Retry-After is returned."
+          },
+          "503": {
+            "description": "Shared request limiter unavailable. Retry later."
+          }
+        },
+        "security": [
+          {
+            "DeveloperKey": []
+          }
+        ],
+        "summary": "Retrieve an organization member",
+        "tags": [
+          "Organization members"
+        ],
+        "x-showpass-employee-permissions": [
+          "manage_memberships"
+        ],
+        "x-showpass-operation-inventory": {
+          "action": "retrieve",
+          "contract-version": "1.0.0",
+          "disposition": "developer-key-admitted",
+          "inventory-ticket": "SPW-21380",
+          "method": "GET",
+          "source": "memberships.api.venue_based.viewsets.members.VenueBasedMemberViewSet",
+          "ticket": "SPW-21414"
+        },
+        "x-showpass-scopes": [
+          "memberships:read"
+        ]
+      }
+    }
+  },
+  "servers": [
+    {
+      "url": "https://demo.showpass.com"
+    }
+  ]
+}

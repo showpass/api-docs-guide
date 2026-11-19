@@ -5,6 +5,11 @@ export interface SEOData {
 }
 
 export const seoDataMap: Record<string, SEOData> = {
+  "/api/private-api-memberships": {
+    title: "Organization Membership Reads API | Showpass",
+    description: "Read current organization members using a scoped developer API key, with group and level names, exact filters and bounded pagination.",
+    keywords: "showpass memberships api, organization members, memberships read, membership group name, membership level name"
+  },
   // Homepage
   "/": {
     title: "Showpass Developer Documentation - API, SDK & Integration Guide",
