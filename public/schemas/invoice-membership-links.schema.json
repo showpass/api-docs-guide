@@ -1,0 +1,229 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Invoice webhook membership linkage",
+  "description": "Partial invoice webhook schema for membership_links. Names are captured when a notification is created and preserved on retries. Earlier stored notifications may omit arrays or name fields. New links conform to CapturedMembershipLink. Other invoice fields are allowed.",
+  "type": "object",
+  "properties": {
+    "data": {
+      "type": "object",
+      "properties": {
+        "invoice_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "membership_links": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/MembershipLink"
+                }
+              }
+            }
+          }
+        },
+        "ticket_items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "membership_links": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/MembershipLink"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "$defs": {
+    "MembershipLink": {
+      "type": "object",
+      "properties": {
+        "member_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "current_member_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "membership_purchase_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "renewal_season_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "source_invoice_item_id": {
+          "type": [
+            "integer",
+            "null"
+          ]
+        },
+        "source_transaction_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "lineage_status": {
+          "enum": [
+            "resolved",
+            "unavailable",
+            "ambiguous"
+          ]
+        },
+        "membership_group_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Group of member_id at notification creation; null if not safely resolvable within the event organization."
+        },
+        "membership_level_name": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "description": "Level of member_id at notification creation; null if missing, outside the event organization, or inconsistent with its group."
+        }
+      },
+      "required": [
+        "member_id",
+        "current_member_id",
+        "membership_purchase_id",
+        "renewal_season_id",
+        "source_invoice_item_id",
+        "source_transaction_id",
+        "lineage_status"
+      ],
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "lineage_status": {
+                "const": "resolved"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "member_id": {
+                "type": "integer"
+              },
+              "membership_purchase_id": {
+                "type": "integer"
+              },
+              "source_invoice_item_id": {
+                "type": "integer"
+              },
+              "source_transaction_id": {
+                "type": "string"
+              }
+            }
+          },
+          "else": {
+            "properties": {
+              "membership_purchase_id": {
+                "type": "null"
+              },
+              "source_invoice_item_id": {
+                "type": "null"
+              },
+              "source_transaction_id": {
+                "type": "null"
+              }
+            }
+          }
+        }
+      ]
+    },
+    "CapturedMembershipLink": {
+      "allOf": [
+        {
+          "$ref": "#/$defs/MembershipLink"
+        },
+        {
+          "required": [
+            "membership_group_name",
+            "membership_level_name"
+          ]
+        }
+      ]
+    }
+  },
+  "examples": [
+    {
+      "data": {
+        "invoice_items": [
+          {
+            "id": 601,
+            "membership_links": [
+              {
+                "member_id": 9001,
+                "current_member_id": 9002,
+                "membership_purchase_id": 101,
+                "renewal_season_id": null,
+                "source_invoice_item_id": 501,
+                "source_transaction_id": "MEMBERSHIP-PURCHASE-1001",
+                "lineage_status": "resolved",
+                "membership_group_name": "Community",
+                "membership_level_name": "Gold"
+              }
+            ]
+          },
+          {
+            "id": 502,
+            "membership_links": [
+              {
+                "member_id": null,
+                "current_member_id": null,
+                "membership_purchase_id": null,
+                "renewal_season_id": null,
+                "source_invoice_item_id": null,
+                "source_transaction_id": null,
+                "lineage_status": "unavailable",
+                "membership_group_name": null,
+                "membership_level_name": null
+              }
+            ]
+          }
+        ],
+        "ticket_items": [
+          {
+            "id": 7001,
+            "membership_links": [
+              {
+                "member_id": 9001,
+                "current_member_id": 9002,
+                "membership_purchase_id": 101,
+                "renewal_season_id": null,
+                "source_invoice_item_id": 501,
+                "source_transaction_id": "MEMBERSHIP-PURCHASE-1001",
+                "lineage_status": "resolved",
+                "membership_group_name": "Community",
+                "membership_level_name": "Gold"
+              }
+            ]
+          },
+          {
+            "id": 7002,
+            "membership_links": []
+          }
+        ]
+      }
+    }
+  ]
+}
