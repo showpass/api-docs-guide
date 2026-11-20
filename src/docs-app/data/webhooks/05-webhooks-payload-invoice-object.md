@@ -202,6 +202,8 @@ or does not apply.
 | --- | --- |
 | `member_id` | The member at the source purchase when resolved; otherwise the known associated member, or `null`. |
 | `current_member_id` | The member associated with the source batch or invoice line. After a membership transfer, this can differ from `member_id`. It is not necessarily the current ticket holder after a direct ticket transfer. |
+| `membership_group_name` | Nullable string: group name of `member_id` when this notification was created. |
+| `membership_level_name` | Nullable string: level name of `member_id` when this notification was created. |
 | `membership_purchase_id` | The captured purchase identity for this member and charged invoice item. A renewal has a new identity even when the member is unchanged. |
 | `renewal_season_id` | The purchased renewal season, or `null` for nonseasonal memberships or unknown seasons. |
 | `source_transaction_id` | String transaction identifier of the invoice that charged for the membership purchase or renewal. |
@@ -215,6 +217,36 @@ records identify conflicting sources. Both unresolved statuses have
 set to `null`. Do not infer a source by matching customer email, dates, a member's
 original invoice, or its latest renewal. Historical sources are not automatically
 backfilled.
+
+### Membership name snapshots
+
+Names follow `member_id`. For a resolved membership transfer, this is the source
+purchase's member, even when `current_member_id` identifies the recipient. Generated
+tickets and direct ticket transfers use the same source member rule. Unavailable
+or ambiguous links name the known member in `member_id` when it can be safely
+resolved. Names do not imply resolved purchase lineage.
+
+The snapshot captures that member's group and level configuration when the webhook
+notification is created. It does not reconstruct names from the original purchase
+date. A later group or level rename, or a membership configuration change, leaves
+the stored body and every retry unchanged. A newly created notification captures
+the names applicable at its own creation time. The organization member lookup API
+returns current names at lookup time instead.
+
+Both fields are nullable strings. An unknown or out of organization member has
+null names. A missing or out of organization group has a null group name. A missing
+or out of organization level, or a level inconsistent with the member's group,
+has a null level name. A valid level with no group can still have a level name.
+Never infer names from emails, dates, or the latest renewal.
+
+Older stored notifications may omit either name field. They retain their original
+bodies and are not backfilled with today's names. Accept absent fields as well as
+explicit null values. Ordinary item empty arrays are unchanged.
+
+The [membership linkage JSON Schema](/schemas/invoice-membership-links.schema.json)
+describes this portion of the invoice payload and includes synthetic examples.
+It accepts older links; `CapturedMembershipLink` requires both nullable name fields
+for newly created links.
 
 ### Purchase, renewal, and generated ticket examples
 
@@ -243,6 +275,8 @@ identifies the source purchase:
           {
             "member_id": 9001,
             "current_member_id": 9001,
+            "membership_group_name": "Community",
+            "membership_level_name": "Gold",
             "membership_purchase_id": 101,
             "renewal_season_id": null,
             "source_transaction_id": "MEMBERSHIP-PURCHASE-1001",
@@ -276,6 +310,8 @@ A renewal of that same member produces a new charge line and purchase identity:
           {
             "member_id": 9001,
             "current_member_id": 9001,
+            "membership_group_name": "Community",
+            "membership_level_name": "Gold",
             "membership_purchase_id": 102,
             "renewal_season_id": null,
             "source_transaction_id": "MEMBERSHIP-RENEWAL-2001",
@@ -319,6 +355,8 @@ points back to the renewal charge, not to the generated ticket invoice:
           {
             "member_id": 9001,
             "current_member_id": 9001,
+            "membership_group_name": "Community",
+            "membership_level_name": "Gold",
             "membership_purchase_id": 102,
             "renewal_season_id": null,
             "source_transaction_id": "MEMBERSHIP-RENEWAL-2001",
