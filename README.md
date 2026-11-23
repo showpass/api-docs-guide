@@ -69,8 +69,7 @@ The [Events API reference](/api/private-api-events) and
 [Memberships API reference](/api/private-api-memberships-reference) use the docs
 site's own UI and read their backend OpenAPI JSON from `public/openapi/`. The catalog at
 `src/docs-app/data/api-reference-catalog.json` records the version, checksum and
-backend revision. The current entry also records the source diff for the local
-Events candidate.
+backend revision.
 
 To update a reference, copy the reviewed backend artifact byte for byte and
 update its catalog entry from the backend release manifest. Run `npm test` and

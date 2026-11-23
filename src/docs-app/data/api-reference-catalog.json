@@ -5,9 +5,8 @@
     "guidePath": "/api/private-api-overview",
     "schemaPath": "/openapi/organizer-events.openapi.json",
     "contractVersion": "1.0.0",
-    "sha256": "6532b8c5965047cdcbce8be9747a065c59c9b85994303d51181f082451b135ed",
-    "sourceRevision": "3fa07cdab41ef998be1f9fd38ba6f244290193d4",
-    "sourceDiffSha256": "78acbcd5d730174ff338f35404b5e1795fb5c55e4cc077758a425be65dce75dc"
+    "sha256": "c20aa34fdb5a5cb9c85c9e4f35f4fde08ab66195c3f30cbe709623b0a6807bbb",
+    "sourceRevision": "a14ab02e77b19ff73537e8e067c09ffdfcebe4cf"
   },
   {
     "slug": "private-api-memberships-reference",

@@ -514,8 +514,18 @@
                                             }
                                         },
                                         "error_code": {
-                                            "type": "object",
-                                            "additionalProperties": true
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 }
@@ -938,8 +948,18 @@
                                             }
                                         },
                                         "error_code": {
-                                            "type": "object",
-                                            "additionalProperties": true
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 }
@@ -1318,8 +1338,18 @@
                                             }
                                         },
                                         "error_code": {
-                                            "type": "object",
-                                            "additionalProperties": true
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 }
@@ -1814,8 +1844,18 @@
                                             }
                                         },
                                         "error_code": {
-                                            "type": "object",
-                                            "additionalProperties": true
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 }
@@ -2213,8 +2253,18 @@
                                             }
                                         },
                                         "error_code": {
-                                            "type": "object",
-                                            "additionalProperties": true
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
                                         }
                                     }
                                 }
