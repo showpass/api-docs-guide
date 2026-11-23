@@ -21,7 +21,7 @@
     "id": "/api/private-api-overview",
     "title": "Showpass Private Organizer API",
     "path": "/api/private-api-overview",
-    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected scopes allow the operation.\n- The endpoint's existing authorization rules allow access to the requested resource.\nFor example, an employee with scanning permissions can create a key with eligible scanning scopes. Selecting a scanning scope does not grant permission to manage events. An All Access employee can choose a smaller set of scopes for a particular integration.\nRemoving an employee's organization access or deactiva"
+    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected scopes allow the operation.\n- The endpoint's existing authorization rules allow access to the requested resource.\nFor example, an employee with scanning permissions can create a key with eligible scanning scopes. Selecting a scanning scope does not grant permission to manage events. An All Access employee can choose a smal"
   },
   {
     "id": "/api/private-api-scan-ticket-by-code",
@@ -412,5 +412,59 @@
     "title": "Showpass WordPress Plugin: Complete Shortcode Reference",
     "path": "/wordpress/shortcode-reference",
     "content": "Quick reference guide for all available Showpass shortcodes. Each shortcode links to its detailed documentation.\n---\nDisplay event lists or individual event detail pages.\nUse cases:\n- Show a list of upcoming events\n- Display a single event detail page\n- Filter events by tags, dates, or other criteria\nDocumentation:\n- Event Lists – Display multiple events in grid or list format\n- Event Detail Pages – Create dedicated pages for individual events\nQuick examples:\n``text\n[showpass_events type=\"list\"]\n[showpass_events type=\"detail\"]\n[showpass_events type=\"list\" tags=\"concert\" page_size=\"10\"]\n`\n---\nAdd purchase buttons or embed purchase widgets for events, products, or memberships.\nUse cases:\n- Add \"Buy Tickets\" buttons to pages\n- Embed full purchase widgets directly on pages\n- Sell products or memberships\nDocumentation:\n- Adding Single Button or Embeddable Widget – Complete guide with all parameters\nQuick examples:\n`text\n[showpass_widget slug=\"my-event\"]\n[showpass_widget slug=\"my-event\" embedded=\"true\"]\n[showpass_widget type=\"product\" id=\"12345\"]\n[showpass_widget type=\"membership\" id=\"67890\"]\n`\n---\nDisplay an interactive calendar view of events (legacy calendar).\nUse cases:\n- Show events in a traditional calendar format\n- Month, week, and day views\nDocumentation:\n- Adding Calendar Widget – See \"Older calendar shortcode\" section\nQuick examples:\n`text\n[showpass_calendar]\n[showpass_calendar tags=\"workshop\" starting_date=\"1-12-2024\"]\n`\n---\nAdd a button that opens the modern calendar widget in a modal.\nUse cases:\n- Calendar button in headers or sidebars\n- Quick access to event calendar\nDocumentation:\n- Adding Calendar Widget – See \"Add a calendar button\"\nQuick examples:\n`text\n[showpass_calendar_widget]\n[showpass_calendar_widget label=\"View Calendar\" tags=\"comedy\"]\n[showpass_calendar_widget is_attraction=\"true\" event_id=\"daily-admission\"]\n[showpass_calendar_widget is_attraction=\"true\" event_id=\"daily-admission\" calendar_open_state=\"special-events\" calendar_special_event=\"all\"]\n"
+  },
+  {
+    "id": "/api/private-api-events",
+    "title": "Events API",
+    "path": "/api/private-api-events",
+    "content": "Events and ticket type operations available to scoped Showpass organizer API keys."
+  },
+  {
+    "id": "/api/private-api-events#listOrganizerEvents",
+    "title": "List organizer events",
+    "path": "/api/private-api-events#listOrganizerEvents",
+    "content": "Events API · GET /api/venue/{venue_id}/events/ · events:read · Lists events for the key organization. Requires a key bound to the organization and an employee with Manage Events or All Access. Nested password data also requires effective passwords:read access. Schedule messages can depend on the event, organization and request language. By default the list is limited to viewable statuses and excludes recurring parents. Use status and recurrence filters to select other supported event records. Use q to search by name. Order by ends_on, starts_on or id, with a leading minus for descending order."
+  },
+  {
+    "id": "/api/private-api-events#retrieveOrganizerEvent",
+    "title": "Retrieve an organizer event",
+    "path": "/api/private-api-events#retrieveOrganizerEvent",
+    "content": "Events API · GET /api/venue/{venue_id}/events/{slug_or_id}/ · events:read · Looks up an event by ID or slug, including events explicitly granted to this organization by a reseller access record. Requires a key bound to the organization and an employee with Manage Events or All Access. Nested password data also requires effective passwords:read access. Schedule messages can depend on the event, organization and request language. The q search term applies to owner venue lookup. The format depends on the presence of search or include_unconfigurable_ticket_types."
+  },
+  {
+    "id": "/api/private-api-events#archiveOrganizerEvent",
+    "title": "Archive an organizer event",
+    "path": "/api/private-api-events#archiveOrganizerEvent",
+    "content": "Events API · DELETE /api/venue/{venue_id}/events/{slug_or_id}/ · events:write · Archives an event owned by the organization. Requires Manage Events or All Access and events:write. Archival is synchronous. A repeated request after successful archival can return 404. After an uncertain outcome, check visibility before retrying. An event with protected sales, remaining recurring children, or membership event batches can be rejected."
+  },
+  {
+    "id": "/api/private-api-events#listOrganizerTicketTypes",
+    "title": "List organizer ticket types",
+    "path": "/api/private-api-events#listOrganizerTicketTypes",
+    "content": "Events API · GET /api/venue/{venue_id}/events/ticket-types/ · events:read · Lists configurable ticket types visible to the key organization. The employee must retain Manage Events or All Access. q matches ticket type or event name. Ordering accepts comma separated fields with a leading minus for descending order. Page results can change between requests."
+  },
+  {
+    "id": "/api/private-api-events#retrieveOrganizerTicketType",
+    "title": "Retrieve an organizer ticket type",
+    "path": "/api/private-api-events#retrieveOrganizerTicketType",
+    "content": "Events API · GET /api/venue/{venue_id}/events/ticket-types/{id}/ · events:read · Returns a configurable ticket type visible to the organization. The key must be bound to that organization. Its employee must retain Manage Events or All Access. Inherited schedule messages depend on event and organization configuration and the request language."
+  },
+  {
+    "id": "/api/private-api-memberships-reference",
+    "title": "Memberships API",
+    "path": "/api/private-api-memberships-reference",
+    "content": "List and retrieve current organization members, including their membership group and level names."
+  },
+  {
+    "id": "/api/private-api-memberships-reference#organization_members_list",
+    "title": "List organization members",
+    "path": "/api/private-api-memberships-reference#organization_members_list",
+    "content": "Memberships API · GET /api/venue/{venueId}/memberships/members/ · memberships:read · Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot."
+  },
+  {
+    "id": "/api/private-api-memberships-reference#organization_members_retrieve",
+    "title": "Retrieve an organization member",
+    "path": "/api/private-api-memberships-reference#organization_members_retrieve",
+    "content": "Memberships API · GET /api/venue/{venueId}/memberships/members/{memberId}/ · memberships:read · Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot."
   }
 ]

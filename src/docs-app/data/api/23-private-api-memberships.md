@@ -8,7 +8,7 @@ Create an employee linked API key with `memberships:read` in **Integrations → 
 
 Scopes and current employee permission are both required. Revocation, expiry, employee removal and permission reductions affect subsequent requests. Ticket scanning and order history scopes do not grant member access.
 
-See the [API key guide](/api/private-api-overview), [interactive member reference](/openapi/organization-memberships.html) and [OpenAPI 3.1 download](/openapi/organization-memberships.openapi.json). The focused contract is version `1.0.0`.
+See the [API key guide](/api/private-api-overview), [interactive member reference](/api/private-api-memberships-reference) and [OpenAPI 3.1 download](/openapi/organization-memberships.openapi.json). The focused contract is version `1.0.0`.
 
 ## List and retrieve members
 

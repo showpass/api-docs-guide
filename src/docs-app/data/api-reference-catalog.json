@@ -1,0 +1,22 @@
+[
+  {
+    "slug": "private-api-events",
+    "title": "Events API",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-events.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "6532b8c5965047cdcbce8be9747a065c59c9b85994303d51181f082451b135ed",
+    "sourceRevision": "3fa07cdab41ef998be1f9fd38ba6f244290193d4",
+    "sourceDiffSha256": "78acbcd5d730174ff338f35404b5e1795fb5c55e4cc077758a425be65dce75dc"
+  },
+  {
+    "slug": "private-api-memberships-reference",
+    "title": "Memberships API",
+    "description": "List and retrieve current organization members, including their membership group and level names.",
+    "guidePath": "/api/private-api-memberships",
+    "schemaPath": "/openapi/organization-memberships.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "10536ef70565e1b2b4f838bdf2b70162db60d6d33db49656a04186379372a9dc",
+    "sourceRevision": "afbad82a491d894745ffe5d0a5aa9a5d42ee1e71"
+  }
+]

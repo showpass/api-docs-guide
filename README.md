@@ -65,6 +65,20 @@ The reference uses demo by default and includes generic organization examples.
 Client references remain available at `/bullbustin/` and `/a440/`. Keep shared
 endpoint and schema updates consistent across the specifications where applicable.
 
+The [Events API reference](/api/private-api-events) and
+[Memberships API reference](/api/private-api-memberships-reference) use the docs
+site's own UI and read their backend OpenAPI JSON from `public/openapi/`. The catalog at
+`src/docs-app/data/api-reference-catalog.json` records the version, checksum and
+backend revision. The current entry also records the source diff for the local
+Events candidate.
+
+To update a reference, copy the reviewed backend artifact byte for byte and
+update its catalog entry from the backend release manifest. Run `npm test` and
+`npm run build`, then check the page, operation links and download locally.
+Promote the artifact after the matching backend contract is released and the
+docs update is approved. To roll back, restore the previous artifact and
+catalog entry together and rebuild the search index.
+
 ---
 
 ## 💡 Highlights

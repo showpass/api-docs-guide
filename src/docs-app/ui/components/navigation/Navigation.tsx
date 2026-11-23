@@ -8,6 +8,7 @@ import {
   AccordionTrigger,
 } from "@/shared/components/accordion.tsx";
 import { ThemeToggle } from "@/shared/components/ThemeToggle.tsx";
+import { referencePath, referenceProfiles } from "@/docs-app/application/api-reference";
 import "./navigation.css";
 
 interface NavigationProps {
@@ -137,6 +138,13 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     Overview
                   </NavLink>
                 </li>
+                {referenceProfiles.map((profile) => (
+                  <li key={profile.slug}>
+                    <NavLink to={referencePath(profile)} className={navLinkClass} onClick={handleLinkClick}>
+                      {profile.title}
+                    </NavLink>
+                  </li>
+                ))}
                 <li>
                   <NavLink
                     to="/api/private-api-scan-ticket-by-code"

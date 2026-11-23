@@ -48,7 +48,8 @@ export interface ApiExamplesData {
   queryParameters?: ApiQueryParameter[];
   requestBodyTemplate?: string;
   examples: ApiExampleSet;
-  response: ApiResponseData;
+  response?: ApiResponseData;
+  testTargets?: readonly { label: string; origin: string }[];
 }
 
 // TableOfContents types
