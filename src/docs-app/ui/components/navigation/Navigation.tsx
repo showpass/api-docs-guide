@@ -182,6 +182,15 @@ const Navigation = ({ currentPath, onNavigate }: NavigationProps) => {
                     Passwords
                   </NavLink>
                 </li>
+                <li>
+                  <NavLink
+                    to="/api/private-api-memberships"
+                    className={navLinkClass}
+                    onClick={handleLinkClick}
+                  >
+                    Organization Memberships
+                  </NavLink>
+                </li>
               </ul>
             </AccordionContent>
           </AccordionItem>
