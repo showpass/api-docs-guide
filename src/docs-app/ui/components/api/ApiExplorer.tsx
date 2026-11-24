@@ -259,7 +259,8 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       ),
     [endpointPath, pathParameters],
   );
-  const archiveRequest = Boolean(referenceTargets && activeMethod === "DELETE");
+  const deleteRequest = Boolean(referenceTargets && activeMethod === "DELETE");
+  const archiveRequest = deleteRequest && endpointUrl.pathname.includes("/events/");
   const completePath = pathParameterNames.every((name) => pathParameters[name]?.trim());
   const validReferencePath = pathParameterNames.every((name) => {
     const value = pathParameters[name]?.trim() ?? "";
@@ -268,6 +269,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   const curl = referenceTargets && validReferencePath
     ? developerRequestExamples(
       activeMethod, buildRequestUrl(baseUrl, resolvedEndpointPath, activeQueryParameters, queryParameterValues).href,
+      hasRequestBody ? body : undefined,
     ).curl
     : undefined;
   let requestLabel = referenceTargets ? "Send request" : "Try now";
@@ -275,6 +277,8 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
     requestLabel = "Sending request";
   } else if (archiveRequest) {
     requestLabel = "Archive test event";
+  } else if (deleteRequest) {
+    requestLabel = "Delete test resource";
   }
 
   useEffect(() => {
@@ -380,7 +384,15 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       return;
     }
 
-    if (archiveRequest && !window.confirm(`Archive the test event at ${url.href}?`)) return;
+    if (referenceTargets && hasRequestBody && formatJsonResponse(body) === undefined) {
+      setError("Enter a valid JSON request body.");
+      return;
+    }
+
+    if (deleteRequest) {
+      const action = archiveRequest ? "Archive the test event" : "Delete the test resource";
+      if (!window.confirm(`${action} at ${url.href}?`)) return;
+    }
 
     setIsSending(true);
     const started = performance.now();
@@ -635,8 +647,12 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         </div>
       )}
 
-      {archiveRequest && (
-        <p className="text-xs text-muted-foreground">This request archives the specified event on the selected test server.</p>
+      {deleteRequest && (
+        <p className="text-xs text-muted-foreground">
+          {archiveRequest
+            ? "This request archives the specified event on the selected test server."
+            : "This request deletes the specified resource on the selected test server."}
+        </p>
       )}
       <button
         type="button"

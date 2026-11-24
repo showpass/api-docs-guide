@@ -21,7 +21,7 @@
     "id": "/api/private-api-overview",
     "title": "Showpass Private Organizer API",
     "path": "/api/private-api-overview",
-    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected scopes allow the operation.\n- The endpoint's existing authorization rules allow access to the requested resource.\nFor example, an employee with scanning permissions can create a key with eligible scanning scopes. Selecting a scanning scope does not grant permission to manage events. An All Access employee can choose a smal"
+    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected "
   },
   {
     "id": "/api/private-api-scan-ticket-by-code",
@@ -39,7 +39,7 @@
     "id": "/api/private-api-tracking-links",
     "title": "Tracking Links",
     "path": "/api/private-api-tracking-links",
-    "content": "Tracking links allow organizers to create shareable URLs that attribute ticket sales to specific employees, venues, or affiliates. Each link generates a unique short URL (e.g., https://showpass.com/l/abc12345) that redirects to your event page while recording views, unique visitors, and conversion data.\n---\nThis endpoint requires authentication using a Showpass token:\n``\nAuthorization: Token YOUR_API_TOKEN\n`\n---\nThe base URL for all tracking link endpoints is:\n`text\nhttps://www.showpass.com/api/venue/{venue_id}/analytics/tracking/links/\n`\n| Method   | Path                 | Description                     |\n| -------- | -------------------- | ------------------------------- |\n| GET    | /links/            | List all tracking links         |\n| POST   | /links/            | Create a new tracking link      |\n| GET    | /links/{id}/       | Retrieve a single tracking link |\n| PUT    | /links/{id}/       | Update a tracking link          |\n| DELETE | /links/{id}/       | Delete a tracking link          |\n| GET    | /links/me/         | List my tracking links          |\n| Parameter  | Type    | Status   | Description                                    |\n| ---------- | ------- | -------- | ---------------------------------------------- |\n| venue_id | Integer | Required | The ID of your venue                           |\n| id       | Integer | Required | The tracking link ID (detail, update, or delete) |\n---\n| Value | Name           | Description                                                    |\n| ----- | -------------- | -------------------------------------------------------------- |\n| 1   | Employee       | Links shared by staff members for sales attribution            |\n| 2   | Venue          | Links created at the venue / organization level                |\n| 3   | Affiliate      | Links for external partners and promoters                      |\n| 4   | Quick Purchase | Pre-configured checkout links with items already in the basket |\n> Note: The API only returns user"
+    "content": "Tracking links allow organizers to create shareable URLs that attribute ticket sales to specific employees, venues, or affiliates. Each link generates a unique short URL (e.g., https://showpass.com/l/abc12345) that redirects to your event page while recording views, unique visitors, and conversion data.\nFor scoped developer keys, use the Tracking Links API reference for supported operations and request examples.\n---\nThis endpoint requires authentication using a Showpass token:\n``\nAuthorization: Token YOUR_API_TOKEN\n`\n---\nThe base URL for all tracking link endpoints is:\n`text\nhttps://www.showpass.com/api/venue/{venue_id}/analytics/tracking/links/\n`\n| Method   | Path                 | Description                     |\n| -------- | -------------------- | ------------------------------- |\n| GET    | /links/            | List all tracking links         |\n| POST   | /links/            | Create a new tracking link      |\n| GET    | /links/{id}/       | Retrieve a single tracking link |\n| PUT    | /links/{id}/       | Update a tracking link          |\n| DELETE | /links/{id}/       | Delete a tracking link          |\n| GET    | /links/me/         | List my tracking links          |\n| Parameter  | Type    | Status   | Description                                    |\n| ---------- | ------- | -------- | ---------------------------------------------- |\n| venue_id | Integer | Required | The ID of your venue                           |\n| id       | Integer | Required | The tracking link ID (detail, update, or delete) |\n---\n| Value | Name           | Description                                                    |\n| ----- | -------------- | -------------------------------------------------------------- |\n| 1   | Employee       | Links shared by staff members for sales attribution            |\n| 2   | Venue          | Links created at the venue / organization level                |\n| 3   | Affiliate      | Links for external partners and promoters                      |\n| 4   | Quic"
   },
   {
     "id": "/api/private-api-discounts",
@@ -448,6 +448,228 @@
     "title": "Retrieve an organizer ticket type",
     "path": "/api/private-api-events#retrieveOrganizerTicketType",
     "content": "Events API · GET /api/venue/{venue_id}/events/ticket-types/{id}/ · events:read · Returns a configurable ticket type visible to the organization. The key must be bound to that organization. Its employee must retain Manage Events or All Access. Inherited schedule messages depend on event and organization configuration and the request language."
+  },
+  {
+    "id": "/api/private-api-inventory",
+    "title": "Inventory API",
+    "path": "/api/private-api-inventory",
+    "content": "Read and manage organizer products and categories, and look up product attributes."
+  },
+  {
+    "id": "/api/private-api-inventory#listOrganizerProducts",
+    "title": "List organizer products",
+    "path": "/api/private-api-inventory#listOrganizerProducts",
+    "content": "Inventory API · GET /api/venue/{venue_id}/products/ · inventory:read · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. Results are paginated and may change between page requests."
+  },
+  {
+    "id": "/api/private-api-inventory#createOrganizerProduct",
+    "title": "Create an organizer product",
+    "path": "/api/private-api-inventory#createOrganizerProduct",
+    "content": "Inventory API · POST /api/venue/{venue_id}/products/ · inventory:write · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. Sales cutoff fields are available when the product sales end time feature is enabled. The server assigns the organization. The change is processed synchronously. The API accepts no idempotency key. Confirm the result before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-inventory#retrieveOrganizerProduct",
+    "title": "Retrieve an organizer product",
+    "path": "/api/private-api-inventory#retrieveOrganizerProduct",
+    "content": "Inventory API · GET /api/venue/{venue_id}/products/{id}/ · inventory:read · Requires a key bound to the organization and an employee with Manage Marketplace or All Access."
+  },
+  {
+    "id": "/api/private-api-inventory#updateOrganizerProduct",
+    "title": "Update an organizer product",
+    "path": "/api/private-api-inventory#updateOrganizerProduct",
+    "content": "Inventory API · PUT /api/venue/{venue_id}/products/{id}/ · inventory:write · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. Sales cutoff fields are available when the product sales end time feature is enabled. The server assigns the organization. The change is processed synchronously. The API accepts no idempotency key. Confirm the result before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-inventory#deleteOrganizerProduct",
+    "title": "Delete an organizer product",
+    "path": "/api/private-api-inventory#deleteOrganizerProduct",
+    "content": "Inventory API · DELETE /api/venue/{venue_id}/products/{id}/ · inventory:write · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. A repeated delete can return 404 after the record is removed. Existing sales can prevent deletion and return 400."
+  },
+  {
+    "id": "/api/private-api-inventory#listOrganizerProductCategories",
+    "title": "List organizer product categories",
+    "path": "/api/private-api-inventory#listOrganizerProductCategories",
+    "content": "Inventory API · GET /api/venue/{venue_id}/products/categories/ · inventory:read · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. Results are paginated and may change between page requests."
+  },
+  {
+    "id": "/api/private-api-inventory#createOrganizerProductCategory",
+    "title": "Create an organizer product category",
+    "path": "/api/private-api-inventory#createOrganizerProductCategory",
+    "content": "Inventory API · POST /api/venue/{venue_id}/products/categories/ · inventory:write · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. The server assigns the organization. The change is processed synchronously. The API accepts no idempotency key. Confirm the result before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-inventory#retrieveOrganizerProductCategory",
+    "title": "Retrieve an organizer product category",
+    "path": "/api/private-api-inventory#retrieveOrganizerProductCategory",
+    "content": "Inventory API · GET /api/venue/{venue_id}/products/categories/{id}/ · inventory:read · Requires a key bound to the organization and an employee with Manage Marketplace or All Access."
+  },
+  {
+    "id": "/api/private-api-inventory#updateOrganizerProductCategory",
+    "title": "Update an organizer product category",
+    "path": "/api/private-api-inventory#updateOrganizerProductCategory",
+    "content": "Inventory API · PUT /api/venue/{venue_id}/products/categories/{id}/ · inventory:write · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. The server assigns the organization. The change is processed synchronously. The API accepts no idempotency key. Confirm the result before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-inventory#deleteOrganizerProductCategory",
+    "title": "Delete an organizer product category",
+    "path": "/api/private-api-inventory#deleteOrganizerProductCategory",
+    "content": "Inventory API · DELETE /api/venue/{venue_id}/products/categories/{id}/ · inventory:write · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. A repeated delete can return 404 after the record is removed."
+  },
+  {
+    "id": "/api/private-api-inventory#listOrganizerProductAttributes",
+    "title": "List organizer product attributes",
+    "path": "/api/private-api-inventory#listOrganizerProductAttributes",
+    "content": "Inventory API · GET /api/venue/{venue_id}/products/attributes/ · inventory:read · Requires a key bound to the organization and an employee with Manage Marketplace or All Access. Results are paginated and may change between page requests."
+  },
+  {
+    "id": "/api/private-api-inventory#retrieveOrganizerProductAttribute",
+    "title": "Retrieve an organizer product attribute",
+    "path": "/api/private-api-inventory#retrieveOrganizerProductAttribute",
+    "content": "Inventory API · GET /api/venue/{venue_id}/products/attributes/{id}/ · inventory:read · Requires a key bound to the organization and an employee with Manage Marketplace or All Access."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning",
+    "title": "Ticket Scanning API",
+    "path": "/api/private-api-ticket-scanning",
+    "content": "Verify ticket codes, record check-in, and manage check-in presets."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#listOrganizerTicketRecords",
+    "title": "List organizer tickets",
+    "path": "/api/private-api-ticket-scanning#listOrganizerTicketRecords",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Results are paginated and can change between page requests."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#retrieveOrganizerTicket",
+    "title": "Retrieve an organizer ticket",
+    "path": "/api/private-api-ticket-scanning#retrieveOrganizerTicket",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/{id}/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#listOrganizerTicketGroupRecords",
+    "title": "List organizer ticket groups",
+    "path": "/api/private-api-ticket-scanning#listOrganizerTicketGroupRecords",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/groups/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets, Scan Memberships, Manage Check-In Presets, or All Access. Results are paginated and can change between page requests."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#retrieveOrganizerTicketGroup",
+    "title": "Retrieve an organizer ticket group",
+    "path": "/api/private-api-ticket-scanning#retrieveOrganizerTicketGroup",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/groups/{id}/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#listOrganizerTicketHistoryRecords",
+    "title": "List organizer ticket history entries",
+    "path": "/api/private-api-ticket-scanning#listOrganizerTicketHistoryRecords",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/histories/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access. Results are paginated and can change between page requests."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#createOrganizerTicketHistory",
+    "title": "Create an organizer ticket history entry",
+    "path": "/api/private-api-ticket-scanning#createOrganizerTicketHistory",
+    "content": "Ticket Scanning API · POST /api/venue/{venue_id}/tickets/items/histories/ · scanning:write · Records a ticket action such as check-in and applies the corresponding ticket state change. Requires Scan Tickets or All Access. Voiding also requires Manage Events. The server sets the organization and actor. Check the ticket state before retrying."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#retrieveOrganizerTicketHistory",
+    "title": "Retrieve an organizer ticket history entry",
+    "path": "/api/private-api-ticket-scanning#retrieveOrganizerTicketHistory",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/histories/{id}/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#listOrganizerCheckInPresetRecords",
+    "title": "List organizer check-in presets",
+    "path": "/api/private-api-ticket-scanning#listOrganizerCheckInPresetRecords",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/presets/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets, Scan Memberships, Manage Check-In Presets, or All Access. Results are paginated and can change between page requests."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#createOrganizerCheckInPreset",
+    "title": "Create an organizer check-in preset",
+    "path": "/api/private-api-ticket-scanning#createOrganizerCheckInPreset",
+    "content": "Ticket Scanning API · POST /api/venue/{venue_id}/tickets/presets/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Include both ticket_types and product_attributes. Either array can be empty if another selection is provided. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#retrieveOrganizerCheckInPreset",
+    "title": "Retrieve an organizer check-in preset",
+    "path": "/api/private-api-ticket-scanning#retrieveOrganizerCheckInPreset",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets, Scan Memberships, Manage Check-In Presets, or All Access."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#updateOrganizerCheckInPreset",
+    "title": "Update an organizer check-in preset",
+    "path": "/api/private-api-ticket-scanning#updateOrganizerCheckInPreset",
+    "content": "Ticket Scanning API · PUT /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Include both ticket_types and product_attributes. Either array can be empty if another selection is provided. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#destroyOrganizerCheckInPreset",
+    "title": "Delete an organizer check-in preset",
+    "path": "/api/private-api-ticket-scanning#destroyOrganizerCheckInPreset",
+    "content": "Ticket Scanning API · DELETE /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Deletes the preset. A repeated request can return 404."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#lookupOrganizerTicketByScanQuery",
+    "title": "Verify a ticket code using query parameters",
+    "path": "/api/private-api-ticket-scanning#lookupOrganizerTicketByScanQuery",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/scan/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access. Verifies and returns the matching ticket. Record check-in separately in ticket history."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#lookupOrganizerTicketByScanBody",
+    "title": "Verify a ticket code using JSON",
+    "path": "/api/private-api-ticket-scanning#lookupOrganizerTicketByScanBody",
+    "content": "Ticket Scanning API · POST /api/venue/{venue_id}/tickets/items/scan/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access. Verifies and returns the matching ticket. Record check-in separately in ticket history."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#searchOrganizerCheckInTickets",
+    "title": "Search tickets for check-in",
+    "path": "/api/private-api-ticket-scanning#searchOrganizerCheckInTickets",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/search-by-spu/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access.Supply a customer, order or membership check-in code, or an invoice ID. Ticket type and product attribute filters are combined with OR. Results can change between page requests."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#readOrganizerTicketStats",
+    "title": "Read organizer ticket statistics",
+    "path": "/api/private-api-ticket-scanning#readOrganizerTicketStats",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/stats/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access."
+  },
+  {
+    "id": "/api/private-api-ticket-scanning#readOrganizerTicketHistoryStats",
+    "title": "Read organizer ticket history entry statistics",
+    "path": "/api/private-api-ticket-scanning#readOrganizerTicketHistoryStats",
+    "content": "Ticket Scanning API · GET /api/venue/{venue_id}/tickets/items/histories/stats/ · scanning:read · Requires a developer key bound to the organization and current employee access for the operation. Requires Scan Tickets or All Access."
+  },
+  {
+    "id": "/api/private-api-tracking-links-reference",
+    "title": "Tracking Links API",
+    "path": "/api/private-api-tracking-links-reference",
+    "content": "Create shareable tracking links and manage Quick Checkout Purchase links."
+  },
+  {
+    "id": "/api/private-api-tracking-links-reference#listOrganizerTrackingLinks",
+    "title": "List organizer tracking links",
+    "path": "/api/private-api-tracking-links-reference#listOrganizerTrackingLinks",
+    "content": "Tracking Links API · GET /api/venue/{venue_id}/analytics/tracking/links/ · tracking:read · Requires a developer key bound to the organization and an employee with Manage Venues or All Access. User-generated links are visible to the seller organization or the owner organization. Statistics may be cached for up to two minutes. Search by description, referrer username or slug. Use pagination for the matching links. Results can change between page requests."
+  },
+  {
+    "id": "/api/private-api-tracking-links-reference#createOrganizerTrackingLink",
+    "title": "Create an organizer tracking link",
+    "path": "/api/private-api-tracking-links-reference#createOrganizerTrackingLink",
+    "content": "Tracking Links API · POST /api/venue/{venue_id}/analytics/tracking/links/ · tracking:write · Requires a developer key bound to the organization and an employee with Manage Venues or All Access. The server sets the seller from the key organization and derives the owner from the event when provided. Supply a destination URL or event for an ordinary link. For Quick Checkout Purchase, provide eligible basket items in extra. The create completes synchronously. Check for an existing link before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-tracking-links-reference#retrieveOrganizerTrackingLink",
+    "title": "Retrieve an organizer tracking link",
+    "path": "/api/private-api-tracking-links-reference#retrieveOrganizerTrackingLink",
+    "content": "Tracking Links API · GET /api/venue/{venue_id}/analytics/tracking/links/{id}/ · tracking:read · Requires a developer key bound to the organization and an employee with Manage Venues or All Access. User-generated links are visible to the seller organization or the owner organization. Statistics may be cached for up to two minutes."
+  },
+  {
+    "id": "/api/private-api-tracking-links-reference#updateOrganizerTrackingLink",
+    "title": "Update a Quick Checkout Purchase link",
+    "path": "/api/private-api-tracking-links-reference#updateOrganizerTrackingLink",
+    "content": "Tracking Links API · PUT /api/venue/{venue_id}/analytics/tracking/links/{id}/ · tracking:write · Requires a developer key bound to the organization and an employee with Manage Venues or All Access. User-generated links are visible to the seller organization or the owner organization. The existing link must be a Quick Checkout Purchase link. Provide eligible basket items in extra when specifying that type. The server assigns the seller from the current organization. Confirm the saved link before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-tracking-links-reference#deleteOrganizerTrackingLink",
+    "title": "Delete an organizer tracking link",
+    "path": "/api/private-api-tracking-links-reference#deleteOrganizerTrackingLink",
+    "content": "Tracking Links API · DELETE /api/venue/{venue_id}/analytics/tracking/links/{id}/ · tracking:write · Requires a developer key bound to the organization and an employee with Manage Venues or All Access. User-generated links are visible to the seller organization or the owner organization. Completed purchases prevent deletion. A repeat request after deletion can return 404."
   },
   {
     "id": "/api/private-api-memberships-reference",

@@ -10,6 +10,21 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Browse the organizer Events API, including scoped event and ticket type reads and event archiving.",
     keywords: "showpass events api, organizer api, ticket types, event archive, openapi"
   },
+  "/api/private-api-inventory": {
+    title: "Inventory API | Showpass Developer Docs",
+    description: "Browse and test organizer product, category and attribute operations with scoped Inventory API keys.",
+    keywords: "showpass inventory api, organizer products, product categories, product attributes, openapi",
+  },
+  "/api/private-api-ticket-scanning": {
+    title: "Ticket Scanning API | Showpass Developer Docs",
+    description: "Verify ticket codes, read scanning history, record check-in and manage organizer check-in presets.",
+    keywords: "showpass ticket scanning api, ticket verification, check-in, organizer api, openapi",
+  },
+  "/api/private-api-tracking-links-reference": {
+    title: "Tracking Links API Reference | Showpass Developer Docs",
+    description: "List, retrieve, create, update and delete organizer tracking links with scoped developer keys.",
+    keywords: "showpass tracking links api, affiliate tracking, quick checkout purchase, organizer api, openapi",
+  },
   "/api/private-api-memberships": {
     title: "Organization Membership Reads API | Showpass",
     description: "Read current organization members using a scoped developer API key, with group and level names, exact filters and bounded pagination.",
