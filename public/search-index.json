@@ -21,7 +21,7 @@
     "id": "/api/private-api-overview",
     "title": "Showpass Private Organizer API",
     "path": "/api/private-api-overview",
-    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected "
+    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\nSee the Holds API reference to read held baskets and dynamic hold details with holds:read.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that or"
   },
   {
     "id": "/api/private-api-scan-ticket-by-code",
@@ -688,5 +688,35 @@
     "title": "Retrieve an organization member",
     "path": "/api/private-api-memberships-reference#organization_members_retrieve",
     "content": "Memberships API · GET /api/venue/{venueId}/memberships/members/{memberId}/ · memberships:read · Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot."
+  },
+  {
+    "id": "/api/private-api-holds",
+    "title": "Holds API",
+    "path": "/api/private-api-holds",
+    "content": "Read held baskets and look up dynamic hold metadata with scoped organizer API keys."
+  },
+  {
+    "id": "/api/private-api-holds#listOrganizerHeldBaskets",
+    "title": "List organizer held baskets",
+    "path": "/api/private-api-holds#listOrganizerHeldBaskets",
+    "content": "Holds API · GET /api/venue/{venue_id}/tickets/baskets/holds/ · holds:read · Reads held baskets in the organization bound to the key. Requires both Box Office Sales and Manage Holds, or All Access. Sellers see baskets assigned to them unless they have Manage All Holds or All Access. Treat customer details and hold URLs as sensitive. Basket contents and expiry can change between requests."
+  },
+  {
+    "id": "/api/private-api-holds#retrieveOrganizerHeldBasket",
+    "title": "Retrieve an organizer held basket",
+    "path": "/api/private-api-holds#retrieveOrganizerHeldBasket",
+    "content": "Holds API · GET /api/venue/{venue_id}/tickets/baskets/holds/{id}/ · holds:read · Reads held baskets in the organization bound to the key. Requires both Box Office Sales and Manage Holds, or All Access. Sellers see baskets assigned to them unless they have Manage All Holds or All Access. Treat customer details and hold URLs as sensitive. Basket contents and expiry can change between requests."
+  },
+  {
+    "id": "/api/private-api-holds#listOrganizerDynamicHoldDetails",
+    "title": "List organizer dynamic hold details",
+    "path": "/api/private-api-holds#listOrganizerDynamicHoldDetails",
+    "content": "Holds API · GET /api/venue/{venue_id}/tickets/baskets/holds/dynamic/ · holds:read · Reads dynamic hold metadata within the organization bound to the developer key. Requires Box Office Sales, Manage Holds, or All Access for the scope. Use the metadata record ID from on_hold_detail.id, which is separate from the basket ID. Expiry, when present, comes from the linked basket."
+  },
+  {
+    "id": "/api/private-api-holds#retrieveOrganizerDynamicHoldDetails",
+    "title": "Retrieve an organizer dynamic hold detail",
+    "path": "/api/private-api-holds#retrieveOrganizerDynamicHoldDetails",
+    "content": "Holds API · GET /api/venue/{venue_id}/tickets/baskets/holds/dynamic/{id}/ · holds:read · Reads dynamic hold metadata within the organization bound to the developer key. Requires Box Office Sales, Manage Holds, or All Access for the scope. Use the metadata record ID from on_hold_detail.id, which is separate from the basket ID. Expiry, when present, comes from the linked basket."
   }
 ]

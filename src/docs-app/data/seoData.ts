@@ -30,6 +30,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Read current organization members using a scoped developer API key, with group and level names, exact filters and bounded pagination.",
     keywords: "showpass memberships api, organization members, memberships read, membership group name, membership level name"
   },
+  "/api/private-api-holds": {
+    title: "Holds API Reference | Showpass Developer Docs",
+    description: "Read held baskets and dynamic hold details with scoped organizer keys. See seller visibility, filters, and paginated responses.",
+    keywords: "showpass holds api, held baskets, dynamic hold details, organizer api, openapi",
+  },
   "/api/private-api-memberships-reference": {
     title: "Memberships API Reference | Showpass Developer Docs",
     description: "Browse and test the organization member list and detail endpoints, with request examples, filters and response schemas.",

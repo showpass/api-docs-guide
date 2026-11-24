@@ -47,5 +47,15 @@
     "contractVersion": "1.0.0",
     "sha256": "10536ef70565e1b2b4f838bdf2b70162db60d6d33db49656a04186379372a9dc",
     "sourceRevision": "afbad82a491d894745ffe5d0a5aa9a5d42ee1e71"
+  },
+  {
+    "slug": "private-api-holds",
+    "title": "Holds API",
+    "description": "Read held baskets and look up dynamic hold metadata with scoped organizer API keys.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-holds.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "6c6848f24c322ae061ec7fd793cfa91aba6937db154994677eac87be6ae94e51",
+    "sourceRevision": "710019c329da01cd1944e3ee7edfcb7459842796"
   }
 ]
