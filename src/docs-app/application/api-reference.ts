@@ -1,4 +1,4 @@
-import type { ApiExampleSet, ApiMethod } from "@/docs-app/data/types";
+import type { ApiExampleSet, ApiMethod, HttpMethod } from "@/docs-app/data/types";
 import catalog from "@/docs-app/data/api-reference-catalog.json";
 
 export interface ReferenceProfile {
@@ -16,7 +16,6 @@ export interface ReferenceProfile {
 export const referenceProfiles: ReferenceProfile[] = catalog;
 export const referencePath = (profile: ReferenceProfile) => `/api/${profile.slug}`;
 
-type HttpMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 const methods: HttpMethod[] = ["get", "put", "post", "delete", "options", "head", "patch", "trace"];
 
 export interface SchemaObject {
@@ -44,6 +43,7 @@ export interface SchemaObject {
   "x-showpass-field-scopes"?: string[];
 }
 
+/** In JSON Schema, true accepts every value and false rejects every value. */
 export type Schema = SchemaObject | boolean;
 
 export interface Parameter {
@@ -114,7 +114,9 @@ export async function loadReference(profile: ReferenceProfile, signal: AbortSign
   }
 
   const bytes = await response.arrayBuffer();
-  if (!crypto.subtle) throw new Error("Checksum verification requires HTTPS or localhost.");
+  if (!crypto.subtle) {
+    throw new Error("Checksum verification requires HTTPS or localhost.");
+  }
   const digest = await crypto.subtle.digest("SHA-256", bytes);
   const checksum = Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, "0")).join("");
   if (checksum !== profile.sha256) {
@@ -143,7 +145,7 @@ export function componentName(ref: string) {
 
 export function schemaType(schema: Schema | undefined): string {
   if (schema === false) return "never";
-  if (!schema || schema === true) return "any";
+  if (schema === undefined || schema === true) return "any";
   if (schema.$ref) return componentName(schema.$ref) ?? "schema reference";
   if (schema.items !== undefined) return `array of ${schemaType(schema.items)}`;
   if (Array.isArray(schema.type)) return schema.type.join(" or ");

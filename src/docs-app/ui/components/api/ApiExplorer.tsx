@@ -263,13 +263,19 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   const completePath = pathParameterNames.every((name) => pathParameters[name]?.trim());
   const validReferencePath = pathParameterNames.every((name) => {
     const value = pathParameters[name]?.trim() ?? "";
-    return value !== "." && value !== ".." && !/[\\/]/.test(value);
+    return value !== "" && value !== "." && value !== ".." && !/[\\/]/.test(value);
   });
-  const curl = referenceTargets && completePath && validReferencePath
+  const curl = referenceTargets && validReferencePath
     ? developerRequestExamples(
       activeMethod, buildRequestUrl(baseUrl, resolvedEndpointPath, activeQueryParameters, queryParameterValues).href,
     ).curl
     : undefined;
+  let requestLabel = referenceTargets ? "Send request" : "Try now";
+  if (isSending) {
+    requestLabel = "Sending request";
+  } else if (archiveRequest) {
+    requestLabel = "Archive test event";
+  }
 
   useEffect(() => {
     setSelectedOperationId(initialOperationId);
@@ -368,6 +374,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
     }
 
     const token = apiKey.trim().replace(/^Token(?:\s+|$)/i, "");
+    // Trimming cleans up the ends, so the whitespace check still catches a split key.
     if (!isPublicEndpoint && !isPartnerEndpoint && (!token || (referenceTargets && /\s/.test(token)))) {
       setError("Enter your Showpass API key.");
       return;
@@ -638,7 +645,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-        {isSending ? "Sending request" : archiveRequest ? "Archive test event" : referenceTargets ? "Send request" : "Try now"}
+        {requestLabel}
       </button>
 
       {response && (

@@ -176,8 +176,11 @@ files.forEach((filePath) => {
 });
 
 for (const { profile, route, operations } of readReferenceArtifacts()) {
-  if (routeSet.has(route) || !routeSet.has(profile.guidePath)) {
-    throw new Error(`API reference route conflicts with an existing page or lacks a guide for ${route}`);
+  if (routeSet.has(route)) {
+    throw new Error(`API reference route conflicts with an existing page at ${route}`);
+  }
+  if (!routeSet.has(profile.guidePath)) {
+    throw new Error(`API reference ${route} points to a missing guide at ${profile.guidePath}`);
   }
   routeSet.add(route);
   anchorsByRoute.set(route, new Set(operations.map(({ operationId }) => operationId)));
