@@ -9,6 +9,36 @@
     "sourceRevision": "b526aa4eb6c184f5a9de1a0a8991f4923d45d6a7"
   },
   {
+    "slug": "private-api-inventory",
+    "title": "Inventory API",
+    "description": "Read and manage organizer products and categories, and look up product attributes.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-inventory.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "622df7ab20ab946b1189174d5401cfad664f5f34682cdc551b8a6bacbb4c0e66",
+    "sourceRevision": "756ab6eebec2fb97f0367c84e4f010eae517abcc"
+  },
+  {
+    "slug": "private-api-ticket-scanning",
+    "title": "Ticket Scanning API",
+    "description": "Verify ticket codes, record check-in, and manage check-in presets.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-ticket-scanning.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "32837678f4618eccb671c8705cf1d05c88f8b3f3574008491efe0d851ce179a9",
+    "sourceRevision": "80c1d93f7bff3f9c3ab10cd3b62f2a5088d4a70c"
+  },
+  {
+    "slug": "private-api-tracking-links-reference",
+    "title": "Tracking Links API",
+    "description": "Create shareable tracking links and manage Quick Checkout Purchase links.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-tracking-links.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "bfb95a1570fd7ca628a7b3f7cd311ab8ea988764ab9f3e74948035f53190bb0b",
+    "sourceRevision": "68387ffb9343cd839c0fc0150bc35d9ad43b6e10"
+  },
+  {
     "slug": "private-api-memberships-reference",
     "title": "Memberships API",
     "description": "List and retrieve current organization members, including their membership group and level names.",

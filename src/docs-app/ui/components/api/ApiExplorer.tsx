@@ -259,7 +259,8 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       ),
     [endpointPath, pathParameters],
   );
-  const archiveRequest = Boolean(referenceTargets && activeMethod === "DELETE");
+  const deleteRequest = Boolean(referenceTargets && activeMethod === "DELETE");
+  const archiveRequest = deleteRequest && endpointUrl.pathname.includes("/events/");
   const completePath = pathParameterNames.every((name) => pathParameters[name]?.trim());
   const validReferencePath = pathParameterNames.every((name) => {
     const value = pathParameters[name]?.trim() ?? "";
@@ -268,6 +269,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   const curl = referenceTargets && completePath && validReferencePath
     ? developerRequestExamples(
       activeMethod, buildRequestUrl(baseUrl, resolvedEndpointPath, activeQueryParameters, queryParameterValues).href,
+      hasRequestBody ? body : undefined,
     ).curl
     : undefined;
 
@@ -373,7 +375,15 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       return;
     }
 
-    if (archiveRequest && !window.confirm(`Archive the test event at ${url.href}?`)) return;
+    if (referenceTargets && hasRequestBody && formatJsonResponse(body) === undefined) {
+      setError("Enter a valid JSON request body.");
+      return;
+    }
+
+    if (deleteRequest) {
+      const action = archiveRequest ? "Archive the test event" : "Delete the test resource";
+      if (!window.confirm(`${action} at ${url.href}?`)) return;
+    }
 
     setIsSending(true);
     const started = performance.now();
@@ -628,8 +638,12 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         </div>
       )}
 
-      {archiveRequest && (
-        <p className="text-xs text-muted-foreground">This request archives the specified event on the selected test server.</p>
+      {deleteRequest && (
+        <p className="text-xs text-muted-foreground">
+          {archiveRequest
+            ? "This request archives the specified event on the selected test server."
+            : "This request deletes the specified resource on the selected test server."}
+        </p>
       )}
       <button
         type="button"
@@ -638,7 +652,9 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-        {isSending ? "Sending request" : archiveRequest ? "Archive test event" : referenceTargets ? "Send request" : "Try now"}
+        {isSending ? "Sending request" : deleteRequest
+          ? (archiveRequest ? "Archive test event" : "Delete test resource")
+          : (referenceTargets ? "Send request" : "Try now")}
       </button>
 
       {response && (

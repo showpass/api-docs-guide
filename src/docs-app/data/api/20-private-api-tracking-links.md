@@ -2,6 +2,8 @@
 
 Tracking links allow organizers to create shareable URLs that attribute ticket sales to specific employees, venues, or affiliates. Each link generates a unique short URL (e.g., `https://showpass.com/l/abc12345`) that redirects to your event page while recording views, unique visitors, and conversion data.
 
+For scoped developer keys, use the [Tracking Links API reference](/api/private-api-tracking-links-reference) for supported operations and request examples.
+
 ---
 
 ## Authentication

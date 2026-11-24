@@ -67,6 +67,12 @@ export interface OperationResponse {
   content?: Record<string, MediaType>;
 }
 
+interface RequestBody {
+  description?: string;
+  required?: boolean;
+  content: Record<string, MediaType>;
+}
+
 interface Operation {
   operationId: string;
   summary: string;
@@ -74,6 +80,7 @@ interface Operation {
   tags?: string[];
   parameters?: Parameter[];
   security?: Record<string, string[]>[];
+  requestBody?: RequestBody;
   responses: Record<string, OperationResponse>;
   "x-showpass-scopes"?: string[];
   "x-showpass-employee-permissions"?: string[];
@@ -156,14 +163,19 @@ export function schemaType(schema: Schema | undefined): string {
   return schema.properties ? "object" : "any";
 }
 
-export function developerRequestExamples(method: ApiMethod, url: string): ApiExampleSet {
-  const quotedUrl = "'" + url.replace(/'/g, "'\"'\"'") + "'";
+export function developerRequestExamples(method: ApiMethod, url: string, body?: string): ApiExampleSet {
+  const shellQuote = (value: string) => "'" + value.replace(/'/g, "'\"'\"'") + "'";
   const urlLiteral = JSON.stringify(url);
+  const bodyLiteral = body === undefined ? undefined : JSON.stringify(body);
   return {
     curl: [
-      `curl --request ${method} ${quotedUrl}`,
+      `curl --request ${method} ${shellQuote(url)}`,
       '  --header "Authorization: Token $SHOWPASS_API_KEY"',
       "  --header 'Accept: application/json'",
+      ...(body === undefined ? [] : [
+        "  --header 'Content-Type: application/json'",
+        `  --data-raw ${shellQuote(body)}`,
+      ]),
     ].join(" \\\n"),
     python: [
       "import os",
@@ -175,7 +187,9 @@ export function developerRequestExamples(method: ApiMethod, url: string): ApiExa
       "    headers={",
       '        "Authorization": "Token " + os.environ["SHOWPASS_API_KEY"],',
       '        "Accept": "application/json",',
+      ...(bodyLiteral === undefined ? [] : ['        "Content-Type": "application/json",']),
       "    },",
+      ...(bodyLiteral === undefined ? [] : [`    data=${bodyLiteral},`]),
       "    timeout=30,",
       "    allow_redirects=False,",
       ")",
@@ -187,7 +201,9 @@ export function developerRequestExamples(method: ApiMethod, url: string): ApiExa
       "  headers: {",
       '    Authorization: "Token " + process.env.SHOWPASS_API_KEY,',
       '    Accept: "application/json",',
+      ...(bodyLiteral === undefined ? [] : ['    "Content-Type": "application/json",']),
       "  },",
+      ...(bodyLiteral === undefined ? [] : [`  body: ${bodyLiteral},`]),
       '  redirect: "error",',
       "});",
       "console.log(response.status, await response.text());",

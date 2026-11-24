@@ -17,7 +17,7 @@ import {
 import { OpenApiSchema, SchemaConstraints, SchemaDisclosure } from "./OpenApiSchema";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock";
 import { seoDataMap } from "@/docs-app/data/seoData";
-import type { ApiExamplesData } from "@/docs-app/data/types";
+import type { ApiExamplesData, ApiMethod } from "@/docs-app/data/types";
 import { useDocLayoutData } from "@/docs-app/ui/components/layout/DocLayout";
 import { useHashScroll } from "@/docs-app/ui/hooks/useHashScroll";
 import { useScrollSpy } from "@/docs-app/ui/hooks/useScrollSpy";
@@ -30,7 +30,14 @@ import { cn } from "@/shared/lib/utils";
 
 const methodStyles: Record<string, string> = {
   get: "border-sky-500/35 bg-sky-500/10",
+  post: "border-emerald-500/35 bg-emerald-500/10",
+  put: "border-amber-500/35 bg-amber-500/10",
+  patch: "border-amber-500/35 bg-amber-500/10",
   delete: "border-rose-500/35 bg-rose-500/10",
+};
+
+const exampleMethods: Partial<Record<ReferenceOperation["method"], ApiMethod>> = {
+  get: "GET", delete: "DELETE", post: "POST", put: "PUT", patch: "PATCH",
 };
 
 const stagingTargets = [
@@ -45,11 +52,12 @@ const testTargets = import.meta.env.DEV && ["localhost", "127.0.0.1"].includes(w
 const outlineSections = [
   { id: "authentication", title: "Authentication" },
   { id: "parameters", title: "Parameters" },
+  { id: "request-body", title: "Request body" },
   { id: "responses", title: "Responses" },
 ] as const;
 
 function makeExamples(operation: ReferenceOperation, spec: ReferenceDocument["spec"]): ApiExamplesData | undefined {
-  const method = operation.method === "get" ? "GET" : operation.method === "delete" ? "DELETE" : undefined;
+  const method = exampleMethods[operation.method];
   const server = spec.servers?.[0]?.url;
   const key = spec.components?.securitySchemes?.DeveloperKey;
   const usesDeveloperKey = operation.security?.some((requirement) =>
@@ -61,13 +69,19 @@ function makeExamples(operation: ReferenceOperation, spec: ReferenceDocument["sp
   const success = Object.entries(operation.responses).find(([status]) => /^2\d{2}$/.test(status));
   const media = success?.[1].content?.["application/json"];
   const body = media?.example ?? Object.values(media?.examples ?? {}).find(({ value }) => value !== undefined)?.value;
+  const requestMedia = operation.requestBody?.content["application/json"];
+  if (operation.requestBody && !requestMedia) return;
+  const requestExample = requestMedia?.example ??
+    Object.values(requestMedia?.examples ?? {}).find(({ value }) => value !== undefined)?.value;
+  const requestBodyTemplate = requestMedia ? JSON.stringify(requestExample ?? {}, null, 2) : undefined;
 
   return {
     endpoint,
     method,
     queryParameters: operation.parameters?.filter(({ in: location }) => location === "query"),
     description: "Replace the path placeholders and set SHOWPASS_API_KEY for the API host.",
-    examples: developerRequestExamples(method, endpoint),
+    examples: developerRequestExamples(method, endpoint, requestBodyTemplate),
+    requestBodyTemplate,
     response: success && body && typeof body === "object" && !Array.isArray(body)
       ? { status: Number(success[0]), body: body as Record<string, unknown> }
       : undefined,
@@ -107,21 +121,18 @@ function ParameterList({ parameters }: { parameters: Parameter[] }) {
   );
 }
 
-function ResponseBody({ response, components }: { response: OperationResponse; components: Record<string, Schema> }) {
+function MediaContent({ content, components, schemaTitle }: {
+  content?: OperationResponse["content"];
+  components: Record<string, Schema>;
+  schemaTitle: string;
+}) {
   return (
     <>
-      {response.headers && Object.keys(response.headers).length > 0 && (
-        <SchemaDisclosure title="Response headers">
-          <ParameterList
-            parameters={Object.entries(response.headers).map(([name, header]) => ({ name, in: "header", ...header }))}
-          />
-        </SchemaDisclosure>
-      )}
-      {Object.entries(response.content ?? {}).map(([mediaType, media]) => (
+      {Object.entries(content ?? {}).map(([mediaType, media]) => (
         <div key={mediaType} className="min-w-0 space-y-2">
           <p className="font-mono text-xs text-muted-foreground">{mediaType}</p>
           {media.schema !== undefined && (
-            <SchemaDisclosure title="Response schema">
+            <SchemaDisclosure title={schemaTitle}>
               <OpenApiSchema schema={media.schema} components={components} />
             </SchemaDisclosure>
           )}
@@ -137,6 +148,21 @@ function ResponseBody({ response, components }: { response: OperationResponse; c
           )}
         </div>
       ))}
+    </>
+  );
+}
+
+function ResponseBody({ response, components }: { response: OperationResponse; components: Record<string, Schema> }) {
+  return (
+    <>
+      {response.headers && Object.keys(response.headers).length > 0 && (
+        <SchemaDisclosure title="Response headers">
+          <ParameterList
+            parameters={Object.entries(response.headers).map(([name, header]) => ({ name, in: "header", ...header }))}
+          />
+        </SchemaDisclosure>
+      )}
+      <MediaContent content={response.content} components={components} schemaTitle="Response schema" />
     </>
   );
 }
@@ -202,6 +228,19 @@ function OperationDetails({ operation, spec, guidePath }: {
         )}
       </section>
 
+      {operation.requestBody && (
+        <section className="space-y-3 border-b border-border py-5">
+          <div className="flex flex-wrap items-center gap-2">
+            <h3 id={`${operation.operationId}/request-body`} data-reference-section className="text-xl font-semibold tracking-tight">Request body</h3>
+            {operation.requestBody.required && <span className="text-xs font-medium text-primary">Required</span>}
+          </div>
+          {operation.requestBody.description && (
+            <p className="text-sm text-muted-foreground">{operation.requestBody.description}</p>
+          )}
+          <MediaContent content={operation.requestBody.content} components={components} schemaTitle="Request schema" />
+        </section>
+      )}
+
       <section className="space-y-2 pt-5">
         <h3 id={`${operation.operationId}/responses`} data-reference-section className="text-xl font-semibold tracking-tight">Responses</h3>
         {Object.entries(operation.responses).map(([code, response]) => (
@@ -241,9 +280,9 @@ export default function ApiReferencePage({ profile }: { profile: ReferenceProfil
     setPageData({
       pageTitle: profile.title,
       hideRightSidebar: !selected,
-      tocItems: selected ? outlineSections.map(({ id, title }) => ({
-        title, href: `#${selected.operationId}/${id}`, level: 2,
-      })) : [],
+      tocItems: selected ? outlineSections
+        .filter(({ id }) => id !== "request-body" || selected.requestBody)
+        .map(({ id, title }) => ({ title, href: `#${selected.operationId}/${id}`, level: 2 })) : [],
       activeSection: activeSection ?? undefined,
       apiExamplesData: examples,
     });
