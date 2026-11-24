@@ -106,12 +106,14 @@ const PageTools = ({
           className="mt-3 min-w-0 focus-visible:outline-none focus-visible:ring-0 focus-visible:ring-offset-0"
         >
           <ApiExplorer
+            key={`${apiExamplesData.method} ${apiExamplesData.endpoint}`}
             description={apiExamplesData.description}
             endpoint={apiExamplesData.endpoint}
             method={apiExamplesData.method}
             operations={apiExamplesData.operations}
             queryParameters={apiExamplesData.queryParameters}
             requestBodyTemplate={apiExamplesData.requestBodyTemplate}
+            referenceTargets={apiExamplesData.testTargets}
           />
         </TabsContent>
       </Tabs>

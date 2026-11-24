@@ -66,9 +66,9 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
   };
 
   // Get the status code from the standardized response format
-  const statusCode = response.status;
+  const statusCode = response?.status;
   // Get the response text as a JSON string
-  const responseText = JSON.stringify(response.body, null, 2);
+  const responseText = response ? JSON.stringify(response.body, null, 2) : "";
 
   return (
     <div className="w-full space-y-4">
@@ -291,7 +291,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
         </Tabs>
       </div>
 
-      <div className="space-y-3 mt-8">
+      {response && <div className="space-y-3 mt-8">
         <div className="flex items-center justify-between border-b border-border/30 pb-1.5">
           <div className="text-xs font-medium text-muted-foreground/70 flex items-center">
             <Check className="h-3 w-3 mr-1.5 text-[hsl(var(--success))]" />
@@ -339,7 +339,7 @@ const ApiExamples: React.FC<ApiExamplesProps> = ({
             )}
           </Highlight>
         </Card>
-      </div>
+      </div>}
     </div>
   );
 };

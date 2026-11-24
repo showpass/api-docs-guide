@@ -2,6 +2,8 @@
 
 The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.
 
+See the [Events API reference](/api/private-api-events) for event and ticket type endpoints, their scopes and response examples.
+
 > **Keep API keys safe.** API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.
 
 ## Create an API key

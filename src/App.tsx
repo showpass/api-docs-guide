@@ -15,6 +15,8 @@ import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import DynamicDocPage from "./docs-app/ui/components/DynamicDocPage";
 import WidgetPlayground from "./pages/WidgetPlayground";
+import ApiReferencePage from "./docs-app/ui/components/api/ApiReferencePage";
+import { referencePath, referenceProfiles } from "./docs-app/application/api-reference";
 
 const queryClient = new QueryClient();
 const basename = "/";
@@ -54,6 +56,9 @@ const App = () => (
               {/* Child routes - their elements will render in DocLayout's Outlet */}
               {/* These children will use a hook to update the context data */}
               <Route path="/" element={<Index />} />
+              {referenceProfiles.map((profile) => (
+                <Route key={profile.slug} path={referencePath(profile)} element={<ApiReferencePage key={profile.slug} profile={profile} />} />
+              ))}
               <Route
                 path="/api/:slug"
                 element={<DynamicDocPage section="api" />}

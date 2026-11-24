@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { AlertCircle, LoaderCircle, Play } from "lucide-react";
 import CodeBlock from "@/docs-app/ui/components/content/CodeBlock.tsx";
+import { developerRequestExamples } from "@/docs-app/application/api-reference";
 import {
   Tooltip,
   TooltipContent,
@@ -21,12 +22,14 @@ interface ApiExplorerProps {
   operations?: ApiOperation[];
   queryParameters?: ApiQueryParameter[];
   requestBodyTemplate?: string;
+  referenceTargets?: readonly { label: string; origin: string }[];
 }
 
 interface ApiResponse {
   body: string;
   status: number;
   statusText: string;
+  elapsedMs: number;
 }
 
 const isShowpassApiHost = (hostname: string) =>
@@ -92,6 +95,21 @@ const formatJsonResponse = (body: string) => {
     return undefined;
   }
 };
+
+function buildRequestUrl(
+  origin: string,
+  path: string,
+  parameters: ApiQueryParameter[],
+  values: Record<string, string>,
+) {
+  const url = new URL(`${origin}${path}`);
+  parameters.forEach(({ name }) => {
+    const value = values[name]?.trim();
+    if (value) url.searchParams.set(name, value);
+    else url.searchParams.delete(name);
+  });
+  return url;
+}
 
 interface CredentialWarningTooltipProps {
   label: string;
@@ -166,6 +184,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   operations,
   queryParameters = [],
   requestBodyTemplate,
+  referenceTargets,
 }) => {
   const defaultOperation = useMemo<ApiOperation>(
     () => ({
@@ -207,11 +226,12 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   const activeMethod = selectedOperation.method;
   const activeQueryParameters = selectedOperation.queryParameters ?? [];
   const activeRequestBodyTemplate = selectedOperation.requestBodyTemplate;
+  const hasRequestBody = referenceTargets ? Boolean(activeRequestBodyTemplate) : activeMethod !== "GET";
   const endpointUrl = useMemo(() => new URL(activeEndpoint), [activeEndpoint]);
   const isPartnerEndpoint = endpointUrl.pathname.startsWith("/api/v1/partner/");
   const isPublicEndpoint = endpointUrl.pathname.startsWith("/api/public/");
   const [baseUrl, setBaseUrl] = useState(() =>
-    getSessionValue(EXPLORER_STORAGE_KEYS.baseUrl, endpointUrl.origin),
+    referenceTargets?.[0]?.origin ?? getSessionValue(EXPLORER_STORAGE_KEYS.baseUrl, endpointUrl.origin),
   );
   const [endpointPath, setEndpointPath] = useState(() =>
     getEndpointPathTemplate(endpoint),
@@ -222,7 +242,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   const [partnerKeyId, setPartnerKeyId] = useState("");
   const [partnerSecret, setPartnerSecret] = useState("");
   const [body, setBody] = useState(
-    activeMethod === "GET" ? "" : activeRequestBodyTemplate ?? "{\n  \n}",
+    hasRequestBody ? activeRequestBodyTemplate ?? "{\n  \n}" : "",
   );
   const [response, setResponse] = useState<ApiResponse>();
   const [error, setError] = useState("");
@@ -239,6 +259,23 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       ),
     [endpointPath, pathParameters],
   );
+  const archiveRequest = Boolean(referenceTargets && activeMethod === "DELETE");
+  const completePath = pathParameterNames.every((name) => pathParameters[name]?.trim());
+  const validReferencePath = pathParameterNames.every((name) => {
+    const value = pathParameters[name]?.trim() ?? "";
+    return value !== "" && value !== "." && value !== ".." && !/[\\/]/.test(value);
+  });
+  const curl = referenceTargets && validReferencePath
+    ? developerRequestExamples(
+      activeMethod, buildRequestUrl(baseUrl, resolvedEndpointPath, activeQueryParameters, queryParameterValues).href,
+    ).curl
+    : undefined;
+  let requestLabel = referenceTargets ? "Send request" : "Try now";
+  if (isSending) {
+    requestLabel = "Sending request";
+  } else if (archiveRequest) {
+    requestLabel = "Archive test event";
+  }
 
   useEffect(() => {
     setSelectedOperationId(initialOperationId);
@@ -254,11 +291,11 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
     setPathParameters({});
     setQueryParameterValues({});
     setBody(
-      activeMethod === "GET" ? "" : activeRequestBodyTemplate ?? "{\n  \n}",
+      hasRequestBody ? activeRequestBodyTemplate ?? "{\n  \n}" : "",
     );
     setError("");
     setResponse(undefined);
-  }, [activeEndpoint, activeMethod, activeRequestBodyTemplate]);
+  }, [activeEndpoint, activeMethod, activeRequestBodyTemplate, hasRequestBody]);
   const formattedResponse = response && formatJsonResponse(response.body);
 
   const sendRequest = async () => {
@@ -273,18 +310,28 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       return;
     }
 
-    if (base.protocol !== "https:") {
+    if (referenceTargets && !referenceTargets.some(({ origin }) => origin === baseUrl)) {
+      setError("Select a Showpass test server.");
+      return;
+    }
+
+    if (!referenceTargets && base.protocol !== "https:") {
       setError("Use HTTPS for Showpass API requests.");
       return;
     }
 
-    if (!isShowpassApiHost(base.hostname)) {
+    if (!referenceTargets && !isShowpassApiHost(base.hostname)) {
       setError("Use a Showpass API host, such as beta.showpass.com or demo.showpass.com.");
       return;
     }
 
-    if (pathParameterNames.some((name) => !pathParameters[name]?.trim())) {
+    if (!completePath) {
       setError("Enter a value for every endpoint parameter before sending.");
+      return;
+    }
+
+    if (referenceTargets && !validReferencePath) {
+      setError("Enter a single ID or slug for each path parameter.");
       return;
     }
 
@@ -307,20 +354,11 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
 
     let url: URL;
     try {
-      url = new URL(`${base.origin}${resolvedEndpointPath}`);
+      url = buildRequestUrl(base.origin, resolvedEndpointPath, activeQueryParameters, queryParameterValues);
     } catch {
       setError("Enter a valid API endpoint path.");
       return;
     }
-
-    activeQueryParameters.forEach((parameter) => {
-      const value = queryParameterValues[parameter.name]?.trim();
-      if (value) {
-        url.searchParams.set(parameter.name, value);
-      } else {
-        url.searchParams.delete(parameter.name);
-      }
-    });
 
     if (isProductionShowpassHost(base.hostname) && !isPublicEndpoint) {
       setError(
@@ -335,14 +373,20 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       return;
     }
 
-    if (!isPublicEndpoint && !isPartnerEndpoint && !apiKey.trim()) {
+    const token = apiKey.trim().replace(/^Token(?:\s+|$)/i, "");
+    // Trimming cleans up the ends, so the whitespace check still catches a split key.
+    if (!isPublicEndpoint && !isPartnerEndpoint && (!token || (referenceTargets && /\s/.test(token)))) {
       setError("Enter your Showpass API key.");
       return;
     }
 
+    if (archiveRequest && !window.confirm(`Archive the test event at ${url.href}?`)) return;
+
     setIsSending(true);
+    const started = performance.now();
     try {
       const headers = new Headers();
+      if (referenceTargets) headers.set("Accept", "application/json");
       if (body) headers.set("Content-Type", "application/json");
 
       if (isPartnerEndpoint) {
@@ -361,7 +405,6 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         headers.set("X-Showpass-Partner-Nonce", nonce);
         headers.set("X-Showpass-Partner-Signature", signature);
       } else if (!isPublicEndpoint) {
-        const token = apiKey.trim().replace(/^Token\s+/i, "");
         headers.set("Authorization", `Token ${token}`);
       }
 
@@ -370,21 +413,48 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         headers,
         body: body || undefined,
         credentials: "omit",
+        ...(referenceTargets && { redirect: "error", cache: "no-store" }),
       });
       const responseBody = await apiResponse.text();
       setResponse({
         status: apiResponse.status,
         statusText: apiResponse.statusText,
         body: responseBody || "(empty response)",
+        elapsedMs: Math.round(performance.now() - started),
       });
     } catch {
       setError(
-        "The request could not be completed. Check the URL, credentials, and API CORS configuration.",
+        referenceTargets
+          ? "The browser could not reach the test API. Check that the server allows requests from this page, or run a request example from your terminal."
+          : "The request could not be completed. Check the URL, credentials, and API CORS configuration.",
       );
     } finally {
       setIsSending(false);
     }
   };
+
+  const renderQueryParameter = (parameter: ApiQueryParameter) => (
+    <label key={parameter.name} className="block space-y-1.5">
+      <span className="text-xs font-medium text-foreground">
+        {parameter.name}
+        {referenceTargets ? (parameter.required ? " (required)" : "") : (parameter.required ? "" : " (optional)")}
+      </span>
+      <input
+        value={queryParameterValues[parameter.name] ?? ""}
+        onChange={(event) =>
+          setQueryParameterValues((current) => ({
+            ...current,
+            [parameter.name]: event.target.value,
+          }))
+        }
+        placeholder={parameter.description ?? `Value for ${parameter.name}`}
+        className="h-9 w-full rounded-md border border-input bg-background px-2 font-mono text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        aria-label={parameter.name}
+      />
+    </label>
+  );
+
+  const optionalQueryParameters = activeQueryParameters.filter(({ required }) => !required);
 
   return (
     <div className="space-y-4 px-1 text-sm">
@@ -412,21 +482,40 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
           </label>
         )}
 
-        <label className="block space-y-1.5">
-          <span className="text-xs font-medium text-foreground">Base URL</span>
-          <input
-            value={baseUrl}
-            onChange={(event) => {
-              setBaseUrl(event.target.value);
-              setSessionValue(EXPLORER_STORAGE_KEYS.baseUrl, event.target.value);
-            }}
-            className="h-7 w-full rounded-md border border-input bg-background px-2 font-mono text-[11px] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label="Base URL"
-          />
-        </label>
+        {referenceTargets ? (
+          <label className="block space-y-1.5">
+            <span className="text-xs font-medium text-foreground">Test server</span>
+            <select
+              value={baseUrl}
+              disabled={isSending}
+              onChange={(event) => {
+                setBaseUrl(event.target.value);
+                setApiKey("");
+                setResponse(undefined);
+                setError("");
+              }}
+              className="h-9 w-full rounded-md border border-input bg-background px-2 text-sm text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            >
+              {referenceTargets.map(({ label, origin }) => <option key={origin} value={origin}>{label}</option>)}
+            </select>
+          </label>
+        ) : (
+          <label className="block space-y-1.5">
+            <span className="text-xs font-medium text-foreground">Base URL</span>
+            <input
+              value={baseUrl}
+              onChange={(event) => {
+                setBaseUrl(event.target.value);
+                setSessionValue(EXPLORER_STORAGE_KEYS.baseUrl, event.target.value);
+              }}
+              className="h-7 w-full rounded-md border border-input bg-background px-2 font-mono text-[11px] text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              aria-label="Base URL"
+            />
+          </label>
+        )}
       </div>
 
-      <label className="block space-y-1.5">
+      {!referenceTargets && <label className="block space-y-1.5">
         <span className="text-xs font-medium text-foreground">Endpoint path</span>
         <input
           value={endpointPath}
@@ -434,7 +523,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
           className="h-9 w-full rounded-md border border-input bg-background px-2 font-mono text-xs text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
           aria-label="Endpoint path"
         />
-      </label>
+      </label>}
 
       {pathParameterNames.map((name) => (
         <label key={name} className="block space-y-1.5">
@@ -454,26 +543,21 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         </label>
       ))}
 
-      {activeQueryParameters.map((parameter) => (
-        <label key={parameter.name} className="block space-y-1.5">
-          <span className="text-xs font-medium text-foreground">
-            {parameter.name}
-            {parameter.required ? "" : " (optional)"}
-          </span>
-          <input
-            value={queryParameterValues[parameter.name] ?? ""}
-            onChange={(event) =>
-              setQueryParameterValues((current) => ({
-                ...current,
-                [parameter.name]: event.target.value,
-              }))
-            }
-            placeholder={parameter.description ?? `Value for ${parameter.name}`}
-            className="h-9 w-full rounded-md border border-input bg-background px-2 font-mono text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            aria-label={parameter.name}
-          />
-        </label>
-      ))}
+      {referenceTargets ? (
+        <>
+          {activeQueryParameters.filter(({ required }) => required).map(renderQueryParameter)}
+          {optionalQueryParameters.length > 0 && (
+            <details className="rounded-md border border-border">
+              <summary className="cursor-pointer px-3 py-2 text-xs font-medium">
+                Optional query parameters ({optionalQueryParameters.length})
+              </summary>
+              <div className="grid gap-3 border-t border-border p-3 sm:grid-cols-2">
+                {optionalQueryParameters.map(renderQueryParameter)}
+              </div>
+            </details>
+          )}
+        </>
+      ) : activeQueryParameters.map(renderQueryParameter)}
 
       {isPartnerEndpoint ? (
         <>
@@ -524,6 +608,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
                 setApiKey(event.target.value);
               }}
               placeholder="Your Showpass API key"
+              aria-label="API key"
               autoComplete="off"
               className="h-9 w-full rounded-md border border-input bg-background px-2 text-xs text-foreground placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             />
@@ -531,7 +616,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         </>
       ) : null}
 
-      {activeMethod !== "GET" && (
+      {hasRequestBody && (
         <label className="block space-y-1.5">
           <span className="text-xs font-medium text-foreground">Request body</span>
           <textarea
@@ -545,11 +630,14 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
       )}
 
       {error && (
-        <div className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">
+        <div role="alert" className="rounded-md border border-destructive/30 bg-destructive/10 p-2 text-xs text-destructive">
           {error}
         </div>
       )}
 
+      {archiveRequest && (
+        <p className="text-xs text-muted-foreground">This request archives the specified event on the selected test server.</p>
+      )}
       <button
         type="button"
         onClick={sendRequest}
@@ -557,22 +645,33 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         className="inline-flex h-9 w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-60"
       >
         {isSending ? <LoaderCircle className="h-4 w-4 animate-spin" /> : <Play className="h-4 w-4" />}
-        {isSending ? "Sending request" : "Try now"}
+        {requestLabel}
       </button>
 
       {response && (
         <div className="overflow-hidden rounded-md border border-border/70">
-          <div className="border-b border-border/70 bg-muted/40 px-3 py-2 font-mono text-xs font-medium text-foreground">
-            {response.status} {response.statusText}
+          <div role="status" className="flex flex-wrap justify-between gap-2 border-b border-border/70 bg-muted/40 px-3 py-2 font-mono text-xs font-medium text-foreground">
+            <span>{response.status} {response.statusText || (response.status >= 200 && response.status < 300 ? "Success" : "")}</span>
+            {referenceTargets && <span className="text-muted-foreground">{response.elapsedMs} ms</span>}
           </div>
-          {formattedResponse ? (
-            <CodeBlock code={formattedResponse} language="javascript" colorful />
-          ) : (
-            <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-words p-3 font-mono text-xs leading-relaxed text-foreground">
-              {response.body}
-            </pre>
-          )}
+          <div className={referenceTargets ? "max-h-80 overflow-auto bg-[hsl(var(--prose-pre-bg))]" : undefined}>
+            {formattedResponse ? (
+              <CodeBlock code={formattedResponse} language="json" colorful />
+            ) : (
+              <pre className="max-h-64 overflow-auto whitespace-pre-wrap break-words p-3 font-mono text-xs leading-relaxed text-foreground">
+                {response.body}
+              </pre>
+            )}
+          </div>
         </div>
+      )}
+      {curl && (
+        <details className="rounded-md border border-border">
+          <summary className="cursor-pointer px-3 py-2 text-xs font-medium">Copy this request as cURL</summary>
+          <div className="border-t border-border px-3">
+            <CodeBlock code={curl} language="bash" />
+          </div>
+        </details>
       )}
     </div>
   );

@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { readReferenceArtifacts } from "./api-reference-artifacts.mjs";
 
 // Function to recursively find all files with a given extension
 async function findFilesByExt(startPath, filter, fileList = []) {
@@ -74,6 +75,24 @@ async function buildSearchIndex() {
         content: plainTextContent.substring(0, 2000), // Truncate content to save space/improve performance
       });
       console.log(`Processed: ${filePath} -> ${urlPath}`);
+    }
+
+    for (const { profile, route, operations, description } of readReferenceArtifacts()) {
+      searchIndex.push({ id: route, title: profile.title, path: route, content: description });
+      for (const operation of operations) {
+        const operationPath = `${route}#${operation.operationId}`;
+        searchIndex.push({
+          id: operationPath,
+          title: operation.summary,
+          path: operationPath,
+          content: [
+            profile.title,
+            `${operation.method.toUpperCase()} ${operation.apiPath}`,
+            ...(operation["x-showpass-scopes"] ?? []),
+            operation.description,
+          ].filter(Boolean).join(" · "),
+        });
+      }
     }
 
     await fs.mkdir(publicPath, { recursive: true }); // Ensure public directory exists

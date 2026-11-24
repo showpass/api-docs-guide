@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { marked } from "marked";
+import { readReferenceArtifacts } from "./api-reference-artifacts.mjs";
 
 const docsRoot = path.resolve("src/docs-app/data");
 const publicRoot = path.resolve("public");
@@ -173,6 +174,17 @@ files.forEach((filePath) => {
   contentByFile.set(filePath, content);
   anchorsByRoute.set(routeForFile(filePath), extractAnchors(content));
 });
+
+for (const { profile, route, operations } of readReferenceArtifacts()) {
+  if (routeSet.has(route)) {
+    throw new Error(`API reference route conflicts with an existing page at ${route}`);
+  }
+  if (!routeSet.has(profile.guidePath)) {
+    throw new Error(`API reference ${route} points to a missing guide at ${profile.guidePath}`);
+  }
+  routeSet.add(route);
+  anchorsByRoute.set(route, new Set(operations.map(({ operationId }) => operationId)));
+}
 
 const issues = [];
 let checkedLinks = 0;
