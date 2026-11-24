@@ -69,6 +69,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Create, list, update, and deactivate Showpass discount codes through the Private Organizer API. Issue personal codes for event and ticket type specific use cases.",
     keywords: "showpass discounts api, discount codes api, private organizer api, promo codes, venue discounts, ticket discount codes"
   },
+  "/api/private-api-discounts-reference": {
+    title: "Discounts API Reference | Showpass Developer Docs",
+    description: "Browse and test the organizer discount endpoints, including standard discounts, Buy/Get rules, authentication scopes and response schemas.",
+    keywords: "showpass discounts api, organizer discount codes, buy get discounts, openapi",
+  },
   "/api/private-api-passwords": {
     title: "Passwords API - Showpass Private Organizer API",
     description: "Create and manage Showpass event and ticket type access passwords for external access-code workflows.",
