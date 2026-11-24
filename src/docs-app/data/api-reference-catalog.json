@@ -47,5 +47,15 @@
     "contractVersion": "1.0.0",
     "sha256": "10536ef70565e1b2b4f838bdf2b70162db60d6d33db49656a04186379372a9dc",
     "sourceRevision": "afbad82a491d894745ffe5d0a5aa9a5d42ee1e71"
+  },
+  {
+    "slug": "private-api-reports",
+    "title": "Reports API",
+    "description": "Read saved reports, cash-out receipts, invoice totals, and payout summaries.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-reports.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "23ade766893799be5e3dce14335cd4f9088ca0041a95c786cfba761d57a7ba20",
+    "sourceRevision": "e276975e9f07c5c73143c87fc559df74385b88f0"
   }
 ]
