@@ -2,7 +2,7 @@
     "openapi": "3.1.0",
     "info": {
         "title": "Showpass Organizer API",
-        "version": "1.0.1",
+        "version": "1.0.2",
         "description": "Events and ticket type operations available to scoped Showpass organizer API keys."
     },
     "paths": {
@@ -3593,13 +3593,19 @@
                     "attraction_event_config": {
                         "type": [
                             "array",
+                            "object",
                             "null"
                         ],
+                        "maxProperties": 0,
+                        "description": "Attraction sections, an empty object, or null.",
                         "items": {
                             "type": "object",
                             "properties": {
                                 "attraction_special_events": {
-                                    "type": "array",
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ],
                                     "items": {
                                         "type": "object",
                                         "properties": {
@@ -6995,13 +7001,19 @@
                     "attraction_event_config": {
                         "type": [
                             "array",
+                            "object",
                             "null"
                         ],
+                        "maxProperties": 0,
+                        "description": "Attraction sections, an empty object, or null.",
                         "items": {
                             "type": "object",
                             "properties": {
                                 "attraction_special_events": {
-                                    "type": "array",
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ],
                                     "items": {
                                         "type": "object",
                                         "properties": {
@@ -8795,13 +8807,19 @@
                     "attraction_event_config": {
                         "type": [
                             "array",
+                            "object",
                             "null"
                         ],
+                        "maxProperties": 0,
+                        "description": "Attraction sections, an empty object, or null.",
                         "items": {
                             "type": "object",
                             "properties": {
                                 "attraction_special_events": {
-                                    "type": "array",
+                                    "type": [
+                                        "array",
+                                        "null"
+                                    ],
                                     "items": {
                                         "type": "object",
                                         "properties": {
