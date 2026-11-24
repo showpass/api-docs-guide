@@ -74,6 +74,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Create and manage Showpass event and ticket type access passwords for external access-code workflows.",
     keywords: "showpass passwords api, ticket type passwords, event passwords, private organizer api, entitlement codes, approved access codes, presale codes"
   },
+  "/api/private-api-access-passwords-reference": {
+    title: "Access Passwords API Reference | Showpass Developer Docs",
+    description: "Browse the organizer endpoints for event and ticket type access codes, including scopes, request examples and response schemas.",
+    keywords: "showpass access passwords api, event access codes, ticket type codes, openapi",
+  },
   "/api/partner-api-overview": {
     title: "Showpass Partner API Overview - Developer Documentation",
     description: "Connect customers in your application to Showpass checkout, order webhooks, and order management with the Showpass Partner API.",

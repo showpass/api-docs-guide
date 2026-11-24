@@ -55,6 +55,12 @@
     <priority>0.8</priority>
   </url>
   <url>
+    <loc>https://dev.showpass.com/api/private-api-access-passwords-reference</loc>
+    <lastmod>2026-11-24</lastmod>
+    <changefreq>monthly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
     <loc>https://dev.showpass.com/api/partner-api-overview</loc>
     <lastmod>2026-10-26</lastmod>
     <changefreq>monthly</changefreq>
