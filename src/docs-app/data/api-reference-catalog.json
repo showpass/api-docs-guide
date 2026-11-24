@@ -47,5 +47,15 @@
     "contractVersion": "1.0.0",
     "sha256": "10536ef70565e1b2b4f838bdf2b70162db60d6d33db49656a04186379372a9dc",
     "sourceRevision": "afbad82a491d894745ffe5d0a5aa9a5d42ee1e71"
+  },
+  {
+    "slug": "private-api-access-passwords-reference",
+    "title": "Access Passwords API",
+    "description": "Manage event and ticket type access codes with scoped organizer API keys.",
+    "guidePath": "/api/private-api-passwords",
+    "schemaPath": "/openapi/organizer-access-passwords.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "e1a0a8cdaed36612b97f6a32bf8dc0dea57bd1a85e22b0dba9ac66297c3e2eff",
+    "sourceRevision": "ec82972cfd6752cf1daa11aee8d3c081255ab5e3"
   }
 ]

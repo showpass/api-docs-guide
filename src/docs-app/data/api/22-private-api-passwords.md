@@ -2,11 +2,13 @@
 
 Passwords are an access-control layer for event and ticket type inventory. They let your system create unique Showpass codes and send them to the customers who should receive access. Common use cases include controlled presales, approved complimentary access, private allocations, and eligibility-based ticket claims. Codes can stay reusable or be capped to a fixed ticket quantity for one-ticket or limited-ticket claims.
 
+The [Access Passwords API reference](/api/private-api-access-passwords-reference) includes endpoint schemas, sample requests, and an explorer. Use synthetic access codes when testing.
+
 ---
 
 ## Authentication
 
-This endpoint requires authentication using a Showpass token:
+Send a Showpass token in the `Authorization` header. Developer keys need `passwords:read` to list and retrieve records or `passwords:write` to create, update, and remove bindings. The employee needs Manage Events or All Access. Successful reads and saved-record responses contain the configured access code or regex pattern. Keep those values out of logs and shared examples.
 
 ```text
 Authorization: Token YOUR_API_TOKEN
@@ -149,7 +151,7 @@ List responses are scoped to the venue in the URL.
 GET /api/venue/{venue_id}/passwords/
 ```
 
-This endpoint uses optional pagination. If `page_size` is omitted, the response is an array. If `page_size` is provided, the response includes pagination metadata such as `count`, `next`, `previous`, and `results`.
+Developer keys always return a paginated response with `count`, `next`, `previous`, and `results`. The default is 100 records per page. You can supply a `page_size` from 1 to 100 and a `page` from 1 to 1000. Legacy organizer tokens can still return an array when `page_size` is omitted.
 
 ```text
 GET /api/venue/{venue_id}/passwords/?page_size=20&page=2
@@ -171,7 +173,7 @@ For an event-scoped password, include the event ID so Showpass removes the corre
 DELETE /api/venue/{venue_id}/passwords/{id}/?event_id=98765
 ```
 
-Deleting an event-scoped password removes its event binding and refreshes event password-protection status. Deleting a direct ticket type password deactivates the password relation for that ticket type and refreshes ticket type password-protection status.
+Deleting an event-scoped password removes its event binding and refreshes event password-protection status. Deleting a direct ticket type password deactivates the password relation for that ticket type and refreshes ticket type password-protection status. Both operations return `201` with `{}` on success. The password record can still be retrieved after its binding is removed.
 
 ---
 

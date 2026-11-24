@@ -261,6 +261,7 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
   );
   const deleteRequest = Boolean(referenceTargets && activeMethod === "DELETE");
   const archiveRequest = deleteRequest && endpointUrl.pathname.includes("/events/");
+  const removesPasswordBinding = deleteRequest && /^\/api\/venue\/[^/]+\/passwords\/[^/]+\/$/.test(endpointUrl.pathname);
   const completePath = pathParameterNames.every((name) => pathParameters[name]?.trim());
   const validReferencePath = pathParameterNames.every((name) => {
     const value = pathParameters[name]?.trim() ?? "";
@@ -277,6 +278,8 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
     requestLabel = "Sending request";
   } else if (archiveRequest) {
     requestLabel = "Archive test event";
+  } else if (removesPasswordBinding) {
+    requestLabel = "Remove test password binding";
   } else if (deleteRequest) {
     requestLabel = "Delete test resource";
   }
@@ -390,7 +393,9 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
     }
 
     if (deleteRequest) {
-      const action = archiveRequest ? "Archive the test event" : "Delete the test resource";
+      let action = "Delete the test resource";
+      if (archiveRequest) action = "Archive the test event";
+      if (removesPasswordBinding) action = "Remove the test password binding";
       if (!window.confirm(`${action} at ${url.href}?`)) return;
     }
 
@@ -651,7 +656,9 @@ const ApiExplorer: React.FC<ApiExplorerProps> = ({
         <p className="text-xs text-muted-foreground">
           {archiveRequest
             ? "This request archives the specified event on the selected test server."
-            : "This request deletes the specified resource on the selected test server."}
+            : removesPasswordBinding
+              ? "This request removes the specified password binding on the selected test server. The password record is retained."
+              : "This request deletes the specified resource on the selected test server."}
         </p>
       )}
       <button
