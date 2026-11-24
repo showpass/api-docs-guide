@@ -57,5 +57,15 @@
     "contractVersion": "1.0.0",
     "sha256": "23ade766893799be5e3dce14335cd4f9088ca0041a95c786cfba761d57a7ba20",
     "sourceRevision": "e276975e9f07c5c73143c87fc559df74385b88f0"
+  },
+  {
+    "slug": "private-api-gift-cards",
+    "title": "Gift Cards API",
+    "description": "Read and configure organizer gift card designs and denominations.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-gift-cards.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "8e36cdda952004277434157662acb55fde2b4babe3c7b8392f1506050f97cb51",
+    "sourceRevision": "dfdab198ed6cfcb16bdca222493ce93bdae2659a"
   }
 ]

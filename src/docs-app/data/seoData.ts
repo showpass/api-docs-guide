@@ -40,6 +40,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Read saved reports, cash-out receipts, invoice totals, and payout summaries with a scoped organizer API key.",
     keywords: "showpass reports api, saved reports, cash-out reports, invoice totals, payout summaries, organizer api",
   },
+  "/api/private-api-gift-cards": {
+    title: "Gift Cards API Reference | Showpass Developer Docs",
+    description: "Read and configure organizer gift card designs, denominations, prices, and inventory with scoped developer keys.",
+    keywords: "showpass gift cards api, gift card designs, gift card denominations, organizer api",
+  },
   // Homepage
   "/": {
     title: "Showpass Developer Documentation - API, SDK & Integration Guide",

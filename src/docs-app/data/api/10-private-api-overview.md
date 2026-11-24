@@ -12,6 +12,8 @@ See the [Tracking Links API reference](/api/private-api-tracking-links-reference
 
 See the [Reports API reference](/api/private-api-reports) for saved reports, cash-out receipts, invoice totals, and payout summaries using `reports:read`.
 
+See the [Gift Cards API reference](/api/private-api-gift-cards) to read and manage gift card designs and denominations with `giftcards:read` and `giftcards:write`.
+
 > **Keep API keys safe.** API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.
 
 ## Create an API key

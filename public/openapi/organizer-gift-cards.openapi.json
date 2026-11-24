@@ -1,0 +1,3912 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Showpass Organizer Gift Card Configuration API",
+        "version": "1.0.0",
+        "description": "Manage gift card designs and denominations. This contract covers configuration only."
+    },
+    "paths": {
+        "/api/venue/{venue_id}/financials/gift-cards/": {
+            "get": {
+                "operationId": "listOrganizerGiftCards",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Active designs are shown by default. Use show=all to include inactive designs. Use q to search by name. Results are paginated and ordered by ID by default. Page reads can reflect intervening edits.",
+                "summary": "List organizer gift card designs",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "is_active",
+                        "schema": {
+                            "type": "boolean"
+                        },
+                        "description": "Use true for active designs (default) or false for inactive designs."
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Sort by a field, for example id or -id."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000,
+                            "default": 1
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search gift card design names."
+                    },
+                    {
+                        "in": "query",
+                        "name": "show",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "all"
+                            ]
+                        },
+                        "description": "Use all to return both active and inactive designs. Overrides is_active."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrganizerGiftCardPage"
+                                }
+                            }
+                        },
+                        "description": "The requested gift card configuration."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            },
+            "post": {
+                "operationId": "createOrganizerGiftCard",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Creates a design and its denominations synchronously. Omit denomination IDs and use the path organization as the venue of each row. Check for a saved design before retrying an ambiguous request.",
+                "summary": "Create an organizer gift card design",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateVenueBasedGiftCardRequest"
+                            },
+                            "examples": {
+                                "GiftCardConfiguration": {
+                                    "value": {
+                                        "name": "Community Gift Card",
+                                        "is_active": true,
+                                        "denominations": [
+                                            {
+                                                "venue": 42,
+                                                "value": "50.00",
+                                                "price": "45.00",
+                                                "inventory": 10
+                                            }
+                                        ]
+                                    },
+                                    "summary": "Gift card configuration"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid fields or denomination configuration."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "201": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedGiftCard"
+                                }
+                            }
+                        },
+                        "description": "The saved gift card configuration."
+                    },
+                    "415": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Unsupported request content type."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/financials/gift-cards/{id}/": {
+            "get": {
+                "operationId": "retrieveOrganizerGiftCard",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Returns the design and its denominations. Inactive designs can also be retrieved by ID.",
+                "summary": "Retrieve an organizer gift card design",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organizer gift card design ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search gift card design names."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedGiftCard"
+                                }
+                            }
+                        },
+                        "description": "The requested gift card configuration."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            },
+            "put": {
+                "operationId": "updateOrganizerGiftCard",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Updates the design synchronously. Send the complete denominations array and set venue on each row to the organization in the path. Include IDs for existing rows on this design and omit id for new rows. Omitted rows are removed when possible. Check saved denominations before retrying.",
+                "summary": "Update an organizer gift card design",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organizer gift card design ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search gift card design names."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VenueBasedGiftCardRequest"
+                            },
+                            "examples": {
+                                "GiftCardConfiguration": {
+                                    "value": {
+                                        "name": "Community Gift Card",
+                                        "is_active": true,
+                                        "denominations": [
+                                            {
+                                                "venue": 42,
+                                                "value": "50.00",
+                                                "price": "45.00",
+                                                "inventory": 10,
+                                                "id": 701
+                                            }
+                                        ]
+                                    },
+                                    "summary": "Gift card configuration"
+                                }
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid fields or denomination configuration."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedGiftCard"
+                                }
+                            }
+                        },
+                        "description": "The saved gift card configuration."
+                    },
+                    "415": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Unsupported request content type."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            },
+            "delete": {
+                "operationId": "deleteOrganizerGiftCard",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Deletes an unreferenced design and its denominations. Deletion is synchronous. A repeat can return 404.",
+                "summary": "Delete an organizer gift card design",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organizer gift card design ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search gift card design names."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "204": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "description": "Configuration deleted. The response body is empty."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/financials/gift-card-denominations/": {
+            "get": {
+                "operationId": "listOrganizerGiftCardDenominations",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Returns denomination configuration for active designs only. Results are paginated and ordered by ID by default. Page reads can reflect intervening edits.",
+                "summary": "List organizer gift card denominations",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Sort by a field, for example id or -id."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000,
+                            "default": 1
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrganizerGiftCardDenominationPage"
+                                }
+                            }
+                        },
+                        "description": "The requested gift card configuration."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/financials/gift-card-denominations/{id}/": {
+            "get": {
+                "operationId": "retrieveOrganizerGiftCardDenomination",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Returns denomination configuration for active designs only.",
+                "summary": "Retrieve an organizer gift card denomination",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organizer gift card denomination ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedGiftCardDenomination"
+                                }
+                            }
+                        },
+                        "description": "The requested gift card configuration."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            },
+            "put": {
+                "operationId": "updateOrganizerGiftCardDenomination",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Updates a denomination on an active design synchronously. The denomination keeps its parent design. Check the saved record before retrying an ambiguous request.",
+                "summary": "Update an organizer gift card denomination",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organizer gift card denomination ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/VenueBasedGiftCardDenominationRequest"
+                            },
+                            "examples": {
+                                "GiftCardConfiguration": {
+                                    "value": {
+                                        "value": "50.00",
+                                        "price": "45.00",
+                                        "inventory": 10
+                                    },
+                                    "summary": "Gift card configuration"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid fields or denomination configuration."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedGiftCardDenomination"
+                                }
+                            }
+                        },
+                        "description": "The saved gift card configuration."
+                    },
+                    "415": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Unsupported request content type."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            },
+            "delete": {
+                "operationId": "deleteOrganizerGiftCardDenomination",
+                "description": "The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Deletes an unreferenced denomination whose design is active. Deletion is synchronous. A repeat can return 404.",
+                "summary": "Delete an organizer gift card denomination",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organizer gift card denomination ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Gift Cards"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "204": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "description": "Configuration deleted. The response body is empty."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "giftcards:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_venues"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "CreateVenueBasedGiftCardRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "description": "Flag indicating if the gift card is active independently of the sale start and end dates"
+                    },
+                    "background_color": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "The background color of the gift card for display purposes. Applies to all denominations.",
+                        "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+                        "maxLength": 25
+                    },
+                    "image_logo": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "base64Data": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    },
+                                    "uploadedImage": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    },
+                                    "path": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    }
+                                },
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "base64Data"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "uploadedImage"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "url"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "path"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Logo shared by all denominations. Send null to clear it. Raster images must be 80 to 500 pixels wide and 80 to 500 pixels high, with a maximum file size of 3 MB."
+                    },
+                    "denominations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedNestedGiftCardDenominationRequest",
+                            "not": {
+                                "required": [
+                                    "id"
+                                ]
+                            }
+                        }
+                    }
+                },
+                "required": [
+                    "denominations",
+                    "name"
+                ]
+            },
+            "OrganizerGiftCardDenominationPage": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "next": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "previous": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "next_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "previous_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "page_number": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "num_pages": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "next_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "previous_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedGiftCardDenomination"
+                        },
+                        "maxItems": 100
+                    }
+                },
+                "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "next_page_number",
+                    "previous_page_number",
+                    "page_number",
+                    "num_pages",
+                    "next_list",
+                    "previous_list",
+                    "results"
+                ]
+            },
+            "OrganizerGiftCardPage": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "next": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "previous": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "next_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "previous_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "page_number": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "num_pages": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "next_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "previous_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedGiftCard"
+                        },
+                        "maxItems": 100
+                    }
+                },
+                "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "next_page_number",
+                    "previous_page_number",
+                    "page_number",
+                    "num_pages",
+                    "next_list",
+                    "previous_list",
+                    "results"
+                ]
+            },
+            "VenueBasedGiftCard": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "venue": {
+                        "type": "integer"
+                    },
+                    "name": {
+                        "type": "string",
+                        "maxLength": 128
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "description": "Flag indicating if the gift card is active independently of the sale start and end dates"
+                    },
+                    "background_color": {
+                        "type": "string",
+                        "description": "The background color of the gift card for display purposes. Applies to all denominations.",
+                        "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+                        "maxLength": 25
+                    },
+                    "image_logo": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri",
+                        "description": "The logo to be displayed on the gift card. Applies to all denominations."
+                    },
+                    "denominations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedNestedGiftCardDenomination"
+                        }
+                    },
+                    "created": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "created",
+                    "denominations",
+                    "id",
+                    "name",
+                    "updated",
+                    "venue"
+                ]
+            },
+            "VenueBasedGiftCardDenomination": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "venue": {
+                        "type": "integer"
+                    },
+                    "value": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$",
+                        "title": "Gift Card Total Value",
+                        "description": "The dollar value on the card"
+                    },
+                    "price": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$",
+                        "title": "Gift Card Price",
+                        "description": "The dollar price of the card"
+                    },
+                    "created": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "sold_out": {
+                        "type": "boolean"
+                    },
+                    "inventory": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "description": "Gift Card Denomination Inventory. No value set means unlimited inventory."
+                    },
+                    "remaining_inventory": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "minimum": 0,
+                        "description": "Inventory remaining after sales, or null when inventory is unlimited.",
+                        "readOnly": true
+                    },
+                    "has_price_lock": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "description": "This lock automatically applies when there is sale made"
+                    }
+                },
+                "required": [
+                    "created",
+                    "id",
+                    "remaining_inventory",
+                    "updated",
+                    "venue"
+                ]
+            },
+            "VenueBasedGiftCardDenominationRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "value": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "decimal",
+                                "pattern": "^\\d{1,6}(?:\\.\\d{1,2})?$"
+                            },
+                            {
+                                "type": "number",
+                                "minimum": 0,
+                                "exclusiveMaximum": 1000000,
+                                "multipleOf": 0.01
+                            }
+                        ],
+                        "title": "Gift Card Total Value",
+                        "description": "The dollar value on the card"
+                    },
+                    "price": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "decimal",
+                                "pattern": "^\\d{1,6}(?:\\.\\d{1,2})?$"
+                            },
+                            {
+                                "type": "number",
+                                "minimum": 0,
+                                "exclusiveMaximum": 1000000,
+                                "multipleOf": 0.01
+                            }
+                        ],
+                        "title": "Gift Card Price",
+                        "description": "The dollar price of the card"
+                    },
+                    "sold_out": {
+                        "type": "boolean"
+                    },
+                    "inventory": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "description": "Gift Card Denomination Inventory. No value set means unlimited inventory."
+                    },
+                    "has_price_lock": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "description": "This lock automatically applies when there is sale made"
+                    }
+                }
+            },
+            "VenueBasedGiftCardRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "name": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                    },
+                    "is_active": {
+                        "type": "boolean",
+                        "description": "Flag indicating if the gift card is active independently of the sale start and end dates"
+                    },
+                    "background_color": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "The background color of the gift card for display purposes. Applies to all denominations.",
+                        "pattern": "^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$",
+                        "maxLength": 25
+                    },
+                    "image_logo": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                            },
+                            {
+                                "type": "object",
+                                "properties": {
+                                    "base64Data": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    },
+                                    "uploadedImage": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    },
+                                    "url": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    },
+                                    "path": {
+                                        "type": "string",
+                                        "description": "Base64 image with an optional data URI prefix, or an existing Showpass media URL."
+                                    }
+                                },
+                                "anyOf": [
+                                    {
+                                        "required": [
+                                            "base64Data"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "uploadedImage"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "url"
+                                        ]
+                                    },
+                                    {
+                                        "required": [
+                                            "path"
+                                        ]
+                                    }
+                                ]
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ],
+                        "description": "Logo shared by all denominations. Send null to clear it. Raster images must be 80 to 500 pixels wide and 80 to 500 pixels high, with a maximum file size of 3 MB."
+                    },
+                    "denominations": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedNestedGiftCardDenominationRequest"
+                        }
+                    }
+                },
+                "required": [
+                    "denominations",
+                    "name"
+                ]
+            },
+            "VenueBasedNestedGiftCardDenomination": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer"
+                    },
+                    "venue": {
+                        "type": "integer"
+                    },
+                    "value": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$",
+                        "title": "Gift Card Total Value",
+                        "description": "The dollar value on the card"
+                    },
+                    "price": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$",
+                        "title": "Gift Card Price",
+                        "description": "The dollar price of the card"
+                    },
+                    "created": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "sold_out": {
+                        "type": "boolean"
+                    },
+                    "inventory": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "description": "Gift Card Denomination Inventory. No value set means unlimited inventory."
+                    },
+                    "remaining_inventory": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "minimum": 0,
+                        "description": "Inventory remaining after sales, or null when inventory is unlimited.",
+                        "readOnly": true
+                    },
+                    "has_price_lock": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "description": "This lock automatically applies when there is sale made"
+                    }
+                },
+                "required": [
+                    "created",
+                    "remaining_inventory",
+                    "updated",
+                    "venue",
+                    "id"
+                ]
+            },
+            "VenueBasedNestedGiftCardDenominationRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "description": "Existing denomination on this design. Omit for a new row."
+                    },
+                    "venue": {
+                        "type": "integer",
+                        "description": "Organization ID from the path."
+                    },
+                    "value": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "decimal",
+                                "pattern": "^\\d{1,6}(?:\\.\\d{1,2})?$"
+                            },
+                            {
+                                "type": "number",
+                                "minimum": 0,
+                                "exclusiveMaximum": 1000000,
+                                "multipleOf": 0.01
+                            }
+                        ],
+                        "title": "Gift Card Total Value",
+                        "description": "The dollar value on the card"
+                    },
+                    "price": {
+                        "anyOf": [
+                            {
+                                "type": "string",
+                                "format": "decimal",
+                                "pattern": "^\\d{1,6}(?:\\.\\d{1,2})?$"
+                            },
+                            {
+                                "type": "number",
+                                "minimum": 0,
+                                "exclusiveMaximum": 1000000,
+                                "multipleOf": 0.01
+                            }
+                        ],
+                        "title": "Gift Card Price",
+                        "description": "The dollar price of the card"
+                    },
+                    "sold_out": {
+                        "type": "boolean"
+                    },
+                    "inventory": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 1,
+                        "description": "Gift Card Denomination Inventory. No value set means unlimited inventory."
+                    },
+                    "has_price_lock": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ],
+                        "description": "This lock automatically applies when there is sale made"
+                    }
+                },
+                "required": [
+                    "venue"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "DeveloperKey": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Send Token <developer-api-key> using the full key."
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "https://www.showpass.com",
+            "description": "Showpass API"
+        }
+    ]
+}

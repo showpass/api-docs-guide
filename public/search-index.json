@@ -21,7 +21,7 @@
     "id": "/api/private-api-overview",
     "title": "Showpass Private Organizer API",
     "path": "/api/private-api-overview",
-    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\nSee the Reports API reference for saved reports, cash-out receipts, invoice totals, and payout summaries using reports:read.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee"
+    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\nSee the Reports API reference for saved reports, cash-out receipts, invoice totals, and payout summaries using reports:read.\nSee the Gift Cards API reference to read and manage gift card designs and denominations with giftcards:read and giftcards:write.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected org"
   },
   {
     "id": "/api/private-api-scan-ticket-by-code",
@@ -730,5 +730,65 @@
     "title": "Read an organizer payout summary",
     "path": "/api/private-api-reports#readOrganizerPayoutSummary",
     "content": "Reports API · GET /api/venue/{venue_id}/financials/invoices/{transaction_id}/payout-stats/ · reports:read · Requires Administer Transactions or All Access in the key organization. The transaction ID must identify a visible settlement invoice. Returns the available financial summary rows for that payout. Use a GET request without a body for the default summary. Existing clients that send a JSON GET body can supply filtered_column_ids there as an array of column IDs."
+  },
+  {
+    "id": "/api/private-api-gift-cards",
+    "title": "Gift Cards API",
+    "path": "/api/private-api-gift-cards",
+    "content": "Read and configure organizer gift card designs and denominations."
+  },
+  {
+    "id": "/api/private-api-gift-cards#listOrganizerGiftCards",
+    "title": "List organizer gift card designs",
+    "path": "/api/private-api-gift-cards#listOrganizerGiftCards",
+    "content": "Gift Cards API · GET /api/venue/{venue_id}/financials/gift-cards/ · giftcards:read · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Active designs are shown by default. Use show=all to include inactive designs. Use q to search by name. Results are paginated and ordered by ID by default. Page reads can reflect intervening edits."
+  },
+  {
+    "id": "/api/private-api-gift-cards#createOrganizerGiftCard",
+    "title": "Create an organizer gift card design",
+    "path": "/api/private-api-gift-cards#createOrganizerGiftCard",
+    "content": "Gift Cards API · POST /api/venue/{venue_id}/financials/gift-cards/ · giftcards:write · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Creates a design and its denominations synchronously. Omit denomination IDs and use the path organization as the venue of each row. Check for a saved design before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-gift-cards#retrieveOrganizerGiftCard",
+    "title": "Retrieve an organizer gift card design",
+    "path": "/api/private-api-gift-cards#retrieveOrganizerGiftCard",
+    "content": "Gift Cards API · GET /api/venue/{venue_id}/financials/gift-cards/{id}/ · giftcards:read · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Returns the design and its denominations. Inactive designs can also be retrieved by ID."
+  },
+  {
+    "id": "/api/private-api-gift-cards#updateOrganizerGiftCard",
+    "title": "Update an organizer gift card design",
+    "path": "/api/private-api-gift-cards#updateOrganizerGiftCard",
+    "content": "Gift Cards API · PUT /api/venue/{venue_id}/financials/gift-cards/{id}/ · giftcards:write · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Updates the design synchronously. Send the complete denominations array and set venue on each row to the organization in the path. Include IDs for existing rows on this design and omit id for new rows. Omitted rows are removed when possible. Check saved denominations before retrying."
+  },
+  {
+    "id": "/api/private-api-gift-cards#deleteOrganizerGiftCard",
+    "title": "Delete an organizer gift card design",
+    "path": "/api/private-api-gift-cards#deleteOrganizerGiftCard",
+    "content": "Gift Cards API · DELETE /api/venue/{venue_id}/financials/gift-cards/{id}/ · giftcards:write · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Deletes an unreferenced design and its denominations. Deletion is synchronous. A repeat can return 404."
+  },
+  {
+    "id": "/api/private-api-gift-cards#listOrganizerGiftCardDenominations",
+    "title": "List organizer gift card denominations",
+    "path": "/api/private-api-gift-cards#listOrganizerGiftCardDenominations",
+    "content": "Gift Cards API · GET /api/venue/{venue_id}/financials/gift-card-denominations/ · giftcards:read · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Returns denomination configuration for active designs only. Results are paginated and ordered by ID by default. Page reads can reflect intervening edits."
+  },
+  {
+    "id": "/api/private-api-gift-cards#retrieveOrganizerGiftCardDenomination",
+    "title": "Retrieve an organizer gift card denomination",
+    "path": "/api/private-api-gift-cards#retrieveOrganizerGiftCardDenomination",
+    "content": "Gift Cards API · GET /api/venue/{venue_id}/financials/gift-card-denominations/{id}/ · giftcards:read · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Returns denomination configuration for active designs only."
+  },
+  {
+    "id": "/api/private-api-gift-cards#updateOrganizerGiftCardDenomination",
+    "title": "Update an organizer gift card denomination",
+    "path": "/api/private-api-gift-cards#updateOrganizerGiftCardDenomination",
+    "content": "Gift Cards API · PUT /api/venue/{venue_id}/financials/gift-card-denominations/{id}/ · giftcards:write · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Updates a denomination on an active design synchronously. The denomination keeps its parent design. Check the saved record before retrying an ambiguous request."
+  },
+  {
+    "id": "/api/private-api-gift-cards#deleteOrganizerGiftCardDenomination",
+    "title": "Delete an organizer gift card denomination",
+    "path": "/api/private-api-gift-cards#deleteOrganizerGiftCardDenomination",
+    "content": "Gift Cards API · DELETE /api/venue/{venue_id}/financials/gift-card-denominations/{id}/ · giftcards:write · The key must belong to this organization and its employee must retain Manage Organization Info or All Access. Deletes an unreferenced denomination whose design is active. Deletion is synchronous. A repeat can return 404."
   }
 ]
