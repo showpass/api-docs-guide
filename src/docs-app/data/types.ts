@@ -29,6 +29,7 @@ export interface ApiQueryParameter {
 }
 
 export type ApiMethod = "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
+export type HttpMethod = "get" | "put" | "post" | "delete" | "options" | "head" | "patch" | "trace";
 
 export interface ApiOperation {
   endpoint: string;
