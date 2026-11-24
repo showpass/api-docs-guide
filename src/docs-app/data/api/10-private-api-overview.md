@@ -10,6 +10,8 @@ See the [Ticket Scanning API reference](/api/private-api-ticket-scanning) for ti
 
 See the [Tracking Links API reference](/api/private-api-tracking-links-reference) for scoped tracking link operations and Quick Checkout Purchase examples.
 
+See the [Holds API reference](/api/private-api-holds) to read held baskets and dynamic hold details with `holds:read`.
+
 > **Keep API keys safe.** API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.
 
 ## Create an API key
