@@ -181,7 +181,7 @@ function OperationDetails({ operation, spec, guidePath }: {
         )}
         {permissions.length > 0 && (
           <p className="text-sm text-muted-foreground">
-            Employee permission <code className="text-xs text-foreground">{permissions.join(", ")}</code>
+            Employee permissions for this scope <code className="text-xs text-foreground">{permissions.join(", ")}</code>
           </p>
         )}
         {schemes.map(([name, scheme]) => (
