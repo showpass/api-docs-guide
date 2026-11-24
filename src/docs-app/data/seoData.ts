@@ -20,6 +20,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Browse and test the organization member list and detail endpoints, with request examples, filters and response schemas.",
     keywords: "showpass memberships api, organizer members, memberships read, openapi",
   },
+  "/api/private-api-order-ticket-history": {
+    title: "Order and Ticket History API | Showpass Developer Docs",
+    description: "Browse the organizer endpoints for invoice, invoice item, purchased ticket and transfer history.",
+    keywords: "showpass order history, invoice api, ticket history, ticket transfers, organizer api, openapi",
+  },
   // Homepage
   "/": {
     title: "Showpass Developer Documentation - API, SDK & Integration Guide",

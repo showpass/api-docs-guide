@@ -21,7 +21,7 @@
     "id": "/api/private-api-overview",
     "title": "Showpass Private Organizer API",
     "path": "/api/private-api-overview",
-    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected scopes allow the operation.\n- The endpoint's existing authorization rules allow access to the requested resource.\nFor example, an employee with scanning permissions can create a key with eligible scanning scopes. Selecting a scanning scope does not grant permission to manage events. An All Access employee can choose a smal"
+    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Order and Ticket History API reference for invoices, invoice items, purchased tickets and transfers. The invoice and invoice item lists require a date window of at most 31 days.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected scopes allow the operation.\n- The endpoint's existing authorization rules allow access to the requested resource.\nFor example, an employee"
   },
   {
     "id": "/api/private-api-scan-ticket-by-code",
@@ -466,5 +466,71 @@
     "title": "Retrieve an organization member",
     "path": "/api/private-api-memberships-reference#organization_members_retrieve",
     "content": "Memberships API · GET /api/venue/{venueId}/memberships/members/{memberId}/ · memberships:read · Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history",
+    "title": "Order and Ticket History API",
+    "path": "/api/private-api-order-ticket-history",
+    "content": "Read organizer invoices, invoice items, purchased tickets and transfer history."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#listOrganizerInvoiceRecords",
+    "title": "List organizer invoices",
+    "path": "/api/private-api-order-ticket-history#listOrganizerInvoiceRecords",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/financials/invoices/ · history:read · Requires a developer key bound to this organization and current employee access. Requires Administer Transactions, Use Box Office, or All Access. Box office sellers can only read permitted sales. Supply a positive history window of at most 31 days using timestamps with offsets. Follow the next page link. The invoice list omits a total count. Each page is a separate read and can reflect changes since the previous request."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#retrieveOrganizerInvoice",
+    "title": "Retrieve an organizer invoice",
+    "path": "/api/private-api-order-ticket-history#retrieveOrganizerInvoice",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/financials/invoices/{transaction_id}/ · history:read · Requires a developer key bound to this organization and current employee access. Requires Administer Transactions, Use Box Office, or All Access. Box office sellers can only read permitted sales."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#listOrganizerInvoiceItemRecords",
+    "title": "List organizer invoice items",
+    "path": "/api/private-api-order-ticket-history#listOrganizerInvoiceItemRecords",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/financials/invoices/items/ · history:read · Requires a developer key bound to this organization and current employee access. Requires Administer Transactions, Use Box Office, or All Access. Box office sellers can only read permitted sales. Supply a positive history window of at most 31 days using timestamps with offsets. Each page is a separate read and can reflect changes since the previous request."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#retrieveOrganizerInvoiceItem",
+    "title": "Retrieve an organizer invoice item",
+    "path": "/api/private-api-order-ticket-history#retrieveOrganizerInvoiceItem",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/financials/invoices/items/{id}/ · history:read · Requires a developer key bound to this organization and current employee access. Requires Administer Transactions, Use Box Office, or All Access. Box office sellers can only read permitted sales."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#listOrganizerHistoryTicketRecords",
+    "title": "List organizer purchased ticket items",
+    "path": "/api/private-api-order-ticket-history#listOrganizerHistoryTicketRecords",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/tickets/items/ · history:read · Requires a developer key bound to this organization and current employee access. Each page is a separate read and can reflect changes since the previous request."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#retrieveOrganizerHistoryTicket",
+    "title": "Retrieve an organizer purchased ticket item",
+    "path": "/api/private-api-order-ticket-history#retrieveOrganizerHistoryTicket",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/tickets/items/{id}/ · history:read · Requires a developer key bound to this organization and current employee access."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#listOrganizerTicketTransferRecords",
+    "title": "List organizer ticket transfers",
+    "path": "/api/private-api-order-ticket-history#listOrganizerTicketTransferRecords",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/tickets/transfers/ · history:read · Requires a developer key bound to this organization and current employee access. Each page is a separate read and can reflect changes since the previous request."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#retrieveOrganizerTicketTransfer",
+    "title": "Retrieve an organizer ticket transfer",
+    "path": "/api/private-api-order-ticket-history#retrieveOrganizerTicketTransfer",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/tickets/transfers/{id}/ · history:read · Requires a developer key bound to this organization and current employee access."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#listOrganizerInvoiceTicketCodes",
+    "title": "Read printable ticket codes for an organizer invoice",
+    "path": "/api/private-api-order-ticket-history#listOrganizerInvoiceTicketCodes",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/financials/invoices/{transaction_id}/tickets/ · history:read · Requires a developer key bound to this organization and current employee access. Requires Administer Transactions, Use Box Office, or All Access. Box office sellers can only read permitted sales. Poll this read if the invoice is still being processed and returns 202."
+  },
+  {
+    "id": "/api/private-api-order-ticket-history#searchOrganizerTicketTransferHistory",
+    "title": "Search organizer ticket transfer history",
+    "path": "/api/private-api-order-ticket-history#searchOrganizerTicketTransferHistory",
+    "content": "Order and Ticket History API · GET /api/venue/{venue_id}/tickets/transfers/search-histories/ · history:read · Requires a developer key bound to this organization and current employee access. Each page is a separate read and can reflect changes since the previous request."
   }
 ]
