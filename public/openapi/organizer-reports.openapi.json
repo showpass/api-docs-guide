@@ -1,0 +1,3035 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Showpass Organizer Reports API",
+        "version": "1.0.0",
+        "description": "Read saved report configurations, cash-out receipts, invoice totals and payout summaries."
+    },
+    "paths": {
+        "/api/venue/{venue_id}/reports/report/": {
+            "get": {
+                "operationId": "listOrganizerSavedReports",
+                "description": "Reads saved report configuration for the organization bound to the key. Requires Manage Reports or All Access. Configurations can include email recipients. List results default to most recently updated first, then descending ID.",
+                "summary": "List organizer saved reports",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use id or -id to order by report ID."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000,
+                            "default": 1
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search by saved report name."
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "advance_report",
+                                "base_ticket_revenue",
+                                "event_financial_summary",
+                                "event_settlement",
+                                "financial_scan_summary",
+                                "gift_card_recipients_report",
+                                "member_benefit_usage_report",
+                                "member_history_report",
+                                "member_report",
+                                "member_seating_report",
+                                "payment_type_breakdown",
+                                "product_breakdown_report",
+                                "report_custom_consent_items",
+                                "report_discount_creation",
+                                "report_discount_usage_stats",
+                                "report_donor_transaction",
+                                "report_employee_sales_history",
+                                "report_employee_scan_history",
+                                "report_event_audit",
+                                "report_event_breakdown",
+                                "report_event_product_inventory",
+                                "report_holds_stats",
+                                "report_invoice_transaction",
+                                "report_marketing_campaign_details",
+                                "report_marketing_campaigns",
+                                "report_password_used_breakdown",
+                                "report_seller_stats",
+                                "report_shipping_fulfillment",
+                                "report_ticket_credit_usage",
+                                "report_ticket_history",
+                                "report_ticket_sales_history",
+                                "report_ticket_type_breakdown",
+                                "report_venue_user",
+                                "report_venue_user_cash_out",
+                                "report_will_call",
+                                "report_will_call_financial",
+                                "reseller_submissions_report",
+                                "settlement_report",
+                                "ticket_type_financial_summary",
+                                "waitlist_subscriber_report"
+                            ]
+                        },
+                        "description": "* `report_invoice_transaction` - Transactions\n* `report_venue_user` - Customers and Employees\n* `report_will_call` - Will Call\n* `report_will_call_financial` - Itemized Sales Report\n* `settlement_report` - Settlement Report\n* `advance_report` - Advance Report\n* `report_ticket_sales_history` - Ticket Sales History\n* `report_employee_sales_history` - Employee Sales History\n* `report_event_breakdown` - Event Summary\n* `report_event_audit` - Event Audit\n* `base_ticket_revenue` - Base Ticket Revenue Report\n* `event_settlement` - Event Settlement Report\n* `payment_type_breakdown` - Payment Type Breakdown\n* `financial_scan_summary` - Financial Scan Summary\n* `event_financial_summary` - Event Financial Summary\n* `ticket_type_financial_summary` - Ticket Type Financial Summary\n* `report_ticket_type_breakdown` - Ticket Type Summary\n* `product_breakdown_report` - Product Summary\n* `report_password_used_breakdown` - Password Used Summary\n* `report_seller_stats` - Seller Stats\n* `report_shipping_fulfillment` - Shipping Fulfillment Stats\n* `report_ticket_history` - Ticket Scan History Report\n* `report_employee_scan_history` - Employee Scan History Report\n* `report_venue_user_cash_out` - Seller Cash Out Report\n* `report_discount_creation` - Discount Creation Report\n* `report_discount_usage_stats` - Discount Usage Stats\n* `report_holds_stats` - Holds Stats\n* `report_event_product_inventory` - Event/Product Inventory Report\n* `member_report` - Member Report\n* `member_history_report` - Member History Report\n* `member_benefit_usage_report` - Member Benefit Usage Report\n* `member_seating_report` - Member Seating Report\n* `waitlist_subscriber_report` - Waitlist Subscribers Report\n* `reseller_submissions_report` - Reselling Submissions Report\n* `report_donor_transaction` - Donations History\n* `gift_card_recipients_report` - Gift Card Recipient Report\n* `report_marketing_campaigns` - Marketing Campaign Summary\n* `report_marketing_campaign_details` - Marketing Campaign Detail\n* `report_ticket_credit_usage` - Ticket Credit Usage Report\n* `report_custom_consent_items` - Custom Consent Items"
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Reports"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrganizerSavedReportPage"
+                                }
+                            }
+                        },
+                        "description": "The requested report records."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "reports:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_reports",
+                    "sell_cash_tickets",
+                    "administer_transactions"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/reports/report/{id}/": {
+            "get": {
+                "operationId": "retrieveOrganizerSavedReport",
+                "description": "Reads saved report configuration for the organization bound to the key. Requires Manage Reports or All Access. Configurations can include email recipients. List results default to most recently updated first, then descending ID.",
+                "summary": "Retrieve an organizer saved report",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Report ID.",
+                        "required": true
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "q",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search by saved report name."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Reports"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedReport"
+                                }
+                            }
+                        },
+                        "description": "The requested report records."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "reports:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_reports",
+                    "sell_cash_tickets",
+                    "administer_transactions"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/reports/cash-out/": {
+            "get": {
+                "operationId": "listOrganizerCashOutReports",
+                "description": "Reads organization cash-out reports. Requires Cash Box Office Sales or All Access. The receipt text is calculated for the stored employee and date range at read time, so it can change.",
+                "summary": "List organizer cash-out reports",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Use id or -id to order by report ID."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000,
+                            "default": 1
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Reports"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrganizerCashOutReportPage"
+                                }
+                            }
+                        },
+                        "description": "The requested report records."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "reports:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_reports",
+                    "sell_cash_tickets",
+                    "administer_transactions"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/reports/cash-out/{id}/": {
+            "get": {
+                "operationId": "retrieveOrganizerCashOutReport",
+                "description": "Reads organization cash-out reports. Requires Cash Box Office Sales or All Access. The receipt text is calculated for the stored employee and date range at read time, so it can change.",
+                "summary": "Retrieve an organizer cash-out report",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Report ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Reports"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/VenueBasedVenueUserCashOutReport"
+                                }
+                            }
+                        },
+                        "description": "The requested report records."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "reports:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_reports",
+                    "sell_cash_tickets",
+                    "administer_transactions"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/financials/invoices/stats/": {
+            "get": {
+                "operationId": "readOrganizerInvoiceTotals",
+                "description": "Requires a key bound to the organization and Administer Transactions, Box Office Sales, or All Access. Provide an increasing date range of at most 31 days, starting on or after January 1, 2000. Restricted employees need View Transaction Totals or Manage Transactions, depending on organization configuration. When totals are hidden, the server returns HTTP 200 with an empty body. Totals can change between requests.",
+                "summary": "Read organizer invoice totals",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "created__gte",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{1,6}Z$"
+                        },
+                        "description": "Inclusive start in UTC with fractional seconds and a trailing Z.",
+                        "required": true,
+                        "examples": {
+                            "UTCStart": {
+                                "value": "2026-01-01T00:00:00.000000Z",
+                                "summary": "UTC start"
+                            }
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "created__lt",
+                        "schema": {
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}\\.\\d{1,6}Z$"
+                        },
+                        "description": "Exclusive end in UTC with fractional seconds and a trailing Z.",
+                        "required": true,
+                        "examples": {
+                            "UTCEnd": {
+                                "value": "2026-01-02T00:00:00.000000Z",
+                                "summary": "UTC end"
+                            }
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "discount__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "minItems": 1
+                        },
+                        "description": "Comma separated values. Discount IDs.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice_items__event_for_filtering",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Event ID."
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice_items__membership_group",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Membership group ID."
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice_items__membership_level__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "minItems": 1
+                        },
+                        "description": "Comma separated values. Membership level IDs.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice_items__product_attribute__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "minItems": 1
+                        },
+                        "description": "Comma separated values. Product attribute IDs.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice_items__product_for_filtering",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Product ID."
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice_items__ticket_type__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "minItems": 1
+                        },
+                        "description": "Comma separated values. Ticket type IDs.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "payment_type__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1
+                            },
+                            "minItems": 1
+                        },
+                        "description": "Comma separated values. Payment type IDs.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "purchase_source_platform__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "enum": [
+                                    "psp_web",
+                                    "psp_web_box_office",
+                                    "psp_desktop_box_office",
+                                    "psp_mobile_box_office",
+                                    "psp_stripe_terminal_mobile",
+                                    "psp_mobile",
+                                    "psp_widget",
+                                    "psp_facebook",
+                                    "psp_google_reserve",
+                                    "psp_qpos",
+                                    "psp_square_qpos",
+                                    "psp_square_terminal",
+                                    "psp_square_terminal_oauth",
+                                    "psp_square_qpos_oauth",
+                                    "psp_square_kiosk",
+                                    "psp_square_terminal_desktop",
+                                    "psp_unknown",
+                                    "psp_auto_generated",
+                                    "psp_shift4_terminal",
+                                    "psp_shift4_terminal_desktop",
+                                    "psp_square_terminal_oauth_mobile"
+                                ],
+                                "type": "string",
+                                "description": "* `psp_web` - Web\n* `psp_web_box_office` - Web Box Office\n* `psp_desktop_box_office` - Desktop Box Office\n* `psp_mobile_box_office` - Mobile Box Office\n* `psp_stripe_terminal_mobile` - Stripe Terminal Mobile\n* `psp_mobile` - Mobile\n* `psp_widget` - Widget\n* `psp_facebook` - Facebook\n* `psp_google_reserve` - Google Reserve\n* `psp_qpos` - Quick Point Of Sale\n* `psp_square_qpos` - Square Point of Sale\n* `psp_square_terminal` - Square Terminal\n* `psp_square_terminal_oauth` - Web Square Terminal (OAuth)\n* `psp_square_qpos_oauth` - Square Point of Sale (OAuth)\n* `psp_square_kiosk` - Square Kiosk\n* `psp_square_terminal_desktop` - Square Terminal OAuth Desktop\n* `psp_unknown` - Unknown\n* `psp_auto_generated` - Auto Generated\n* `psp_shift4_terminal` - Shift4 Terminal\n* `psp_shift4_terminal_desktop` - Shift4 Terminal Desktop\n* `psp_square_terminal_oauth_mobile` - Square Terminal OAuth Mobile"
+                            },
+                            "minItems": 1
+                        },
+                        "description": "Comma separated values. Purchase source platform IDs.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "sold_by",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Seller user ID."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Reports"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ],
+                                            "description": "Field name or index of an invalid list item."
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid date window or invoice filters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "net_sales": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "format": "decimal"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "description": "Net sales for the selected transactions."
+                                        },
+                                        "revenue": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "format": "decimal"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "description": "Revenue for the selected transactions."
+                                        },
+                                        "total_refunds": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "format": "decimal"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "description": "Refund amounts for the selected transactions."
+                                        },
+                                        "gst_total": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "format": "decimal"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "description": "Total tax for the selected transactions."
+                                        },
+                                        "organizer_charges_total": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "number"
+                                                },
+                                                {
+                                                    "type": "string",
+                                                    "format": "decimal"
+                                                },
+                                                {
+                                                    "type": "null"
+                                                }
+                                            ],
+                                            "description": "Total organizer charges for the selected transactions."
+                                        }
+                                    },
+                                    "required": [
+                                        "net_sales",
+                                        "revenue",
+                                        "total_refunds",
+                                        "gst_total",
+                                        "organizer_charges_total"
+                                    ]
+                                },
+                                "examples": {
+                                    "NoMatchingSales": {
+                                        "value": {
+                                            "net_sales": 0,
+                                            "revenue": 0,
+                                            "total_refunds": 0,
+                                            "gst_total": 0,
+                                            "organizer_charges_total": 0
+                                        },
+                                        "summary": "No matching sales"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invoice totals, or an empty body when totals are hidden."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "reports:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_reports",
+                    "sell_cash_tickets",
+                    "administer_transactions"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/financials/invoices/{transaction_id}/payout-stats/": {
+            "get": {
+                "operationId": "readOrganizerPayoutSummary",
+                "description": "Requires Administer Transactions or All Access in the key organization. The transaction ID must identify a visible settlement invoice. Returns the available financial summary rows for that payout. Use a GET request without a body for the default summary. Existing clients that send a JSON GET body can supply filtered_column_ids there as an array of column IDs.",
+                "summary": "Read an organizer payout summary",
+                "parameters": [
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "A search term.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "transaction_id",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Payout invoice transaction ID.",
+                        "required": true
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Reports"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "integer",
+                                                "null"
+                                            ],
+                                            "description": "Field name or index of an invalid list item."
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters or the transaction is not a settlement invoice."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "properties": {
+                                        "report": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/OrganizerPayoutSummaryRow"
+                                            }
+                                        }
+                                    },
+                                    "required": [
+                                        "report"
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "Payout summary rows."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "reports:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_reports",
+                    "sell_cash_tickets",
+                    "administer_transactions"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "BlankEnum": {
+                "enum": [
+                    ""
+                ]
+            },
+            "DisplayClassEnum": {
+                "type": "string",
+                "enum": [
+                    "default",
+                    "main-row",
+                    "main-subrow",
+                    "secondary-subrow",
+                    "tertiary-subrow"
+                ]
+            },
+            "FileTypeEnum": {
+                "enum": [
+                    "csv",
+                    "pdf",
+                    "xlsx"
+                ],
+                "type": "string",
+                "description": "* `csv` - CSV\n* `pdf` - PDF\n* `xlsx` - XLSX"
+            },
+            "FrequencyEnum": {
+                "enum": [
+                    "rf_one_time",
+                    "rf_recur_monthly",
+                    "rf_recur_weekly",
+                    "rf_recur_daily",
+                    "rf_recur_hourly",
+                    "rf_recur_every_ten_minutes"
+                ],
+                "type": "string",
+                "description": "* `rf_one_time` - One Time\n* `rf_recur_monthly` - Recur Monthly\n* `rf_recur_weekly` - Recur Weekly\n* `rf_recur_daily` - Recur Daily\n* `rf_recur_hourly` - Recur Hourly\n* `rf_recur_every_ten_minutes` - Recur Every Ten Minutes"
+            },
+            "GroupingOptionEnum": {
+                "enum": [
+                    "individual_event",
+                    "main_event"
+                ],
+                "type": "string",
+                "description": "* `individual_event` - Individual Occurrences\n* `main_event` - Main Events"
+            },
+            "NullEnum": {
+                "type": "null"
+            },
+            "OrganizerCashOutReportPage": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "next": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "previous": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "next_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "previous_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "page_number": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "num_pages": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "next_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "previous_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedVenueUserCashOutReport"
+                        },
+                        "maxItems": 100
+                    }
+                },
+                "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "next_page_number",
+                    "previous_page_number",
+                    "page_number",
+                    "num_pages",
+                    "next_list",
+                    "previous_list",
+                    "results"
+                ]
+            },
+            "OrganizerPayoutSummaryRow": {
+                "type": "object",
+                "required": [
+                    "name",
+                    "display_class",
+                    "value"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "string",
+                        "description": "Column ID when defined, such as rc_amount_paid."
+                    },
+                    "name": {
+                        "type": "string"
+                    },
+                    "display_class": {
+                        "$ref": "#/components/schemas/DisplayClassEnum"
+                    },
+                    "negative": {
+                        "type": "boolean",
+                        "description": "Whether the row is displayed as a deduction, when specified."
+                    },
+                    "value": {
+                        "type": "number"
+                    },
+                    "count": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "tooltip": {
+                        "type": "string"
+                    },
+                    "value_descriptor": {
+                        "type": "string"
+                    },
+                    "count_descriptor": {
+                        "type": "string"
+                    },
+                    "columns": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/OrganizerPayoutSummaryRow"
+                        }
+                    }
+                }
+            },
+            "OrganizerSavedReportPage": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "next": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "previous": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "next_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "previous_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "page_number": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "num_pages": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "next_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "previous_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedReport"
+                        },
+                        "maxItems": 100
+                    }
+                },
+                "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "next_page_number",
+                    "previous_page_number",
+                    "page_number",
+                    "num_pages",
+                    "next_list",
+                    "previous_list",
+                    "results"
+                ]
+            },
+            "TimeDeltaEnum": {
+                "enum": [
+                    "today",
+                    "yesterday",
+                    "current_week",
+                    "last_week",
+                    "current_month",
+                    "last_month",
+                    "current_quarter",
+                    "last_quarter",
+                    "year_to_date",
+                    "last_year",
+                    "custom"
+                ],
+                "type": "string",
+                "description": "* `today` - Today\n* `yesterday` - Yesterday\n* `current_week` - This Week\n* `last_week` - Last Week\n* `current_month` - This Month\n* `last_month` - Last Month\n* `current_quarter` - This Quarter\n* `last_quarter` - Last Quarter\n* `year_to_date` - Year to Date\n* `last_year` - Last Year\n* `custom` - Custom"
+            },
+            "TypeEnum": {
+                "enum": [
+                    "report_invoice_transaction",
+                    "report_venue_user",
+                    "report_will_call",
+                    "report_will_call_financial",
+                    "settlement_report",
+                    "advance_report",
+                    "report_ticket_sales_history",
+                    "report_employee_sales_history",
+                    "report_event_breakdown",
+                    "report_event_audit",
+                    "base_ticket_revenue",
+                    "event_settlement",
+                    "payment_type_breakdown",
+                    "financial_scan_summary",
+                    "event_financial_summary",
+                    "ticket_type_financial_summary",
+                    "report_ticket_type_breakdown",
+                    "product_breakdown_report",
+                    "report_password_used_breakdown",
+                    "report_seller_stats",
+                    "report_shipping_fulfillment",
+                    "report_ticket_history",
+                    "report_employee_scan_history",
+                    "report_venue_user_cash_out",
+                    "report_discount_creation",
+                    "report_discount_usage_stats",
+                    "report_holds_stats",
+                    "report_event_product_inventory",
+                    "member_report",
+                    "member_history_report",
+                    "member_benefit_usage_report",
+                    "member_seating_report",
+                    "waitlist_subscriber_report",
+                    "reseller_submissions_report",
+                    "report_donor_transaction",
+                    "gift_card_recipients_report",
+                    "report_marketing_campaigns",
+                    "report_marketing_campaign_details",
+                    "report_ticket_credit_usage",
+                    "report_custom_consent_items"
+                ],
+                "type": "string",
+                "description": "* `report_invoice_transaction` - Transactions\n* `report_venue_user` - Customers and Employees\n* `report_will_call` - Will Call\n* `report_will_call_financial` - Itemized Sales Report\n* `settlement_report` - Settlement Report\n* `advance_report` - Advance Report\n* `report_ticket_sales_history` - Ticket Sales History\n* `report_employee_sales_history` - Employee Sales History\n* `report_event_breakdown` - Event Summary\n* `report_event_audit` - Event Audit\n* `base_ticket_revenue` - Base Ticket Revenue Report\n* `event_settlement` - Event Settlement Report\n* `payment_type_breakdown` - Payment Type Breakdown\n* `financial_scan_summary` - Financial Scan Summary\n* `event_financial_summary` - Event Financial Summary\n* `ticket_type_financial_summary` - Ticket Type Financial Summary\n* `report_ticket_type_breakdown` - Ticket Type Summary\n* `product_breakdown_report` - Product Summary\n* `report_password_used_breakdown` - Password Used Summary\n* `report_seller_stats` - Seller Stats\n* `report_shipping_fulfillment` - Shipping Fulfillment Stats\n* `report_ticket_history` - Ticket Scan History Report\n* `report_employee_scan_history` - Employee Scan History Report\n* `report_venue_user_cash_out` - Seller Cash Out Report\n* `report_discount_creation` - Discount Creation Report\n* `report_discount_usage_stats` - Discount Usage Stats\n* `report_holds_stats` - Holds Stats\n* `report_event_product_inventory` - Event/Product Inventory Report\n* `member_report` - Member Report\n* `member_history_report` - Member History Report\n* `member_benefit_usage_report` - Member Benefit Usage Report\n* `member_seating_report` - Member Seating Report\n* `waitlist_subscriber_report` - Waitlist Subscribers Report\n* `reseller_submissions_report` - Reselling Submissions Report\n* `report_donor_transaction` - Donations History\n* `gift_card_recipients_report` - Gift Card Recipient Report\n* `report_marketing_campaigns` - Marketing Campaign Summary\n* `report_marketing_campaign_details` - Marketing Campaign Detail\n* `report_ticket_credit_usage` - Ticket Credit Usage Report\n* `report_custom_consent_items` - Custom Consent Items"
+            },
+            "VenueBasedReport": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "name": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "description": "Custom name given to the report",
+                        "maxLength": 50
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/TypeEnum"
+                    },
+                    "file_type": {
+                        "$ref": "#/components/schemas/FileTypeEnum"
+                    },
+                    "venue": {
+                        "type": "integer"
+                    },
+                    "selected_columns": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {},
+                        "description": "columns chosen for report, null means report defaults"
+                    },
+                    "from_dt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "to_dt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "events": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "ticket_types": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "ticket_statuses": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "products": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "product_attributes": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "updated": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "email_recipients": {
+                        "type": "array",
+                        "items": {}
+                    },
+                    "email_dt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "email_sent": {
+                        "type": "boolean"
+                    },
+                    "frequency": {
+                        "$ref": "#/components/schemas/FrequencyEnum"
+                    },
+                    "recurring_end_dt": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "description": "When the recurring report should end"
+                    },
+                    "is_select_all_events": {
+                        "type": "boolean"
+                    },
+                    "is_select_all_invoices": {
+                        "type": "boolean"
+                    },
+                    "time_delta": {
+                        "$ref": "#/components/schemas/TimeDeltaEnum"
+                    },
+                    "employees": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "integer",
+                            "maximum": 2147483647,
+                            "minimum": -2147483648
+                        }
+                    },
+                    "purchase_source_platforms": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "string",
+                            "maxLength": 64
+                        }
+                    },
+                    "grouping_option": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/GroupingOptionEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/NullEnum"
+                            }
+                        ]
+                    },
+                    "membership_levels": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "payout_invoices": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "integer",
+                            "maximum": 2147483647,
+                            "minimum": -2147483648
+                        }
+                    },
+                    "advance_invoices": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "integer",
+                            "maximum": 2147483647,
+                            "minimum": -2147483648
+                        }
+                    },
+                    "membership_groups": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "is_select_from_sub_orgs": {
+                        "type": [
+                            "boolean",
+                            "null"
+                        ]
+                    },
+                    "gift_cards": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "gift_card_denominations": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {}
+                    },
+                    "utm_campaigns": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "integer",
+                            "maximum": 2147483647,
+                            "minimum": -2147483648
+                        }
+                    },
+                    "unique_tickets_only": {
+                        "type": "boolean"
+                    }
+                },
+                "required": [
+                    "id",
+                    "type",
+                    "updated",
+                    "venue"
+                ]
+            },
+            "VenueBasedVenueUserCashOutReport": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "from_dt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "to_dt": {
+                        "type": "string",
+                        "format": "date-time"
+                    },
+                    "report_string": {
+                        "type": "string",
+                        "description": "Formatted cash-out receipt text, including line breaks.",
+                        "readOnly": true
+                    },
+                    "venue": {
+                        "type": "integer"
+                    },
+                    "venue_user": {
+                        "type": "integer"
+                    },
+                    "created": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "required": [
+                    "created",
+                    "from_dt",
+                    "id",
+                    "report_string",
+                    "to_dt",
+                    "updated",
+                    "venue",
+                    "venue_user"
+                ]
+            }
+        },
+        "securitySchemes": {
+            "DeveloperKey": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Send Token <developer-api-key> using the full key."
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "https://www.showpass.com",
+            "description": "Showpass API"
+        }
+    ]
+}

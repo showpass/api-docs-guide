@@ -35,6 +35,11 @@ export const seoDataMap: Record<string, SEOData> = {
     description: "Browse and test the organization member list and detail endpoints, with request examples, filters and response schemas.",
     keywords: "showpass memberships api, organizer members, memberships read, openapi",
   },
+  "/api/private-api-reports": {
+    title: "Reports API Reference | Showpass Developer Docs",
+    description: "Read saved reports, cash-out receipts, invoice totals, and payout summaries with a scoped organizer API key.",
+    keywords: "showpass reports api, saved reports, cash-out reports, invoice totals, payout summaries, organizer api",
+  },
   // Homepage
   "/": {
     title: "Showpass Developer Documentation - API, SDK & Integration Guide",

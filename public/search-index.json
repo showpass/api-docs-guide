@@ -21,7 +21,7 @@
     "id": "/api/private-api-overview",
     "title": "Showpass Private Organizer API",
     "path": "/api/private-api-overview",
-    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee still has valid access to that organization.\n- The employee's current permissions allow the operation.\n- The key's selected "
+    "content": "The Private Organizer API lets integrations work with an organization's events, tickets and other organizer resources. Requests require an API credential and permission to perform the requested operation.\nSee the Events API reference for event and ticket type endpoints, their scopes and response examples.\nSee the Inventory API reference for product and category operations and product attribute lookups.\nSee the Ticket Scanning API reference for ticket verification, scan history, ticket groups, and check-in presets.\nSee the Tracking Links API reference for scoped tracking link operations and Quick Checkout Purchase examples.\nSee the Reports API reference for saved reports, cash-out receipts, invoice totals, and payout summaries using reports:read.\n> Keep API keys safe. API keys can grant access to sensitive organization and customer data and allow actions on your organization's behalf. Treat the full secret like a password: store it in a backend secret manager, never expose it in browser code, URLs, source control or logs, and revoke and replace it immediately if it is exposed.\nIf Developer tools is enabled for your organization:\n1. Sign in to Showpass and select the organization your integration will use.\n2. Open Developer tools → API keys at: https://www.showpass.com/manage/organization/developer/\n3. Select Create API key and enter a recognizable integration name.\n4. Choose the scopes the integration needs. Only scopes available under your current employee permissions can be selected.\n5. Choose an expiration and create the key.\n6. Copy the full secret into your integration's secret store before closing the dialog. The secret is shown only once.\nThe prefix shown in the key list identifies the key. It is not the full secret and cannot authenticate requests.\nEach new developer key belongs to the employee who creates it and to the selected organization. A request must pass all of these checks:\n- The key is active, has not expired and has not been revoked.\n- The employee"
   },
   {
     "id": "/api/private-api-scan-ticket-by-code",
@@ -688,5 +688,47 @@
     "title": "Retrieve an organization member",
     "path": "/api/private-api-memberships-reference#organization_members_retrieve",
     "content": "Memberships API · GET /api/venue/{venueId}/memberships/members/{memberId}/ · memberships:read · Requires memberships:read and current manage_memberships permission or All Access. Names reflect current configuration, not purchase or webhook snapshots. Group ID and name are nullable; level is required. Unknown or repeated parameters are rejected. Only exact ID/status filters and page/page_size are supported; filtered detail requests can return 404. Lists are ordered by ascending member ID. Page reads are not a consistent synchronization snapshot."
+  },
+  {
+    "id": "/api/private-api-reports",
+    "title": "Reports API",
+    "path": "/api/private-api-reports",
+    "content": "Read saved reports, cash-out receipts, invoice totals, and payout summaries."
+  },
+  {
+    "id": "/api/private-api-reports#listOrganizerSavedReports",
+    "title": "List organizer saved reports",
+    "path": "/api/private-api-reports#listOrganizerSavedReports",
+    "content": "Reports API · GET /api/venue/{venue_id}/reports/report/ · reports:read · Reads saved report configuration for the organization bound to the key. Requires Manage Reports or All Access. Configurations can include email recipients. List results default to most recently updated first, then descending ID."
+  },
+  {
+    "id": "/api/private-api-reports#retrieveOrganizerSavedReport",
+    "title": "Retrieve an organizer saved report",
+    "path": "/api/private-api-reports#retrieveOrganizerSavedReport",
+    "content": "Reports API · GET /api/venue/{venue_id}/reports/report/{id}/ · reports:read · Reads saved report configuration for the organization bound to the key. Requires Manage Reports or All Access. Configurations can include email recipients. List results default to most recently updated first, then descending ID."
+  },
+  {
+    "id": "/api/private-api-reports#listOrganizerCashOutReports",
+    "title": "List organizer cash-out reports",
+    "path": "/api/private-api-reports#listOrganizerCashOutReports",
+    "content": "Reports API · GET /api/venue/{venue_id}/reports/cash-out/ · reports:read · Reads organization cash-out reports. Requires Cash Box Office Sales or All Access. The receipt text is calculated for the stored employee and date range at read time, so it can change."
+  },
+  {
+    "id": "/api/private-api-reports#retrieveOrganizerCashOutReport",
+    "title": "Retrieve an organizer cash-out report",
+    "path": "/api/private-api-reports#retrieveOrganizerCashOutReport",
+    "content": "Reports API · GET /api/venue/{venue_id}/reports/cash-out/{id}/ · reports:read · Reads organization cash-out reports. Requires Cash Box Office Sales or All Access. The receipt text is calculated for the stored employee and date range at read time, so it can change."
+  },
+  {
+    "id": "/api/private-api-reports#readOrganizerInvoiceTotals",
+    "title": "Read organizer invoice totals",
+    "path": "/api/private-api-reports#readOrganizerInvoiceTotals",
+    "content": "Reports API · GET /api/venue/{venue_id}/financials/invoices/stats/ · reports:read · Requires a key bound to the organization and Administer Transactions, Box Office Sales, or All Access. Provide an increasing date range of at most 31 days, starting on or after January 1, 2000. Restricted employees need View Transaction Totals or Manage Transactions, depending on organization configuration. When totals are hidden, the server returns HTTP 200 with an empty body. Totals can change between requests."
+  },
+  {
+    "id": "/api/private-api-reports#readOrganizerPayoutSummary",
+    "title": "Read an organizer payout summary",
+    "path": "/api/private-api-reports#readOrganizerPayoutSummary",
+    "content": "Reports API · GET /api/venue/{venue_id}/financials/invoices/{transaction_id}/payout-stats/ · reports:read · Requires Administer Transactions or All Access in the key organization. The transaction ID must identify a visible settlement invoice. Returns the available financial summary rows for that payout. Use a GET request without a body for the default summary. Existing clients that send a JSON GET body can supply filtered_column_ids there as an array of column IDs."
   }
 ]
