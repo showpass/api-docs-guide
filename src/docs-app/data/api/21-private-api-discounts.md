@@ -4,11 +4,13 @@ Discounts allow organizers to create checkout codes that reduce the price of eli
 
 Most integrations use this API to issue customer-entered discount codes for promotions, customer-specific offers, or fixed-amount credits.
 
+The [Discounts API reference](/api/private-api-discounts-reference) includes request and response schemas, Buy/Get examples, and an explorer for the organizer endpoints.
+
 ---
 
 ## Authentication
 
-This endpoint requires authentication using a Showpass token:
+Send a Showpass token in the `Authorization` header. Developer keys need `discounts:read` for list and detail requests or `discounts:write` to create, update or deactivate a discount. The employee needs Manage Events or All Access in the organization.
 
 ```text
 Authorization: Token YOUR_API_TOKEN

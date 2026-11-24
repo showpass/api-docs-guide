@@ -47,5 +47,15 @@
     "contractVersion": "1.0.0",
     "sha256": "10536ef70565e1b2b4f838bdf2b70162db60d6d33db49656a04186379372a9dc",
     "sourceRevision": "afbad82a491d894745ffe5d0a5aa9a5d42ee1e71"
+  },
+  {
+    "slug": "private-api-discounts-reference",
+    "title": "Discounts API",
+    "description": "List, create and update standard and Buy/Get discounts with organizer API keys.",
+    "guidePath": "/api/private-api-discounts",
+    "schemaPath": "/openapi/organizer-discounts.openapi.json",
+    "contractVersion": "1.0.0",
+    "sha256": "289e8478b3bff8266c337744bf64eb99b720ed7a8169a48680541de93eb5e399",
+    "sourceRevision": "8afc3f7db97699591ae4c737901fbe401f8a5de8"
   }
 ]

@@ -1,0 +1,3547 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+        "title": "Showpass Organizer Discounts API",
+        "version": "1.0.0",
+        "description": "List, retrieve, create, update and remove discounts using scoped organizer API keys."
+    },
+    "paths": {
+        "/api/venue/{venue_id}/financials/discounts/": {
+            "get": {
+                "operationId": "listOrganizerDiscounts",
+                "description": "Requires a key bound to this organization and an employee with Manage Events or All Access. Usage statistics can be cached for up to ten minutes. Search by code or description. The default order is descending discount ID. Buy/Get discounts use the common list fields. Retrieve one by ID for the Buy/Get rule.",
+                "summary": "List organizer discounts",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "bulk_order",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "bulk_order__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "bulk_order__isnull",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "code",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "code__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "string"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "event_discount_permissions__event",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "event_discount_permissions__event__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "events",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "minimum": 1
+                            }
+                        },
+                        "description": "Use event_discount_permissions__event__in.",
+                        "deprecated": true,
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "id__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "invoice__email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "is_public",
+                        "schema": {
+                            "type": "boolean"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "ordering",
+                        "schema": {
+                            "type": "string",
+                            "default": "-id"
+                        },
+                        "description": "Comma separated order fields: updated, created, id, or is_public. Prefix a field with - for descending."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000,
+                            "default": 1
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100,
+                            "default": 100
+                        },
+                        "description": "Page requests are independent and may reflect intervening edits."
+                    },
+                    {
+                        "in": "query",
+                        "name": "possessor__email",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "A search term.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "reference",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "reference__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "search",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "description": "Search discount codes and descriptions."
+                    },
+                    {
+                        "in": "query",
+                        "name": "tt_discount_permissions__ticket_type",
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "tt_discount_permissions__ticket_type__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "type",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer",
+                                "enum": [
+                                    1,
+                                    2,
+                                    3,
+                                    4,
+                                    5,
+                                    6,
+                                    7,
+                                    8,
+                                    9
+                                ]
+                            }
+                        },
+                        "description": "Use type__in.",
+                        "deprecated": true,
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "query",
+                        "name": "type__in",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "type": "integer"
+                            }
+                        },
+                        "description": "Multiple values may be separated by commas.",
+                        "explode": false,
+                        "style": "form"
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    },
+                    {
+                        "in": "query",
+                        "name": "voucher_invoice__email",
+                        "schema": {
+                            "type": "string",
+                            "format": "email"
+                        },
+                        "description": "Use invoice__email.",
+                        "deprecated": true
+                    }
+                ],
+                "tags": [
+                    "Discounts"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/OrganizerDiscountPage"
+                                }
+                            }
+                        },
+                        "description": "The requested discount data."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "discounts:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_events"
+                ]
+            },
+            "post": {
+                "operationId": "createOrganizerDiscount",
+                "description": "Requires a key bound to this organization and an employee with Manage Events or All Access. Creates the discount synchronously. Codes are normalized and unique to the organization. For Buy/Get, send type 9, a complete rule and eligible reward ticket types from the same event as the qualifying types. Buy/Get is automatic by default. Use CODE activation for a customer-entered code. Auto discounts require venue eligibility, capacity and discount rules. Check by code or list results before retrying a create after an uncertain result.",
+                "summary": "Create an organizer discount",
+                "parameters": [
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Discounts"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "anyOf": [
+                                    {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/components/schemas/VenueBasedDiscountRequest"
+                                            },
+                                            {
+                                                "not": {
+                                                    "required": [
+                                                        "buy_get_rule"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/components/schemas/VenueBasedBogoDiscountRequest"
+                                            },
+                                            {
+                                                "required": [
+                                                    "type",
+                                                    "buy_get_rule",
+                                                    "event_discount_permissions"
+                                                ],
+                                                "properties": {
+                                                    "type": {
+                                                        "const": 9
+                                                    },
+                                                    "event_discount_permissions": {
+                                                        "minItems": 1
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                ],
+                                "if": {
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "const": 8
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "discount_rules"
+                                    ],
+                                    "properties": {
+                                        "discount_rules": {
+                                            "minItems": 1
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "discount_rules": {
+                                            "maxItems": 0
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "PercentageDiscount": {
+                                    "value": {
+                                        "type": 1,
+                                        "code": "COMMUNITY15",
+                                        "description": "Community offer",
+                                        "percentage": "15.00"
+                                    },
+                                    "summary": "Percentage discount"
+                                },
+                                "Buy/GetTickets": {
+                                    "value": {
+                                        "type": 9,
+                                        "description": "Buy one ticket and get one reward ticket",
+                                        "percentage": "100.00",
+                                        "apply_method": 1,
+                                        "permission_type": "disc_level_ticket_type",
+                                        "event_discount_permissions": [
+                                            {
+                                                "event": 501,
+                                                "tt_discount_permissions": [
+                                                    {
+                                                        "ticket_type": 602
+                                                    }
+                                                ]
+                                            }
+                                        ],
+                                        "buy_get_rule": {
+                                            "buy_quantity": 1,
+                                            "get_quantity": 1,
+                                            "reward_selection_strategy": "LOWEST_ELIGIBLE_PRICE",
+                                            "qualifiers": [
+                                                {
+                                                    "target_kind": "TICKET_TYPE",
+                                                    "target_id": 601
+                                                }
+                                            ]
+                                        }
+                                    },
+                                    "summary": "Buy/Get tickets"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid JSON, duplicate code, invalid discount configuration, or changes to protected fields."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "201": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/VenueBasedDiscount"
+                                                },
+                                                {
+                                                    "not": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "const": 9
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/VenueBasedBogoDiscount"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "The saved discount."
+                    },
+                    "415": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Unsupported request content type."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "discounts:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_events"
+                ]
+            }
+        },
+        "/api/venue/{venue_id}/financials/discounts/{id}/": {
+            "get": {
+                "operationId": "retrieveOrganizerDiscount",
+                "description": "Requires a key bound to this organization and an employee with Manage Events or All Access. Usage statistics can be cached for up to ten minutes. Buy/Get discounts include the stored rule and whether activation mode is locked.",
+                "summary": "Retrieve an organizer discount",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Discount ID.",
+                        "required": true
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "A search term.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Discounts"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/VenueBasedDiscount"
+                                                },
+                                                {
+                                                    "not": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "const": 9
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/VenueBasedBogoDiscount"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "The requested discount data."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "discounts:read"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_events"
+                ]
+            },
+            "put": {
+                "operationId": "updateOrganizerDiscount",
+                "description": "Requires a key bound to this organization and an employee with Manage Events or All Access. Updates the discount synchronously. The existing discount type is retained. An omitted Buy/Get rule keeps the existing rule. Once used in a sale, pricing, qualifying items, reward items and activation mode can be locked. Check the saved discount before retrying.",
+                "summary": "Update an organizer discount",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Discount ID.",
+                        "required": true
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "A search term.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Discounts"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "anyOf": [
+                                    {
+                                        "allOf": [
+                                            {
+                                                "$ref": "#/components/schemas/VenueBasedDiscountRequest"
+                                            },
+                                            {
+                                                "not": {
+                                                    "required": [
+                                                        "buy_get_rule"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    {
+                                        "$ref": "#/components/schemas/VenueBasedBogoDiscountRequest"
+                                    }
+                                ],
+                                "if": {
+                                    "required": [
+                                        "type"
+                                    ],
+                                    "properties": {
+                                        "type": {
+                                            "const": 8
+                                        }
+                                    }
+                                },
+                                "then": {
+                                    "required": [
+                                        "discount_rules"
+                                    ],
+                                    "properties": {
+                                        "discount_rules": {
+                                            "minItems": 1
+                                        }
+                                    }
+                                },
+                                "else": {
+                                    "properties": {
+                                        "discount_rules": {
+                                            "maxItems": 0
+                                        }
+                                    }
+                                }
+                            },
+                            "examples": {
+                                "PercentageDiscount": {
+                                    "value": {
+                                        "type": 1,
+                                        "code": "COMMUNITY15",
+                                        "description": "Community offer",
+                                        "percentage": "15.00"
+                                    },
+                                    "summary": "Percentage discount"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid JSON, duplicate code, invalid discount configuration, or changes to protected fields."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "200": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "oneOf": [
+                                        {
+                                            "allOf": [
+                                                {
+                                                    "$ref": "#/components/schemas/VenueBasedDiscount"
+                                                },
+                                                {
+                                                    "not": {
+                                                        "properties": {
+                                                            "type": {
+                                                                "const": 9
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        {
+                                            "$ref": "#/components/schemas/VenueBasedBogoDiscount"
+                                        }
+                                    ]
+                                }
+                            }
+                        },
+                        "description": "The saved discount."
+                    },
+                    "415": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Unsupported request content type."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "discounts:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_events"
+                ]
+            },
+            "delete": {
+                "operationId": "deleteOrganizerDiscount",
+                "description": "Requires a key bound to this organization and an employee with Manage Events or All Access. Soft deletes the discount and disables redemption. A repeat request can return 404.",
+                "summary": "Delete an organizer discount",
+                "parameters": [
+                    {
+                        "in": "path",
+                        "name": "id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Discount ID.",
+                        "required": true
+                    },
+                    {
+                        "name": "ordering",
+                        "required": false,
+                        "in": "query",
+                        "description": "Which field to use when ordering the results.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "query",
+                        "name": "page",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 1000
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "in": "query",
+                        "name": "page_size",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1,
+                            "maximum": 100
+                        },
+                        "description": "Validated when supplied. This operation returns a single response."
+                    },
+                    {
+                        "name": "q",
+                        "required": false,
+                        "in": "query",
+                        "description": "A search term.",
+                        "schema": {
+                            "type": "string"
+                        }
+                    },
+                    {
+                        "in": "path",
+                        "name": "venue_id",
+                        "schema": {
+                            "type": "integer",
+                            "minimum": 1
+                        },
+                        "description": "Organization ID bound to the key.",
+                        "required": true
+                    }
+                ],
+                "tags": [
+                    "Discounts"
+                ],
+                "security": [
+                    {
+                        "DeveloperKey": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "string"
+                                                },
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        },
+                                        "field": {
+                                            "type": [
+                                                "string",
+                                                "null"
+                                            ]
+                                        },
+                                        "error_list": {
+                                            "type": "array",
+                                            "items": {
+                                                "type": "string"
+                                            }
+                                        },
+                                        "error_code": {
+                                            "anyOf": [
+                                                {
+                                                    "type": "object",
+                                                    "additionalProperties": true
+                                                },
+                                                {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            ]
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Invalid query parameters."
+                    },
+                    "401": {
+                        "headers": {
+                            "WWW-Authenticate": {
+                                "schema": {
+                                    "type": "string"
+                                },
+                                "description": "Authentication challenge."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "examples": {
+                                    "InvalidKey": {
+                                        "value": {
+                                            "detail": "Invalid developer API key."
+                                        },
+                                        "summary": "Invalid key"
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Missing or invalid credential or inactive access."
+                    },
+                    "403": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Wrong organization or insufficient scope or permission."
+                    },
+                    "404": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Resource or requested page is unavailable."
+                    },
+                    "406": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "The requested response media type is unsupported."
+                    },
+                    "429": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limit exceeded. Defaults are 60 requests per key and 300 per organization per minute. Use Retry-After to determine when to retry."
+                    },
+                    "503": {
+                        "headers": {
+                            "Retry-After": {
+                                "schema": {
+                                    "type": "integer"
+                                },
+                                "description": "Seconds to wait before retrying."
+                            },
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "object",
+                                    "required": [
+                                        "detail"
+                                    ],
+                                    "properties": {
+                                        "detail": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "description": "Shared request limiter is unavailable."
+                    },
+                    "204": {
+                        "headers": {
+                            "X-Request-ID": {
+                                "schema": {
+                                    "type": "string",
+                                    "format": "uuid"
+                                },
+                                "description": "Request log correlation ID when a key was identified."
+                            }
+                        },
+                        "description": "Discount soft deleted."
+                    }
+                },
+                "x-showpass-scopes": [
+                    "discounts:write"
+                ],
+                "x-showpass-employee-permissions": [
+                    "manage_events"
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "AllowedCheckoutsEnum": {
+                "type": "string",
+                "enum": [
+                    "disc_allowed_box_office",
+                    "disc_allowed_public"
+                ]
+            },
+            "ApplyMethodEnum": {
+                "enum": [
+                    1,
+                    2
+                ],
+                "type": "integer",
+                "description": "* `1` - Apply to each item individually\n* `2` - Single application to entire basket"
+            },
+            "BlankEnum": {
+                "enum": [
+                    ""
+                ]
+            },
+            "BuyGetActivationModeEnum": {
+                "enum": [
+                    "AUTOMATIC",
+                    "CODE"
+                ],
+                "type": "string",
+                "description": "* `AUTOMATIC` - Automatic\n* `CODE` - Customer-entered code"
+            },
+            "DiscountLocalScheduleRequest": {
+                "type": "object",
+                "properties": {
+                    "policy_version": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "timezone": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "starts_on": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/LocalScheduleValueRequest"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+                    "ends_on": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/LocalScheduleValueRequest"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "policy_version",
+                    "timezone"
+                ]
+            },
+            "LimitTypeEnum": {
+                "enum": [
+                    1,
+                    2,
+                    3
+                ],
+                "type": "integer",
+                "description": "* `1` - Item quantity\n* `2` - Total basket quantity\n* `3` - Total purchase amount"
+            },
+            "LocalScheduleValueRequest": {
+                "type": "object",
+                "properties": {
+                    "local_datetime": {
+                        "type": "string",
+                        "minLength": 1
+                    },
+                    "fold": {
+                        "type": "integer",
+                        "maximum": 1,
+                        "minimum": 0
+                    }
+                },
+                "required": [
+                    "fold",
+                    "local_datetime"
+                ]
+            },
+            "NullEnum": {
+                "type": "null"
+            },
+            "OrganizerDiscountPage": {
+                "type": "object",
+                "properties": {
+                    "count": {
+                        "type": "integer",
+                        "minimum": 0
+                    },
+                    "next": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "previous": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "uri"
+                    },
+                    "next_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "previous_page_number": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "page_number": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "num_pages": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "next_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "previous_list": {
+                        "type": "array",
+                        "items": {
+                            "type": "integer"
+                        }
+                    },
+                    "results": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscount"
+                        },
+                        "maxItems": 100
+                    }
+                },
+                "required": [
+                    "count",
+                    "next",
+                    "previous",
+                    "next_page_number",
+                    "previous_page_number",
+                    "page_number",
+                    "num_pages",
+                    "next_list",
+                    "previous_list",
+                    "results"
+                ]
+            },
+            "PermissionTypeEnum": {
+                "enum": [
+                    "disc_level_venue",
+                    "disc_level_ticket_type",
+                    "disc_level_excluded_ticket_type",
+                    "disc_level_all"
+                ],
+                "type": "string",
+                "description": "* `disc_level_venue` - Apply to all items of this type\n* `disc_level_ticket_type` - Apply to certain items of this type\n* `disc_level_excluded_ticket_type` - Exclude certain items of this type\n* `disc_level_all` - Allowed to be used to all items of this type"
+            },
+            "RewardSelectionStrategyEnum": {
+                "enum": [
+                    "LOWEST_ELIGIBLE_PRICE"
+                ],
+                "type": "string",
+                "description": "* `LOWEST_ELIGIBLE_PRICE` - Lowest eligible price"
+            },
+            "TargetKindEnum": {
+                "enum": [
+                    "TICKET_TYPE"
+                ],
+                "type": "string",
+                "description": "* `TICKET_TYPE` - TICKET_TYPE"
+            },
+            "VenueBasedBogoDiscount": {
+                "type": "object",
+                "description": "Venue Discount representation and persistence for the V1 BOGO graph.",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "venue": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "code": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "percentage": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,17}(?:\\.\\d{0,2})?$"
+                    },
+                    "limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "per_user_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "is_public": {
+                        "type": "boolean",
+                        "description": "Shows/hides item from the public"
+                    },
+                    "reference": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "event_discount_permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountEventDiscountPermission"
+                        }
+                    },
+                    "starts_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "ends_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "type": {
+                        "type": "integer",
+                        "const": 9
+                    },
+                    "stats": {
+                        "type": "object",
+                        "properties": {
+                            "last_updated": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "discounts": {
+                                "type": "object",
+                                "properties": {
+                                    "used_count": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    },
+                                    "available": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    }
+                                },
+                                "required": [
+                                    "used_count",
+                                    "available"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "last_updated",
+                            "discounts"
+                        ],
+                        "readOnly": true
+                    },
+                    "minimum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "maximum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "allowed_checkouts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllowedCheckoutsEnum"
+                        }
+                    },
+                    "permission_type": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/PermissionTypeEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/NullEnum"
+                            }
+                        ]
+                    },
+                    "apply_method": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ApplyMethodEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "created_by": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "description": "User that created the discount"
+                    },
+                    "basket_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per basket"
+                    },
+                    "per_event_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per event"
+                    },
+                    "discount_rules": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountDiscountRule"
+                        }
+                    },
+                    "buy_get_activation_mode": {
+                        "$ref": "#/components/schemas/BuyGetActivationModeEnum"
+                    },
+                    "buy_get_mode_locked": {
+                        "type": "boolean",
+                        "readOnly": true
+                    },
+                    "buy_get_rule": {
+                        "readOnly": true,
+                        "anyOf": [
+                            {
+                                "$ref": "#/components/schemas/VenueBasedBogoDiscountBuyGetRuleInput"
+                            },
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    }
+                },
+                "required": [
+                    "buy_get_mode_locked",
+                    "buy_get_rule",
+                    "id",
+                    "stats",
+                    "type",
+                    "venue"
+                ]
+            },
+            "VenueBasedBogoDiscountBuyGetRuleInput": {
+                "type": "object",
+                "properties": {
+                    "buy_quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "get_quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "reward_selection_strategy": {
+                        "$ref": "#/components/schemas/RewardSelectionStrategyEnum"
+                    },
+                    "qualifiers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedBogoDiscountBuyGetRuleInputBuyGetTargetInput"
+                        }
+                    }
+                },
+                "required": [
+                    "buy_quantity",
+                    "get_quantity",
+                    "qualifiers",
+                    "reward_selection_strategy"
+                ]
+            },
+            "VenueBasedBogoDiscountBuyGetRuleInputBuyGetTargetInput": {
+                "type": "object",
+                "properties": {
+                    "target_kind": {
+                        "$ref": "#/components/schemas/TargetKindEnum"
+                    },
+                    "target_id": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                },
+                "required": [
+                    "target_id",
+                    "target_kind"
+                ]
+            },
+            "VenueBasedBogoDiscountBuyGetRuleInputBuyGetTargetInputRequest": {
+                "type": "object",
+                "properties": {
+                    "target_kind": {
+                        "$ref": "#/components/schemas/TargetKindEnum"
+                    },
+                    "target_id": {
+                        "type": "integer",
+                        "minimum": 1
+                    }
+                },
+                "required": [
+                    "target_id",
+                    "target_kind"
+                ]
+            },
+            "VenueBasedBogoDiscountBuyGetRuleInputRequest": {
+                "type": "object",
+                "properties": {
+                    "buy_quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "get_quantity": {
+                        "type": "integer",
+                        "minimum": 1
+                    },
+                    "reward_selection_strategy": {
+                        "$ref": "#/components/schemas/RewardSelectionStrategyEnum"
+                    },
+                    "qualifiers": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedBogoDiscountBuyGetRuleInputBuyGetTargetInputRequest"
+                        }
+                    }
+                },
+                "required": [
+                    "buy_quantity",
+                    "get_quantity",
+                    "qualifiers",
+                    "reward_selection_strategy"
+                ]
+            },
+            "VenueBasedBogoDiscountRequest": {
+                "type": "object",
+                "description": "Venue Discount representation and persistence for the V1 BOGO graph.",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "percentage": {
+                        "type": [
+                            "string",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "amount": {
+                        "type": [
+                            "string",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,17}(?:\\.\\d{0,2})?$"
+                    },
+                    "limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "per_user_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "is_public": {
+                        "type": "boolean",
+                        "description": "Shows/hides item from the public"
+                    },
+                    "reference": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "event_discount_permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountEventDiscountPermissionRequest"
+                        }
+                    },
+                    "starts_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "ends_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VenueBasedBogoDiscountTypeEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "minimum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "maximum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "allowed_checkouts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllowedCheckoutsEnum"
+                        }
+                    },
+                    "permission_type": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/PermissionTypeEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/NullEnum"
+                            }
+                        ]
+                    },
+                    "apply_method": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ApplyMethodEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "basket_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per basket"
+                    },
+                    "per_event_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per event"
+                    },
+                    "discount_rules": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountDiscountRuleRequest"
+                        }
+                    },
+                    "local_schedule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DiscountLocalScheduleRequest"
+                            }
+                        ],
+                        "writeOnly": true
+                    },
+                    "buy_get_rule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VenueBasedBogoDiscountBuyGetRuleInputRequest"
+                            }
+                        ],
+                        "writeOnly": true
+                    },
+                    "buy_get_activation_mode": {
+                        "$ref": "#/components/schemas/BuyGetActivationModeEnum"
+                    }
+                }
+            },
+            "VenueBasedBogoDiscountTypeEnum": {
+                "enum": [
+                    1,
+                    3,
+                    5,
+                    7,
+                    8,
+                    9
+                ],
+                "type": "integer",
+                "description": "* `1` - 1\n* `3` - 3\n* `5` - 5\n* `7` - 7\n* `8` - 8\n* `9` - 9"
+            },
+            "VenueBasedDiscount": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "venue": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "code": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "percentage": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "amount": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,17}(?:\\.\\d{0,2})?$"
+                    },
+                    "limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "per_user_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "is_public": {
+                        "type": "boolean",
+                        "description": "Shows/hides item from the public"
+                    },
+                    "reference": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "event_discount_permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountEventDiscountPermission"
+                        }
+                    },
+                    "starts_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "ends_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "type": {
+                        "$ref": "#/components/schemas/VenueBasedDiscountTypeEnum"
+                    },
+                    "stats": {
+                        "type": "object",
+                        "properties": {
+                            "last_updated": {
+                                "type": "string",
+                                "format": "date-time"
+                            },
+                            "discounts": {
+                                "type": "object",
+                                "properties": {
+                                    "used_count": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    },
+                                    "available": {
+                                        "type": "integer",
+                                        "minimum": 0
+                                    }
+                                },
+                                "required": [
+                                    "used_count",
+                                    "available"
+                                ]
+                            }
+                        },
+                        "required": [
+                            "last_updated",
+                            "discounts"
+                        ],
+                        "readOnly": true
+                    },
+                    "minimum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "maximum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "allowed_checkouts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllowedCheckoutsEnum"
+                        }
+                    },
+                    "permission_type": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/PermissionTypeEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/NullEnum"
+                            }
+                        ]
+                    },
+                    "apply_method": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ApplyMethodEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "created_by": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "description": "User that created the discount"
+                    },
+                    "basket_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per basket"
+                    },
+                    "per_event_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per event"
+                    },
+                    "discount_rules": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountDiscountRule"
+                        }
+                    }
+                },
+                "required": [
+                    "id",
+                    "stats",
+                    "type",
+                    "venue"
+                ]
+            },
+            "VenueBasedDiscountDiscountRule": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "minimum_limit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "maximum_limit": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "limit_type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/LimitTypeEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "amount": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,17}(?:\\.\\d{0,2})?$"
+                    },
+                    "percentage": {
+                        "type": "string",
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "venue": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "amount",
+                    "id",
+                    "limit_type",
+                    "percentage",
+                    "venue"
+                ]
+            },
+            "VenueBasedDiscountDiscountRuleRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "minimum_limit": {
+                        "type": [
+                            "string",
+                            "null",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "maximum_limit": {
+                        "type": [
+                            "string",
+                            "null",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "limit_type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/LimitTypeEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "amount": {
+                        "type": [
+                            "string",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,17}(?:\\.\\d{0,2})?$"
+                    },
+                    "percentage": {
+                        "type": [
+                            "string",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "venue": {
+                        "type": "integer"
+                    }
+                },
+                "required": [
+                    "amount",
+                    "limit_type",
+                    "percentage",
+                    "venue"
+                ]
+            },
+            "VenueBasedDiscountEventDiscountPermission": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "event": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "tt_discount_permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountEventDiscountPermissionTicketTypeDiscountPermission"
+                        }
+                    },
+                    "membership_group": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "product": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "VenueBasedDiscountEventDiscountPermissionRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "event": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "tt_discount_permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountEventDiscountPermissionTicketTypeDiscountPermissionRequest"
+                        }
+                    },
+                    "membership_group": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "product": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "VenueBasedDiscountEventDiscountPermissionTicketTypeDiscountPermission": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "ticket_type": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "product_attribute": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "membership_level": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                },
+                "required": [
+                    "id"
+                ]
+            },
+            "VenueBasedDiscountEventDiscountPermissionTicketTypeDiscountPermissionRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "ticket_type": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "product_attribute": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "membership_level": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    }
+                }
+            },
+            "VenueBasedDiscountRequest": {
+                "type": "object",
+                "description": "Adds nested create feature",
+                "properties": {
+                    "code": {
+                        "type": "string",
+                        "default": "",
+                        "maxLength": 255
+                    },
+                    "description": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "percentage": {
+                        "type": [
+                            "string",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,6}(?:\\.\\d{0,2})?$"
+                    },
+                    "amount": {
+                        "type": [
+                            "string",
+                            "number"
+                        ],
+                        "format": "decimal",
+                        "pattern": "^-?\\d{0,17}(?:\\.\\d{0,2})?$"
+                    },
+                    "limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "per_user_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "is_public": {
+                        "type": "boolean",
+                        "description": "Shows/hides item from the public"
+                    },
+                    "reference": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ]
+                    },
+                    "event_discount_permissions": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountEventDiscountPermissionRequest"
+                        }
+                    },
+                    "starts_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "ends_on": {
+                        "type": [
+                            "string",
+                            "null"
+                        ],
+                        "format": "date-time"
+                    },
+                    "type": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/VenueBasedDiscountTypeEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "minimum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "maximum_quantity": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0
+                    },
+                    "allowed_checkouts": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/AllowedCheckoutsEnum"
+                        }
+                    },
+                    "permission_type": {
+                        "oneOf": [
+                            {
+                                "$ref": "#/components/schemas/PermissionTypeEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/BlankEnum"
+                            },
+                            {
+                                "$ref": "#/components/schemas/NullEnum"
+                            }
+                        ]
+                    },
+                    "apply_method": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/ApplyMethodEnum"
+                            }
+                        ],
+                        "minimum": -2147483648,
+                        "maximum": 2147483647
+                    },
+                    "basket_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per basket"
+                    },
+                    "per_event_limit": {
+                        "type": [
+                            "integer",
+                            "null"
+                        ],
+                        "maximum": 2147483647,
+                        "minimum": 0,
+                        "description": "Limit usage per event"
+                    },
+                    "discount_rules": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/VenueBasedDiscountDiscountRuleRequest"
+                        }
+                    },
+                    "local_schedule": {
+                        "allOf": [
+                            {
+                                "$ref": "#/components/schemas/DiscountLocalScheduleRequest"
+                            }
+                        ],
+                        "writeOnly": true
+                    }
+                }
+            },
+            "VenueBasedDiscountTypeEnum": {
+                "type": "integer",
+                "enum": [
+                    1,
+                    2,
+                    3,
+                    4,
+                    5,
+                    6,
+                    7,
+                    8,
+                    9
+                ]
+            }
+        },
+        "securitySchemes": {
+            "DeveloperKey": {
+                "type": "apiKey",
+                "in": "header",
+                "name": "Authorization",
+                "description": "Send Token <developer-api-key> using the full key."
+            }
+        }
+    },
+    "servers": [
+        {
+            "url": "https://www.showpass.com",
+            "description": "Showpass API"
+        }
+    ]
+}
