@@ -2,7 +2,7 @@
     "openapi": "3.1.0",
     "info": {
         "title": "Showpass Organizer Order and Ticket History API",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "description": "Read invoices, invoice items, purchased tickets and transfers using scoped organizer API keys."
     },
     "paths": {
@@ -7920,7 +7920,8 @@
                     },
                     "quantity_multi_scan_limit": {
                         "type": "integer",
-                        "minimum": 0,
+                        "minimum": -1,
+                        "description": "Maximum number of scans. A value of -1 means unlimited.",
                         "readOnly": true
                     },
                     "quantity_multi_scans_used": {
