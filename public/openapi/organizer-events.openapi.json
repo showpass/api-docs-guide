@@ -2,7 +2,7 @@
     "openapi": "3.1.0",
     "info": {
         "title": "Showpass Organizer API",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "description": "Events and ticket type operations available to scoped Showpass organizer API keys."
     },
     "paths": {
@@ -3590,7 +3590,54 @@
                         ],
                         "description": "Used to create a celery task which saves the event asynchronously, while also creating a skeleton model to generate the object itself before accessing .perform_save() "
                     },
-                    "attraction_event_config": {},
+                    "attraction_event_config": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "attraction_special_events": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "child_events": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "starts_on": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "ends_on": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "name",
+                                                        "starts_on",
+                                                        "ends_on"
+                                                    ]
+                                                },
+                                                "description": "Child event details included when the special event has linked recurring slots."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "is_attraction_child": {
                         "type": [
                             "boolean",
@@ -3915,6 +3962,35 @@
                                 },
                                 "special_key": {
                                     "type": "string"
+                                },
+                                "child_events": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "starts_on": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "ends_on": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "starts_on",
+                                            "ends_on"
+                                        ]
+                                    },
+                                    "description": "Child event details included when the special event has linked recurring slots."
                                 }
                             },
                             "required": [
@@ -4202,32 +4278,61 @@
                                 "type": "object",
                                 "properties": {
                                     "included_in_total_count": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "included_in_total_count_with_non_final": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "used_count": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "total_membership_scan_ins": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "on_hold_count": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "total_membership_scan_allowed": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "total_membership_scan_ins_unlimited": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "included_in_total_revenue": {
                                         "type": [
                                             "number",
-                                            "string"
+                                            "string",
+                                            "null"
                                         ],
-                                        "description": "Total revenue as a decimal."
+                                        "description": "Total revenue as a decimal, or null when the stored value is unavailable."
                                     }
                                 },
                                 "required": [
@@ -5127,32 +5232,61 @@
                         "type": "object",
                         "properties": {
                             "included_in_total_count": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "included_in_total_count_with_non_final": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "used_count": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "total_membership_scan_ins": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "on_hold_count": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "total_membership_scan_allowed": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "total_membership_scan_ins_unlimited": {
-                                "type": "integer"
+                                "type": [
+                                    "integer",
+                                    "null"
+                                ],
+                                "description": "Null when the stored count is unavailable."
                             },
                             "included_in_total_revenue": {
                                 "type": [
                                     "number",
-                                    "string"
+                                    "string",
+                                    "null"
                                 ],
-                                "description": "Total revenue as a decimal."
+                                "description": "Total revenue as a decimal, or null when the stored value is unavailable."
                             }
                         },
                         "required": [
@@ -6858,7 +6992,54 @@
                         ],
                         "description": "Used to create a celery task which saves the event asynchronously, while also creating a skeleton model to generate the object itself before accessing .perform_save() "
                     },
-                    "attraction_event_config": {},
+                    "attraction_event_config": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "attraction_special_events": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "child_events": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "starts_on": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "ends_on": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "name",
+                                                        "starts_on",
+                                                        "ends_on"
+                                                    ]
+                                                },
+                                                "description": "Child event details included when the special event has linked recurring slots."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "is_attraction_child": {
                         "type": [
                             "boolean",
@@ -7183,6 +7364,35 @@
                                 },
                                 "special_key": {
                                     "type": "string"
+                                },
+                                "child_events": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "starts_on": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "ends_on": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "starts_on",
+                                            "ends_on"
+                                        ]
+                                    },
+                                    "description": "Child event details included when the special event has linked recurring slots."
                                 }
                             },
                             "required": [
@@ -8582,7 +8792,54 @@
                         ],
                         "description": "Used to create a celery task which saves the event asynchronously, while also creating a skeleton model to generate the object itself before accessing .perform_save() "
                     },
-                    "attraction_event_config": {},
+                    "attraction_event_config": {
+                        "type": [
+                            "array",
+                            "null"
+                        ],
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "attraction_special_events": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "child_events": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "object",
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "integer"
+                                                        },
+                                                        "name": {
+                                                            "type": "string"
+                                                        },
+                                                        "starts_on": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        },
+                                                        "ends_on": {
+                                                            "type": "string",
+                                                            "format": "date-time"
+                                                        }
+                                                    },
+                                                    "required": [
+                                                        "id",
+                                                        "name",
+                                                        "starts_on",
+                                                        "ends_on"
+                                                    ]
+                                                },
+                                                "description": "Child event details included when the special event has linked recurring slots."
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    },
                     "is_attraction_child": {
                         "type": [
                             "boolean",
@@ -8907,6 +9164,35 @@
                                 },
                                 "special_key": {
                                     "type": "string"
+                                },
+                                "child_events": {
+                                    "type": "array",
+                                    "items": {
+                                        "type": "object",
+                                        "properties": {
+                                            "id": {
+                                                "type": "integer"
+                                            },
+                                            "name": {
+                                                "type": "string"
+                                            },
+                                            "starts_on": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            },
+                                            "ends_on": {
+                                                "type": "string",
+                                                "format": "date-time"
+                                            }
+                                        },
+                                        "required": [
+                                            "id",
+                                            "name",
+                                            "starts_on",
+                                            "ends_on"
+                                        ]
+                                    },
+                                    "description": "Child event details included when the special event has linked recurring slots."
                                 }
                             },
                             "required": [
@@ -9528,32 +9814,61 @@
                                 "type": "object",
                                 "properties": {
                                     "included_in_total_count": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "included_in_total_count_with_non_final": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "used_count": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "total_membership_scan_ins": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "on_hold_count": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "total_membership_scan_allowed": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "total_membership_scan_ins_unlimited": {
-                                        "type": "integer"
+                                        "type": [
+                                            "integer",
+                                            "null"
+                                        ],
+                                        "description": "Null when the stored count is unavailable."
                                     },
                                     "included_in_total_revenue": {
                                         "type": [
                                             "number",
-                                            "string"
+                                            "string",
+                                            "null"
                                         ],
-                                        "description": "Total revenue as a decimal."
+                                        "description": "Total revenue as a decimal, or null when the stored value is unavailable."
                                     }
                                 },
                                 "required": [
