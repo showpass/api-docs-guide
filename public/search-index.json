@@ -585,7 +585,7 @@
     "id": "/api/private-api-ticket-scanning#createOrganizerCheckInPreset",
     "title": "Create an organizer check-in preset",
     "path": "/api/private-api-ticket-scanning#createOrganizerCheckInPreset",
-    "content": "Ticket Scanning API · POST /api/venue/{venue_id}/tickets/presets/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request."
+    "content": "Ticket Scanning API · POST /api/venue/{venue_id}/tickets/presets/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Include both ticket_types and product_attributes. Either array can be empty if another selection is provided. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request."
   },
   {
     "id": "/api/private-api-ticket-scanning#retrieveOrganizerCheckInPreset",
@@ -597,13 +597,13 @@
     "id": "/api/private-api-ticket-scanning#updateOrganizerCheckInPreset",
     "title": "Update an organizer check-in preset",
     "path": "/api/private-api-ticket-scanning#updateOrganizerCheckInPreset",
-    "content": "Ticket Scanning API · PUT /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request."
+    "content": "Ticket Scanning API · PUT /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Include both ticket_types and product_attributes. Either array can be empty if another selection is provided. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request."
   },
   {
     "id": "/api/private-api-ticket-scanning#destroyOrganizerCheckInPreset",
     "title": "Delete an organizer check-in preset",
     "path": "/api/private-api-ticket-scanning#destroyOrganizerCheckInPreset",
-    "content": "Ticket Scanning API · DELETE /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. Deletes the preset. A repeated request can return 404."
+    "content": "Ticket Scanning API · DELETE /api/venue/{venue_id}/tickets/presets/{id}/ · scanning:write · Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Deletes the preset. A repeated request can return 404."
   },
   {
     "id": "/api/private-api-ticket-scanning#lookupOrganizerTicketByScanQuery",

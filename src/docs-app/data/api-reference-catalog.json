@@ -24,9 +24,9 @@
     "description": "Verify ticket codes, record check-in, and manage check-in presets.",
     "guidePath": "/api/private-api-overview",
     "schemaPath": "/openapi/organizer-ticket-scanning.openapi.json",
-    "contractVersion": "1.0.0",
-    "sha256": "32837678f4618eccb671c8705cf1d05c88f8b3f3574008491efe0d851ce179a9",
-    "sourceRevision": "80c1d93f7bff3f9c3ab10cd3b62f2a5088d4a70c"
+    "contractVersion": "1.0.1",
+    "sha256": "deff7ad0e8e4a18892f7bcadc96126a3f634f82869a1e6c50b822c0a53551fe5",
+    "sourceRevision": "0fba452769278cf697f6fce1fc61512775e628d4"
   },
   {
     "slug": "private-api-tracking-links-reference",

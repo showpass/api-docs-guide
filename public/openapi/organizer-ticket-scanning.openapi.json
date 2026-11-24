@@ -2,7 +2,7 @@
     "openapi": "3.1.0",
     "info": {
         "title": "Showpass Organizer Ticket Scanning API",
-        "version": "1.0.0",
+        "version": "1.0.1",
         "description": "Ticket verification, scan history, groups and check-in presets for scoped organizer API keys."
     },
     "paths": {
@@ -3264,7 +3264,7 @@
             },
             "post": {
                 "operationId": "createOrganizerCheckInPreset",
-                "description": "Requires Manage Check-In Presets, Select Items to Scan, or All Access. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request.",
+                "description": "Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Include both ticket_types and product_attributes. Either array can be empty if another selection is provided. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request.",
                 "summary": "Create an organizer check-in preset",
                 "parameters": [
                     {
@@ -4001,7 +4001,7 @@
             },
             "put": {
                 "operationId": "updateOrganizerCheckInPreset",
-                "description": "Requires Manage Check-In Presets, Select Items to Scan, or All Access. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request.",
+                "description": "Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Include both ticket_types and product_attributes. Either array can be empty if another selection is provided. Selected ticket types, product attributes and membership levels must belong to this organization. The server derives the associated events, products and membership groups. Changes apply synchronously. Confirm the outcome before retrying a create request.",
                 "summary": "Update an organizer check-in preset",
                 "parameters": [
                     {
@@ -4395,7 +4395,7 @@
             },
             "delete": {
                 "operationId": "destroyOrganizerCheckInPreset",
-                "description": "Requires Manage Check-In Presets, Select Items to Scan, or All Access. Deletes the preset. A repeated request can return 404.",
+                "description": "Requires Manage Check-In Presets, Select Items to Scan, or All Access. The x-showpass-employee-permissions extension lists the shared eligibility permissions for the API key scope. The server also checks the preset permissions for this operation. Deletes the preset. A repeated request can return 404.",
                 "summary": "Delete an organizer check-in preset",
                 "parameters": [
                     {
@@ -7864,7 +7864,9 @@
                     }
                 },
                 "required": [
-                    "description"
+                    "description",
+                    "product_attributes",
+                    "ticket_types"
                 ],
                 "anyOf": [
                     {
@@ -8208,7 +8210,8 @@
                     },
                     "quantity_multi_scan_limit": {
                         "type": "integer",
-                        "minimum": 0,
+                        "minimum": -1,
+                        "description": "Maximum number of scans. A value of -1 means unlimited.",
                         "readOnly": true
                     },
                     "quantity_multi_scans_used": {
@@ -8584,7 +8587,8 @@
                     },
                     "quantity_multi_scan_limit": {
                         "type": "integer",
-                        "minimum": 0,
+                        "minimum": -1,
+                        "description": "Maximum number of scans. A value of -1 means unlimited.",
                         "readOnly": true
                     },
                     "is_bundle": {
@@ -9017,7 +9021,8 @@
                     },
                     "quantity_multi_scan_limit": {
                         "type": "integer",
-                        "minimum": 0,
+                        "minimum": -1,
+                        "description": "Maximum number of scans. A value of -1 means unlimited.",
                         "readOnly": true
                     },
                     "quantity_multi_scans_used": {
