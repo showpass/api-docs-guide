@@ -17,5 +17,15 @@
     "contractVersion": "1.0.0",
     "sha256": "10536ef70565e1b2b4f838bdf2b70162db60d6d33db49656a04186379372a9dc",
     "sourceRevision": "afbad82a491d894745ffe5d0a5aa9a5d42ee1e71"
+  },
+  {
+    "slug": "private-api-order-ticket-history",
+    "title": "Order and Ticket History API",
+    "description": "Read organizer invoices, invoice items, purchased tickets and transfer history.",
+    "guidePath": "/api/private-api-overview",
+    "schemaPath": "/openapi/organizer-order-ticket-history.openapi.json",
+    "contractVersion": "1.0.1",
+    "sha256": "6ba154c279daeb71605cc4e736741c6bb8cac01cbc4f3c3a5893f5d12d02a752",
+    "sourceRevision": "9acaea06b8bdcc787ada9dac7b910d268ccd8c36"
   }
 ]
